@@ -13,19 +13,17 @@ public class BinanceRestApiSpotUserStreamClient
     private const string spotDeleteListenKeyEndpoint = "userDataStream";
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiSpotClient SpotClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => SpotClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiSpotClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await SpotClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiSpotUserStreamClient(BinanceRestApiClient root, BinanceRestApiSpotClient spot)
+    internal BinanceRestApiSpotUserStreamClient(BinanceRestApiSpotClient main)
     {
-        RootClient = root;
-        SpotClient = spot;
+        MainClient = main;
     }
 
     #region Create a ListenKey (Spot)

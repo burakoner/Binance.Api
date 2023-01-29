@@ -21,11 +21,7 @@ public class BinanceRestApiSpotClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions Options { get { return (BinanceRestApiClientOptions)base.Options; } }
 
-    internal BinanceRestApiSpotClient(BinanceRestApiClient root) : this(root, new BinanceRestApiClientOptions())
-    {
-    }
-
-    internal BinanceRestApiSpotClient(BinanceRestApiClient root, BinanceRestApiClientOptions options) : base("Binance Spot RestApi", options)
+    internal BinanceRestApiSpotClient(BinanceRestApiClient root) : base("Binance Spot RestApi", root.Options)
     {
         RootClient = root;
 
@@ -33,11 +29,11 @@ public class BinanceRestApiSpotClient : RestApiClient
         RequestBodyFormat = RequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
-        this.Server = new BinanceRestApiSpotServerClient(root, this);
-        this.Account = new BinanceRestApiSpotAccountClient(root, this);
-        this.Trading = new BinanceRestApiSpotTradingClient(root, this);
-        this.MarketData = new BinanceRestApiSpotMarketDataClient(root, this);
-        this.UserStream = new BinanceRestApiSpotUserStreamClient(root, this);
+        this.Server = new BinanceRestApiSpotServerClient(this);
+        this.Account = new BinanceRestApiSpotAccountClient(this);
+        this.Trading = new BinanceRestApiSpotTradingClient(this);
+        this.MarketData = new BinanceRestApiSpotMarketDataClient(this);
+        this.UserStream = new BinanceRestApiSpotUserStreamClient(this);
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)

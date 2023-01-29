@@ -78,19 +78,17 @@ public class BinanceRestApiMarginTradingClient
     public event Action<OrderId> OnOrderCanceled;
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiMarginClient MarginClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => MarginClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiMarginClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MarginClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiMarginTradingClient(BinanceRestApiClient root, BinanceRestApiMarginClient margin)
+    internal BinanceRestApiMarginTradingClient(BinanceRestApiMarginClient main)
     {
-        RootClient = root;
-        MarginClient = margin;
+        MainClient = main;
     }
 
     internal void InvokeOrderPlaced(OrderId id)
@@ -225,7 +223,7 @@ public class BinanceRestApiMarginTradingClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        var result = await MarginClient.PlaceOrderInternal(GetUrl(newMarginOrderEndpoint, marginApi, marginVersion),
+        var result = await MainClient.PlaceOrderInternal(GetUrl(newMarginOrderEndpoint, marginApi, marginVersion),
             symbol,
             side,
             type,
@@ -495,10 +493,10 @@ public class BinanceRestApiMarginTradingClient
         CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
-        var rulesCheck = await MarginClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
+        var rulesCheck = await MainClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            MarginClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceMarginOrderOcoList>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 

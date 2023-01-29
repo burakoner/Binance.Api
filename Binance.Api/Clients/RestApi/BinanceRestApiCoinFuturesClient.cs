@@ -27,11 +27,7 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions Options { get { return (BinanceRestApiClientOptions)base.Options; } }
 
-    internal BinanceRestApiCoinFuturesClient(BinanceRestApiClient root) : this(root, new BinanceRestApiClientOptions())
-    {
-    }
-
-    internal BinanceRestApiCoinFuturesClient(BinanceRestApiClient root, BinanceRestApiClientOptions options) : base("Binance CoinFutures RestApi", options)
+    internal BinanceRestApiCoinFuturesClient(BinanceRestApiClient root) : base("Binance CoinFutures RestApi", root.Options)
     {
         RootClient = root;
 
@@ -39,12 +35,12 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
         RequestBodyFormat = RequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
-        this.Server = new BinanceRestApiCoinFuturesServerClient(root, this);
-        this.Account = new BinanceRestApiCoinFuturesAccountClient(root, this);
-        this.Trading = new BinanceRestApiCoinFuturesTradingClient(root, this);
-        this.MarketData = new BinanceRestApiCoinFuturesMarketDataClient(root, this);
-        this.UserStream = new BinanceRestApiCoinFuturesUserStreamClient(root, this);
-        this.Portfolio = new BinanceRestApiCoinFuturesPortfolioClient(root, this);
+        this.Server = new BinanceRestApiCoinFuturesServerClient(this);
+        this.Account = new BinanceRestApiCoinFuturesAccountClient(this);
+        this.Trading = new BinanceRestApiCoinFuturesTradingClient(this);
+        this.MarketData = new BinanceRestApiCoinFuturesMarketDataClient(this);
+        this.UserStream = new BinanceRestApiCoinFuturesUserStreamClient(this);
+        this.Portfolio = new BinanceRestApiCoinFuturesPortfolioClient(this);
     }
 
     internal void InvokeOrderPlaced(OrderId id)

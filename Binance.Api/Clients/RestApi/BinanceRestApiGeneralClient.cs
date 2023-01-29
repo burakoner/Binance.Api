@@ -37,11 +37,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions Options { get { return (BinanceRestApiClientOptions)base.Options; } }
 
-    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : this(root, new BinanceRestApiClientOptions())
-    {
-    }
-
-    internal BinanceRestApiGeneralClient(BinanceRestApiClient root, BinanceRestApiClientOptions options) : base("Binance RestApi", options)
+    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base("Binance RestApi", root.Options)
     {
         RootClient = root;
 
@@ -49,27 +45,27 @@ public class BinanceRestApiGeneralClient : RestApiClient
         RequestBodyFormat = RequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
-        this.FuturesAlgo = new BinanceRestApiFuturesAlgoClient(root, this);
-        this.FuturesLoan = new BinanceRestApiFuturesLoanClient(root, this);
-        this.FuturesTransfer = new BinanceRestApiFuturesTransferClient(root, this);
+        this.FuturesAlgo = new BinanceRestApiFuturesAlgoClient(this);
+        this.FuturesLoan = new BinanceRestApiFuturesLoanClient(this);
+        this.FuturesTransfer = new BinanceRestApiFuturesTransferClient(this);
 
-        this.SubAccount = new BinanceRestApiSubAccountClient(root, this);
-        this.Brokerage = new BinanceRestApiBrokerageClient(root, this);
-        this.Savings = new BinanceRestApiSavingsClient(root, this);
-        this.Staking = new BinanceRestApiStakingClient(root, this);
-        this.Mining = new BinanceRestApiMiningClient(root, this);
-        this.BLVT = new BinanceRestApiBlvtClient(root, this);
-        this.BSwap = new BinanceRestApiBSwapClient(root, this);
-        this.Fiat = new BinanceRestApiFiatClient(root, this);
-        this.C2C = new BinanceRestApiC2cClient(root, this);
+        this.SubAccount = new BinanceRestApiSubAccountClient(this);
+        this.Brokerage = new BinanceRestApiBrokerageClient(this);
+        this.Savings = new BinanceRestApiSavingsClient(this);
+        this.Staking = new BinanceRestApiStakingClient(this);
+        this.Mining = new BinanceRestApiMiningClient(this);
+        this.BLVT = new BinanceRestApiBlvtClient(this);
+        this.BSwap = new BinanceRestApiBSwapClient(this);
+        this.Fiat = new BinanceRestApiFiatClient(this);
+        this.C2C = new BinanceRestApiC2cClient(this);
 
-        this.CryptoLoans = new BinanceRestApiCryptoLoansClient(root, this);
-        this.GiftCards = new BinanceRestApiGiftCardClient(root, this);
-        this.VipLoans = new BinanceRestApiVipLoansClient(root, this);
-        this.Convert = new BinanceRestApiConvertClient(root, this);
-        this.Rebate = new BinanceRestApiRebateClient(root, this);
-        this.NFT = new BinanceRestApiNftClient(root, this);
-        this.Pay = new BinanceRestApiPayClient(root, this);
+        this.CryptoLoans = new BinanceRestApiCryptoLoansClient(this);
+        this.GiftCards = new BinanceRestApiGiftCardClient(this);
+        this.VipLoans = new BinanceRestApiVipLoansClient(this);
+        this.Convert = new BinanceRestApiConvertClient(this);
+        this.Rebate = new BinanceRestApiRebateClient(this);
+        this.NFT = new BinanceRestApiNftClient(this);
+        this.Pay = new BinanceRestApiPayClient(this);
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)

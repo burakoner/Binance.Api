@@ -19,19 +19,17 @@ public class BinanceRestApiMarginUserStreamClient
     private const string isolatedMarginDeleteListenKeyEndpoint = "userDataStream/isolated";
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiMarginClient MarginClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => MarginClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiMarginClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MarginClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiMarginUserStreamClient(BinanceRestApiClient root, BinanceRestApiMarginClient margin)
+    internal BinanceRestApiMarginUserStreamClient(BinanceRestApiMarginClient main)
     {
-        RootClient = root;
-        MarginClient = margin;
+        MainClient = main;
     }
 
     #region Create a ListenKey (Cross Margin)

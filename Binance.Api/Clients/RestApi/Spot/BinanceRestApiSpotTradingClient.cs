@@ -44,19 +44,17 @@ public class BinanceRestApiSpotTradingClient
     public event Action<OrderId> OnOrderCanceled;
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiSpotClient SpotClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => SpotClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiSpotClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await SpotClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiSpotTradingClient(BinanceRestApiClient root, BinanceRestApiSpotClient spot)
+    internal BinanceRestApiSpotTradingClient(BinanceRestApiSpotClient main)
     {
-        RootClient = root;
-        SpotClient = spot;
+        MainClient = main;
     }
 
     internal void InvokeOrderPlaced(OrderId id)
@@ -81,7 +79,7 @@ public class BinanceRestApiSpotTradingClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        return await SpotClient.PlaceOrderInternal(GetUrl(newTestOrderEndpoint, api, signedVersion),
+        return await MainClient.PlaceOrderInternal(GetUrl(newTestOrderEndpoint, api, signedVersion),
             symbol,
             side,
             type,
@@ -118,7 +116,7 @@ public class BinanceRestApiSpotTradingClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        var result = await SpotClient.PlaceOrderInternal(GetUrl(newOrderEndpoint, api, signedVersion),
+        var result = await MainClient.PlaceOrderInternal(GetUrl(newOrderEndpoint, api, signedVersion),
             symbol,
             side,
             type,
@@ -213,10 +211,10 @@ public class BinanceRestApiSpotTradingClient
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
             throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
 
-        var rulesCheck = await SpotClient.CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await MainClient.CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            SpotClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceReplaceOrderResult>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -252,7 +250,7 @@ public class BinanceRestApiSpotTradingClient
         if (!result && result.OriginalData != null)
         {
             // Attempt to parse the error
-            var jsonData = result.OriginalData.ToJToken(SpotClient.Log);
+            var jsonData = result.OriginalData.ToJToken(MainClient.Log);
             if (jsonData != null)
             {
                 var dataNode = jsonData["data"];
@@ -342,10 +340,10 @@ public class BinanceRestApiSpotTradingClient
     {
         symbol.ValidateBinanceSymbol();
 
-        var rulesCheck = await SpotClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
+        var rulesCheck = await MainClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            SpotClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceOrderOcoList>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 

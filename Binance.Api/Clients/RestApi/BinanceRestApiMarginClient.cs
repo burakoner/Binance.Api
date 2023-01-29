@@ -22,11 +22,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions Options { get { return (BinanceRestApiClientOptions)base.Options; } }
 
-    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : this(root, new BinanceRestApiClientOptions())
-    {
-    }
-
-    internal BinanceRestApiMarginClient(BinanceRestApiClient root, BinanceRestApiClientOptions options) : base("Binance Margin RestApi", options)
+    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base("Binance Margin RestApi", root.Options)
     {
         RootClient = root;
 
@@ -34,12 +30,12 @@ public class BinanceRestApiMarginClient : RestApiClient
         RequestBodyFormat = RequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
-        this.Server = new BinanceRestApiMarginServerClient(root, this);
-        this.Account = new BinanceRestApiSpotAccountClient(root, root.Spot);
-        this.Trading = new BinanceRestApiMarginTradingClient(root, this);
-        this.MarketData = new BinanceRestApiSpotMarketDataClient(root, root.Spot);
-        this.UserStream = new BinanceRestApiMarginUserStreamClient(root, this);
-        this.Portfolio = new BinanceRestApiMarginPortfolioClient(root, this);
+        this.Server = new BinanceRestApiMarginServerClient(this);
+        this.Account = new BinanceRestApiSpotAccountClient(root.Spot);
+        this.Trading = new BinanceRestApiMarginTradingClient(this);
+        this.MarketData = new BinanceRestApiSpotMarketDataClient(root.Spot);
+        this.UserStream = new BinanceRestApiMarginUserStreamClient(this);
+        this.Portfolio = new BinanceRestApiMarginPortfolioClient(this);
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)

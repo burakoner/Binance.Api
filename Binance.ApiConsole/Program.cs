@@ -1,6 +1,7 @@
 ﻿using Binance.Api;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Binance.ApiConsole
@@ -9,9 +10,9 @@ namespace Binance.ApiConsole
     {
         static async Task Main(string[] args)
         {
-            /** /
+            /**/
             var ws = new BinanceStreamClient();
-            await ws.SubscribeToAllMiniTickerUpdatesAsync((data) =>
+            await ws.Spot.MarketData.SubscribeToAllMiniTickerUpdatesAsync((data) =>
             {
                 foreach (var d in data.Data)
                 {

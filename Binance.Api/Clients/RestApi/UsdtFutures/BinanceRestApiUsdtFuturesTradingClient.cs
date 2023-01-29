@@ -23,19 +23,17 @@ public class BinanceRestApiUsdtFuturesTradingClient
     private const string forceOrdersEndpoint = "forceOrders";
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiUsdtFuturesClient UsdtFuturesClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => UsdtFuturesClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiUsdtFuturesClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await UsdtFuturesClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiUsdtFuturesTradingClient(BinanceRestApiClient root, BinanceRestApiUsdtFuturesClient usdt)
+    internal BinanceRestApiUsdtFuturesTradingClient(BinanceRestApiUsdtFuturesClient main)
     {
-        RootClient = root;
-        UsdtFuturesClient = usdt;
+        MainClient = main;
     }
 
     #region New Order
@@ -70,10 +68,10 @@ public class BinanceRestApiUsdtFuturesTradingClient
         if (orderResponseType == OrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
-        var rulesCheck = await UsdtFuturesClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await MainClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            UsdtFuturesClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceFuturesPlacedOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -105,7 +103,7 @@ public class BinanceRestApiUsdtFuturesTradingClient
         var result = await SendRequestInternal<BinanceFuturesPlacedOrder>(GetUrl(newOrderEndpoint, api, "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (result)
         {
-            UsdtFuturesClient.InvokeOrderPlaced(new OrderId
+            MainClient.InvokeOrderPlaced(new OrderId
             {
                 SourceObject = result.Data,
                 Id = result.Data.Id.ToString(CultureInfo.InvariantCulture)
@@ -125,10 +123,10 @@ public class BinanceRestApiUsdtFuturesTradingClient
         {
             foreach (var order in orders)
             {
-                var rulesCheck = await UsdtFuturesClient.CheckTradeRules(order.Symbol, order.Quantity, null, order.Price, order.StopPrice, order.Type, ct).ConfigureAwait(false);
+                var rulesCheck = await MainClient.CheckTradeRules(order.Symbol, order.Quantity, null, order.Price, order.StopPrice, order.Type, ct).ConfigureAwait(false);
                 if (!rulesCheck.Passed)
                 {
-                    UsdtFuturesClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+                    MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
                     return new RestCallResult<IEnumerable<CallResult<BinanceFuturesPlacedOrder>>>(new ArgumentError(rulesCheck.ErrorMessage!));
                 }
 
@@ -221,7 +219,7 @@ public class BinanceRestApiUsdtFuturesTradingClient
 
         if (result)
         {
-            UsdtFuturesClient.InvokeOrderCanceled(new OrderId
+            MainClient.InvokeOrderCanceled(new OrderId
             {
                 SourceObject = result.Data,
                 Id = result.Data.Id.ToString(CultureInfo.InvariantCulture)

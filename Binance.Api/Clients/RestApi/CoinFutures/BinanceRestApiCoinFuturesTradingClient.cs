@@ -25,19 +25,17 @@ public class BinanceRestApiCoinFuturesTradingClient
     private const string forceOrdersEndpoint = "forceOrders";
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiCoinFuturesClient CoinFuturesClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => CoinFuturesClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiCoinFuturesClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await CoinFuturesClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiCoinFuturesTradingClient(BinanceRestApiClient root, BinanceRestApiCoinFuturesClient coin)
+    internal BinanceRestApiCoinFuturesTradingClient(BinanceRestApiCoinFuturesClient main)
     {
-        RootClient = root;
-        CoinFuturesClient = coin;
+        MainClient = main;
     }
 
     #region New Order
@@ -72,10 +70,10 @@ public class BinanceRestApiCoinFuturesTradingClient
         if (orderResponseType == OrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
-        var rulesCheck = await CoinFuturesClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await MainClient.CheckTradeRules(symbol, quantity, null, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            CoinFuturesClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceFuturesPlacedOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -106,7 +104,7 @@ public class BinanceRestApiCoinFuturesTradingClient
 
         var result = await SendRequestInternal<BinanceFuturesPlacedOrder>(GetUrl(newOrderEndpoint, api, "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         if (result)
-            CoinFuturesClient.InvokeOrderPlaced(new OrderId { SourceObject = result.Data, Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
+            MainClient.InvokeOrderPlaced(new OrderId { SourceObject = result.Data, Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
         return result;
     }
     #endregion
@@ -124,10 +122,10 @@ public class BinanceRestApiCoinFuturesTradingClient
         {
             foreach (var order in orders)
             {
-                var rulesCheck = await CoinFuturesClient.CheckTradeRules(order.Symbol, order.Quantity, null, order.Price, order.StopPrice, order.Type, ct).ConfigureAwait(false);
+                var rulesCheck = await MainClient.CheckTradeRules(order.Symbol, order.Quantity, null, order.Price, order.StopPrice, order.Type, ct).ConfigureAwait(false);
                 if (!rulesCheck.Passed)
                 {
-                    CoinFuturesClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+                    MainClient.Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
                     return new RestCallResult<IEnumerable<CallResult<BinanceFuturesPlacedOrder>>>(new ArgumentError(rulesCheck.ErrorMessage!));
                 }
 
@@ -219,7 +217,7 @@ public class BinanceRestApiCoinFuturesTradingClient
 
         var result = await SendRequestInternal<BinanceFuturesCancelOrder>(GetUrl(cancelOrderEndpoint, api, "1"), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
         if (result)
-            CoinFuturesClient.InvokeOrderCanceled(new OrderId { SourceObject = result.Data, Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
+            MainClient.InvokeOrderCanceled(new OrderId { SourceObject = result.Data, Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
         return result;
     }
     #endregion

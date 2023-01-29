@@ -1,8 +1,5 @@
 ﻿namespace Binance.Api
 {
-    /// <summary>
-    /// Api addresses
-    /// </summary>
     public class BinanceApiAddresses
     {
         /// <summary>

@@ -16,19 +16,17 @@ public class BinanceRestApiFuturesAlgoClient
     private string _spotBaseAddress = "";
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiGeneralClient GeneralClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => GeneralClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiGeneralClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await GeneralClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiFuturesAlgoClient(BinanceRestApiClient root, BinanceRestApiGeneralClient general)
+    internal BinanceRestApiFuturesAlgoClient(BinanceRestApiGeneralClient main)
     {
-        RootClient = root;
-        GeneralClient = general;
+        MainClient = main;
 
         _spotBaseAddress = Options.SpotOptions.BaseAddress;
     }

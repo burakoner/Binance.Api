@@ -16,19 +16,17 @@ public class BinanceRestApiUsdtFuturesServerClient
     private const string exchangeInfoEndpoint = "exchangeInfo";
 
     // Internal References
-    internal BinanceRestApiClient RootClient { get; }
-    internal BinanceRestApiUsdtFuturesClient UsdtFuturesClient { get; }
-    internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
-    internal Uri GetUrl(string endpoint, string api, string version = null) => UsdtFuturesClient.GetUrl(endpoint, api, version);
+    internal BinanceRestApiUsdtFuturesClient MainClient { get; }
+    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
     HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await UsdtFuturesClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
-    internal BinanceRestApiUsdtFuturesServerClient(BinanceRestApiClient root, BinanceRestApiUsdtFuturesClient usdt)
+    internal BinanceRestApiUsdtFuturesServerClient(BinanceRestApiUsdtFuturesClient main)
     {
-        RootClient = root;
-        UsdtFuturesClient = usdt;
+        MainClient = main;
     }
 
     #region Test Connectivity
@@ -57,9 +55,9 @@ public class BinanceRestApiUsdtFuturesServerClient
         if (!exchangeInfoResult)
             return exchangeInfoResult;
 
-        UsdtFuturesClient.ExchangeInfo = exchangeInfoResult.Data;
-        UsdtFuturesClient.LastExchangeInfoUpdate = DateTime.UtcNow;
-        UsdtFuturesClient.Log.Write(LogLevel.Information, "Trade rules updated");
+        MainClient.ExchangeInfo = exchangeInfoResult.Data;
+        MainClient.LastExchangeInfoUpdate = DateTime.UtcNow;
+        MainClient.Log.Write(LogLevel.Information, "Trade rules updated");
         return exchangeInfoResult;
     }
     #endregion
