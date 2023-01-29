@@ -1,17 +1,4 @@
-﻿/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-namespace Binance.ApiClient.Models.RestApi.Brokerage.SubAccountData;
-After:
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models;
-using Binance.ApiClient.Models.RestApi;
-using Binance.ApiClient.Models.RestApi.Brokerage;
-using Binance.ApiClient.Models.RestApi.Brokerage;
-using Binance.ApiClient.Models.RestApi.Brokerage.SubAccountData;
-*/
-
-namespace Binance.ApiClient.Models.RestApi.Brokerage;
+﻿namespace Binance.Api.Models.RestApi.Brokerage;
 
 /// <summary>
 /// IP Restriction

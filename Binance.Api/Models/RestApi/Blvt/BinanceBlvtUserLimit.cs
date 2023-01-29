@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Blvt;
+﻿namespace Binance.Api.Models.RestApi.Blvt;
 
 /// <summary>
 /// Leveraged tokens user limits

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.UserDataStream;
+﻿namespace Binance.Api.Models.RestApi.UserDataStream;
 
 internal class BinanceListenKey
 {

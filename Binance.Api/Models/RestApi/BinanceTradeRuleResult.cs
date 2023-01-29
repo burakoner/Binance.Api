@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi;
+﻿namespace Binance.Api.Models.RestApi;
 
 internal class BinanceTradeRuleResult
 {

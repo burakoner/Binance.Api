@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount
 {
     /// <summary>
     /// Sub account futures details

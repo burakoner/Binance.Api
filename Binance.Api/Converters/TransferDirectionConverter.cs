@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class TransferDirectionConverter: BaseConverter<TransferDirection>
+    internal class TransferDirectionConverter : BaseConverter<TransferDirection>
     {
-        public TransferDirectionConverter(): this(true) { }
+        public TransferDirectionConverter() : this(true) { }
         public TransferDirectionConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<TransferDirection, string>> Mapping => new List<KeyValuePair<TransferDirection, string>>

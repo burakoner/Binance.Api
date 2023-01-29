@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Enums
+﻿namespace Binance.Api.Enums
 {
     /// <summary>
     /// Add/Remove liquidity type

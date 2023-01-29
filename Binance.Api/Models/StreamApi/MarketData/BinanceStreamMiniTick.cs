@@ -1,24 +1,4 @@
-﻿using Binance.ApiClient.Interfaces;
-using Binance.ApiClient.Models.StreamApi;
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.Spot.Socket
-After:
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.zzz.Spot.Socket;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models.Spot;
-using Binance.ApiClient.Models.Spot.Socket;
-
-namespace Binance.ApiClient.Models.Spot.Socket
-*/
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// MiniTick info

@@ -1,4 +1,4 @@
-namespace Binance.ApiClient.Models.RestApi.Futures;
+namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// The result of cancel all orders

@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class DepositStatusConverter: BaseConverter<DepositStatus>
+    internal class DepositStatusConverter : BaseConverter<DepositStatus>
     {
-        public DepositStatusConverter(): this(true) { }
+        public DepositStatusConverter() : this(true) { }
         public DepositStatusConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<DepositStatus, string>> Mapping => new List<KeyValuePair<DepositStatus, string>>

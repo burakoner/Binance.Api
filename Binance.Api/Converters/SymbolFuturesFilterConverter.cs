@@ -1,11 +1,6 @@
-﻿using Binance.ApiClient.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Diagnostics;
-using Binance.ApiClient.Models.RestApi.Futures;
+﻿using Binance.Api.Models.RestApi.Futures;
 
-namespace Binance.ApiClient.Converters
+namespace Binance.Api.Converters
 {
     internal class SymbolFuturesFilterConverter : JsonConverter
     {
@@ -17,7 +12,6 @@ namespace Binance.ApiClient.Converters
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
-#pragma warning disable 8604, 8602
             var type = new SymbolFilterTypeConverter(false).ReadString(obj["filterType"].ToString());
             BinanceFuturesSymbolFilter result;
             switch (type)
@@ -77,7 +71,6 @@ namespace Binance.ApiClient.Converters
                     result = new BinanceFuturesSymbolFilter();
                     break;
             }
-#pragma warning restore 8604
             result.FilterType = type;
             return result;
         }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Binance.ApiClient.Models.RestApi.Margin;
-using Newtonsoft.Json;
+﻿using Binance.Api.Models.RestApi.Margin;
 
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+namespace Binance.Api.Models.RestApi.SubAccount
 {
     /// <summary>
     /// Sub account margin trade details

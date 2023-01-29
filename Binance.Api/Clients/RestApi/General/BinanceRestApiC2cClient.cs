@@ -1,7 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi;
-using Binance.ApiClient.Models.RestApi.C2C;
+﻿using Binance.Api.Models.RestApi.C2C;
 
-namespace Binance.ApiClient.Clients.RestApi.General;
+namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiC2cClient
 {

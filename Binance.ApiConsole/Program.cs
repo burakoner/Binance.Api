@@ -1,4 +1,4 @@
-﻿using Binance.ApiClient;
+﻿using Binance.Api;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;

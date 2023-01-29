@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Compressed aggregated trade information. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
@@ -26,7 +24,7 @@ namespace Binance.ApiClient.Interfaces
         /// <summary>
         /// The last trade id in this aggregation
         /// </summary>
-         long LastTradeId { get; set; }
+        long LastTradeId { get; set; }
         /// <summary>
         /// The timestamp of the trades
         /// </summary>

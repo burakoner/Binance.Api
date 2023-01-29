@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.PortfolioMargin;
+﻿namespace Binance.Api.Models.RestApi.PortfolioMargin;
 
 /// <summary>
 /// Portfolio margin collateral rate info

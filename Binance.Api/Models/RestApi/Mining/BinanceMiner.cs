@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Mining;
+﻿namespace Binance.Api.Models.RestApi.Mining;
 
 /// <summary>
 /// Miner list

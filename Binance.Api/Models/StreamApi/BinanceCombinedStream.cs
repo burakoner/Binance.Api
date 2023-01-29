@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.StreamApi;
+﻿namespace Binance.Api.Models.StreamApi;
 
 /// <summary>
 /// Represents the binance result for combined data on a single socket connection

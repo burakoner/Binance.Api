@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Fiat;
+﻿namespace Binance.Api.Models.RestApi.Fiat;
 
 /// <summary>
 /// Fiat payment info

@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.StreamApi;
-
-namespace Binance.ApiClient.Models.RestApi.Blvt;
+﻿namespace Binance.Api.Models.RestApi.Blvt;
 
 /// <summary>
 /// Blvt info update

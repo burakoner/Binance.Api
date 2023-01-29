@@ -1,5 +1,5 @@
 ﻿
-namespace Binance.ApiClient.Enums
+namespace Binance.Api.Enums
 {
     /// <summary>
     /// Margin level status

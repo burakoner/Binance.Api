@@ -1,8 +1,4 @@
-﻿using System;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount
 {
     /// <summary>
     /// Sub-account Status on Margin/Futures

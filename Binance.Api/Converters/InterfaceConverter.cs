@@ -1,9 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class InterfaceConverter<TImp>: JsonConverter
+    internal class InterfaceConverter<TImp> : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

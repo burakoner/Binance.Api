@@ -1,9 +1,4 @@
-﻿using ApiSharp.Converters;
-using Binance.ApiClient.Models.StreamApi;
-using Newtonsoft.Json;
-using System;
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// Rolling window tick info

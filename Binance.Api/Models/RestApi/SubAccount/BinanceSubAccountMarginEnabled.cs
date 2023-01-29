@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount
 {
     /// <summary>
     /// Sub account margin trading enabled

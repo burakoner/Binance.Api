@@ -1,9 +1,4 @@
-﻿using System;
-using ApiSharp.Converters;
-using Binance.ApiClient.Models.StreamApi;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// Update when asset is withdrawn/deposited 

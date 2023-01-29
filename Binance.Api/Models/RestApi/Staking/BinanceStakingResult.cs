@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Staking;
+﻿namespace Binance.Api.Models.RestApi.Staking;
 
 /// <summary>
 /// Staking result

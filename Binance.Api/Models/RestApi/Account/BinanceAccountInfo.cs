@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Account;
+﻿namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Information about an account

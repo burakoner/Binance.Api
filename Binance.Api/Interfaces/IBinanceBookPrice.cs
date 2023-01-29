@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Book tick

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Futures;
+﻿namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Result of the requested margin amount change

@@ -1,10 +1,4 @@
-﻿using Binance.ApiClient.Enums;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class BrokerageAccountTypeConverter : JsonConverter
     {

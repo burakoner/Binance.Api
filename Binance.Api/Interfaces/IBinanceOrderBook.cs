@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi.MarketData;
-
-namespace Binance.ApiClient.Interfaces;
+﻿namespace Binance.Api.Interfaces;
 
 /// <summary>
 /// The order book for a asset

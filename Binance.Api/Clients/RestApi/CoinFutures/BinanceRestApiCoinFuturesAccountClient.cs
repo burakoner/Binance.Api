@@ -1,7 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi;
-using Binance.ApiClient.Models.RestApi.Futures;
+﻿using Binance.Api.Models.RestApi.Futures;
 
-namespace Binance.ApiClient.Clients.RestApi.CoinFutures;
+namespace Binance.Api.Clients.RestApi.CoinFutures;
 
 public class BinanceRestApiCoinFuturesAccountClient
 {

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Enums
+﻿namespace Binance.Api.Enums
 {
     /// <summary>
     /// The time the order will be active for

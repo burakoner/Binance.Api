@@ -1,46 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.Spot.SubAccountData
-After:
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.zzz.Spot.SubAccountData;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models;
-using Binance.ApiClient.Models.Spot;
-using Binance.ApiClient.Models.Spot.SubAccountData;
-
-namespace Binance.ApiClient.Models.Spot.SubAccountData
-*/
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.zzz.Spot.SubAccountData
-After:
-using Newtonsoft.Json;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models;
-using Binance.ApiClient.Models.zzz;
-using Binance.ApiClient.Models.zzz.Spot;
-using Binance.ApiClient.Models.zzz.Spot.SubAccountData;
-using Binance.ApiClient.Models.RestApi.SubAccount;
-
-namespace Binance.ApiClient.Models.RestApi.SubAccount
-*/
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount
 {
     internal class BinanceSubAccountUniversalTransfersList
     {

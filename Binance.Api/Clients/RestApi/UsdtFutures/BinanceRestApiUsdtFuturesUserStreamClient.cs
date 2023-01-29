@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.UserDataStream;
+﻿using Binance.Api.Models.RestApi.UserDataStream;
 
-namespace Binance.ApiClient.Clients.RestApi.UsdtFutures;
+namespace Binance.Api.Clients.RestApi.UsdtFutures;
 
 public class BinanceRestApiUsdtFuturesUserStreamClient
 {

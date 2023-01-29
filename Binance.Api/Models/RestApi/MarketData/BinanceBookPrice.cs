@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
 /// Information about the best price/quantity available for a symbol

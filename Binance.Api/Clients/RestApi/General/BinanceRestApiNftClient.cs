@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Clients.RestApi.General;
+﻿namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiNftClient
 {

@@ -1,7 +1,4 @@
-﻿using Binance.ApiClient.Enums;
-using System;
-
-namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Forced liquidation info

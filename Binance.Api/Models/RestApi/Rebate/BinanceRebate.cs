@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Rebate;
+﻿namespace Binance.Api.Models.RestApi.Rebate;
 
 /// <summary>
 /// Rebates page wrapper

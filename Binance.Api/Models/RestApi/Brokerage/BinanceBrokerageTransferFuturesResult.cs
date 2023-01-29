@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Brokerage;
+﻿namespace Binance.Api.Models.RestApi.Brokerage;
 
 /// <summary>
 /// Transfer Futures Result

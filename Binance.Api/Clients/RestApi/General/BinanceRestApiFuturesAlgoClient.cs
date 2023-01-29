@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.FuturesAlgoOrders;
+﻿using Binance.Api.Models.RestApi.FuturesAlgoOrders;
 
-namespace Binance.ApiClient.Clients.RestApi.General;
+namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiFuturesAlgoClient
 {

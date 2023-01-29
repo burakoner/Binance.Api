@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class FuturesTransferTypeConverter: BaseConverter<FuturesTransferType>
+    internal class FuturesTransferTypeConverter : BaseConverter<FuturesTransferType>
     {
         public FuturesTransferTypeConverter() : this(true) { }
         public FuturesTransferTypeConverter(bool quotes) : base(quotes) { }

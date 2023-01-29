@@ -1,7 +1,4 @@
-﻿using Binance.ApiClient.Models.StreamApi;
-using Binance.ApiClient.Models.StreamApi.MarketData;
-
-namespace Binance.ApiClient;
+﻿namespace Binance.Api;
 
 public class BinanceStreamClient : StreamApiClient
 {

@@ -1,7 +1,4 @@
-﻿using Binance.ApiClient.Models.StreamApi;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+﻿namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// Index price update

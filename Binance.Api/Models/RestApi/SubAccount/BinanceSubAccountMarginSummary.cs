@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount
 {
     /// <summary>
     /// Sub accounts margin summary

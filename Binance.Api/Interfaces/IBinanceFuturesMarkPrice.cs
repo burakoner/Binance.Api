@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Mark Price and Funding Rate

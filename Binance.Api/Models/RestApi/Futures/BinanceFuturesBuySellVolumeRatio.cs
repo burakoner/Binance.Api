@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Futures;
+﻿namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Buy Sell Volume Ratio Info

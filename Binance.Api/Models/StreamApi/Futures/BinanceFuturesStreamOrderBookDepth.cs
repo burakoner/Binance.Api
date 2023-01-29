@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Binance.ApiClient.Interfaces;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.RestApi.MarketData;
-using Binance.ApiClient.Models.StreamApi;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+﻿namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// The order book for a asset

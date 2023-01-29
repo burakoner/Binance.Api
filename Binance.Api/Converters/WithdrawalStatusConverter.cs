@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class WithdrawalStatusConverter : BaseConverter<WithdrawalStatus>
     {

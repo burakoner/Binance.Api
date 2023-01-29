@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.Brokerage;
+﻿using Binance.Api.Models.RestApi.Brokerage;
 
-namespace Binance.ApiClient.Clients.RestApi.General;
+namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiBrokerageClient
 {

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Account;
+﻿namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Result of placing a withdrawal

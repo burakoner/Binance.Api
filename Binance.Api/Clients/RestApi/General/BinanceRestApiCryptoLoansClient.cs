@@ -1,7 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi;
-using Binance.ApiClient.Models.RestApi.CryptoLoans;
+﻿using Binance.Api.Models.RestApi.CryptoLoans;
 
-namespace Binance.ApiClient.Clients.RestApi.General;
+namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiCryptoLoansClient
 {

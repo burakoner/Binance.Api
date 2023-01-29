@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Clients.RestApi.CoinFutures;
+﻿namespace Binance.Api.Clients.RestApi.CoinFutures;
 
 public class BinanceRestApiCoinFuturesPortfolioClient
 {

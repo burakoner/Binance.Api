@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class FuturesOrderTypeConverter : JsonConverter
     {

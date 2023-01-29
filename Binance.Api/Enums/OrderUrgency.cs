@@ -1,6 +1,4 @@
-﻿using ApiSharp.Attributes;
-
-namespace Binance.ApiClient.Enums
+﻿namespace Binance.Api.Enums
 {
     /// <summary>
     /// Order urgency

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Price statistics of the last 24 hours

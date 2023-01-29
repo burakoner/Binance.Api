@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi.MarketData;
-
-namespace Binance.ApiClient.Models.RestApi.Futures;
+﻿namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Price statistics of the last 24 hours

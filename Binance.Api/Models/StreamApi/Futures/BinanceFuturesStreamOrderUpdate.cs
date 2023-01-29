@@ -1,27 +1,4 @@
-using System;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.Futures.Socket
-After:
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.zzz.Futures.Socket;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models.Futures;
-using Binance.ApiClient.Models.Futures.Socket;
-
-namespace Binance.ApiClient.Models.Futures.Socket
-*/
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.StreamApi;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// Order update

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Pay;
+﻿namespace Binance.Api.Models.RestApi.Pay;
 
 /// <summary>
 /// Binance pay trade

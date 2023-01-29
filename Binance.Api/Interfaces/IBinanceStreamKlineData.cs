@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Stream kline data
@@ -21,7 +19,7 @@ namespace Binance.ApiClient.Interfaces
     /// <summary>
     /// Stream kline data
     /// </summary>
-    public interface IBinanceStreamKline: IBinanceKline
+    public interface IBinanceStreamKline : IBinanceKline
     {
         /// <summary>
         /// Interval

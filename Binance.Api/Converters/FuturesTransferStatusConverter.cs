@@ -1,8 +1,4 @@
-﻿using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-using System.Collections.Generic;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class FuturesTransferStatusConverter : BaseConverter<FuturesTransferStatus>
     {

@@ -1,9 +1,4 @@
-﻿using ApiSharp.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Binance.ApiClient.Enums
+﻿namespace Binance.Api.Enums
 {
     /// <summary>
     /// Download status

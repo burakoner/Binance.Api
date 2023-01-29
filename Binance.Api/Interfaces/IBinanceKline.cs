@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Kline data
@@ -11,7 +9,7 @@ namespace Binance.ApiClient.Interfaces
         /// The time this candlestick opened
         /// </summary>
         DateTime OpenTime { get; set; }
-        
+
         /// <summary>
         /// The price at which this candlestick opened
         /// </summary>

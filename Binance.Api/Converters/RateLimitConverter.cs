@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class RateLimitConverter: BaseConverter<RateLimitType>
+    internal class RateLimitConverter : BaseConverter<RateLimitType>
     {
         public RateLimitConverter() : this(true) { }
         public RateLimitConverter(bool quotes) : base(quotes) { }

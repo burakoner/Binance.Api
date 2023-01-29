@@ -1,10 +1,4 @@
-﻿using System;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.C2C
+﻿namespace Binance.Api.Models.RestApi.C2C
 {
     /// <summary>
     /// C2C user trade

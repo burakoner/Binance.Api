@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.CryptoLoans;
+﻿namespace Binance.Api.Models.RestApi.CryptoLoans;
 
 /// <summary>
 /// Ltv adjustment info

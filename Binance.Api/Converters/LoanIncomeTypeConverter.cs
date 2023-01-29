@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class LoanIncomeTypeConverter : BaseConverter<LoanIncomeType>
     {
-        public LoanIncomeTypeConverter(): this(true) { }
+        public LoanIncomeTypeConverter() : this(true) { }
         public LoanIncomeTypeConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<LoanIncomeType, string>> Mapping => new List<KeyValuePair<LoanIncomeType, string>>

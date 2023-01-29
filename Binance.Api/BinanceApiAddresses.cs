@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.zzz
+﻿namespace Binance.Api
 {
     /// <summary>
     /// Api addresses
@@ -8,12 +8,12 @@
         /// <summary>
         /// The address used by the BinanceClient for the Spot API
         /// </summary>
-        public string RestClientAddress { get; set; } = "";
+        public string RestClientAddress { get; set; }
 
         /// <summary>
         /// The address used by the BinanceSocketClient for the Spot API
         /// </summary>
-        public string SocketClientAddress { get; set; } = "";
+        public string SocketClientAddress { get; set; }
 
         /// <summary>
         /// The address used by the BinanceSocketClient for connecting to the BLVT streams

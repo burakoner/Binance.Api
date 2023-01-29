@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Helpers;
+﻿namespace Binance.Api.Helpers;
 
 /// <summary>
 /// Helper methods for the Binance API

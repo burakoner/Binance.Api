@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Clients.RestApi.UsdtFutures;
+﻿namespace Binance.Api.Clients.RestApi.UsdtFutures;
 
 public class BinanceRestApiUsdtFuturesPortfolioClient
 {

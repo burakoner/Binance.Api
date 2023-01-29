@@ -1,7 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi;
-using Binance.ApiClient.Models.RestApi.Server;
+﻿using Binance.Api.Models.RestApi.Server;
 
-namespace Binance.ApiClient.Clients.RestApi.Margin;
+namespace Binance.Api.Clients.RestApi.Margin;
 
 public class BinanceRestApiMarginServerClient
 {
@@ -21,8 +20,8 @@ public class BinanceRestApiMarginServerClient
     internal BinanceRestApiClientOptions Options { get => RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MarginClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false, 
-    HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class 
+    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
+    HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
         => await MarginClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
     internal BinanceRestApiMarginServerClient(BinanceRestApiClient root, BinanceRestApiMarginClient margin)

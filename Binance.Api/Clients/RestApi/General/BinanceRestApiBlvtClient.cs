@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.Blvt;
+﻿using Binance.Api.Models.RestApi.Blvt;
 
-namespace Binance.ApiClient.Clients.RestApi.General;
+namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiBlvtClient
 {

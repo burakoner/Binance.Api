@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi;
-
-namespace Binance.ApiClient.Clients.RestApi;
+﻿namespace Binance.Api.Clients.RestApi;
 
 public class BinanceRestApiSpotClient : RestApiClient
 {

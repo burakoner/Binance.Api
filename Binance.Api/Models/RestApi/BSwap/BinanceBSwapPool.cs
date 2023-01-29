@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.BSwap;
+﻿namespace Binance.Api.Models.RestApi.BSwap;
 
 /// <summary>
 /// Swap pool info

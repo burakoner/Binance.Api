@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class OrderStatusConverter : BaseConverter<OrderStatus>
     {
-        public OrderStatusConverter(): this(true) { }
+        public OrderStatusConverter() : this(true) { }
         public OrderStatusConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<OrderStatus, string>> Mapping => new List<KeyValuePair<OrderStatus, string>>

@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class ExecutionTypeConverter: BaseConverter<ExecutionType>
+    internal class ExecutionTypeConverter : BaseConverter<ExecutionType>
     {
-        public ExecutionTypeConverter(): this(true) { }
+        public ExecutionTypeConverter() : this(true) { }
         public ExecutionTypeConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<ExecutionType, string>> Mapping => new List<KeyValuePair<ExecutionType, string>>

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Savings;
+﻿namespace Binance.Api.Models.RestApi.Savings;
 
 /// <summary>
 /// Binance project info

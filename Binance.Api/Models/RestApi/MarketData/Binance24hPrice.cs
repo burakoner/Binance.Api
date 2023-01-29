@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
 /// Price statistics of the last 24 hours

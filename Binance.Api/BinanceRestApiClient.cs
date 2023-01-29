@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient;
+﻿namespace Binance.Api;
 
 public sealed class BinanceRestApiClient
 {
@@ -43,13 +43,13 @@ public sealed class BinanceRestApiClient
 
     public BinanceRestApiClient(BinanceRestApiClientOptions options)
     {
-        this.Options = options;
+        Options = options;
 
-        this.Spot = new BinanceRestApiSpotClient(this, options);
-        this.Margin = new BinanceRestApiMarginClient(this, options);
-        this.GeneralApi = new BinanceRestApiGeneralClient(this, options);
-        this.CoinFutures = new BinanceRestApiCoinFuturesClient(this, options);
-        this.UsdtFutures = new BinanceRestApiUsdtFuturesClient(this, options);
+        Spot = new BinanceRestApiSpotClient(this, options);
+        Margin = new BinanceRestApiMarginClient(this, options);
+        GeneralApi = new BinanceRestApiGeneralClient(this, options);
+        CoinFutures = new BinanceRestApiCoinFuturesClient(this, options);
+        UsdtFutures = new BinanceRestApiUsdtFuturesClient(this, options);
 
         // this.FuturesAccount = new BinanceRestApiFuturesAccountClient(this, options);
         // this.FuturesAlgo = new BinanceRestApiFuturesAlgoClient(this, options);

@@ -1,10 +1,4 @@
-﻿using System;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount
 {
     /// <summary>
     /// Information about a deposit

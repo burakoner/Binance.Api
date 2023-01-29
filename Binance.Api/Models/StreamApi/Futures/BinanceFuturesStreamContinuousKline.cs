@@ -1,11 +1,4 @@
-﻿using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using Binance.ApiClient.Interfaces;
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.StreamApi;
-using Binance.ApiClient.Models.StreamApi.MarketData;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+﻿namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// Wrapper for continuous kline information for a symbol

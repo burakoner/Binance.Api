@@ -1,11 +1,4 @@
-﻿using System;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.StreamApi;
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// Update data about an order

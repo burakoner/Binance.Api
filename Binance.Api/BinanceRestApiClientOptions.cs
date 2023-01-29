@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient;
+﻿namespace Binance.Api;
 
 public class BinanceRestApiClientOptions : RestApiClientOptions
 {
@@ -48,7 +48,7 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
 
 public class BinanceRestApiSpotClientOptions
 {
-        // Base Address
+    // Base Address
     public string BaseAddress { get; set; }
 
     // Trade Rules

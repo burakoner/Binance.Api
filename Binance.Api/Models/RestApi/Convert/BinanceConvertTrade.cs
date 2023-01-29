@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Convert;
+﻿namespace Binance.Api.Models.RestApi.Convert;
 
 /// <summary>
 /// Convert trade info

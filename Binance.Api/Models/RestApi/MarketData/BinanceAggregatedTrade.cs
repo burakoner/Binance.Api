@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
 /// Compressed aggregated trade information. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.

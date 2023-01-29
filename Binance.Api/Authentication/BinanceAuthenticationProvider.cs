@@ -1,6 +1,4 @@
-﻿using ApiSharp.Enums;
-
-namespace Binance.ApiClient.Authentication;
+﻿namespace Binance.Api.Authentication;
 
 internal class BinanceAuthenticationProvider : AuthenticationProvider
 {

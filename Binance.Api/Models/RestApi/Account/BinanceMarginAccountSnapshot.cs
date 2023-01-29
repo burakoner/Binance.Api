@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.Margin;
+﻿using Binance.Api.Models.RestApi.Margin;
 
-namespace Binance.ApiClient.Models.RestApi.Account;
+namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Margin account snapshot

@@ -1,7 +1,4 @@
-﻿using Binance.ApiClient.Interfaces;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// Book tick

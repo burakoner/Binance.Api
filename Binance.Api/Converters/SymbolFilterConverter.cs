@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class SymbolFilterConverter : JsonConverter
     {

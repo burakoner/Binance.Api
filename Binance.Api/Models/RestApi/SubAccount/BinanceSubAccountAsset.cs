@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.Account;
+﻿using Binance.Api.Models.RestApi.Account;
 
-namespace Binance.ApiClient.Models.RestApi.SubAccount
+namespace Binance.Api.Models.RestApi.SubAccount
 {
     internal class BinanceSubAccountAsset
     {

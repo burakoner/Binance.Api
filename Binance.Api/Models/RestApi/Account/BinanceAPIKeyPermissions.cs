@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Account;
+﻿namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Permissions of the current API key

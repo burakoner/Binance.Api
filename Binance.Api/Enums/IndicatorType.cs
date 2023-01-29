@@ -1,7 +1,4 @@
-﻿using Binance.ApiClient.Converters;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Enums
+﻿namespace Binance.Api.Enums
 {
     /// <summary>
     /// Types of indicators

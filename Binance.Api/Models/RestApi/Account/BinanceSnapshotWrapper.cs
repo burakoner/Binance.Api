@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Account;
+﻿namespace Binance.Api.Models.RestApi.Account;
 
 internal class BinanceSnapshotWrapper<T>
 {

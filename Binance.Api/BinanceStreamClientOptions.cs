@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient;
+﻿namespace Binance.Api;
 
 public class BinanceStreamClientOptions : StreamApiClientOptions
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Binance.ApiClient.Models.StreamApi;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+﻿namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// Composite index info

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Server;
+﻿namespace Binance.Api.Models.RestApi.Server;
 
 /// <summary>
 /// The status of Binance

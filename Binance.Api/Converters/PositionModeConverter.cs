@@ -1,8 +1,4 @@
-﻿using Binance.ApiClient.Enums;
-using Newtonsoft.Json;
-using System;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class PositionModeConverter : JsonConverter
     {

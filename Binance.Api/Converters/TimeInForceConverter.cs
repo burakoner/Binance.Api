@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class TimeInForceConverter : BaseConverter<TimeInForce>
     {
-        public TimeInForceConverter(): this(true) { }
+        public TimeInForceConverter() : this(true) { }
         public TimeInForceConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<TimeInForce, string>> Mapping => new List<KeyValuePair<TimeInForce, string>>

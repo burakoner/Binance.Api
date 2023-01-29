@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.FuturesAlgoOrders;
+﻿namespace Binance.Api.Models.RestApi.FuturesAlgoOrders;
 
 /// <summary>
 /// Algo orders

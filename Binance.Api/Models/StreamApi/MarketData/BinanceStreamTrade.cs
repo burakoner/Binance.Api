@@ -1,10 +1,4 @@
-﻿using System;
-using Binance.ApiClient.Interfaces;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.StreamApi;
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// Aggregated information about trades for a symbol

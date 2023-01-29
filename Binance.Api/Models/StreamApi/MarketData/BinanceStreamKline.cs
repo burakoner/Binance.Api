@@ -1,40 +1,4 @@
-﻿using System;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using Binance.ApiClient.Interfaces;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.RestApi.MarketData;
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Binance.ApiClient.Models.StreamApi;
-After:
-using Binance.ApiClient.Models.StreamApi;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models;
-using Binance.ApiClient.Models.zzz;
-using Binance.ApiClient.Models.zzz.Spot;
-using Binance.ApiClient.Models.zzz.Spot.Socket;
-using Binance.ApiClient.Models.StreamApi.MarketData;
-*/
-using Binance.ApiClient.Models.StreamApi;
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Binance.ApiClient.Models.zzz;
-After:
-using Binance.ApiClient.Models.zzz;
-using Binance.ApiClient.Models.zzz.Spot.Socket;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models;
-using Binance.ApiClient.Models.Spot;
-using Binance.ApiClient.Models.Spot.Socket;
-*/
-
-namespace Binance.ApiClient.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData
 {
     /// <summary>
     /// Wrapper for kline information for a symbol

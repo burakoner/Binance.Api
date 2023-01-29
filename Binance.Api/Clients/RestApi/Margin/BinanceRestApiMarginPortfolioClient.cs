@@ -1,7 +1,7 @@
-﻿using Binance.ApiClient.Models.RestApi.Account;
-using Binance.ApiClient.Models.RestApi.PortfolioMargin;
+﻿using Binance.Api.Models.RestApi.Account;
+using Binance.Api.Models.RestApi.PortfolioMargin;
 
-namespace Binance.ApiClient.Clients.RestApi.Margin;
+namespace Binance.Api.Clients.RestApi.Margin;
 
 public class BinanceRestApiMarginPortfolioClient
 {

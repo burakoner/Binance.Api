@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.UserDataStream;
+﻿using Binance.Api.Models.RestApi.UserDataStream;
 
-namespace Binance.ApiClient.Clients.RestApi.Spot;
+namespace Binance.Api.Clients.RestApi.Spot;
 
 public class BinanceRestApiSpotUserStreamClient
 {

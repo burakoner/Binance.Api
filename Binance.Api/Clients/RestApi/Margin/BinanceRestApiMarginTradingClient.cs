@@ -1,8 +1,7 @@
-﻿using Binance.ApiClient.Models.RestApi;
-using Binance.ApiClient.Models.RestApi.Account;
-using Binance.ApiClient.Models.RestApi.Margin;
+﻿using Binance.Api.Models.RestApi.Account;
+using Binance.Api.Models.RestApi.Margin;
 
-namespace Binance.ApiClient.Clients.RestApi.Margin;
+namespace Binance.Api.Clients.RestApi.Margin;
 
 public class BinanceRestApiMarginTradingClient
 {
@@ -72,7 +71,7 @@ public class BinanceRestApiMarginTradingClient
     /// Event triggered when an order is placed via this client. Only available for Spot orders
     /// </summary>
     public event Action<OrderId> OnOrderPlaced;
-    
+
     /// <summary>
     /// Event triggered when an order is canceled via this client. Note that this does not trigger when using CancelAllOrdersAsync. Only available for Spot orders
     /// </summary>

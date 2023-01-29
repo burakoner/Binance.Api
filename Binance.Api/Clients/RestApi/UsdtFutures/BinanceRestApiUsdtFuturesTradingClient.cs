@@ -1,6 +1,6 @@
-﻿using Binance.ApiClient.Models.RestApi.Futures;
+﻿using Binance.Api.Models.RestApi.Futures;
 
-namespace Binance.ApiClient.Clients.RestApi.UsdtFutures;
+namespace Binance.Api.Clients.RestApi.UsdtFutures;
 
 public class BinanceRestApiUsdtFuturesTradingClient
 {

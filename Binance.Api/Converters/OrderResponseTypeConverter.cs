@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class OrderResponseTypeConverter: BaseConverter<OrderResponseType>
+    internal class OrderResponseTypeConverter : BaseConverter<OrderResponseType>
     {
-        public OrderResponseTypeConverter(): this(true) { }
+        public OrderResponseTypeConverter() : this(true) { }
         public OrderResponseTypeConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<OrderResponseType, string>> Mapping => new List<KeyValuePair<OrderResponseType, string>>

@@ -1,7 +1,7 @@
-﻿using Binance.ApiClient.Models.RestApi.Account;
-using Binance.ApiClient.Models.RestApi.SubAccount;
+﻿using Binance.Api.Models.RestApi.Account;
+using Binance.Api.Models.RestApi.SubAccount;
 
-namespace Binance.ApiClient.Clients.RestApi.General;
+namespace Binance.Api.Clients.RestApi.General;
 
 public class BinanceRestApiSubAccountClient
 {

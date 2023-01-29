@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
 /// An entry in the order book

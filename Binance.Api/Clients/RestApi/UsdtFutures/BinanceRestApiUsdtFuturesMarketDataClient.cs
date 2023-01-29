@@ -1,10 +1,9 @@
-﻿using Binance.ApiClient.Models.RestApi.Futures;
-using Binance.ApiClient.Models.RestApi.MarketData;
+﻿using Binance.Api.Models.RestApi.Futures;
 
-namespace Binance.ApiClient.Clients.RestApi.UsdtFutures;
+namespace Binance.Api.Clients.RestApi.UsdtFutures;
 
 public class BinanceRestApiUsdtFuturesMarketDataClient
-{   
+{
     // Api
     private const string api = "fapi";
     private const string publicVersion = "1";
@@ -394,7 +393,7 @@ public class BinanceRestApiUsdtFuturesMarketDataClient
         var parameters = new Dictionary<string, object>();
         return await SendRequestInternal<IEnumerable<BinanceFuturesAssetIndex>>(GetUrl(assetIndexEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: 10).ConfigureAwait(false);
     }
-    
+
     public async Task<RestCallResult<BinanceFuturesAssetIndex>> GetAssetIndexAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>()

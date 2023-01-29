@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Converters;
+﻿namespace Binance.Api.Converters;
 
 internal class IpRestrictionStatusConverter : BaseConverter<IpRestrictionStatus>
 {

@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi.Account;
+﻿namespace Binance.Api.Models.RestApi.Account;
 
 // NOTE this is a bit of a weird place for this, however it is a request on the normal client since it uses
 // the /sapi/ route instead of /fapi/. For lack of a better place keep it here

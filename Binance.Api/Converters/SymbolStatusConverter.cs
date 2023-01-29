@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class SymbolStatusConverter : BaseConverter<SymbolStatus>
     {
-        public SymbolStatusConverter(): this(true) { }
+        public SymbolStatusConverter() : this(true) { }
         public SymbolStatusConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<SymbolStatus, string>> Mapping => new List<KeyValuePair<SymbolStatus, string>>

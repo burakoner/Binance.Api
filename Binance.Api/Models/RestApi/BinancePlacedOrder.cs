@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.RestApi;
+﻿namespace Binance.Api.Models.RestApi;
 
 /// <summary>
 /// The result of placing a new order

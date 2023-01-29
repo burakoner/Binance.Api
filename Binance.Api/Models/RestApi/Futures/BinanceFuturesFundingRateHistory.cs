@@ -1,4 +1,4 @@
-namespace Binance.ApiClient.Models.RestApi.Futures;
+namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Funding rate information for Futures trading

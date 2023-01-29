@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using ApiSharp.Converters;
-using Binance.ApiClient.Enums;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
     internal class SymbolFilterTypeConverter : BaseConverter<SymbolFilterType>
     {
-        public SymbolFilterTypeConverter(): this(true) { }
+        public SymbolFilterTypeConverter() : this(true) { }
         public SymbolFilterTypeConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<SymbolFilterType, string>> Mapping => new List<KeyValuePair<SymbolFilterType, string>>

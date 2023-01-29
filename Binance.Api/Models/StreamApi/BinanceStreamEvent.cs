@@ -1,4 +1,4 @@
-﻿namespace Binance.ApiClient.Models.StreamApi;
+﻿namespace Binance.Api.Models.StreamApi;
 
 /// <summary>
 /// A event received by a Binance websocket

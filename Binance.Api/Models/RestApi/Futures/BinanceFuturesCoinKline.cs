@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi.MarketData;
-
-namespace Binance.ApiClient.Models.RestApi.Futures;
+﻿namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Candlestick information for symbol

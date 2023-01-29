@@ -1,26 +1,4 @@
-﻿using System;
-using Binance.ApiClient.Converters;
-using Binance.ApiClient.Enums;
-using Binance.ApiClient.Interfaces;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-
-/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
-Before:
-using Binance.ApiClient.Models.zzz;
-After:
-using Binance.ApiClient.Models.zzz;
-using Binance.ApiClient.Models.zzz.Futures.Socket;
-using Binance;
-using Binance.ApiClient;
-using Binance.ApiClient.Models;
-using Binance.ApiClient.Models.Futures;
-using Binance.ApiClient.Models.Futures.Socket;
-*/
-using Binance.ApiClient.Models.RestApi.MarketData;
-using Binance.ApiClient.Models.StreamApi;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+﻿namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// Wrapper for kline information for a symbol

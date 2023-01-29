@@ -1,7 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.StreamApi
+﻿namespace Binance.Api.Models.StreamApi
 {
     internal class BinanceSocketRequest
     {

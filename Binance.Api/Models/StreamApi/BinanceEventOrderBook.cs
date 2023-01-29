@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi.MarketData;
-
-namespace Binance.ApiClient.Models.zzz.Spot;
+﻿namespace Binance.Api.Models.StreamApi;
 
 /// <summary>
 /// Stream order book

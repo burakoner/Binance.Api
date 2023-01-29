@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Binance.ApiClient.Enums;
-using ApiSharp.Converters;
-
-namespace Binance.ApiClient.Converters
+﻿namespace Binance.Api.Converters
 {
-    internal class KlineIntervalConverter: BaseConverter<KlineInterval>
+    internal class KlineIntervalConverter : BaseConverter<KlineInterval>
     {
-        public KlineIntervalConverter(): this(true) { }
+        public KlineIntervalConverter() : this(true) { }
         public KlineIntervalConverter(bool quotes) : base(quotes) { }
 
         protected override List<KeyValuePair<KlineInterval, string>> Mapping => new List<KeyValuePair<KlineInterval, string>>

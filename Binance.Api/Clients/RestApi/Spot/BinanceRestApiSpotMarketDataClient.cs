@@ -1,6 +1,4 @@
-﻿using Binance.ApiClient.Models.RestApi.MarketData;
-
-namespace Binance.ApiClient.Clients.RestApi.Spot;
+﻿namespace Binance.Api.Clients.RestApi.Spot;
 
 public class BinanceRestApiSpotMarketDataClient
 {

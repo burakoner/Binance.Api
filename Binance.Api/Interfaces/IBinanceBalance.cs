@@ -1,10 +1,10 @@
-﻿namespace Binance.ApiClient.Interfaces
+﻿namespace Binance.Api.Interfaces
 {
     /// <summary>
     /// Balance data
     /// </summary>
     public interface IBinanceBalance
-	{
+    {
         /// <summary>
         /// The asset this balance is for
         /// </summary>
@@ -21,5 +21,5 @@
         /// The total balance of this asset (Free + Locked)
         /// </summary>
         decimal Total { get; }
-	}
+    }
 }

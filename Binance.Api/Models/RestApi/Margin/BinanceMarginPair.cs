@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Binance.ApiClient.Models.RestApi.Margin
+﻿namespace Binance.Api.Models.RestApi.Margin
 {
     /// <summary>
     /// Margin pair info

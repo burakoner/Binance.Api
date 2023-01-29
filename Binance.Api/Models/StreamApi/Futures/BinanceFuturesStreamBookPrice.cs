@@ -1,9 +1,4 @@
-﻿using System;
-using ApiSharp.Converters;
-using Newtonsoft.Json;
-using Binance.ApiClient.Models.StreamApi.MarketData;
-
-namespace Binance.ApiClient.Models.zzz.Futures.Socket
+﻿namespace Binance.Api.Models.StreamApi.Futures
 {
     /// <summary>
     /// Futures book price
