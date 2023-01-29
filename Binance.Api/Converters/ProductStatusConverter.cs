@@ -1,0 +1,19 @@
+﻿using Binance.ApiClient.Enums;
+using ApiSharp.Converters;
+using System.Collections.Generic;
+
+namespace Binance.ApiClient.Converters
+{
+    internal class ProductStatusConverter : BaseConverter<ProductStatus>
+    {
+        public ProductStatusConverter() : this(true) { }
+        public ProductStatusConverter(bool quotes) : base(quotes) { }
+
+        protected override List<KeyValuePair<ProductStatus, string>> Mapping => new List<KeyValuePair<ProductStatus, string>>
+        {
+            new KeyValuePair<ProductStatus, string>(ProductStatus.All, "ALL"),
+            new KeyValuePair<ProductStatus, string>(ProductStatus.Subscribable, "SUBSCRIBABLE"),
+            new KeyValuePair<ProductStatus, string>(ProductStatus.Unsubscribable, "UNSUBSCRIBABLE")
+        };
+    }
+}

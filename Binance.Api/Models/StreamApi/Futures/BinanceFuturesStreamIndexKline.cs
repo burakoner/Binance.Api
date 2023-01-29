@@ -1,0 +1,145 @@
+﻿using System;
+using Binance.ApiClient.Converters;
+using Binance.ApiClient.Enums;
+using ApiSharp.Converters;
+
+/* Unmerged change from project 'Binance.ApiClient (netstandard2.1)'
+Before:
+using Newtonsoft.Json;
+
+namespace Binance.ApiClient.Models.Futures.Socket
+After:
+using Newtonsoft.Json;
+using Binance.ApiClient.Models.zzz.Futures.Socket;
+using Binance;
+using Binance.ApiClient;
+using Binance.ApiClient.Models.Futures;
+using Binance.ApiClient.Models.Futures.Socket;
+
+namespace Binance.ApiClient.Models.Futures.Socket
+*/
+using Newtonsoft.Json;
+using Binance.ApiClient.Models.StreamApi;
+
+namespace Binance.ApiClient.Models.zzz.Futures.Socket
+{
+    /// <summary>
+    /// Wrapper for kline information for a symbol
+    /// </summary>
+    public class BinanceStreamIndexKlineData : BinanceStreamEvent
+    {
+        /// <summary>
+        /// The symbol the data is for
+        /// </summary>
+        [JsonProperty("s")]
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// The data
+        /// </summary>
+        [JsonProperty("k")]
+        public BinanceFuturesStreamIndexKline Data { get; set; } = default!;
+    }
+
+    /// <summary>
+    /// Index kline
+    /// </summary>
+    public class BinanceFuturesStreamIndexKline
+    {
+        /// <summary>
+        /// Open time
+        /// </summary>
+        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("t")]
+        public DateTime OpenTime { get; set; }
+        /// <summary>
+        /// Close time
+        /// </summary>
+        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("T")]
+        public DateTime CloseTime { get; set; }
+
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("s")]
+        public string Ignore1 { get; set; }
+        /// <summary>
+        /// Kline interval
+        /// </summary>
+        [JsonProperty("i")]
+        [JsonConverter(typeof(KlineIntervalConverter))]
+        public KlineInterval Interval { get; set; }
+
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("f")]
+        public string Ignore2 { get; set; }
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("L")]
+        public string Ignore3 { get; set; }
+
+        /// <summary>
+        /// Open price of the kline
+        /// </summary>
+        [JsonProperty("o")]
+        public decimal OpenPrice { get; set; }
+        /// <summary>
+        /// Close price of the kline
+        /// </summary>
+        [JsonProperty("c")]
+        public decimal ClosePrice { get; set; }
+        /// <summary>
+        /// High price of the kline
+        /// </summary>
+        [JsonProperty("h")]
+        public decimal HighPrice { get; set; }
+        /// <summary>
+        /// Low price of the kline
+        /// </summary>
+        [JsonProperty("l")]
+        public decimal LowPrice { get; set; }
+
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("v")]
+        public string Ignore4 { get; set; }
+
+        /// <summary>
+        /// Number of basic data
+        /// </summary>
+        [JsonProperty("n")]
+        public int NumberOfBasicData { get; set; }
+
+        /// <summary>
+        /// Is the kline closed
+        /// </summary>
+        [JsonProperty("x")]
+        public bool Closed { get; set; }
+
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("q")]
+        public string Ignore5 { get; set; }
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("V")]
+        public string Ignore6 { get; set; }
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("Q")]
+        public string Ignore7 { get; set; }
+        /// <summary>
+        /// Ignore
+        /// </summary>
+        [JsonProperty("b")]
+        public string Ignore8 { get; set; }
+    }
+}

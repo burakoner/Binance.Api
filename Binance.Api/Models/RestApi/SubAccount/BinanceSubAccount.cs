@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using ApiSharp.Converters;
+using Newtonsoft.Json;
+
+namespace Binance.ApiClient.Models.RestApi.SubAccount
+{
+    internal class BinanceSubAccountWrapper
+    {
+        public IEnumerable<BinanceSubAccount> SubAccounts { get; set; }
+    }
+
+    /// <summary>
+    /// Sub account details
+    /// </summary>
+    public class BinanceSubAccount
+    {
+        /// <summary>
+        /// The email associated with the sub account
+        /// </summary>
+        public string Email { get; set; }
+        /// <summary>
+        /// Is account frozen
+        /// </summary>
+        public bool IsFreeze { get; set; } = false;
+        /// <summary>
+        /// The time the sub account was created
+        /// </summary>
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime CreateTime { get; set; }
+    }
+}

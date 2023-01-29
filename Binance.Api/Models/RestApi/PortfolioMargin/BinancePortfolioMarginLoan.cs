@@ -1,0 +1,17 @@
+﻿namespace Binance.ApiClient.Models.RestApi.PortfolioMargin;
+
+/// <summary>
+/// Bankruptcy loan info
+/// </summary>
+public class BinancePortfolioMarginLoan
+{
+    /// <summary>
+    /// Asset
+    /// </summary>
+    public string Asset { get; set; }
+    /// <summary>
+    /// Loan amount
+    /// </summary>
+    [JsonProperty("amount")]
+    public decimal Quantity { get; set; }
+}
