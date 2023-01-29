@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Brokerage transfer transaction status
+/// </summary>
+public enum BrokerageTransferTransactionStatus
 {
-    /// <summary>
-    /// Brokerage transfer transaction status
-    /// </summary>
-    public enum BrokerageTransferTransactionStatus
-    {
-        /// <summary> Init </summary>
-        Init,
-        /// <summary> Process </summary>
-        Process,
-        /// <summary> Success </summary>
-        Success,
-        /// <summary> Failure </summary>
-        Failure,
-    }
+    /// <summary> Init </summary>
+    Init,
+    /// <summary> Process </summary>
+    Process,
+    /// <summary> Success </summary>
+    Success,
+    /// <summary> Failure </summary>
+    Failure,
 }

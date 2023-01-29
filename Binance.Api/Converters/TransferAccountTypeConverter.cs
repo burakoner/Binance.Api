@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Converters
-{
-    internal class TransferAccountTypeConverter : BaseConverter<TransferAccountType>
-    {
-        public TransferAccountTypeConverter() : this(true) { }
-        public TransferAccountTypeConverter(bool quotes) : base(quotes) { }
+﻿namespace Binance.Api.Converters;
 
-        protected override List<KeyValuePair<TransferAccountType, string>> Mapping => new List<KeyValuePair<TransferAccountType, string>>
-        {
-            new KeyValuePair<TransferAccountType, string>(TransferAccountType.Spot, "SPOT"),
-            new KeyValuePair<TransferAccountType, string>(TransferAccountType.UsdtFuture, "USDT_FUTURE"),
-            new KeyValuePair<TransferAccountType, string>(TransferAccountType.CoinFuture, "COIN_FUTURE"),
-            new KeyValuePair<TransferAccountType, string>(TransferAccountType.Margin, "MARGIN"),
-            new KeyValuePair<TransferAccountType, string>(TransferAccountType.IsolatedMargin, "ISOLATED_MARGIN"),
-        };
-    }
+internal class TransferAccountTypeConverter : BaseConverter<TransferAccountType>
+{
+    public TransferAccountTypeConverter() : this(true) { }
+    public TransferAccountTypeConverter(bool quotes) : base(quotes) { }
+
+    protected override List<KeyValuePair<TransferAccountType, string>> Mapping => new List<KeyValuePair<TransferAccountType, string>>
+    {
+        new KeyValuePair<TransferAccountType, string>(TransferAccountType.Spot, "SPOT"),
+        new KeyValuePair<TransferAccountType, string>(TransferAccountType.UsdtFuture, "USDT_FUTURE"),
+        new KeyValuePair<TransferAccountType, string>(TransferAccountType.CoinFuture, "COIN_FUTURE"),
+        new KeyValuePair<TransferAccountType, string>(TransferAccountType.Margin, "MARGIN"),
+        new KeyValuePair<TransferAccountType, string>(TransferAccountType.IsolatedMargin, "ISOLATED_MARGIN"),
+    };
 }

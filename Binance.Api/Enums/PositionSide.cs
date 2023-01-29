@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Position side
+/// </summary>
+public enum PositionSide
 {
     /// <summary>
-    /// Position side
+    /// Short
     /// </summary>
-    public enum PositionSide
-    {
-        /// <summary>
-        /// Short
-        /// </summary>
-        Short,
-        /// <summary>
-        /// Long
-        /// </summary>
-        Long,
-        /// <summary>
-        /// Both for One-way mode when placing an order
-        /// </summary>
-        Both
-    }
+    Short,
+    /// <summary>
+    /// Long
+    /// </summary>
+    Long,
+    /// <summary>
+    /// Both for One-way mode when placing an order
+    /// </summary>
+    Both
 }

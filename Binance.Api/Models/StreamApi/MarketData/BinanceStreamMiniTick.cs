@@ -1,74 +1,73 @@
-﻿namespace Binance.Api.Models.StreamApi.MarketData
+﻿namespace Binance.Api.Models.StreamApi.MarketData;
+
+/// <summary>
+/// MiniTick info
+/// </summary>
+public abstract class BinanceStreamMiniTickBase : BinanceStreamEvent, IBinanceMiniTick
 {
     /// <summary>
-    /// MiniTick info
+    /// The symbol this data is for
     /// </summary>
-    public abstract class BinanceStreamMiniTickBase : BinanceStreamEvent, IBinanceMiniTick
-    {
-        /// <summary>
-        /// The symbol this data is for
-        /// </summary>
-        [JsonProperty("s")]
-        public string Symbol { get; set; }
-
-        /// <summary>
-        /// The current day close price. This is the latest price for this symbol.
-        /// </summary>
-        [JsonProperty("c")]
-        public decimal LastPrice { get; set; }
-
-        /// <summary>
-        /// Todays open price
-        /// </summary>
-        [JsonProperty("o")]
-        public decimal OpenPrice { get; set; }
-
-        /// <summary>
-        /// Todays high price
-        /// </summary>
-        [JsonProperty("h")]
-        public decimal HighPrice { get; set; }
-
-        /// <summary>
-        /// Todays low price
-        /// </summary>
-        [JsonProperty("l")]
-        public decimal LowPrice { get; set; }
-
-        /// <summary>
-        /// Total traded volume
-        /// </summary>
-        public abstract decimal Volume { get; set; }
-
-        /// <summary>
-        /// Total traded quote volume
-        /// </summary>
-        public abstract decimal QuoteVolume { get; set; }
-    }
+    [JsonProperty("s")]
+    public string Symbol { get; set; }
 
     /// <summary>
-    /// Stream mini tick
+    /// The current day close price. This is the latest price for this symbol.
     /// </summary>
-    public class BinanceStreamMiniTick : BinanceStreamMiniTickBase
-    {
-        /// <inheritdoc/>
-        [JsonProperty("v")]
-        public override decimal Volume { get; set; }
-        /// <inheritdoc/>
-        [JsonProperty("q")]
-        public override decimal QuoteVolume { get; set; }
-    }
+    [JsonProperty("c")]
+    public decimal LastPrice { get; set; }
 
     /// <summary>
-    /// Stream mini tick
+    /// Todays open price
     /// </summary>
-    public class BinanceStreamCoinMiniTick : BinanceStreamMiniTickBase
-    {
-        /// <inheritdoc/>
-        [JsonProperty("q")]
-        public override decimal Volume { get; set; }
-        /// <inheritdoc/>
-        [JsonProperty("v")]
-        public override decimal QuoteVolume { get; set; }
-    }
+    [JsonProperty("o")]
+    public decimal OpenPrice { get; set; }
+
+    /// <summary>
+    /// Todays high price
+    /// </summary>
+    [JsonProperty("h")]
+    public decimal HighPrice { get; set; }
+
+    /// <summary>
+    /// Todays low price
+    /// </summary>
+    [JsonProperty("l")]
+    public decimal LowPrice { get; set; }
+
+    /// <summary>
+    /// Total traded volume
+    /// </summary>
+    public abstract decimal Volume { get; set; }
+
+    /// <summary>
+    /// Total traded quote volume
+    /// </summary>
+    public abstract decimal QuoteVolume { get; set; }
+}
+
+/// <summary>
+/// Stream mini tick
+/// </summary>
+public class BinanceStreamMiniTick : BinanceStreamMiniTickBase
+{
+    /// <inheritdoc/>
+    [JsonProperty("v")]
+    public override decimal Volume { get; set; }
+    /// <inheritdoc/>
+    [JsonProperty("q")]
+    public override decimal QuoteVolume { get; set; }
+}
+
+/// <summary>
+/// Stream mini tick
+/// </summary>
+public class BinanceStreamCoinMiniTick : BinanceStreamMiniTickBase
+{
+    /// <inheritdoc/>
+    [JsonProperty("q")]
+    public override decimal Volume { get; set; }
+    /// <inheritdoc/>
+    [JsonProperty("v")]
+    public override decimal QuoteVolume { get; set; }
 }

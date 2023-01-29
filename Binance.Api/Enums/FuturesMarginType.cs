@@ -1,18 +1,17 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Type of Margin
+/// </summary>
+public enum FuturesMarginType
 {
     /// <summary>
-    /// Type of Margin
+    /// Isolated margin
     /// </summary>
-    public enum FuturesMarginType
-    {
-        /// <summary>
-        /// Isolated margin
-        /// </summary>
-        Isolated,
+    Isolated,
 
-        /// <summary>
-        /// Crossed margin
-        /// </summary>
-        Cross
-    }
+    /// <summary>
+    /// Crossed margin
+    /// </summary>
+    Cross
 }

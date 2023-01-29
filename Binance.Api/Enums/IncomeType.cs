@@ -1,33 +1,32 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Type of futures income
+/// </summary>
+public enum IncomeType
 {
     /// <summary>
-    /// Type of futures income
+    /// Transfer into account
     /// </summary>
-    public enum IncomeType
-    {
-        /// <summary>
-        /// Transfer into account
-        /// </summary>
-        Transfer,
-        /// <summary>
-        /// Futures welcome bonus
-        /// </summary>
-        WelcomeBonus,
-        /// <summary>
-        /// Futures realized profit
-        /// </summary>
-        RealizedPnl,
-        /// <summary>
-        /// Futures funding fee
-        /// </summary>
-        FundingFee,
-        /// <summary>
-        /// Futures trading commission
-        /// </summary>
-        Commission,
-        /// <summary>
-        /// Insurance clear
-        /// </summary>
-        InsuranceClear
-    }
+    Transfer,
+    /// <summary>
+    /// Futures welcome bonus
+    /// </summary>
+    WelcomeBonus,
+    /// <summary>
+    /// Futures realized profit
+    /// </summary>
+    RealizedPnl,
+    /// <summary>
+    /// Futures funding fee
+    /// </summary>
+    FundingFee,
+    /// <summary>
+    /// Futures trading commission
+    /// </summary>
+    Commission,
+    /// <summary>
+    /// Insurance clear
+    /// </summary>
+    InsuranceClear
 }

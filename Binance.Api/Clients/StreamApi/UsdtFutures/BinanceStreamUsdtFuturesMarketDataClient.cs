@@ -25,7 +25,7 @@ public class BinanceStreamUsdtFuturesMarketDataClient
     // Internal References
     internal BinanceStreamUsdtFuturesClient MainClient { get; }
     internal Log Log { get => MainClient.Log; }
-    internal string BaseAddress{ get => Options.BaseAddress; }
+    internal string BaseAddress { get => Options.BaseAddress; }
     internal BinanceStreamClientOptions Options { get => MainClient.RootClient.Options; }
     internal CallResult<T> Deserialize<T>(string data, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(data, serializer, requestId);
     internal CallResult<T> Deserialize<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(obj, serializer, requestId);

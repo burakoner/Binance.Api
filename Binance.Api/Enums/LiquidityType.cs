@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Add/Remove liquidity type
+/// </summary>
+public enum LiquidityType
 {
     /// <summary>
-    /// Add/Remove liquidity type
+    /// Add/Remove single asset
     /// </summary>
-    public enum LiquidityType
-    {
-        /// <summary>
-        /// Add/Remove single asset
-        /// </summary>
-        Single,
-        /// <summary>
-        /// Add/Remove combination of all coins
-        /// </summary>
-        Combined
-    }
+    Single,
+    /// <summary>
+    /// Add/Remove combination of all coins
+    /// </summary>
+    Combined
 }

@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Swap operation
+/// </summary>
+public enum BSwapOperation
 {
     /// <summary>
-    /// Swap operation
+    /// Add liquidity
     /// </summary>
-    public enum BSwapOperation
-    {
-        /// <summary>
-        /// Add liquidity
-        /// </summary>
-        Add,
-        /// <summary>
-        /// Remove liquidity
-        /// </summary>
-        Remove
-    }
+    Add,
+    /// <summary>
+    /// Remove liquidity
+    /// </summary>
+    Remove
 }

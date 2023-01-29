@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Status of a BSwap operation
+/// </summary>
+public enum BSwapStatus
 {
     /// <summary>
-    /// Status of a BSwap operation
+    /// Pending
     /// </summary>
-    public enum BSwapStatus
-    {
-        /// <summary>
-        /// Pending
-        /// </summary>
-        Pending,
-        /// <summary>
-        /// Success
-        /// </summary>
-        Success,
-        /// <summary>
-        /// Failure
-        /// </summary>
-        Failure
-    }
+    Pending,
+    /// <summary>
+    /// Success
+    /// </summary>
+    Success,
+    /// <summary>
+    /// Failure
+    /// </summary>
+    Failure
 }

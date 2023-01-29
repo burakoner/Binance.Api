@@ -1,13 +1,12 @@
-﻿namespace Binance.Api.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount;
+
+/// <summary>
+/// Sub account details
+/// </summary>
+public class BinanceSubAccountEmail
 {
     /// <summary>
-    /// Sub account details
+    /// The email associated with the sub account
     /// </summary>
-    public class BinanceSubAccountEmail
-    {
-        /// <summary>
-        /// The email associated with the sub account
-        /// </summary>
-        public string Email { get; set; }
-    }
+    public string Email { get; set; }
 }

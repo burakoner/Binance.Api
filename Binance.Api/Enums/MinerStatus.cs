@@ -1,25 +1,24 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Miner status
+/// </summary>
+public enum MinerStatus
 {
     /// <summary>
-    /// Miner status
+    /// All miners
     /// </summary>
-    public enum MinerStatus
-    {
-        /// <summary>
-        /// All miners
-        /// </summary>
-        All,
-        /// <summary>
-        /// Valid
-        /// </summary>
-        Valid,
-        /// <summary>
-        /// Invalid
-        /// </summary>
-        Invalid,
-        /// <summary>
-        /// Failure
-        /// </summary>
-        Failure
-    }
+    All,
+    /// <summary>
+    /// Valid
+    /// </summary>
+    Valid,
+    /// <summary>
+    /// Invalid
+    /// </summary>
+    Invalid,
+    /// <summary>
+    /// Failure
+    /// </summary>
+    Failure
 }

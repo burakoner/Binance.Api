@@ -1,20 +1,19 @@
-﻿namespace Binance.Api.Converters
+﻿namespace Binance.Api.Converters;
+
+internal class InterfaceConverter<TImp> : JsonConverter
 {
-    internal class InterfaceConverter<TImp> : JsonConverter
+    public override bool CanConvert(Type objectType)
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return true;
-        }
+        return true;
+    }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            return serializer.Deserialize<TImp>(reader);
-        }
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        return serializer.Deserialize<TImp>(reader);
+    }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value);
-        }
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        serializer.Serialize(writer, value);
     }
 }

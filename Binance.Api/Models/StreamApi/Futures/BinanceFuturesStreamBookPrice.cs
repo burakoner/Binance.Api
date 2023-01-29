@@ -1,22 +1,21 @@
-﻿namespace Binance.Api.Models.StreamApi.Futures
+﻿namespace Binance.Api.Models.StreamApi.Futures;
+
+/// <summary>
+/// Futures book price
+/// </summary>
+public class BinanceFuturesStreamBookPrice : BinanceStreamBookPrice
 {
+
     /// <summary>
-    /// Futures book price
+    /// Timestamp
     /// </summary>
-    public class BinanceFuturesStreamBookPrice : BinanceStreamBookPrice
-    {
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? TransactionTime { get; set; }
+    /// <summary>
+    /// The time the event happened
+    /// </summary>
+    [JsonProperty("E"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime EventTime { get; set; }
 
-        /// <summary>
-        /// Timestamp
-        /// </summary>
-        [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? TransactionTime { get; set; }
-        /// <summary>
-        /// The time the event happened
-        /// </summary>
-        [JsonProperty("E"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime EventTime { get; set; }
-
-        [JsonProperty("e")] private string Event { get; set; }
-    }
+    [JsonProperty("e")] private string Event { get; set; }
 }

@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Underlying Type
+/// </summary>
+public enum UnderlyingType
 {
     /// <summary>
-    /// Underlying Type
+    /// Coin
     /// </summary>
-    public enum UnderlyingType
-    {
-        /// <summary>
-        /// Coin
-        /// </summary>
-        Coin,
-        /// <summary>
-        /// Index
-        /// </summary>
-        Index
-    }
+    Coin,
+    /// <summary>
+    /// Index
+    /// </summary>
+    Index
 }

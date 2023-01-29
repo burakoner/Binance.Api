@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Response type
+/// </summary>
+public enum OrderResponseType
 {
     /// <summary>
-    /// Response type
+    /// Ack only
     /// </summary>
-    public enum OrderResponseType
-    {
-        /// <summary>
-        /// Ack only
-        /// </summary>
-        Acknowledge,
-        /// <summary>
-        /// Resulting order
-        /// </summary>
-        Result,
-        /// <summary>
-        /// Full order info, only valid on SPOT orders  
-        /// </summary>
-        Full
-    }
+    Acknowledge,
+    /// <summary>
+    /// Resulting order
+    /// </summary>
+    Result,
+    /// <summary>
+    /// Full order info, only valid on SPOT orders  
+    /// </summary>
+    Full
 }

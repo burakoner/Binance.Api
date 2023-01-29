@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Transfer direction
+/// </summary>
+public enum TransferDirectionType
 {
     /// <summary>
-    /// Transfer direction
+    /// From main account to margin account
     /// </summary>
-    public enum TransferDirectionType
-    {
-        /// <summary>
-        /// From main account to margin account
-        /// </summary>
-        MainToMargin,
-        /// <summary>
-        /// From margin account to main account
-        /// </summary>
-        MarginToMain
-    }
+    MainToMargin,
+    /// <summary>
+    /// From margin account to main account
+    /// </summary>
+    MarginToMain
 }

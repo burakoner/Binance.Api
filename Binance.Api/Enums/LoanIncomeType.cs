@@ -1,37 +1,36 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Income type
+/// </summary>
+public enum LoanIncomeType
 {
     /// <summary>
-    /// Income type
+    /// Borrow in
     /// </summary>
-    public enum LoanIncomeType
-    {
-        /// <summary>
-        /// Borrow in
-        /// </summary>
-        BorrowIn,
-        /// <summary>
-        /// Collateral spent
-        /// </summary>
-        CollateralSpent,
-        /// <summary>
-        /// Repay amount
-        /// </summary>
-        RepayAmount,
-        /// <summary>
-        /// Collateral return
-        /// </summary>
-        CollateralReturn,
-        /// <summary>
-        /// Add collateral
-        /// </summary>
-        AddCollateral,
-        /// <summary>
-        /// Remove collateral
-        /// </summary>
-        RemoveCollateral,
-        /// <summary>
-        /// Collateral return after liquidation
-        /// </summary>
-        CollateralReturnAfterLiquidation
-    }
+    BorrowIn,
+    /// <summary>
+    /// Collateral spent
+    /// </summary>
+    CollateralSpent,
+    /// <summary>
+    /// Repay amount
+    /// </summary>
+    RepayAmount,
+    /// <summary>
+    /// Collateral return
+    /// </summary>
+    CollateralReturn,
+    /// <summary>
+    /// Add collateral
+    /// </summary>
+    AddCollateral,
+    /// <summary>
+    /// Remove collateral
+    /// </summary>
+    RemoveCollateral,
+    /// <summary>
+    /// Collateral return after liquidation
+    /// </summary>
+    CollateralReturnAfterLiquidation
 }

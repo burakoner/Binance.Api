@@ -1,41 +1,40 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Status of a fiat payment
+/// </summary>
+public enum FiatWithdrawDepositStatus
 {
     /// <summary>
-    /// Status of a fiat payment
+    /// Still processing
     /// </summary>
-    public enum FiatWithdrawDepositStatus
-    {
-        /// <summary>
-        /// Still processing
-        /// </summary>
-        Processing,
-        /// <summary>
-        /// Successfully completed
-        /// </summary>
-        Successful,
-        /// <summary>
-        /// Failed
-        /// </summary>
-        Failed,
-        /// <summary>
-        /// Finished
-        /// </summary>
-        Finished,
-        /// <summary>
-        /// Refunding
-        /// </summary>
-        Refunding,
-        /// <summary>
-        /// Refunded
-        /// </summary>
-        Refunded,
-        /// <summary>
-        /// Refund failed
-        /// </summary>
-        RefundFailed,
-        /// <summary>
-        /// Expired
-        /// </summary>
-        Expired
-    }
+    Processing,
+    /// <summary>
+    /// Successfully completed
+    /// </summary>
+    Successful,
+    /// <summary>
+    /// Failed
+    /// </summary>
+    Failed,
+    /// <summary>
+    /// Finished
+    /// </summary>
+    Finished,
+    /// <summary>
+    /// Refunding
+    /// </summary>
+    Refunding,
+    /// <summary>
+    /// Refunded
+    /// </summary>
+    Refunded,
+    /// <summary>
+    /// Refund failed
+    /// </summary>
+    RefundFailed,
+    /// <summary>
+    /// Expired
+    /// </summary>
+    Expired
 }

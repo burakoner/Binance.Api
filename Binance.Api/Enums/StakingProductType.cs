@@ -1,24 +1,23 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Staking type
+/// </summary>
+public enum StakingProductType
 {
     /// <summary>
-    /// Staking type
+    /// Locked staking
     /// </summary>
-    public enum StakingProductType
-    {
-        /// <summary>
-        /// Locked staking
-        /// </summary>
-        [Map("STAKING")]
-        Staking,
-        /// <summary>
-        /// Flexible DeFi staking
-        /// </summary>
-        [Map("F_DEFI")]
-        FlexibleDeFi,
-        /// <summary>
-        /// Locked DeFi staking
-        /// </summary>
-        [Map("L_DEFI")]
-        LockedDeFi
-    }
+    [Map("STAKING")]
+    Staking,
+    /// <summary>
+    /// Flexible DeFi staking
+    /// </summary>
+    [Map("F_DEFI")]
+    FlexibleDeFi,
+    /// <summary>
+    /// Locked DeFi staking
+    /// </summary>
+    [Map("L_DEFI")]
+    LockedDeFi
 }

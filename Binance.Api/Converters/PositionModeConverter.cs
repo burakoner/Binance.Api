@@ -1,20 +1,19 @@
-﻿namespace Binance.Api.Converters
+﻿namespace Binance.Api.Converters;
+
+internal class PositionModeConverter : JsonConverter
 {
-    internal class PositionModeConverter : JsonConverter
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            writer.WriteValue(value?.ToString() == PositionMode.Hedge.ToString());
-        }
+        writer.WriteValue(value?.ToString() == PositionMode.Hedge.ToString());
+    }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            return ((bool)reader.Value!) ? PositionMode.Hedge : PositionMode.OneWay;
-        }
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        return ((bool)reader.Value!) ? PositionMode.Hedge : PositionMode.OneWay;
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(bool);
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(bool);
     }
 }

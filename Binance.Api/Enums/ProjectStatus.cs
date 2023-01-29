@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Project status
+/// </summary>
+public enum ProjectStatus
 {
     /// <summary>
-    /// Project status
+    /// Holding
     /// </summary>
-    public enum ProjectStatus
-    {
-        /// <summary>
-        /// Holding
-        /// </summary>
-        Holding,
-        /// <summary>
-        /// Redeemed
-        /// </summary>
-        Redeemed
-    }
+    Holding,
+    /// <summary>
+    /// Redeemed
+    /// </summary>
+    Redeemed
 }

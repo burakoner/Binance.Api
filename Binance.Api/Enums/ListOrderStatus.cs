@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// List order status
+/// </summary>
+public enum ListOrderStatus
 {
     /// <summary>
-    /// List order status
+    /// Executing
     /// </summary>
-    public enum ListOrderStatus
-    {
-        /// <summary>
-        /// Executing
-        /// </summary>
-        Executing,
-        /// <summary>
-        /// Executed
-        /// </summary>
-        Done,
-        /// <summary>
-        /// Rejected
-        /// </summary>
-        Rejected
-    }
+    Executing,
+    /// <summary>
+    /// Executed
+    /// </summary>
+    Done,
+    /// <summary>
+    /// Rejected
+    /// </summary>
+    Rejected
 }

@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Type of working
+/// </summary>
+public enum WorkingType
 {
     /// <summary>
-    /// Type of working
+    /// Mark price type
     /// </summary>
-    public enum WorkingType
-    {
-        /// <summary>
-        /// Mark price type
-        /// </summary>
-        Mark,
-        /// <summary>
-        /// Contract price type
-        /// </summary>
-        Contract
-    }
+    Mark,
+    /// <summary>
+    /// Contract price type
+    /// </summary>
+    Contract
 }

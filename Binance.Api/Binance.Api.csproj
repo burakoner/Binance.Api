@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 		<None Include="Binance.png" Pack="true" PackagePath="" />
+		<None Include="E:\Github\Binance.Api\Binance.Api\.editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,6 +40,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="ApiSharp" Version="1.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EditorConfigFiles Remove="E:\Github\Binance.Api\Binance.Api\.editorconfig" />
 	</ItemGroup>
 
 </Project>

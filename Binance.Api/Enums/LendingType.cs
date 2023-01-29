@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Lending type
+/// </summary>
+public enum LendingType
 {
     /// <summary>
-    /// Lending type
+    /// Flexible
     /// </summary>
-    public enum LendingType
-    {
-        /// <summary>
-        /// Flexible
-        /// </summary>
-        Daily,
-        /// <summary>
-        /// Activity
-        /// </summary>
-        Activity,
-        /// <summary>
-        /// Customized fixed
-        /// </summary>
-        CustomizedFixed
-    }
+    Daily,
+    /// <summary>
+    /// Activity
+    /// </summary>
+    Activity,
+    /// <summary>
+    /// Customized fixed
+    /// </summary>
+    CustomizedFixed
 }

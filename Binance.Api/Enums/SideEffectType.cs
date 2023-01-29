@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Side effect for a margin order
+/// </summary>
+public enum SideEffectType
 {
     /// <summary>
-    /// Side effect for a margin order
+    /// Normal trade
     /// </summary>
-    public enum SideEffectType
-    {
-        /// <summary>
-        /// Normal trade
-        /// </summary>
-        NoSideEffect,
-        /// <summary>
-        /// Margin trade order
-        /// </summary>
-        MarginBuy,
-        /// <summary>
-        /// Make auto repayment after order is filled
-        /// </summary>
-        AutoRepay
-    }
+    NoSideEffect,
+    /// <summary>
+    /// Margin trade order
+    /// </summary>
+    MarginBuy,
+    /// <summary>
+    /// Make auto repayment after order is filled
+    /// </summary>
+    AutoRepay
 }

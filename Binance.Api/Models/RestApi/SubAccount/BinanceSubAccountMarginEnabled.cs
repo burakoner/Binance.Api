@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Models.RestApi.SubAccount
+﻿namespace Binance.Api.Models.RestApi.SubAccount;
+
+/// <summary>
+/// Sub account margin trading enabled
+/// </summary>
+public class BinanceSubAccountMarginEnabled
 {
     /// <summary>
-    /// Sub account margin trading enabled
+    /// Email of the account
     /// </summary>
-    public class BinanceSubAccountMarginEnabled
-    {
-        /// <summary>
-        /// Email of the account
-        /// </summary>
-        public string Email { get; set; }
-        /// <summary>
-        /// Whether Margin trading is enabled
-        /// </summary>
-        public bool IsMarginEnabled { get; set; }
-    }
+    public string Email { get; set; }
+    /// <summary>
+    /// Whether Margin trading is enabled
+    /// </summary>
+    public bool IsMarginEnabled { get; set; }
 }

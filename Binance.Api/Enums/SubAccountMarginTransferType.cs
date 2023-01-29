@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Sub account margin transfer type
+/// </summary>
+public enum SubAccountMarginTransferType
 {
     /// <summary>
-    /// Sub account margin transfer type
+    /// Sub account spot to sub account margin
     /// </summary>
-    public enum SubAccountMarginTransferType
-    {
-        /// <summary>
-        /// Sub account spot to sub account margin
-        /// </summary>
-        FromSubAccountSpotToSubAccountMargin,
-        /// <summary>
-        /// From sub account margin to sub account spot
-        /// </summary>
-        FromSubAccountMarginToSubAccountSpot
-    }
+    FromSubAccountSpotToSubAccountMargin,
+    /// <summary>
+    /// From sub account margin to sub account spot
+    /// </summary>
+    FromSubAccountMarginToSubAccountSpot
 }

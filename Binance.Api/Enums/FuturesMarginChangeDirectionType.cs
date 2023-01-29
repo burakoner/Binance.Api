@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// The direction to change futures margin
+/// </summary>
+public enum FuturesMarginChangeDirectionType
 {
     /// <summary>
-    /// The direction to change futures margin
+    /// Add margin
     /// </summary>
-    public enum FuturesMarginChangeDirectionType
-    {
-        /// <summary>
-        /// Add margin
-        /// </summary>
-        Add,
-        /// <summary>
-        /// Reduce Margin
-        /// </summary>
-        Reduce
-    }
+    Add,
+    /// <summary>
+    /// Reduce Margin
+    /// </summary>
+    Reduce
 }

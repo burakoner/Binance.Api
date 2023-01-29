@@ -1,21 +1,20 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// List status type
+/// </summary>
+public enum ListStatusType
 {
     /// <summary>
-    /// List status type
+    /// Failed action
     /// </summary>
-    public enum ListStatusType
-    {
-        /// <summary>
-        /// Failed action
-        /// </summary>
-        Response,
-        /// <summary>
-        /// Placed
-        /// </summary>
-        ExecutionStarted,
-        /// <summary>
-        /// Order list is done
-        /// </summary>
-        Done
-    }
+    Response,
+    /// <summary>
+    /// Placed
+    /// </summary>
+    ExecutionStarted,
+    /// <summary>
+    /// Order list is done
+    /// </summary>
+    Done
 }

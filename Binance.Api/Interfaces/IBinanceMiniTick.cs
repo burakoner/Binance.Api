@@ -1,43 +1,42 @@
-﻿namespace Binance.Api.Interfaces
+﻿namespace Binance.Api.Interfaces;
+
+/// <summary>
+/// MiniTick info
+/// </summary>
+public interface IBinanceMiniTick
 {
     /// <summary>
-    /// MiniTick info
+    /// Symbol
     /// </summary>
-    public interface IBinanceMiniTick
-    {
-        /// <summary>
-        /// Symbol
-        /// </summary>
-        string Symbol { get; set; }
+    string Symbol { get; set; }
 
-        /// <summary>
-        /// Close Price
-        /// </summary>
-        decimal LastPrice { get; set; }
+    /// <summary>
+    /// Close Price
+    /// </summary>
+    decimal LastPrice { get; set; }
 
-        /// <summary>
-        /// Open Price
-        /// </summary>
-        decimal OpenPrice { get; set; }
+    /// <summary>
+    /// Open Price
+    /// </summary>
+    decimal OpenPrice { get; set; }
 
-        /// <summary>
-        /// High
-        /// </summary>
-        decimal HighPrice { get; set; }
+    /// <summary>
+    /// High
+    /// </summary>
+    decimal HighPrice { get; set; }
 
-        /// <summary>
-        /// Low
-        /// </summary>
-        decimal LowPrice { get; set; }
+    /// <summary>
+    /// Low
+    /// </summary>
+    decimal LowPrice { get; set; }
 
-        /// <summary>
-        /// Total traded volume
-        /// </summary>
-        decimal Volume { get; set; }
+    /// <summary>
+    /// Total traded volume
+    /// </summary>
+    decimal Volume { get; set; }
 
-        /// <summary>
-        /// Total traded alternate asset volume
-        /// </summary>
-        decimal QuoteVolume { get; set; }
-    }
+    /// <summary>
+    /// Total traded alternate asset volume
+    /// </summary>
+    decimal QuoteVolume { get; set; }
 }

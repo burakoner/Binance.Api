@@ -1,62 +1,61 @@
-namespace Binance.Api.Models.StreamApi.Futures
+namespace Binance.Api.Models.StreamApi.Futures;
+
+/// <summary>
+/// Mark price update
+/// </summary>
+public class BinanceFuturesStreamMarkPrice : BinanceStreamEvent, IBinanceFuturesMarkPrice
 {
     /// <summary>
-    /// Mark price update
+    /// Symbol
     /// </summary>
-    public class BinanceFuturesStreamMarkPrice : BinanceStreamEvent, IBinanceFuturesMarkPrice
-    {
-        /// <summary>
-        /// Symbol
-        /// </summary>
-        [JsonProperty("s")]
-        public string Symbol { get; set; }
-
-        /// <summary>
-        /// Mark Price
-        /// </summary>
-        [JsonProperty("p")]
-        public decimal MarkPrice { get; set; }
-
-        /// <summary>
-        /// Estimated Settle Price, only useful in the last hour before the settlement starts
-        /// </summary>
-        [JsonProperty("P")]
-        public decimal EstimatedSettlePrice { get; set; }
-
-        /// <summary>
-        /// Next Funding Rate
-        /// </summary>
-        [JsonProperty("r")]
-        public decimal? FundingRate { get; set; }
-
-        /// <summary>
-        /// Next Funding Time
-        /// </summary>
-        [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime NextFundingTime { get; set; }
-    }
+    [JsonProperty("s")]
+    public string Symbol { get; set; }
 
     /// <summary>
-    /// Mark price update
+    /// Mark Price
     /// </summary>
-    public class BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
-    {
-        /// <summary>
-        /// Mark Price
-        /// </summary>
-        [JsonProperty("i")]
-        public decimal IndexPrice { get; set; }
-    }
+    [JsonProperty("p")]
+    public decimal MarkPrice { get; set; }
 
     /// <summary>
-    /// Mark price update
+    /// Estimated Settle Price, only useful in the last hour before the settlement starts
     /// </summary>
-    public class BinanceFuturesCoinStreamMarkPrice : BinanceFuturesStreamMarkPrice
-    {
-        /// <summary>
-        /// Mark Price
-        /// </summary>
-        [JsonProperty("P")]
-        public new decimal EstimatedSettlePrice { get; set; }
-    }
+    [JsonProperty("P")]
+    public decimal EstimatedSettlePrice { get; set; }
+
+    /// <summary>
+    /// Next Funding Rate
+    /// </summary>
+    [JsonProperty("r")]
+    public decimal? FundingRate { get; set; }
+
+    /// <summary>
+    /// Next Funding Time
+    /// </summary>
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime NextFundingTime { get; set; }
+}
+
+/// <summary>
+/// Mark price update
+/// </summary>
+public class BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
+{
+    /// <summary>
+    /// Mark Price
+    /// </summary>
+    [JsonProperty("i")]
+    public decimal IndexPrice { get; set; }
+}
+
+/// <summary>
+/// Mark price update
+/// </summary>
+public class BinanceFuturesCoinStreamMarkPrice : BinanceFuturesStreamMarkPrice
+{
+    /// <summary>
+    /// Mark Price
+    /// </summary>
+    [JsonProperty("P")]
+    public new decimal EstimatedSettlePrice { get; set; }
 }

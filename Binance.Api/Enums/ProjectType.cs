@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// The type of project
+/// </summary>
+public enum ProjectType
 {
     /// <summary>
-    /// The type of project
+    /// Regular
     /// </summary>
-    public enum ProjectType
-    {
-        /// <summary>
-        /// Regular
-        /// </summary>
-        Activity,
-        /// <summary>
-        /// Customized fixed
-        /// </summary>
-        CustomizedFixed
-    }
+    Activity,
+    /// <summary>
+    /// Customized fixed
+    /// </summary>
+    CustomizedFixed
 }

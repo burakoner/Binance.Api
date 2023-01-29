@@ -1,23 +1,22 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Trade rules behaviour
+/// </summary>
+public enum TradeRulesBehavior
 {
     /// <summary>
-    /// Trade rules behaviour
+    /// None
     /// </summary>
-    public enum TradeRulesBehavior
-    {
-        /// <summary>
-        /// None
-        /// </summary>
-        None,
+    None,
 
-        /// <summary>
-        /// Throw an error if not complying
-        /// </summary>
-        ThrowError,
+    /// <summary>
+    /// Throw an error if not complying
+    /// </summary>
+    ThrowError,
 
-        /// <summary>
-        /// Auto adjust order when not complying
-        /// </summary>
-        AutoComply
-    }
+    /// <summary>
+    /// Auto adjust order when not complying
+    /// </summary>
+    AutoComply
 }

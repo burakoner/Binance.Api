@@ -1,18 +1,17 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Transfer direction for isolated margin transfer
+/// </summary>
+public enum IsolatedMarginTransferDirection
 {
     /// <summary>
-    /// Transfer direction for isolated margin transfer
+    /// Spot
     /// </summary>
-    public enum IsolatedMarginTransferDirection
-    {
-        /// <summary>
-        /// Spot
-        /// </summary>
-        Spot,
+    Spot,
 
-        /// <summary>
-        /// Isolated margin
-        /// </summary>
-        IsolatedMargin
-    }
+    /// <summary>
+    /// Isolated margin
+    /// </summary>
+    IsolatedMargin
 }

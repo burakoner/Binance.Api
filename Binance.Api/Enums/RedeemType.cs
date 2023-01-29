@@ -1,17 +1,16 @@
-﻿namespace Binance.Api.Enums
+﻿namespace Binance.Api.Enums;
+
+/// <summary>
+/// Redeem type
+/// </summary>
+public enum RedeemType
 {
     /// <summary>
-    /// Redeem type
+    /// Fast
     /// </summary>
-    public enum RedeemType
-    {
-        /// <summary>
-        /// Fast
-        /// </summary>
-        Fast,
-        /// <summary>
-        /// Normal
-        /// </summary>
-        Normal
-    }
+    Fast,
+    /// <summary>
+    /// Normal
+    /// </summary>
+    Normal
 }
