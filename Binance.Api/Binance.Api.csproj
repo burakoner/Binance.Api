@@ -23,8 +23,8 @@
 		</PackageReleaseNotes>
 		<PackageIcon>Binance.png</PackageIcon>
 		<PackageIconUrl />
-		<PackageProjectUrl>https://github.com/burakoner/Binance.ApiClient</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/burakoner/Binance.ApiClient</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/burakoner/Binance.Api</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/burakoner/Binance.Api</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
