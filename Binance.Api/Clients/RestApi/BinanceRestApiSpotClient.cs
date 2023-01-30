@@ -26,7 +26,7 @@ public class BinanceRestApiSpotClient : RestApiClient
         RootClient = root;
 
         RequestBodyEmptyContent = "";
-        RequestBodyFormat = RequestBodyFormat.FormData;
+        RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
         this.Server = new BinanceRestApiSpotServerClient(this);
@@ -81,7 +81,7 @@ public class BinanceRestApiSpotClient : RestApiClient
         CancellationToken cancellationToken,
         Dictionary<string, object> parameters = null,
         bool signed = false,
-        HttpMethodParameterPosition? postPosition = null,
+        RestParameterPosition? postPosition = null,
         ArraySerialization? arraySerialization = null,
         int weight = 1,
         bool ignoreRateLimit = false) where T : class

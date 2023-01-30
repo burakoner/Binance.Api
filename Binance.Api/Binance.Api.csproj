@@ -8,10 +8,10 @@
 	<PropertyGroup>
 		<PackageId>Binance.Api</PackageId>
 		<Authors>Burak Öner</Authors>
-		<Version>1.0.5</Version>
-		<FileVersion>1.0.5</FileVersion>
-		<PackageVersion>1.0.5</PackageVersion>
-		<AssemblyVersion>1.0.5</AssemblyVersion>
+		<Version>1.0.6</Version>
+		<FileVersion>1.0.6</FileVersion>
+		<PackageVersion>1.0.6</PackageVersion>
+		<AssemblyVersion>1.0.6</AssemblyVersion>
 		<Description>Binance Api Client</Description>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageTags>Binance;BNB;BTC;Api;Client;Rest;Web;Websocket;Socket;Wrapper;Crypto;Currency;Cryptocurrency;Exchange;Trade;Trading;Bitcoin;Spot;Margin;Futures;Derivates;Stock;Options;Swap;</PackageTags>
@@ -19,7 +19,7 @@
 		<NeutralLanguage>en</NeutralLanguage>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>
-			Version 1.0.5 - 29 Jan 2023
+			Version 1.0.6 - 30 Jan 2023
 		</PackageReleaseNotes>
 		<PackageIcon>Binance.png</PackageIcon>
 		<PackageIconUrl />
@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 		<None Include="Binance.png" Pack="true" PackagePath="" />
-		<None Include="E:\Github\Binance.Api\Binance.Api\.editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,11 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ApiSharp" Version="1.0.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EditorConfigFiles Remove="E:\Github\Binance.Api\Binance.Api\.editorconfig" />
+		<PackageReference Include="ApiSharp" Version="1.0.6" />
 	</ItemGroup>
 
 </Project>

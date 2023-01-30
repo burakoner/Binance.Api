@@ -46,7 +46,7 @@ public class BinanceRestApiSpotAccountClient
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
+    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
         => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
     internal BinanceRestApiSpotAccountClient(BinanceRestApiSpotClient main)
@@ -147,7 +147,7 @@ public class BinanceRestApiSpotAccountClient
         parameters.AddOptionalParameter("walletType", walletType != null ? JsonConvert.SerializeObject(walletType, new WalletTypeConverter(false)) : null);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceWithdrawalPlaced>(GetUrl(withdrawEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceWithdrawalPlaced>(GetUrl(withdrawEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
         return result;
     }
     #endregion

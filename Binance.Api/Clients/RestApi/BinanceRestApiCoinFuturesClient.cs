@@ -32,7 +32,7 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
         RootClient = root;
 
         RequestBodyEmptyContent = "";
-        RequestBodyFormat = RequestBodyFormat.FormData;
+        RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
         this.Server = new BinanceRestApiCoinFuturesServerClient(this);
@@ -207,7 +207,7 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     }
 
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(Uri uri, HttpMethod method, CancellationToken cancellationToken,
-        Dictionary<string, object> parameters = null, bool signed = false, HttpMethodParameterPosition? postPosition = null,
+        Dictionary<string, object> parameters = null, bool signed = false, RestParameterPosition? postPosition = null,
         ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
     {
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRatelimit: ignoreRateLimit).ConfigureAwait(false);

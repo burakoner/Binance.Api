@@ -56,7 +56,7 @@ public class BinanceRestApiSubAccountClient
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
     Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    HttpMethodParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
+    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
         => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
 
     internal BinanceRestApiSubAccountClient(BinanceRestApiGeneralClient main)
@@ -74,7 +74,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountEmail>(GetUrl(subAccountCreateVirtualEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, postPosition: HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountEmail>(GetUrl(subAccountCreateVirtualEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, postPosition: RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -209,7 +209,7 @@ public class BinanceRestApiSubAccountClient
         };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountMarginEnabled>(GetUrl(subAccountEnableMarginEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountMarginEnabled>(GetUrl(subAccountEnableMarginEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -250,7 +250,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountFuturesEnabled>(GetUrl(subAccountEnableFuturesEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountFuturesEnabled>(GetUrl(subAccountEnableFuturesEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -310,7 +310,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountTransaction>(GetUrl(subAccountTransferFuturesSpotEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountTransaction>(GetUrl(subAccountTransferFuturesSpotEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -330,7 +330,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountTransaction>(GetUrl(subAccountTransferMarginSpotEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountTransaction>(GetUrl(subAccountTransferMarginSpotEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -349,7 +349,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountTransaction>(GetUrl(subAccountTransferToSubEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountTransaction>(GetUrl(subAccountTransferToSubEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -405,7 +405,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceTransaction>(GetUrl(transferSubAccountEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceTransaction>(GetUrl(transferSubAccountEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 
@@ -484,7 +484,7 @@ public class BinanceRestApiSubAccountClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceSubAccountBlvt>(GetUrl(subAccountEnableBlvtEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, HttpMethodParameterPosition.InUri).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSubAccountBlvt>(GetUrl(subAccountEnableBlvtEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, RestParameterPosition.InUri).ConfigureAwait(false);
     }
     #endregion
 

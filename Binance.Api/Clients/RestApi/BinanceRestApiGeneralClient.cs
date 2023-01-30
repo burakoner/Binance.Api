@@ -42,7 +42,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
         RootClient = root;
 
         RequestBodyEmptyContent = "";
-        RequestBodyFormat = RequestBodyFormat.FormData;
+        RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
         this.FuturesAlgo = new BinanceRestApiFuturesAlgoClient(this);
@@ -113,7 +113,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
         CancellationToken cancellationToken,
         Dictionary<string, object> parameters = null,
         bool signed = false,
-        HttpMethodParameterPosition? postPosition = null,
+        RestParameterPosition? postPosition = null,
         ArraySerialization? arraySerialization = null,
         int weight = 1,
         bool ignoreRateLimit = false) where T : class
