@@ -14,8 +14,7 @@ namespace Binance.ApiConsole
         {
             var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
             {
-                ApiCredentials = new ApiSharp.Authentication.ApiCredentials("OQx9OJtaQ0NJ0jp9Jfb5mbN2BIOLCz6EMOYCZxk92WUdsUriD1N5FwXKnOvK2sYc", "Iw3IcHPgtpEldKo1Z1JX9PpyhPrz1J5DkSt3wiyDb5vxuiVHE5Od60vLl4OXHsBB")
-                // ApiCredentials = new ApiSharp.Authentication.ApiCredentials("-----API-KEY-----", "-----API-SECRET-----")
+                ApiCredentials = new ApiSharp.Authentication.ApiCredentials("-----API-KEY-----", "-----API-SECRET-----")
             });
 
             /*
