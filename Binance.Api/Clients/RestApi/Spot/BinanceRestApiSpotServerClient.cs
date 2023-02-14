@@ -19,9 +19,10 @@ public class BinanceRestApiSpotServerClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiSpotServerClient(BinanceRestApiSpotClient main)
     {
@@ -41,7 +42,7 @@ public class BinanceRestApiSpotServerClient
     #region Server Time
     public async Task<RestCallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default)
     {
-        var result = await SendRequestInternal<BinanceServerTime>(GetUrl(checkTimeEndpoint, api, publicVersion), HttpMethod.Get, ct, ignoreRateLimit: true).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceServerTime>(GetUrl(checkTimeEndpoint, api, publicVersion), HttpMethod.Get, ct, ignoreRatelimit: true).ConfigureAwait(false);
         return result.As(result.Data?.ServerTime ?? default);
     }
     #endregion
@@ -49,7 +50,7 @@ public class BinanceRestApiSpotServerClient
     #region System Status
     public async Task<RestCallResult<BinanceSystemStatus>> GetSystemStatusAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<BinanceSystemStatus>(GetUrl(systemStatusEndpoint, "sapi", "1"), HttpMethod.Get, ct, null, false).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSystemStatus>(GetUrl(systemStatusEndpoint, "sapi", "1"), HttpMethod.Get, ct).ConfigureAwait(false);
     }
     #endregion
 
@@ -82,7 +83,7 @@ public class BinanceRestApiSpotServerClient
             parameters.Add("permissions", permissions.First().ToString().ToUpper());
         }
 
-        var exchangeInfoResult = await SendRequestInternal<BinanceExchangeInfo>(GetUrl(exchangeInfoEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters: parameters, arraySerialization: ArraySerialization.Array, weight: 10).ConfigureAwait(false);
+        var exchangeInfoResult = await SendRequestInternal<BinanceExchangeInfo>(GetUrl(exchangeInfoEndpoint, api, publicVersion), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 10).ConfigureAwait(false);
         if (!exchangeInfoResult)
             return exchangeInfoResult;
 
@@ -105,7 +106,7 @@ public class BinanceRestApiSpotServerClient
             parameters.Add("symbol", symbols.First());
         }
 
-        var exchangeInfoResult = await SendRequestInternal<BinanceExchangeInfo>(GetUrl(exchangeInfoEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters: parameters, arraySerialization: ArraySerialization.Array, weight: 10).ConfigureAwait(false);
+        var exchangeInfoResult = await SendRequestInternal<BinanceExchangeInfo>(GetUrl(exchangeInfoEndpoint, api, publicVersion), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 10).ConfigureAwait(false);
         if (!exchangeInfoResult)
             return exchangeInfoResult;
 

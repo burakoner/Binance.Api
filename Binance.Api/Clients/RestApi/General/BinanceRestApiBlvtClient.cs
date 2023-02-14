@@ -24,9 +24,10 @@ public class BinanceRestApiBlvtClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiBlvtClient(BinanceRestApiGeneralClient main)
     {
@@ -39,7 +40,7 @@ public class BinanceRestApiBlvtClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBlvtInfo>>(GetUrl(blvtInfoEndpoint, blvtApi, blvtVersion), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBlvtInfo>>(GetUrl(blvtInfoEndpoint, blvtApi, blvtVersion), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -58,7 +59,7 @@ public class BinanceRestApiBlvtClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBlvtKline>>(GetUrl(blvtHistoricalKlinesEndpoint, "fapi", blvtVersion), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBlvtKline>>(GetUrl(blvtHistoricalKlinesEndpoint, "fapi", blvtVersion), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -72,7 +73,7 @@ public class BinanceRestApiBlvtClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBlvtSubscribeResult>(GetUrl(blvtSubscribeEndpoint, blvtApi, blvtVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBlvtSubscribeResult>(GetUrl(blvtSubscribeEndpoint, blvtApi, blvtVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -89,7 +90,7 @@ public class BinanceRestApiBlvtClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBlvtSubscription>>(GetUrl(blvtSubscriptionRecordsEndpoint, blvtApi, blvtVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBlvtSubscription>>(GetUrl(blvtSubscriptionRecordsEndpoint, blvtApi, blvtVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -103,7 +104,7 @@ public class BinanceRestApiBlvtClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBlvtRedeemResult>(GetUrl(blvtRedeemEndpoint, blvtApi, blvtVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBlvtRedeemResult>(GetUrl(blvtRedeemEndpoint, blvtApi, blvtVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -120,7 +121,7 @@ public class BinanceRestApiBlvtClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBlvtRedemption>>(GetUrl(blvtRedeemRecordsEndpoint, blvtApi, blvtVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBlvtRedemption>>(GetUrl(blvtRedeemRecordsEndpoint, blvtApi, blvtVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -131,7 +132,7 @@ public class BinanceRestApiBlvtClient
         parameters.AddOptionalParameter("tokenName", tokenName);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBlvtUserLimit>>(GetUrl(blvtUserLimitEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBlvtUserLimit>>(GetUrl(blvtUserLimitEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 }

@@ -71,9 +71,10 @@ public class BinanceRestApiBrokerageClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiBrokerageClient(BinanceRestApiGeneralClient main)
     {
@@ -86,7 +87,7 @@ public class BinanceRestApiBrokerageClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSubAccountCreateResult>(GetUrl(subAccountCreateEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSubAccountCreateResult>(GetUrl(subAccountCreateEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -99,7 +100,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccount>>(GetUrl(subAccountQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccount>>(GetUrl(subAccountQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -115,7 +116,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageEnableMarginResult>(GetUrl(enableMarginForSubAccountEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageEnableMarginResult>(GetUrl(enableMarginForSubAccountEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -130,7 +131,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageEnableFuturesResult>(GetUrl(enableFuturesForSubAccountEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageEnableFuturesResult>(GetUrl(enableFuturesForSubAccountEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -146,7 +147,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageEnableLeverageTokenResult>(GetUrl(enableLeverageTokenForSubAccountEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageEnableLeverageTokenResult>(GetUrl(enableLeverageTokenForSubAccountEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -165,7 +166,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("futuresTrade", isFuturesTradingEnabled.ToString().ToLower());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageApiKeyCreateResult>(GetUrl(apiKeyCreateEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageApiKeyCreateResult>(GetUrl(apiKeyCreateEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -176,13 +177,13 @@ public class BinanceRestApiBrokerageClient
         apiKey.ValidateNotNull(nameof(apiKey));
 
         var parameters = new Dictionary<string, object>
-                             {
-                                 {"subAccountId", subAccountId},
-                                 {"subAccountApiKey", apiKey}
-                             };
+        {
+            {"subAccountId", subAccountId},
+            {"subAccountApiKey", apiKey}
+        };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<object>(GetUrl(apiKeyDeleteEndpoint, brokerageApi, brokerageVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(apiKeyDeleteEndpoint, brokerageApi, brokerageVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -200,7 +201,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSubAccountApiKey>(GetUrl(apiKeyQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSubAccountApiKey>(GetUrl(apiKeyQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -221,7 +222,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSubAccountApiKey>(GetUrl(apiKeyPermissionEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSubAccountApiKey>(GetUrl(apiKeyPermissionEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -241,7 +242,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageAddIpRestrictionResult>(GetUrl(apiKeyIpRestrictionAddEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageAddIpRestrictionResult>(GetUrl(apiKeyIpRestrictionAddEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -259,7 +260,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageIpRestriction>(GetUrl(apiKeyIpRestrictionEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageIpRestriction>(GetUrl(apiKeyIpRestrictionEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -279,7 +280,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageIpRestrictionBase>(GetUrl(apiKeyIpRestrictionListEndpoint, brokerageApi, brokerageVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageIpRestrictionBase>(GetUrl(apiKeyIpRestrictionListEndpoint, brokerageApi, brokerageVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -298,7 +299,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageIpRestriction>(GetUrl(apiKeyIpRestrictionUpdateEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageIpRestriction>(GetUrl(apiKeyIpRestrictionUpdateEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -319,7 +320,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("marginTakerCommission", marginTakerCommission?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSubAccountCommission>(GetUrl(apiKeyCommissionEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSubAccountCommission>(GetUrl(apiKeyCommissionEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -339,7 +340,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSubAccountFuturesCommission>(GetUrl(apiKeyCommissionFuturesChangeEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSubAccountFuturesCommission>(GetUrl(apiKeyCommissionFuturesChangeEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -356,7 +357,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccountFuturesCommission>>(GetUrl(apiKeyCommissionFuturesQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccountFuturesCommission>>(GetUrl(apiKeyCommissionFuturesQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -376,7 +377,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSubAccountCoinFuturesCommission>(GetUrl(apiKeyCommissionCoinFuturesChangeEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSubAccountCoinFuturesCommission>(GetUrl(apiKeyCommissionCoinFuturesChangeEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -393,7 +394,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("pair", pair);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccountFuturesCommission>>(GetUrl(apiKeyCommissionCoinFuturesQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccountFuturesCommission>>(GetUrl(apiKeyCommissionCoinFuturesQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -403,7 +404,7 @@ public class BinanceRestApiBrokerageClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageAccountInfo>(GetUrl(brokerAccountInfoEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageAccountInfo>(GetUrl(brokerAccountInfoEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -423,7 +424,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("clientTranId", clientTransferId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageTransferResult>(GetUrl(transferEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageTransferResult>(GetUrl(transferEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -445,7 +446,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageTransferTransaction>>(GetUrl(transferQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageTransferTransaction>>(GetUrl(transferQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -466,7 +467,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("clientTranId", clientTransferId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageTransferFuturesResult>(GetUrl(transferFuturesEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageTransferFuturesResult>(GetUrl(transferFuturesEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -489,7 +490,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("clientTranId", clientTransferId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageTransferFuturesTransactions>(GetUrl(transferFuturesQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageTransferFuturesTransactions>(GetUrl(transferFuturesQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -509,7 +510,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageRebate>>(GetUrl(rebatesRecentEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageRebate>>(GetUrl(rebatesRecentEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -527,7 +528,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageFuturesRebate>>(GetUrl(rebatesFuturesHistoryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageFuturesRebate>>(GetUrl(rebatesFuturesHistoryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
 
     #endregion
@@ -545,7 +546,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageChangeBnbBurnSpotAndMarginResult>(GetUrl(changeBnbBurnForSubAccountSpotAndMarginEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageChangeBnbBurnSpotAndMarginResult>(GetUrl(changeBnbBurnForSubAccountSpotAndMarginEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -562,7 +563,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageChangeBnbBurnMarginInterestResult>(GetUrl(changeBnbBurnForSubAccountMarginInterestEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageChangeBnbBurnMarginInterestResult>(GetUrl(changeBnbBurnForSubAccountMarginInterestEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -577,7 +578,7 @@ public class BinanceRestApiBrokerageClient
                              };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageBnbBurnStatus>(GetUrl(bnbBurnForSubAccountStatusEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageBnbBurnStatus>(GetUrl(bnbBurnForSubAccountStatusEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -596,7 +597,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("offset", offset?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccountDepositTransaction>>(GetUrl(depositHistoryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageSubAccountDepositTransaction>>(GetUrl(depositHistoryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -610,7 +611,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageSpotAssetInfo>(GetUrl(spotSummaryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageSpotAssetInfo>(GetUrl(spotSummaryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -624,7 +625,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageMarginAssetInfo>(GetUrl(marginSummaryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageMarginAssetInfo>(GetUrl(marginSummaryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -641,7 +642,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("size", size?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageFuturesAssetInfo>(GetUrl(futuresSummaryEndpoint, brokerageApi, "2"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageFuturesAssetInfo>(GetUrl(futuresSummaryEndpoint, brokerageApi, "2"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -664,7 +665,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("clientTranId", clientTransferId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBrokerageTransferResult>(GetUrl(transferUniversalEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBrokerageTransferResult>(GetUrl(transferUniversalEndpoint, brokerageApi, brokerageVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -686,7 +687,7 @@ public class BinanceRestApiBrokerageClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBrokerageTransferTransactionUniversal>>(GetUrl(transferUniversalQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBrokerageTransferTransactionUniversal>>(GetUrl(transferUniversalQueryEndpoint, brokerageApi, brokerageVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 

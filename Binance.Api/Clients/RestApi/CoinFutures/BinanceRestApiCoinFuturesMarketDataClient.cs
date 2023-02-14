@@ -51,9 +51,10 @@ public class BinanceRestApiCoinFuturesMarketDataClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiCoinFuturesMarketDataClient(BinanceRestApiCoinFuturesClient main)
     {
@@ -68,7 +69,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         var requestWeight = limit == null ? 10 : limit <= 50 ? 2 : limit == 100 ? 5 : limit == 500 ? 10 : 20;
-        var result = await SendRequestInternal<BinanceFuturesOrderBook>(GetUrl(orderBookEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: requestWeight).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceFuturesOrderBook>(GetUrl(orderBookEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
         if (result && string.IsNullOrEmpty(result.Data.Symbol))
             result.Data.Symbol = symbol;
         return result.As(result.Data);
@@ -82,7 +83,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
 
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeBase>>(GetUrl(recentTradesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeBase>>(GetUrl(recentTradesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceRecentTrade>>(result.Data);
     }
     #endregion
@@ -96,7 +97,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeBase>>(GetUrl(historicalTradesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: 20).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeBase>>(GetUrl(historicalTradesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceRecentTrade>>(result.Data);
     }
     #endregion
@@ -112,7 +113,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceAggregatedTrade>>(GetUrl(aggregatedTradesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: 20).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceAggregatedTrade>>(GetUrl(aggregatedTradesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 
@@ -123,7 +124,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("pair", pair);
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinMarkPrice>>(GetUrl(markPriceEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinMarkPrice>>(GetUrl(markPriceEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
 
     }
     #endregion
@@ -139,7 +140,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesFundingRateHistory>>(GetUrl(fundingRateHistoryEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesFundingRateHistory>>(GetUrl(fundingRateHistoryEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -156,7 +157,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        var result = await SendRequestInternal<IEnumerable<BinanceFuturesCoinKline>>(GetUrl(klinesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: requestWeight).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceFuturesCoinKline>>(GetUrl(klinesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceKline>>(result.Data);
     }
     #endregion
@@ -175,7 +176,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        var result = await SendRequestInternal<IEnumerable<BinanceFuturesCoinKline>>(GetUrl(continuousContractKlineEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: requestWeight).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceFuturesCoinKline>>(GetUrl(continuousContractKlineEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceKline>>(result.Data);
     }
     #endregion
@@ -193,7 +194,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        return await SendRequestInternal<IEnumerable<BinanceFuturesMarkIndexKline>>(GetUrl(indexPriceKlineEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: requestWeight).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesMarkIndexKline>>(GetUrl(indexPriceKlineEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
     }
     #endregion
 
@@ -212,7 +213,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
         var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        return await SendRequestInternal<IEnumerable<BinanceFuturesMarkIndexKline>>(GetUrl(markPriceKlinesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: requestWeight).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesMarkIndexKline>>(GetUrl(markPriceKlinesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
     }
     #endregion
 
@@ -224,7 +225,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("pair", pair);
 
         var result = await SendRequestInternal<IEnumerable<BinanceFuturesCoin24HPrice>>(GetUrl(price24HEndpoint, api, publicVersion),
-                HttpMethod.Get, ct, parameters, weight: symbol == null ? 40 : 1).ConfigureAwait(false);
+                HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: symbol == null ? 40 : 1).ConfigureAwait(false);
         return result.As<IEnumerable<IBinance24HPrice>>(result.Success ? result.Data : null);
     }
     #endregion
@@ -236,7 +237,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("pair", pair);
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinPrice>>(GetUrl(allPricesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: symbol == null ? 2 : 1).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinPrice>>(GetUrl(allPricesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: symbol == null ? 2 : 1).ConfigureAwait(false);
     }
     #endregion
 
@@ -248,7 +249,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("pair", pair);
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesBookPrice>>(
-                GetUrl(bookPricesEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters, weight: symbol == null ? 2 : 1)
+                GetUrl(bookPricesEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: symbol == null ? 2 : 1)
             .ConfigureAwait(false);
     }
     #endregion
@@ -261,7 +262,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
                 { "symbol", symbol }
             };
 
-        return await SendRequestInternal<BinanceFuturesCoinOpenInterest>(GetUrl(openInterestEndpoint, api, publicVersion), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesCoinOpenInterest>(GetUrl(openInterestEndpoint, api, publicVersion), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -280,7 +281,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinOpenInterestHistory>>(GetUrl(openInterestHistoryEndpoint, tradingDataapi), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinOpenInterestHistory>>(GetUrl(openInterestHistoryEndpoint, tradingDataapi), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -299,7 +300,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesLongShortRatio>>(url, HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesLongShortRatio>>(url, HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -318,7 +319,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesLongShortRatio>>(url, HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesLongShortRatio>>(url, HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -337,7 +338,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesLongShortRatio>>(url, HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesLongShortRatio>>(url, HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -356,7 +357,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinBuySellVolumeRatio>>(GetUrl(takerBuySellVolumeRatioEndpoint, tradingDataapi), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesCoinBuySellVolumeRatio>>(GetUrl(takerBuySellVolumeRatioEndpoint, tradingDataapi), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -375,7 +376,7 @@ public class BinanceRestApiCoinFuturesMarketDataClient
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesBasis>>(GetUrl(basisEndpoint, tradingDataapi), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesBasis>>(GetUrl(basisEndpoint, tradingDataapi), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 

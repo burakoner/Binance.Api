@@ -35,32 +35,33 @@ public class BinanceRestApiSpotTradingClient
     /// <summary>
     /// Event triggered when an order is placed via this client. Only available for Spot orders
     /// </summary>
-    public event Action<OrderId> OnOrderPlaced;
+    public event Action<long> OnOrderPlaced;
 
     /// <summary>
     /// Event triggered when an order is canceled via this client. 
     /// Note that this does not trigger when using CancelAllOrdersAsync. Only available for Spot orders
     /// </summary>
-    public event Action<OrderId> OnOrderCanceled;
+    public event Action<long> OnOrderCanceled;
 
     // Internal References
     internal BinanceRestApiSpotClient MainClient { get; }
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiSpotTradingClient(BinanceRestApiSpotClient main)
     {
         MainClient = main;
     }
 
-    internal void InvokeOrderPlaced(OrderId id)
+    internal void InvokeOrderPlaced(long id)
         => OnOrderPlaced?.Invoke(id);
 
-    internal void InvokeOrderCanceled(OrderId id)
+    internal void InvokeOrderCanceled(long id)
         => OnOrderCanceled?.Invoke(id);
 
     #region Test New Order 
@@ -135,7 +136,7 @@ public class BinanceRestApiSpotTradingClient
             1,
             ct).ConfigureAwait(false);
         if (result)
-            InvokeOrderPlaced(new OrderId() { SourceObject = result.Data, Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
+            InvokeOrderPlaced(result.Data.Id);
         return result;
     }
     #endregion
@@ -156,9 +157,9 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceOrderBase>(GetUrl(cancelOrderEndpoint, api, signedVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceOrderBase>(GetUrl(cancelOrderEndpoint, api, signedVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result)
-            InvokeOrderCanceled(new OrderId() { SourceObject = result.Data, Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
+            InvokeOrderCanceled(result.Data.Id);
         return result;
     }
     #endregion
@@ -174,7 +175,7 @@ public class BinanceRestApiSpotTradingClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(GetUrl(cancelAllOpenOrderEndpoint, api, signedVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(GetUrl(cancelAllOpenOrderEndpoint, api, signedVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -246,11 +247,11 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("trailingDelta", trailingDelta);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceReplaceOrderResult>(GetUrl(cancelReplaceOrderEndpoint, api, signedVersion), HttpMethod.Post, ct, parameters, true, weight: 1).ConfigureAwait(false);
-        if (!result && result.OriginalData != null)
+        var result = await SendRequestInternal<BinanceReplaceOrderResult>(GetUrl(cancelReplaceOrderEndpoint, api, signedVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        if (!result && result.Raw != null)
         {
             // Attempt to parse the error
-            var jsonData = result.OriginalData.ToJToken(MainClient.Log);
+            var jsonData = result.Raw.ToJToken(MainClient.Log);
             if (jsonData != null)
             {
                 var dataNode = jsonData["data"];
@@ -264,7 +265,7 @@ public class BinanceRestApiSpotTradingClient
         }
 
         if (result && result.Data.NewOrderResult == OrderOperationResult.Success)
-            InvokeOrderPlaced(new OrderId() { SourceObject = result.Data, Id = result.Data.NewOrderResponse!.Id.ToString(CultureInfo.InvariantCulture) });
+            InvokeOrderPlaced(result.Data.NewOrderResponse!.Id);
         return result;
     }
     #endregion
@@ -278,7 +279,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("symbol", symbol);
 
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(openOrdersEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: symbol == null ? 40 : 3).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(openOrdersEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
     }
     #endregion
 
@@ -297,7 +298,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrder>(GetUrl(queryOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrder>(GetUrl(queryOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
@@ -317,7 +318,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(allOrdersEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(allOrdersEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -369,7 +370,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("trailingDelta", trailingDelta);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(newOcoOrderEndpoint, api, signedVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(newOcoOrderEndpoint, api, signedVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -390,7 +391,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(cancelOcoOrderEndpoint, api, signedVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(cancelOcoOrderEndpoint, api, signedVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -405,7 +406,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(getOcoOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(getOcoOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
@@ -424,7 +425,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(getAllOcoOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(getAllOcoOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -434,7 +435,7 @@ public class BinanceRestApiSpotTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(getOpenOcoOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 3).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(getOpenOcoOrderEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3).ConfigureAwait(false);
     }
     #endregion
 
@@ -444,7 +445,7 @@ public class BinanceRestApiSpotTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceAccountInfo>(GetUrl(accountInfoEndpoint, api, "3"), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceAccountInfo>(GetUrl(accountInfoEndpoint, api, "3"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -465,7 +466,7 @@ public class BinanceRestApiSpotTradingClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceTrade>>(GetUrl(myTradesEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceTrade>>(GetUrl(myTradesEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -475,7 +476,7 @@ public class BinanceRestApiSpotTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(orderRateLimitEndpoint, api, "3"), HttpMethod.Get, ct, parameters, true, weight: 20).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(orderRateLimitEndpoint, api, "3"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 

@@ -24,9 +24,10 @@ public class BinanceRestApiMiningClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiMiningClient(BinanceRestApiGeneralClient main)
     {
@@ -37,7 +38,7 @@ public class BinanceRestApiMiningClient
     public async Task<RestCallResult<IEnumerable<BinanceMiningAlgorithm>>> GetMiningAlgorithmListAsync(CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMiningAlgorithm>>>(GetUrl(algorithmEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMiningAlgorithm>>>(GetUrl(algorithmEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (!result.Success)
             return result.As<IEnumerable<BinanceMiningAlgorithm>>(default);
 
@@ -52,7 +53,7 @@ public class BinanceRestApiMiningClient
     public async Task<RestCallResult<IEnumerable<BinanceMiningCoin>>> GetMiningCoinListAsync(CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMiningCoin>>>(GetUrl(coinListEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMiningCoin>>>(GetUrl(coinListEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (!result.Success)
             return result.As<IEnumerable<BinanceMiningCoin>>(default);
 
@@ -77,7 +78,7 @@ public class BinanceRestApiMiningClient
                 {"workerName", workerName}
             };
 
-        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMinerDetails>>>(GetUrl(minerDetailsEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMinerDetails>>>(GetUrl(minerDetailsEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<IEnumerable<BinanceMinerDetails>>(default);
 
@@ -105,7 +106,7 @@ public class BinanceRestApiMiningClient
         parameters.AddOptionalParameter("sortColumn", sortColumn);
         parameters.AddOptionalParameter("workerStatus", workerStatus == null ? null : JsonConvert.SerializeObject(workerStatus, new MinerStatusConverter(false)));
 
-        var result = await SendRequestInternal<BinanceResult<BinanceMinerList>>(GetUrl(minerListEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceMinerList>>(GetUrl(minerListEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<BinanceMinerList>(default);
 
@@ -134,7 +135,7 @@ public class BinanceRestApiMiningClient
         parameters.AddOptionalParameter("startDate", startDate.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endDate", endDate.ConvertToMilliseconds());
 
-        var result = await SendRequestInternal<BinanceResult<BinanceRevenueList>>(GetUrl(miningRevenueEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceRevenueList>>(GetUrl(miningRevenueEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<BinanceRevenueList>(default);
 
@@ -163,7 +164,7 @@ public class BinanceRestApiMiningClient
         parameters.AddOptionalParameter("startDate", startDate.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endDate", endDate.ConvertToMilliseconds());
 
-        var result = await SendRequestInternal<BinanceResult<BinanceOtherRevenueList>>(GetUrl(miningOtherRevenueEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceOtherRevenueList>>(GetUrl(miningOtherRevenueEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<BinanceOtherRevenueList>(default);
 
@@ -181,7 +182,7 @@ public class BinanceRestApiMiningClient
         parameters.AddOptionalParameter("pageIndex", page?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("pageSize", pageSize?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceResult<BinanceHashrateResaleList>>(GetUrl(miningHashrateResaleListEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceHashrateResaleList>>(GetUrl(miningHashrateResaleListEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<BinanceHashrateResaleList>(default);
 
@@ -206,7 +207,7 @@ public class BinanceRestApiMiningClient
         parameters.AddOptionalParameter("pageIndex", page?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("pageSize", pageSize?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceResult<BinanceHashrateResaleDetails>>(GetUrl(miningHashrateResaleDetailsEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceHashrateResaleDetails>>(GetUrl(miningHashrateResaleDetailsEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<BinanceHashrateResaleDetails>(default);
 
@@ -234,7 +235,7 @@ public class BinanceRestApiMiningClient
                 { "hashRate", hashRate }
             };
 
-        var result = await SendRequestInternal<BinanceResult<int>>(GetUrl(miningHashrateResaleRequest, "sapi", "1"), HttpMethod.Post, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<int>>(GetUrl(miningHashrateResaleRequest, "sapi", "1"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<int>(default);
 
@@ -256,7 +257,7 @@ public class BinanceRestApiMiningClient
                 { "userName", userName }
             };
 
-        var result = await SendRequestInternal<BinanceResult<bool>>(GetUrl(miningHashrateResaleCancel, "sapi", "1"), HttpMethod.Post, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<bool>>(GetUrl(miningHashrateResaleCancel, "sapi", "1"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<bool>(default);
 
@@ -279,7 +280,7 @@ public class BinanceRestApiMiningClient
                 {"userName", userName}
             };
 
-        var result = await SendRequestInternal<BinanceResult<BinanceMiningStatistic>>(GetUrl(miningStatisticsEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceMiningStatistic>>(GetUrl(miningStatisticsEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<BinanceMiningStatistic>(default);
 
@@ -302,7 +303,7 @@ public class BinanceRestApiMiningClient
                 {"userName", userName}
             };
 
-        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMiningAccount>>>(GetUrl(miningAccountListEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceMiningAccount>>>(GetUrl(miningAccountListEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success)
             return result.As<IEnumerable<BinanceMiningAccount>>(default);
 

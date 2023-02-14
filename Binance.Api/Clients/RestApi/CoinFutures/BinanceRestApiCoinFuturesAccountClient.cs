@@ -28,9 +28,10 @@ public class BinanceRestApiCoinFuturesAccountClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiCoinFuturesAccountClient(BinanceRestApiCoinFuturesClient main)
     {
@@ -46,7 +47,7 @@ public class BinanceRestApiCoinFuturesAccountClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceResult>(GetUrl(positionModeSideSetEndpoint, api, signedVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceResult>(GetUrl(positionModeSideSetEndpoint, api, signedVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -56,7 +57,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceFuturesPositionMode>(GetUrl(positionModeSideGetEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 30).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesPositionMode>(GetUrl(positionModeSideGetEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30).ConfigureAwait(false);
     }
     #endregion
 
@@ -66,7 +67,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesAccountBalance>>(GetUrl(futuresAccountBalanceEndpoint, api, "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesAccountBalance>>(GetUrl(futuresAccountBalanceEndpoint, api, "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -76,7 +77,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceFuturesCoinAccountInfo>(GetUrl(accountInfoEndpoint, api, "1"), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesCoinAccountInfo>(GetUrl(accountInfoEndpoint, api, "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
 
@@ -92,7 +93,7 @@ public class BinanceRestApiCoinFuturesAccountClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceFuturesInitialLeverageChangeResult>(GetUrl(changeInitialLeverageEndpoint, api, signedVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesInitialLeverageChangeResult>(GetUrl(changeInitialLeverageEndpoint, api, signedVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -106,7 +107,7 @@ public class BinanceRestApiCoinFuturesAccountClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceFuturesChangeMarginTypeResult>(GetUrl(changeMarginTypeEndpoint, api, signedVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesChangeMarginTypeResult>(GetUrl(changeMarginTypeEndpoint, api, signedVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -122,7 +123,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("positionSide", positionSide == null ? null : JsonConvert.SerializeObject(positionSide, new PositionSideConverter(false)));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceFuturesPositionMarginResult>(GetUrl(positionMarginEndpoint, api, signedVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesPositionMarginResult>(GetUrl(positionMarginEndpoint, api, signedVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -139,7 +140,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(positionMarginChangeHistoryEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(positionMarginChangeHistoryEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -152,7 +153,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("pair", pair);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinancePositionDetailsCoin>>(GetUrl(positionInformationEndpoint, api, "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinancePositionDetailsCoin>>(GetUrl(positionInformationEndpoint, api, "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -169,7 +170,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesIncomeHistory>>(GetUrl(incomeHistoryEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 20).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesIncomeHistory>>(GetUrl(incomeHistoryEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 
@@ -181,7 +182,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("pair", pair);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesSymbolBracket>>(url, HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesSymbolBracket>>(url, HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -193,7 +194,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesSymbolBracket>>(url, HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesSymbolBracket>>(url, HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -204,7 +205,7 @@ public class BinanceRestApiCoinFuturesAccountClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFuturesQuantileEstimation>>(GetUrl(adlQuantileEndpoint, api, signedVersion), HttpMethod.Get, ct, parameters, true, weight: 5).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFuturesQuantileEstimation>>(GetUrl(adlQuantileEndpoint, api, signedVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
 
@@ -216,7 +217,7 @@ public class BinanceRestApiCoinFuturesAccountClient
                 { "symbol", symbol}
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        return await SendRequestInternal<BinanceFuturesAccountUserCommissionRate>(GetUrl(futuresAccountUserCommissionRateEndpoint, "dapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 20).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceFuturesAccountUserCommissionRate>(GetUrl(futuresAccountUserCommissionRateEndpoint, "dapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 }

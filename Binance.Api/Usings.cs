@@ -1,7 +1,6 @@
 ﻿global using ApiSharp;
 global using ApiSharp.Attributes;
 global using ApiSharp.Authentication;
-global using ApiSharp.Common;
 global using ApiSharp.Converters;
 global using ApiSharp.Enums;
 global using ApiSharp.Extensions;

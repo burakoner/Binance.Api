@@ -22,9 +22,10 @@ public class BinanceRestApiStakingClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiStakingClient(BinanceRestApiGeneralClient main)
     {
@@ -43,7 +44,7 @@ public class BinanceRestApiStakingClient
         parameters.AddOptionalParameter("size", limit);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceStakingProduct>>(GetUrl(stakingProductListEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceStakingProduct>>(GetUrl(stakingProductListEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -59,7 +60,7 @@ public class BinanceRestApiStakingClient
         parameters.AddOptionalParameter("renewable", renewable);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceStakingPositionResult>(GetUrl(stakingPurchaseEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true, weight: 1).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceStakingPositionResult>(GetUrl(stakingPurchaseEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -76,7 +77,7 @@ public class BinanceRestApiStakingClient
         parameters.AddOptionalParameter("renewable", renewable);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceStakingResult>(GetUrl(stakingRedeemEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true, weight: 1).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceStakingResult>(GetUrl(stakingRedeemEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -92,7 +93,7 @@ public class BinanceRestApiStakingClient
         parameters.AddOptionalParameter("size", limit);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceStakingPosition>>(GetUrl(stakingPositionEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 1).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceStakingPosition>>(GetUrl(stakingPositionEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -111,7 +112,7 @@ public class BinanceRestApiStakingClient
         parameters.AddOptionalParameter("size", limit);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceStakingHistory>>(GetUrl(stakingHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 1).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceStakingHistory>>(GetUrl(stakingHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -126,7 +127,7 @@ public class BinanceRestApiStakingClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceStakingResult>(GetUrl(setAutoStakingEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceStakingResult>(GetUrl(setAutoStakingEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -140,7 +141,7 @@ public class BinanceRestApiStakingClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceStakingPersonalQuota>(GetUrl(stakingQuotaLeftEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceStakingPersonalQuota>(GetUrl(stakingQuotaLeftEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 

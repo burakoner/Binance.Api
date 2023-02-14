@@ -41,7 +41,6 @@ public class BinanceRestApiGeneralClient : RestApiClient
     {
         RootClient = root;
 
-        RequestBodyEmptyContent = "";
         RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
@@ -108,23 +107,16 @@ public class BinanceRestApiGeneralClient : RestApiClient
     }
 
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-        Uri uri,
-        HttpMethod method,
-        CancellationToken cancellationToken,
-        Dictionary<string, object> parameters = null,
-        bool signed = false,
-        RestParameterPosition? postPosition = null,
-        ArraySerialization? arraySerialization = null,
-        int weight = 1,
-        bool ignoreRateLimit = false) where T : class
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
-        var result = await SendRequestAsync<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRatelimit: ignoreRateLimit).ConfigureAwait(false);
+        var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
         if (!result && result.Error!.Code == -1021 && Options.AutoTimestamp)
         {
             log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;
         }
-
         return result;
     }
 

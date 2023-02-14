@@ -31,7 +31,6 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     {
         RootClient = root;
 
-        RequestBodyEmptyContent = "";
         RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
@@ -43,12 +42,12 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         this.Portfolio = new BinanceRestApiUsdtFuturesPortfolioClient(this);
     }
 
-    internal void InvokeOrderPlaced(OrderId id)
+    internal void InvokeOrderPlaced(long id)
     {
         OnOrderPlaced?.Invoke(id);
     }
 
-    internal void InvokeOrderCanceled(OrderId id)
+    internal void InvokeOrderCanceled(long id)
     {
         OnOrderCanceled?.Invoke(id);
     }
@@ -56,12 +55,12 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     /// <summary>
     /// Event triggered when an order is placed via this client. Only available for Spot orders
     /// </summary>
-    public event Action<OrderId> OnOrderPlaced;
+    public event Action<long> OnOrderPlaced;
 
     /// <summary>
     /// Event triggered when an order is canceled via this client. Note that this does not trigger when using CancelAllOrdersAsync. Only available for Spot orders
     /// </summary>
-    public event Action<OrderId> OnOrderCanceled;
+    public event Action<long> OnOrderCanceled;
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
         => new BinanceAuthenticationProvider(credentials);
@@ -206,14 +205,15 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
     }
 
-    internal async Task<RestCallResult<T>> SendRequestInternal<T>(Uri uri, HttpMethod method, CancellationToken cancellationToken,
-        Dictionary<string, object> parameters = null, bool signed = false, RestParameterPosition? postPosition = null,
-        ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
+    internal async Task<RestCallResult<T>> SendRequestInternal<T>(
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
-        var result = await SendRequestAsync<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRatelimit: ignoreRateLimit).ConfigureAwait(false);
+        var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
         if (!result && result.Error!.Code == -1021 && Options.AutoTimestamp)
         {
-            Log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+            log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;
         }
         return result;

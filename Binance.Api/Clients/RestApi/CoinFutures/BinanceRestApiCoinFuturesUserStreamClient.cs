@@ -18,9 +18,10 @@ public class BinanceRestApiCoinFuturesUserStreamClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiCoinFuturesUserStreamClient(BinanceRestApiCoinFuturesClient main)
     {
@@ -30,7 +31,7 @@ public class BinanceRestApiCoinFuturesUserStreamClient
     #region Start User Data Stream
     public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
     {
-        var result = await SendRequestInternal<BinanceListenKey>(GetUrl(getFuturesListenKeyEndpoint, api, signedVersion), HttpMethod.Post, ct).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceListenKey>(GetUrl(getFuturesListenKeyEndpoint, api, signedVersion), HttpMethod.Post, ct, true).ConfigureAwait(false);
         return result.As(result.Data?.ListenKey!);
     }
     #endregion
@@ -45,7 +46,7 @@ public class BinanceRestApiCoinFuturesUserStreamClient
                 { "listenKey", listenKey }
             };
 
-        return await SendRequestInternal<object>(GetUrl(keepFuturesListenKeyAliveEndpoint, api, signedVersion), HttpMethod.Put, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(keepFuturesListenKeyAliveEndpoint, api, signedVersion), HttpMethod.Put, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -58,7 +59,7 @@ public class BinanceRestApiCoinFuturesUserStreamClient
                 { "listenKey", listenKey }
             };
 
-        return await SendRequestInternal<object>(GetUrl(closeFuturesListenKeyEndpoint, api, signedVersion), HttpMethod.Delete, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(closeFuturesListenKeyEndpoint, api, signedVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 }

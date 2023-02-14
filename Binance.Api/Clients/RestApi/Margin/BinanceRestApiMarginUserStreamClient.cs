@@ -23,9 +23,10 @@ public class BinanceRestApiMarginUserStreamClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiMarginUserStreamClient(BinanceRestApiMarginClient main)
     {
@@ -50,7 +51,7 @@ public class BinanceRestApiMarginUserStreamClient
                 { "listenKey", listenKey },
             };
 
-        return await SendRequestInternal<object>(GetUrl(crossMarginUpdateListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Put, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(crossMarginUpdateListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Put, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -63,7 +64,7 @@ public class BinanceRestApiMarginUserStreamClient
                 { "listenKey", listenKey }
             };
 
-        return await SendRequestInternal<object>(GetUrl(crossMarginDeleteListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(crossMarginDeleteListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -76,7 +77,7 @@ public class BinanceRestApiMarginUserStreamClient
             {"symbol", symbol}
         };
 
-        var result = await SendRequestInternal<BinanceListenKey>(GetUrl(isolatedMarginCreateListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceListenKey>(GetUrl(isolatedMarginCreateListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         return result.As(result.Data?.ListenKey!);
     }
     #endregion
@@ -91,7 +92,7 @@ public class BinanceRestApiMarginUserStreamClient
             {"symbol", symbol}
         };
 
-        return await SendRequestInternal<object>(GetUrl(isolatedMarginUpdateListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Put, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(isolatedMarginUpdateListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Put, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -105,7 +106,7 @@ public class BinanceRestApiMarginUserStreamClient
             {"symbol", symbol}
         };
 
-        return await SendRequestInternal<object>(GetUrl(isolatedMarginDeleteListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(isolatedMarginDeleteListenKeyEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 

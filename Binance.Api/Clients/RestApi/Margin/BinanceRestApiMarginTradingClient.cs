@@ -70,31 +70,32 @@ public class BinanceRestApiMarginTradingClient
     /// <summary>
     /// Event triggered when an order is placed via this client. Only available for Spot orders
     /// </summary>
-    public event Action<OrderId> OnOrderPlaced;
+    public event Action<long> OnOrderPlaced;
 
     /// <summary>
     /// Event triggered when an order is canceled via this client. Note that this does not trigger when using CancelAllOrdersAsync. Only available for Spot orders
     /// </summary>
-    public event Action<OrderId> OnOrderCanceled;
+    public event Action<long> OnOrderCanceled;
 
     // Internal References
     internal BinanceRestApiMarginClient MainClient { get; }
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiMarginTradingClient(BinanceRestApiMarginClient main)
     {
         MainClient = main;
     }
 
-    internal void InvokeOrderPlaced(OrderId id)
+    internal void InvokeOrderPlaced(long id)
         => OnOrderPlaced?.Invoke(id);
 
-    internal void InvokeOrderCanceled(OrderId id)
+    internal void InvokeOrderCanceled(long id)
         => OnOrderCanceled?.Invoke(id);
 
     #region Cross Margin Account Transfer
@@ -109,7 +110,7 @@ public class BinanceRestApiMarginTradingClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceTransaction>(GetUrl(marginTransferEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true, weight: 600).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceTransaction>(GetUrl(marginTransferEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 600).ConfigureAwait(false);
     }
     #endregion
 
@@ -129,7 +130,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceTransaction>(GetUrl(marginBorrowEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true, weight: 3000).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceTransaction>(GetUrl(marginBorrowEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
     }
     #endregion
 
@@ -146,7 +147,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceTransaction>(GetUrl(marginRepayEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true, weight: 3000).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceTransaction>(GetUrl(marginRepayEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
     }
     #endregion
 
@@ -160,7 +161,7 @@ public class BinanceRestApiMarginTradingClient
                 {"asset", asset}
             };
 
-        return await SendRequestInternal<BinanceMarginAsset>(GetUrl(marginAssetEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginAsset>(GetUrl(marginAssetEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -174,7 +175,7 @@ public class BinanceRestApiMarginTradingClient
                 {"symbol", symbol}
             };
 
-        return await SendRequestInternal<BinanceMarginPair>(GetUrl(marginPairEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginPair>(GetUrl(marginPairEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -202,7 +203,7 @@ public class BinanceRestApiMarginTradingClient
                 {"symbol", symbol}
             };
 
-        return await SendRequestInternal<BinanceMarginPriceIndex>(GetUrl(marginPriceIndexEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginPriceIndex>(GetUrl(marginPriceIndexEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -242,8 +243,7 @@ public class BinanceRestApiMarginTradingClient
             weight: 6,
             ct).ConfigureAwait(false);
 
-        if (result)
-            InvokeOrderPlaced(new OrderId { Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
+        if (result) InvokeOrderPlaced(result.Data.Id);
         return result;
     }
     #endregion
@@ -266,9 +266,8 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceOrderBase>(GetUrl(cancelMarginOrderEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, parameters, true, weight: 10).ConfigureAwait(false);
-        if (result)
-            InvokeOrderCanceled(new OrderId { Id = result.Data.Id.ToString(CultureInfo.InvariantCulture) });
+        var result = await SendRequestInternal<BinanceOrderBase>(GetUrl(cancelMarginOrderEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        if (result) InvokeOrderCanceled(result.Data.Id);
         return result;
     }
     #endregion
@@ -285,7 +284,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("isIsolated", isIsolated);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(GetUrl(cancelOpenMarginOrdersEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(GetUrl(cancelOpenMarginOrdersEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -304,7 +303,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceTransferHistory>>(GetUrl(transferHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceTransferHistory>>(GetUrl(transferHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -336,7 +335,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("isolatedSymbol", isolatedSymbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceLoan>>(GetUrl(getLoanEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceLoan>>(GetUrl(getLoanEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -367,7 +366,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("archived", archived);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceRepay>>(GetUrl(getRepayEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceRepay>>(GetUrl(getRepayEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -385,7 +384,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceInterestHistory>>(GetUrl(interestHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceInterestHistory>>(GetUrl(interestHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -402,7 +401,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceForcedLiquidation>>(GetUrl(forceLiquidationHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceForcedLiquidation>>(GetUrl(forceLiquidationHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -412,7 +411,7 @@ public class BinanceRestApiMarginTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceMarginAccount>(GetUrl(marginAccountInfoEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginAccount>(GetUrl(marginAccountInfoEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -432,7 +431,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrder>(GetUrl(queryMarginOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrder>(GetUrl(queryMarginOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -448,7 +447,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("isIsolated", isIsolated);
 
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(openMarginOrdersEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(openMarginOrdersEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -469,7 +468,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(allMarginOrdersEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 200).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(allMarginOrdersEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 200).ConfigureAwait(false);
     }
     #endregion
 
@@ -524,7 +523,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("stopLimitTimeInForce", stopLimitTimeInForce == null ? null : JsonConvert.SerializeObject(stopLimitTimeInForce, new TimeInForceConverter(false)));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceMarginOrderOcoList>(GetUrl(newMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, parameters, true, weight: 6).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginOrderOcoList>(GetUrl(newMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6).ConfigureAwait(false);
     }
     #endregion
 
@@ -546,7 +545,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceMarginOrderOcoList>(GetUrl(cancelMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginOrderOcoList>(GetUrl(cancelMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -563,7 +562,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceMarginOrderOcoList>(GetUrl(getMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginOrderOcoList>(GetUrl(getMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -584,7 +583,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceMarginOrderOcoList>>(GetUrl(allMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 200).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceMarginOrderOcoList>>(GetUrl(allMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 200).ConfigureAwait(false);
     }
     #endregion
 
@@ -596,7 +595,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("isIsolated", isIsolated?.ToString());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceMarginOrderOcoList>>(GetUrl(openMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceMarginOrderOcoList>>(GetUrl(openMarginOCOOrderEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -617,7 +616,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceTrade>>(GetUrl(myMarginTradesEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceTrade>>(GetUrl(myMarginTradesEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -634,7 +633,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("isolatedSymbol", isolatedSymbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceMarginAmount>(GetUrl(maxBorrowableEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 50).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginAmount>(GetUrl(maxBorrowableEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 50).ConfigureAwait(false);
     }
     #endregion
 
@@ -650,7 +649,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("isolatedSymbol", isolatedSymbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceMarginAmount>(GetUrl(maxTransferableEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 50).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceMarginAmount>(GetUrl(maxTransferableEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 50).ConfigureAwait(false);
 
         if (!result)
             return result.As<decimal>(default);
@@ -670,7 +669,7 @@ public class BinanceRestApiMarginTradingClient
             };
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        return await SendRequestInternal<BinanceMarginLevel>(GetUrl(marginLevelInformation, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginLevel>(GetUrl(marginLevelInformation, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -692,7 +691,7 @@ public class BinanceRestApiMarginTradingClient
         };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceTransaction>(GetUrl(transferIsolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceTransaction>(GetUrl(transferIsolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -719,7 +718,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("size", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceIsolatedMarginTransfer>>(GetUrl(isolatedMarginTransferHistoryEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 600).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceIsolatedMarginTransfer>>(GetUrl(isolatedMarginTransferHistoryEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 600).ConfigureAwait(false);
     }
     #endregion
 
@@ -729,7 +728,7 @@ public class BinanceRestApiMarginTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceIsolatedMarginAccount>(GetUrl(isolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceIsolatedMarginAccount>(GetUrl(isolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -742,7 +741,7 @@ public class BinanceRestApiMarginTradingClient
         };
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        return await SendRequestInternal<BinanceCreateIsolatedMarginAccountResult>(GetUrl(disableIsolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Delete, ct, parameters, true, weight: 300).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceCreateIsolatedMarginAccountResult>(GetUrl(disableIsolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 300).ConfigureAwait(false);
     }
     #endregion
 
@@ -755,7 +754,7 @@ public class BinanceRestApiMarginTradingClient
             };
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        return await SendRequestInternal<BinanceCreateIsolatedMarginAccountResult>(GetUrl(enableIsolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true, weight: 300).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceCreateIsolatedMarginAccountResult>(GetUrl(enableIsolatedMarginAccountEndpoint, "sapi", "1"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 300).ConfigureAwait(false);
     }
     #endregion
 
@@ -766,7 +765,7 @@ public class BinanceRestApiMarginTradingClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceIsolatedMarginAccountLimit>(GetUrl(isolatedMarginAccountLimitEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceIsolatedMarginAccountLimit>(GetUrl(isolatedMarginAccountLimitEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -782,7 +781,7 @@ public class BinanceRestApiMarginTradingClient
 
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceIsolatedMarginSymbol>(GetUrl(isolatedMarginSymbolEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceIsolatedMarginSymbol>(GetUrl(isolatedMarginSymbolEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -792,7 +791,7 @@ public class BinanceRestApiMarginTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceIsolatedMarginSymbol>>(GetUrl(isolatedMarginAllSymbolEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceIsolatedMarginSymbol>>(GetUrl(isolatedMarginAllSymbolEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -807,7 +806,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("interestBNBBurn", marginInterest);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBnbBurnStatus>(GetUrl(toggleBnbBurnEndpoint, "sapi", "1"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBnbBurnStatus>(GetUrl(toggleBnbBurnEndpoint, "sapi", "1"), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -817,7 +816,7 @@ public class BinanceRestApiMarginTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBnbBurnStatus>(GetUrl(getBnbBurnEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBnbBurnStatus>(GetUrl(getBnbBurnEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -837,7 +836,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceInterestRateHistory>>(GetUrl(interestRateHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceInterestRateHistory>>(GetUrl(interestRateHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -852,7 +851,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("vipLevel", vipLevel?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceInterestMarginData>>(GetUrl(interestMarginDataEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceInterestMarginData>>(GetUrl(interestMarginDataEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -866,7 +865,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("tier", tier);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceIsolatedMarginTierData>>(GetUrl(isolatedMargingTierEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceIsolatedMarginTierData>>(GetUrl(isolatedMargingTierEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -876,7 +875,7 @@ public class BinanceRestApiMarginTradingClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(marginOrderRateLimitEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true, weight: 20).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(marginOrderRateLimitEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 
@@ -887,7 +886,7 @@ public class BinanceRestApiMarginTradingClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        var result = await SendRequestInternal<BinanceDustLogList>(GetUrl(marginDustLogEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceDustLogList>(GetUrl(marginDustLogEndpoint, "sapi", "1"), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion

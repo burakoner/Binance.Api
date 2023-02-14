@@ -29,9 +29,10 @@ public class BinanceRestApiBSwapClient
     internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-    Uri uri, HttpMethod method, CancellationToken cancellationToken, Dictionary<string, object> parameters = null, bool signed = false,
-    RestParameterPosition? postPosition = null, ArraySerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
-        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit);
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+        => await MainClient.SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal BinanceRestApiBSwapClient(BinanceRestApiGeneralClient main)
     {
@@ -44,7 +45,7 @@ public class BinanceRestApiBSwapClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBSwapPool>>(GetUrl(bSwapPoolsEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBSwapPool>>(GetUrl(bSwapPoolsEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -55,7 +56,7 @@ public class BinanceRestApiBSwapClient
         parameters.AddOptionalParameter("poolId", poolId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBSwapPoolLiquidity>>(GetUrl(bSwapPoolLiquidityEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, true, weight: poolId == null ? 10 : 1).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBSwapPoolLiquidity>>(GetUrl(bSwapPoolLiquidityEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: poolId == null ? 10 : 1).ConfigureAwait(false);
     }
     #endregion
 
@@ -71,7 +72,7 @@ public class BinanceRestApiBSwapClient
         parameters.AddOptionalParameter("type", type == null ? null : JsonConvert.SerializeObject(type.Value, new LiquidityTypeConverter(false)));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBSwapOperationResult>(GetUrl(bSwapAddLiquidityEndpoint, bSwapApi, bSwapVersion), HttpMethod.Post, ct, parameters, true, weight: 1000).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBSwapOperationResult>(GetUrl(bSwapAddLiquidityEndpoint, bSwapApi, bSwapVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1000).ConfigureAwait(false);
     }
     #endregion
 
@@ -87,7 +88,7 @@ public class BinanceRestApiBSwapClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBSwapOperationResult>(GetUrl(bSwapRemoveLiquidityEndpoint, bSwapApi, bSwapVersion), HttpMethod.Post, ct, parameters, true, weight: 1000).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBSwapOperationResult>(GetUrl(bSwapRemoveLiquidityEndpoint, bSwapApi, bSwapVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1000).ConfigureAwait(false);
     }
     #endregion
 
@@ -105,7 +106,7 @@ public class BinanceRestApiBSwapClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBSwapOperation>>(GetUrl(bSwapLiquidityOperationsEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, true, weight: 3000).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBSwapOperation>>(GetUrl(bSwapLiquidityOperationsEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
     }
     #endregion
 
@@ -120,7 +121,7 @@ public class BinanceRestApiBSwapClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBSwapQuote>(GetUrl(bSwapQuoteEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, true, weight: 150).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBSwapQuote>(GetUrl(bSwapQuoteEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150).ConfigureAwait(false);
     }
     #endregion
 
@@ -135,7 +136,7 @@ public class BinanceRestApiBSwapClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBSwapResult>(GetUrl(bSwapSwapEndpoint, bSwapApi, bSwapVersion), HttpMethod.Post, ct, parameters, true, weight: 1000).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBSwapResult>(GetUrl(bSwapSwapEndpoint, bSwapApi, bSwapVersion), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1000).ConfigureAwait(false);
     }
     #endregion
 
@@ -154,7 +155,7 @@ public class BinanceRestApiBSwapClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBSwapRecord>>(GetUrl(bSwapSwapRecordsEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, true, weight: 3000).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBSwapRecord>>(GetUrl(bSwapSwapRecordsEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
     }
     #endregion
 
@@ -167,7 +168,7 @@ public class BinanceRestApiBSwapClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceBSwapPoolConfig>>(GetUrl(bSwapPoolsConfigureEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, signed: true, weight: 150).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBSwapPoolConfig>>(GetUrl(bSwapPoolsConfigureEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150).ConfigureAwait(false);
     }
     #endregion
 
@@ -183,7 +184,7 @@ public class BinanceRestApiBSwapClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBSwapPreviewResult>(GetUrl(bSwapAddLiquidityPreviewEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, true, weight: 150).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBSwapPreviewResult>(GetUrl(bSwapAddLiquidityPreviewEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150).ConfigureAwait(false);
     }
     #endregion
 
@@ -199,7 +200,7 @@ public class BinanceRestApiBSwapClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceBSwapPreviewResult>(GetUrl(bSwapRemoveLiquidityPreviewEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, parameters, true, weight: 150).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBSwapPreviewResult>(GetUrl(bSwapRemoveLiquidityPreviewEndpoint, bSwapApi, bSwapVersion), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150).ConfigureAwait(false);
     }
     #endregion
 
