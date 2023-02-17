@@ -17,7 +17,7 @@ public class BinanceRestApiFuturesAlgoClient
 
     // Internal References
     internal BinanceRestApiGeneralClient MainClient { get; }
-    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal BinanceRestApiClientOptions ClientOptions { get => MainClient.RootClient.ClientOptions; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -29,7 +29,7 @@ public class BinanceRestApiFuturesAlgoClient
     {
         MainClient = main;
 
-        _spotBaseAddress = Options.SpotOptions.BaseAddress;
+        _spotBaseAddress = ClientOptions.SpotOptions.BaseAddress;
     }
 
     #region Volume Participation(VP) New Order
@@ -56,7 +56,7 @@ public class BinanceRestApiFuturesAlgoClient
         parameters.AddOptionalParameter("clientAlgoId", clientOrderId);
         parameters.AddOptionalParameter("reduceOnly", reduceOnly);
         parameters.AddOptionalParameter("limitPrice", limitPrice);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var url = _spotBaseAddress.AppendPath("sapi", "v1", placeVpOrderEndpoint);
         return await SendRequestInternal<BinanceAlgoOrderResult>(new Uri(url), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
@@ -87,7 +87,7 @@ public class BinanceRestApiFuturesAlgoClient
         parameters.AddOptionalParameter("clientAlgoId", clientOrderId);
         parameters.AddOptionalParameter("reduceOnly", reduceOnly);
         parameters.AddOptionalParameter("limitPrice", limitPrice);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var url = _spotBaseAddress.AppendPath("sapi", "v1", placeTwapOrderEndpoint);
         return await SendRequestInternal<BinanceAlgoOrderResult>(new Uri(url), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
@@ -101,7 +101,7 @@ public class BinanceRestApiFuturesAlgoClient
             {
                 { "algoId", algoOrderId },
             };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var url = _spotBaseAddress.AppendPath("sapi", "v1", cancelAlgoOrderEndpoint);
         return await SendRequestInternal<BinanceAlgoResult>(new Uri(url), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
@@ -112,7 +112,7 @@ public class BinanceRestApiFuturesAlgoClient
     public async Task<RestCallResult<BinanceAlgoOrders>> GetOpenAlgoOrdersAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var url = _spotBaseAddress.AppendPath("sapi", "v1", getAlgoOpenOrdersEndpoint);
         return await SendRequestInternal<BinanceAlgoOrders>(new Uri(url), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
@@ -129,7 +129,7 @@ public class BinanceRestApiFuturesAlgoClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("page", page);
         parameters.AddOptionalParameter("pageSize", limit);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var url = _spotBaseAddress.AppendPath("sapi", "v1", getAlgoHistoricalOrdersEndpoint);
         return await SendRequestInternal<BinanceAlgoOrders>(new Uri(url), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
@@ -145,7 +145,7 @@ public class BinanceRestApiFuturesAlgoClient
             };
         parameters.AddOptionalParameter("page", page);
         parameters.AddOptionalParameter("pageSize", limit);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var url = _spotBaseAddress.AppendPath("sapi", "v1", getAlgoSubOrdersEndpoint);
         return await SendRequestInternal<BinanceAlgoSubOrderList>(new Uri(url), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);

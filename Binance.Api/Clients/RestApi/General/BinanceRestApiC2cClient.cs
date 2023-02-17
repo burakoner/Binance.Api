@@ -13,7 +13,7 @@ public class BinanceRestApiC2cClient
 
     // Internal References
     internal BinanceRestApiGeneralClient MainClient { get; }
-    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal BinanceRestApiClientOptions ClientOptions { get => MainClient.RootClient.ClientOptions; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -35,7 +35,7 @@ public class BinanceRestApiC2cClient
         parameters.AddOptionalParameter("endTimestamp", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("page", page);
         parameters.AddOptionalParameter("rows", pageSize);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? Options.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceC2CUserTrade>>>(GetUrl(c2cTradeHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (!result.Success)

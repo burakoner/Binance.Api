@@ -35,9 +35,9 @@ public class BinanceRestApiGeneralClient : RestApiClient
     internal BinanceRestApiClient RootClient { get; }
 
     // Options
-    public new BinanceRestApiClientOptions Options { get { return (BinanceRestApiClientOptions)base.Options; } }
+    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.Options; } }
 
-    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base("Binance RestApi", root.Options)
+    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base("Binance RestApi", root.ClientOptions)
     {
         RootClient = root;
 
@@ -88,7 +88,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
         => RootClient.Spot.Server.GetServerTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
-        => new(log, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
+        => new(log, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
 
     public override TimeSpan GetTimeOffset()
         => TimeSyncState.TimeOffset;
@@ -98,7 +98,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
 
     internal Uri GetUrl(string endpoint, string api, string version = null)
     {
-        var result = Options.BaseAddress.AppendPath(api);
+        var result = ClientOptions.BaseAddress.AppendPath(api);
 
         if (!string.IsNullOrEmpty(version))
             result = result.AppendPath($"v{version}");
@@ -112,7 +112,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
         ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
-        if (!result && result.Error!.Code == -1021 && Options.AutoTimestamp)
+        if (!result && result.Error!.Code == -1021 && ClientOptions.AutoTimestamp)
         {
             log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;

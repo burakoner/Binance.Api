@@ -3,9 +3,9 @@
 public class BinanceRestApiCoinFuturesPortfolioClient
 {
     // Api
-    private const string api = "dapi";
-    private const string publicVersion = "1";
-    private const string signedVersion = "1";
+    //private const string api = "dapi";
+    //private const string publicVersion = "1";
+    //private const string signedVersion = "1";
 
     // Portfolio
     // TODO: Portfolio Margin Exchange Information
@@ -13,7 +13,7 @@ public class BinanceRestApiCoinFuturesPortfolioClient
 
     // Internal References
     internal BinanceRestApiCoinFuturesClient MainClient { get; }
-    internal BinanceRestApiClientOptions Options { get => MainClient.RootClient.Options; }
+    internal BinanceRestApiClientOptions ClientOptions { get => MainClient.RootClient.ClientOptions; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,

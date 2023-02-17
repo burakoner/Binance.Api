@@ -3,7 +3,7 @@
 public sealed class BinanceRestApiClient
 {
     // Options
-    public BinanceRestApiClientOptions Options { get; }
+    public BinanceRestApiClientOptions ClientOptions { get; }
 
     // Master Clients
     public BinanceRestApiSpotClient Spot { get; }
@@ -43,7 +43,7 @@ public sealed class BinanceRestApiClient
 
     public BinanceRestApiClient(BinanceRestApiClientOptions options)
     {
-        Options = options;
+        ClientOptions = options;
 
         Spot = new BinanceRestApiSpotClient(this);
         Margin = new BinanceRestApiMarginClient(this);
