@@ -15,9 +15,9 @@ public class BinanceStreamSpotClient : StreamApiClient
     internal BinanceStreamClient RootClient { get; }
 
     // Options
-    public new BinanceStreamClientOptions Options { get { return (BinanceStreamClientOptions)base.Options; } }
+    public new BinanceStreamClientOptions ClientOptions { get { return (BinanceStreamClientOptions)base.ClientOptions; } }
 
-    internal BinanceStreamSpotClient(BinanceStreamClient root) : base("Binance Spot Stream", root.Options)
+    internal BinanceStreamSpotClient(BinanceStreamClient root) : base("Binance Spot Stream", root.ClientOptions)
     {
         RootClient = root;
 
@@ -113,7 +113,7 @@ public class BinanceStreamSpotClient : StreamApiClient
         if (!connection.Connected)
             return true;
 
-        await connection.SendAndWaitAsync(unsub, Options.ResponseTimeout, data =>
+        await connection.SendAndWaitAsync(unsub, ClientOptions.ResponseTimeout, data =>
         {
             if (data.Type != JTokenType.Object)
                 return false;

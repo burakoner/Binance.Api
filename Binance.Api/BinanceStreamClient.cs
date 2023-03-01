@@ -3,7 +3,7 @@
 public class BinanceStreamClient
 {
     // Options
-    public BinanceStreamClientOptions Options { get; }
+    public BinanceStreamClientOptions ClientOptions { get; }
 
     // Master Clients
     public BinanceStreamSpotClient Spot { get; }
@@ -20,7 +20,7 @@ public class BinanceStreamClient
 
     public BinanceStreamClient(BinanceStreamClientOptions options)
     {
-        Options = options;
+        ClientOptions = options;
 
         Spot = new BinanceStreamSpotClient(this);
         General = new BinanceStreamGeneralClient(this);

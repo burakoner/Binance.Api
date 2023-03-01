@@ -25,7 +25,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     internal BinanceRestApiClient RootClient { get; }
 
     // Options
-    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.Options; } }
+    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
     internal BinanceRestApiUsdtFuturesClient(BinanceRestApiClient root) : base("Binance UsdtFutures RestApi", root.ClientOptions)
     {
@@ -231,7 +231,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public string GetSymbolName(string baseAsset, string quoteAsset) =>
         (baseAsset + quoteAsset).ToUpper(CultureInfo.InvariantCulture);
 
-    protected override CallError ParseErrorResponse(JToken error)
+    protected override Error ParseErrorResponse(JToken error)
     {
         if (!error.HasValues)
             return new ServerError(error.ToString());

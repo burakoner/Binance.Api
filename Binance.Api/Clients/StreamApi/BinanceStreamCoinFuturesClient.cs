@@ -15,9 +15,9 @@ public class BinanceStreamCoinFuturesClient : StreamApiClient
     internal BinanceStreamClient RootClient { get; }
 
     // Options
-    public new BinanceStreamClientOptions Options { get { return (BinanceStreamClientOptions)base.Options; } }
+    public new BinanceStreamClientOptions ClientOptions { get { return (BinanceStreamClientOptions)base.ClientOptions; } }
 
-    internal BinanceStreamCoinFuturesClient(BinanceStreamClient root) : base("Binance CoinFutures Stream", root.Options)
+    internal BinanceStreamCoinFuturesClient(BinanceStreamClient root) : base("Binance CoinFutures Stream", root.ClientOptions)
     {
         RootClient = root;
 
@@ -116,7 +116,7 @@ public class BinanceStreamCoinFuturesClient : StreamApiClient
         if (!connection.Connected)
             return true;
 
-        await connection.SendAndWaitAsync(unsub, Options.ResponseTimeout, data =>
+        await connection.SendAndWaitAsync(unsub, ClientOptions.ResponseTimeout, data =>
         {
             if (data.Type != JTokenType.Object)
                 return false;

@@ -20,7 +20,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     internal BinanceRestApiClient RootClient { get; }
 
     // Options
-    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.Options; } }
+    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
     internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base("Binance Margin RestApi", root.ClientOptions)
     {
@@ -40,7 +40,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
         => new BinanceAuthenticationProvider(credentials);
 
-    protected override CallError ParseErrorResponse(JToken error)
+    protected override Error ParseErrorResponse(JToken error)
     {
         if (!error.HasValues)
             return new ServerError(error.ToString());

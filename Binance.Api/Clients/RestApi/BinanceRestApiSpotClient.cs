@@ -19,7 +19,7 @@ public class BinanceRestApiSpotClient : RestApiClient
     internal BinanceRestApiClient RootClient { get; }
 
     // Options
-    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.Options; } }
+    public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
     internal BinanceRestApiSpotClient(BinanceRestApiClient root) : base("Binance Spot RestApi", root.ClientOptions)
     {
@@ -38,7 +38,7 @@ public class BinanceRestApiSpotClient : RestApiClient
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
         => new BinanceAuthenticationProvider(credentials);
 
-    protected override CallError ParseErrorResponse(JToken error)
+    protected override Error ParseErrorResponse(JToken error)
     {
         if (!error.HasValues)
             return new ServerError(error.ToString());
