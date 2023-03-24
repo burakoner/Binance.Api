@@ -225,7 +225,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     protected override TimeSyncInfo GetTimeSyncInfo()
         => new TimeSyncInfo(Log, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
 
-    public override TimeSpan GetTimeOffset()
+    protected override TimeSpan GetTimeOffset()
         => TimeSyncState.TimeOffset;
 
     public string GetSymbolName(string baseAsset, string quoteAsset) =>

@@ -225,10 +225,10 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     protected override TimeSyncInfo GetTimeSyncInfo()
         => new TimeSyncInfo(log, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
 
-    public override TimeSpan GetTimeOffset()
+    protected override TimeSpan GetTimeOffset()
         => TimeSyncState.TimeOffset;
 
-    public string GetSymbolName(string baseAsset, string quoteAsset) =>
+    protected string GetSymbolName(string baseAsset, string quoteAsset) =>
         (baseAsset + quoteAsset).ToUpper(CultureInfo.InvariantCulture);
 
     protected override Error ParseErrorResponse(JToken error)
