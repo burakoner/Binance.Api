@@ -16,7 +16,7 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     public BinanceRestApiEuropeanClientOptions EuropeanOptions { get; set; }
     public BinanceRestApiBrokerClientOptions BrokerOptions { get; set; }
 
-    public BinanceRestApiClientOptions() : this(new ApiCredentials("", ""))
+    public BinanceRestApiClientOptions() : this(null)
     {
     }
 

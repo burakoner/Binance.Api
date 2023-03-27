@@ -1,9 +1,5 @@
 ﻿using Binance.Api;
-using Binance.Api.Enums;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Binance.ApiConsole
@@ -12,19 +8,13 @@ namespace Binance.ApiConsole
     {
         static async Task Main(string[] args)
         {
-            var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
-            {
-                ApiCredentials = new ApiSharp.Authentication.ApiCredentials("OQx9OJtaQ0NJ0jp9Jfb5mbN2BIOLCz6EMOYCZxk92WUdsUriD1N5FwXKnOvK2sYc", "Iw3IcHPgtpEldKo1Z1JX9PpyhPrz1J5DkSt3wiyDb5vxuiVHE5Od60vLl4OXHsBB")
-                // ApiCredentials = new ApiSharp.Authentication.ApiCredentials("-----API-KEY-----", "-----API-SECRET-----")
-            });
+            var api = new BinanceRestApiClient();
 
-            /*
             // Server (Public)
             var server_01 = await api.Spot.Server.PingAsync();
             var server_02 = await api.Spot.Server.GetServerTimeAsync();
             var server_03 = await api.Spot.Server.GetExchangeInfoAsync();
             var server_04 = await api.Spot.Server.GetSystemStatusAsync();
-            */
 
             /*
             // Market Data (Public)
