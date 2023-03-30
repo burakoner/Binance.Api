@@ -30,7 +30,7 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
         ApiCredentials = credentials;
 
         // Api Addresses
-        BaseAddress = "https://api.binance.com";
+        BaseAddress = BinanceApiAddresses.Default.RestClientAddress;
 
         // Rate Limiters
         RateLimiters = new List<IRateLimiter>
