@@ -13,7 +13,7 @@ public class BinanceRestApiFuturesAlgoClient
     private const string getAlgoSubOrdersEndpoint = "algo/futures/subOrders";
 
     // Api
-    private string _spotBaseAddress = "";
+    private readonly string _spotBaseAddress = "";
 
     // Internal References
     internal BinanceRestApiGeneralClient MainClient { get; }

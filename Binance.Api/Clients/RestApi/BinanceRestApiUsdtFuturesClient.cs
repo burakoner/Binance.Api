@@ -122,7 +122,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         => GetServerTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
-        => new TimeSyncInfo(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
+        => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
 
     protected override TimeSpan GetTimeOffset()
         => TimeSyncState.TimeOffset;
@@ -875,7 +875,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         if (!result)
             return result.As<IEnumerable<BinanceFuturesQuantileEstimation>>(null);
 
-        return result.As<IEnumerable<BinanceFuturesQuantileEstimation>>(new[] { result.Data });
+        return result.As<IEnumerable<BinanceFuturesQuantileEstimation>>([result.Data]);
     }
     #endregion
 
