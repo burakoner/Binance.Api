@@ -1,22 +1,22 @@
 ﻿namespace Binance.Api.Clients.StreamApi;
 
-public class BinanceStreamGeneralClient : StreamApiClient
+public class BinanceStreamGeneralClient : WebSocketApiClient
 {
     // Clients
     public BinanceStreamBlvtClient BLVT { get; }
 
     // Internal
-    internal Log Log { get => this.log; }
+    internal ILogger Logger { get => this._logger; }
     internal CallResult<T> Deserializer<T>(string data, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(data, serializer, requestId);
     internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(obj, serializer, requestId);
 
     // Root Client
-    internal BinanceStreamClient RootClient { get; }
+    internal BinanceWebSocketApiClient RootClient { get; }
 
     // Options
-    public new BinanceStreamClientOptions ClientOptions { get { return (BinanceStreamClientOptions)base.ClientOptions; } }
+    public new BinanceWebSocketApiClientOptions ClientOptions { get { return (BinanceWebSocketApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceStreamGeneralClient(BinanceStreamClient root) : base("Binance Spot Stream", root.ClientOptions)
+    internal BinanceStreamGeneralClient(BinanceWebSocketApiClient root) : base(root.Logger, root.ClientOptions)
     {
         RootClient = root;
 
@@ -29,7 +29,7 @@ public class BinanceStreamGeneralClient : StreamApiClient
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
     => new BinanceAuthenticationProvider(credentials);
 
-    internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<StreamDataEvent<T>> onData, CancellationToken ct)
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     {
         var request = new BinanceSocketRequest
         {
@@ -41,12 +41,12 @@ public class BinanceStreamGeneralClient : StreamApiClient
         return SubscribeAsync(url.AppendPath("stream"), request, null, false, onData, ct);
     }
 
-    protected override bool HandleQueryResponse<T>(StreamConnection connection, object request, JToken data, out CallResult<T> callResult)
+    protected override bool HandleQueryResponse<T>(WebSocketConnection connection, object request, JToken data, out CallResult<T> callResult)
     {
         throw new NotImplementedException();
     }
 
-    protected override bool HandleSubscriptionResponse(StreamConnection connection, StreamSubscription subscription, object request, JToken message, out CallResult<object> callResult)
+    protected override bool HandleSubscriptionResponse(WebSocketConnection connection, WebSocketSubscription subscription, object request, JToken message, out CallResult<object> callResult)
     {
         callResult = null;
         if (message.Type != JTokenType.Object)
@@ -63,7 +63,7 @@ public class BinanceStreamGeneralClient : StreamApiClient
         var result = message["result"];
         if (result != null && result.Type == JTokenType.Null)
         {
-            Log.Write(LogLevel.Trace, $"Socket {connection.Id} Subscription completed");
+            Logger.Log(LogLevel.Trace, $"Socket {connection.Id} Subscription completed");
             callResult = new CallResult<object>(new object());
             return true;
         }
@@ -79,7 +79,7 @@ public class BinanceStreamGeneralClient : StreamApiClient
         return true;
     }
 
-    protected override bool MessageMatchesHandler(StreamConnection connection, JToken message, object request)
+    protected override bool MessageMatchesHandler(WebSocketConnection connection, JToken message, object request)
     {
         if (message.Type != JTokenType.Object)
             return false;
@@ -92,17 +92,17 @@ public class BinanceStreamGeneralClient : StreamApiClient
         return bRequest.Params.Contains(stream.ToString());
     }
 
-    protected override bool MessageMatchesHandler(StreamConnection connection, JToken message, string identifier)
+    protected override bool MessageMatchesHandler(WebSocketConnection connection, JToken message, string identifier)
     {
         return true;
     }
 
-    protected override Task<CallResult<bool>> AuthenticateAsync(StreamConnection connection)
+    protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
     {
         throw new NotImplementedException();
     }
 
-    protected override async Task<bool> UnsubscribeAsync(StreamConnection connection, StreamSubscription subscription)
+    protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
     {
         var topics = ((BinanceSocketRequest)subscription.Request!).Params;
         var unsub = new BinanceSocketRequest { Method = "UNSUBSCRIBE", Params = topics, Id = NextId() };

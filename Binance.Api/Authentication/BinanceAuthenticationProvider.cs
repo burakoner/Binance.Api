@@ -23,12 +23,12 @@ internal class BinanceAuthenticationProvider : AuthenticationProvider
         headers.Add("signature", SignHMACSHA256(body == null || body.Count == 0 ? uri.Query.Replace("?", "") : body.ToFormData()));
     }
 
-    public override void AuthenticateSocketApi()
+    public override void AuthenticateTcpSocketApi()
     {
         throw new NotImplementedException();
     }
 
-    public override void AuthenticateStreamApi()
+    public override void AuthenticateWebSocketApi()
     {
         throw new NotImplementedException();
     }

@@ -28,7 +28,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     public BinanceRestApiPayClient Pay { get; }
 
     // Internal
-    internal Log Log { get => this.log; }
+    internal ILogger Logger { get => this._logger; }
     internal TimeSyncState TimeSyncState = new("Binance RestApi");
 
     // Root Client
@@ -37,7 +37,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base("Binance RestApi", root.ClientOptions)
+    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
     {
         RootClient = root;
 
@@ -88,7 +88,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
         => RootClient.Spot.GetServerTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
-        => new(log, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
+        => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
 
     protected override TimeSpan GetTimeOffset()
         => TimeSyncState.TimeOffset;
@@ -114,7 +114,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
         if (!result && result.Error!.Code == -1021 && ClientOptions.AutoTimestamp)
         {
-            log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+            Logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;
         }
         return result;

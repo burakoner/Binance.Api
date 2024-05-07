@@ -79,7 +79,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     private const string portfolioMarginRepayEndpoint = "portfolio/repay";
 
     // Internal
-    internal Log Log { get => this.log; }
+    internal ILogger Logger { get => this._logger; }
     internal BinanceExchangeInfo ExchangeInfo;
     internal DateTime? LastExchangeInfoUpdate;
     internal TimeSyncState TimeSyncState = new("Binance Margin RestApi");
@@ -100,7 +100,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     /// </summary>
     public event Action<long> OnOrderCanceled;
 
-    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base("Binance Margin RestApi", root.ClientOptions)
+    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
     {
         RootClient = root;
 
@@ -130,7 +130,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         => RootClient.Spot.GetServerTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
-        => new(log, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
+        => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
 
     protected override TimeSpan GetTimeOffset()
         => TimeSyncState.TimeOffset;
@@ -164,7 +164,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
         if (!result && result.Error!.Code == -1021 && ClientOptions.AutoTimestamp)
         {
-            log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+            Logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;
         }
         return result;
@@ -200,7 +200,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         var rulesCheck = await CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinancePlacedOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -285,7 +285,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: LotSize filter failed. Original quantity: {quantity}, Closest allowed: {outputQuantity}");
                     }
 
-                    log.Write(LogLevel.Information, $"Quantity clamped from {quantity} to {outputQuantity} based on lot size filter");
+                    Logger.Log(LogLevel.Information, $"Quantity clamped from {quantity} to {outputQuantity} based on lot size filter");
                 }
             }
         }
@@ -301,7 +301,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                 }
 
                 outputQuoteQuantity = symbolData.MinNotionalFilter.MinNotional;
-                log.Write(LogLevel.Information, $"QuoteQuantity adjusted from {quoteQuantity} to {outputQuoteQuantity} based on min notional filter");
+                Logger.Log(LogLevel.Information, $"QuoteQuantity adjusted from {quoteQuantity} to {outputQuoteQuantity} based on min notional filter");
             }
         }
 
@@ -318,7 +318,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                     if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter max/min failed. Original price: {price}, Closest allowed: {outputPrice}");
 
-                    log.Write(LogLevel.Information, $"price clamped from {price} to {outputPrice} based on price filter");
+                    Logger.Log(LogLevel.Information, $"price clamped from {price} to {outputPrice} based on price filter");
                 }
 
                 if (stopPrice != null)
@@ -333,7 +333,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                                 $"Trade rules check failed: Stop price filter max/min failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
                         }
 
-                        log.Write(LogLevel.Information,
+                        Logger.Log(LogLevel.Information,
                             $"Stop price clamped from {stopPrice} to {outputStopPrice} based on price filter");
                     }
                 }
@@ -348,7 +348,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                     if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter tick failed. Original price: {price}, Closest allowed: {outputPrice}");
 
-                    log.Write(LogLevel.Information, $"price floored from {beforePrice} to {outputPrice} based on price filter");
+                    Logger.Log(LogLevel.Information, $"price floored from {beforePrice} to {outputPrice} based on price filter");
                 }
 
                 if (stopPrice != null)
@@ -363,7 +363,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                                 $"Trade rules check failed: Stop price filter tick failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
                         }
 
-                        log.Write(LogLevel.Information,
+                        Logger.Log(LogLevel.Information,
                             $"Stop price floored from {beforeStopPrice} to {outputStopPrice} based on price filter");
                     }
                 }
@@ -389,7 +389,7 @@ public class BinanceRestApiMarginClient : RestApiClient
             var minQuantity = symbolData.MinNotionalFilter.MinNotional / outputPrice.Value;
             var stepSize = symbolData.LotSizeFilter!.StepSize;
             outputQuantity = BinanceHelpers.Floor(minQuantity + (stepSize - minQuantity % stepSize));
-            log.Write(LogLevel.Information, $"Quantity clamped from {currentQuantity} to {outputQuantity} based on min notional filter");
+            Logger.Log(LogLevel.Information, $"Quantity clamped from {currentQuantity} to {outputQuantity} based on min notional filter");
         }
 
         return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
@@ -458,7 +458,7 @@ public class BinanceRestApiMarginClient : RestApiClient
 
         ExchangeInfo = exchangeInfoResult.Data;
         LastExchangeInfoUpdate = DateTime.UtcNow;
-        Log.Write(LogLevel.Information, "Trade rules updated");
+        Logger.Log(LogLevel.Information, "Trade rules updated");
         return exchangeInfoResult;
     }
 
@@ -481,7 +481,7 @@ public class BinanceRestApiMarginClient : RestApiClient
 
         ExchangeInfo = exchangeInfoResult.Data;
         LastExchangeInfoUpdate = DateTime.UtcNow;
-        Log.Write(LogLevel.Information, "Trade rules updated");
+        Logger.Log(LogLevel.Information, "Trade rules updated");
         return exchangeInfoResult;
     }
     #endregion
@@ -903,7 +903,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         var rulesCheck = await CheckTradeRules(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            Log.Write(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceMarginOrderOcoList>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 

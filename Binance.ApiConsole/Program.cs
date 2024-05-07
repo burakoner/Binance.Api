@@ -11,10 +11,10 @@ namespace Binance.ApiConsole
             var api = new BinanceRestApiClient();
 
             // Server (Public)
-            var server_01 = await api.Spot.Server.PingAsync();
-            var server_02 = await api.Spot.Server.GetServerTimeAsync();
-            var server_03 = await api.Spot.Server.GetExchangeInfoAsync();
-            var server_04 = await api.Spot.Server.GetSystemStatusAsync();
+            var server_01 = await api.Spot.PingAsync();
+            var server_02 = await api.Spot.GetServerTimeAsync();
+            var server_03 = await api.Spot.GetExchangeInfoAsync();
+            var server_04 = await api.Spot.GetSystemStatusAsync();
 
             /*
             // Market Data (Public)

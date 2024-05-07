@@ -3,7 +3,7 @@
 /// <summary>
 /// Blvt info update
 /// </summary>
-public class BinanceBlvtInfoUpdate : BinanceStreamEvent
+public class BinanceBlvtInfoUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// Token name

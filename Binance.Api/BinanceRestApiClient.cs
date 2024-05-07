@@ -2,6 +2,9 @@
 
 public sealed class BinanceRestApiClient
 {
+    // Logger
+    internal ILogger Logger { get; }
+
     // Options
     public BinanceRestApiClientOptions ClientOptions { get; }
 
@@ -37,12 +40,17 @@ public sealed class BinanceRestApiClient
     public BinanceRestApiNftClient NFT { get => General.NFT; }
     public BinanceRestApiPayClient Pay { get => General.Pay; }
 
-    public BinanceRestApiClient() : this(new BinanceRestApiClientOptions())
+    public BinanceRestApiClient() : this(null, new BinanceRestApiClientOptions())
     {
     }
 
-    public BinanceRestApiClient(BinanceRestApiClientOptions options)
+    public BinanceRestApiClient(BinanceRestApiClientOptions options) : this(null, options)
     {
+    }
+
+    public BinanceRestApiClient(ILogger logger, BinanceRestApiClientOptions options)
+    {
+        Logger = logger;
         ClientOptions = options;
 
         Spot = new BinanceRestApiSpotClient(this);

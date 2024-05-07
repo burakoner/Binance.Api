@@ -10,12 +10,12 @@ public class BinanceStreamSpotUserStreamClient
 
     // Internal References
     internal BinanceStreamSpotClient MainClient { get; }
-    internal Log Log { get => MainClient.Log; }
+    internal ILogger Logger { get => MainClient.Logger; }
     internal string BaseAddress { get => Options.BaseAddress; }
-    internal BinanceStreamClientOptions Options { get => MainClient.RootClient.ClientOptions; }
+    internal BinanceWebSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
     internal CallResult<T> Deserialize<T>(string data, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(data, serializer, requestId);
     internal CallResult<T> Deserialize<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(obj, serializer, requestId);
-    internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<StreamDataEvent<T>> onData, CancellationToken ct)
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     => MainClient.SubscribeAsync<T>(url, topics, onData, ct);
 
     internal BinanceStreamSpotUserStreamClient(BinanceStreamSpotClient main)
@@ -24,17 +24,17 @@ public class BinanceStreamSpotUserStreamClient
     }
 
     #region User Data Stream
-    public async Task<CallResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
+    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUserDataUpdatesAsync(
         string listenKey,
-        Action<StreamDataEvent<BinanceStreamOrderUpdate>> onOrderUpdateMessage,
-        Action<StreamDataEvent<BinanceStreamOrderList>> onOcoOrderUpdateMessage,
-        Action<StreamDataEvent<BinanceStreamPositionsUpdate>> onAccountPositionMessage,
-        Action<StreamDataEvent<BinanceStreamBalanceUpdate>> onAccountBalanceUpdate,
+        Action<WebSocketDataEvent<BinanceStreamOrderUpdate>> onOrderUpdateMessage,
+        Action<WebSocketDataEvent<BinanceStreamOrderList>> onOcoOrderUpdateMessage,
+        Action<WebSocketDataEvent<BinanceStreamPositionsUpdate>> onAccountPositionMessage,
+        Action<WebSocketDataEvent<BinanceStreamBalanceUpdate>> onAccountBalanceUpdate,
         CancellationToken ct = default)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
 
-        var handler = new Action<StreamDataEvent<string>>(data =>
+        var handler = new Action<WebSocketDataEvent<string>>(data =>
         {
             var combinedToken = JToken.Parse(data.Data);
             var token = combinedToken["data"];
@@ -56,7 +56,7 @@ public class BinanceStreamSpotUserStreamClient
                             onOrderUpdateMessage?.Invoke(data.As(result.Data, result.Data.Id.ToString()));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning,
+                            MainClient.Logger.Log(LogLevel.Warning,
                                 "Couldn't deserialize data received from order stream: " + result.Error);
                         break;
                     }
@@ -69,7 +69,7 @@ public class BinanceStreamSpotUserStreamClient
                             onOcoOrderUpdateMessage?.Invoke(data.As(result.Data, result.Data.Id.ToString()));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning,
+                            MainClient.Logger.Log(LogLevel.Warning,
                                 "Couldn't deserialize data received from oco order stream: " + result.Error);
                         break;
                     }
@@ -82,7 +82,7 @@ public class BinanceStreamSpotUserStreamClient
                             onAccountPositionMessage?.Invoke(data.As(result.Data));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning,
+                            MainClient.Logger.Log(LogLevel.Warning,
                                 "Couldn't deserialize data received from account position stream: " + result.Error);
                         break;
                     }
@@ -95,12 +95,12 @@ public class BinanceStreamSpotUserStreamClient
                             onAccountBalanceUpdate?.Invoke(data.As(result.Data, result.Data.Asset));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning,
+                            MainClient.Logger.Log(LogLevel.Warning,
                                 "Couldn't deserialize data received from account position stream: " + result.Error);
                         break;
                     }
                 default:
-                    MainClient.Log.Write(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data);
+                    MainClient.Logger.Log(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data);
                     break;
             }
         });

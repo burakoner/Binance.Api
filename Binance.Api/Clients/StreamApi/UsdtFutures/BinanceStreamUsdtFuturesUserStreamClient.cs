@@ -1,4 +1,4 @@
-﻿using Binance.Api.Models.StreamApi.Futures;
+﻿using Binance.Api.Models.WebSocketApi.Futures;
 
 namespace Binance.Api.Clients.StreamApi.UsdtFutures;
 
@@ -12,12 +12,12 @@ public class BinanceStreamUsdtFuturesUserStreamClient
 
     // Internal References
     internal BinanceStreamUsdtFuturesClient MainClient { get; }
-    internal Log Log { get => MainClient.Log; }
+    internal ILogger Logger { get => MainClient.Logger; }
     internal string BaseAddress { get => Options.BaseAddress; }
-    internal BinanceStreamClientOptions Options { get => MainClient.RootClient.ClientOptions; }
+    internal BinanceWebSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
     internal CallResult<T> Deserialize<T>(string data, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(data, serializer, requestId);
     internal CallResult<T> Deserialize<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(obj, serializer, requestId);
-    internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<StreamDataEvent<T>> onData, CancellationToken ct)
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     => MainClient.SubscribeAsync<T>(url, topics, onData, ct);
 
     internal BinanceStreamUsdtFuturesUserStreamClient(BinanceStreamUsdtFuturesClient main)
@@ -26,18 +26,18 @@ public class BinanceStreamUsdtFuturesUserStreamClient
     }
 
     #region User Data Streams
-    public async Task<CallResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
+    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUserDataUpdatesAsync(
         string listenKey,
-        Action<StreamDataEvent<BinanceFuturesStreamConfigUpdate>> onConfigUpdate,
-        Action<StreamDataEvent<BinanceFuturesStreamMarginUpdate>> onMarginUpdate,
-        Action<StreamDataEvent<BinanceFuturesStreamAccountUpdate>> onAccountUpdate,
-        Action<StreamDataEvent<BinanceFuturesStreamOrderUpdate>> onOrderUpdate,
-        Action<StreamDataEvent<BinanceStreamEvent>> onListenKeyExpired,
+        Action<WebSocketDataEvent<BinanceFuturesStreamConfigUpdate>> onConfigUpdate,
+        Action<WebSocketDataEvent<BinanceFuturesStreamMarginUpdate>> onMarginUpdate,
+        Action<WebSocketDataEvent<BinanceFuturesStreamAccountUpdate>> onAccountUpdate,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderUpdate>> onOrderUpdate,
+        Action<WebSocketDataEvent<BinanceSocketEvent>> onListenKeyExpired,
         CancellationToken ct = default)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
 
-        var handler = new Action<StreamDataEvent<string>>(data =>
+        var handler = new Action<WebSocketDataEvent<string>>(data =>
         {
             var combinedToken = JToken.Parse(data.Data);
             var token = combinedToken["data"];
@@ -59,7 +59,7 @@ public class BinanceStreamUsdtFuturesUserStreamClient
                             onConfigUpdate?.Invoke(data.As(result.Data, result.Data.LeverageUpdateData?.Symbol));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning, "Couldn't deserialize data received from config stream: " + result.Error);
+                            MainClient.Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from config stream: " + result.Error);
 
                         break;
                     }
@@ -72,7 +72,7 @@ public class BinanceStreamUsdtFuturesUserStreamClient
                             onMarginUpdate?.Invoke(data.As(result.Data));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning, "Couldn't deserialize data received from order stream: " + result.Error);
+                            MainClient.Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from order stream: " + result.Error);
                         break;
                     }
                 case accountUpdateEvent:
@@ -84,7 +84,7 @@ public class BinanceStreamUsdtFuturesUserStreamClient
                             onAccountUpdate?.Invoke(data.As(result.Data));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning, "Couldn't deserialize data received from account stream: " + result.Error);
+                            MainClient.Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account stream: " + result.Error);
 
                         break;
                     }
@@ -97,20 +97,20 @@ public class BinanceStreamUsdtFuturesUserStreamClient
                             onOrderUpdate?.Invoke(data.As(result.Data, result.Data.UpdateData.Symbol));
                         }
                         else
-                            MainClient.Log.Write(LogLevel.Warning, "Couldn't deserialize data received from order stream: " + result.Error);
+                            MainClient.Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from order stream: " + result.Error);
                         break;
                     }
                 case listenKeyExpiredEvent:
                     {
-                        var result = Deserialize<BinanceStreamEvent>(token);
+                        var result = Deserialize<BinanceSocketEvent>(token);
                         if (result)
                             onListenKeyExpired?.Invoke(data.As(result.Data, combinedToken["stream"]!.Value<string>()));
                         else
-                            MainClient.Log.Write(LogLevel.Warning, "Couldn't deserialize data received from the expired listen key event: " + result.Error);
+                            MainClient.Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from the expired listen key event: " + result.Error);
                         break;
                     }
                 default:
-                    MainClient.Log.Write(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data.Data);
+                    MainClient.Logger.Log(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data.Data);
                     break;
             }
         });
