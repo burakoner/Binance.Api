@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Information about a futures symbol
@@ -161,7 +163,7 @@ public record BinanceFuturesUsdtSymbol : BinanceFuturesSymbol
     /// The status of the symbol
     /// </summary>
     [JsonConverter(typeof(SymbolStatusConverter))]
-    public SymbolStatus Status { get; set; }
+    public BinanceSymbolStatus Status { get; set; }
 
     /// <summary>
     /// The status of the symbol
@@ -181,7 +183,7 @@ public record BinanceFuturesCoinSymbol : BinanceFuturesSymbol
     /// </summary>
     [JsonConverter(typeof(SymbolStatusConverter))]
     [JsonProperty("contractStatus")]
-    public SymbolStatus Status { get; set; }
+    public BinanceSymbolStatus Status { get; set; }
 
     /// <summary>
     /// Contract size

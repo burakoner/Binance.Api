@@ -1,15 +1,17 @@
-﻿namespace Binance.Api.Models.RestApi;
+﻿using Binance.Api.Spot.Converters;
+
+namespace Binance.Api.Models.RestApi;
 
 /// <summary>
 /// A filter for order placed on a symbol.
 /// </summary>
-[JsonConverter(typeof(SymbolFilterConverter))]
+[JsonConverter(typeof(BinanceSymbolFilterConverter))]
 public record BinanceSymbolFilter
 {
     /// <summary>
     /// The type of this filter
     /// </summary>
-    public SymbolFilterType FilterType { get; set; }
+    public BinanceSymbolFilterType FilterType { get; set; }
 }
 
 /// <summary>
@@ -21,10 +23,12 @@ public record BinanceSymbolPriceFilter : BinanceSymbolFilter
     /// The minimal price the order can be for
     /// </summary>
     public decimal MinPrice { get; set; }
+
     /// <summary>
     /// The max price the order can be for
     /// </summary>
     public decimal MaxPrice { get; set; }
+
     /// <summary>
     /// The tick size of the price. The price can not have more precision as this and can only be incremented in steps of this.
     /// </summary>
@@ -40,10 +44,12 @@ public record BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
     /// The max factor the price can deviate up
     /// </summary>
     public decimal MultiplierUp { get; set; }
+
     /// <summary>
     /// The max factor the price can deviate down
     /// </summary>
     public decimal MultiplierDown { get; set; }
+
     /// <summary>
     /// The amount of minutes the average price of trades is calculated over. 0 means the last price is used
     /// </summary>
@@ -59,18 +65,22 @@ public record BinanceSymbolPercentPriceBySideFilter : BinanceSymbolFilter
     /// The max factor the price can deviate up for buys
     /// </summary>
     public decimal BidMultiplierUp { get; set; }
+
     /// <summary>
     /// The max factor the price can deviate up for sells
     /// </summary>
     public decimal AskMultiplierUp { get; set; }
+
     /// <summary>
     /// The max factor the price can deviate down for buys
     /// </summary>
     public decimal BidMultiplierDown { get; set; }
+
     /// <summary>
     /// The max factor the price can deviate down for sells
     /// </summary>
     public decimal AskMultiplierDown { get; set; }
+
     /// <summary>
     /// The amount of minutes the average price of trades is calculated over. 0 means the last price is used
     /// </summary>
@@ -86,10 +96,12 @@ public record BinanceSymbolLotSizeFilter : BinanceSymbolFilter
     /// The minimal quantity of an order
     /// </summary>
     public decimal MinQuantity { get; set; }
+
     /// <summary>
     /// The maximum quantity of an order
     /// </summary>
     public decimal MaxQuantity { get; set; }
+
     /// <summary>
     /// The tick size of the quantity. The quantity can not have more precision as this and can only be incremented in steps of this.
     /// </summary>
@@ -105,10 +117,12 @@ public record BinanceSymbolMarketLotSizeFilter : BinanceSymbolFilter
     /// The minimal quantity of an order
     /// </summary>
     public decimal MinQuantity { get; set; }
+
     /// <summary>
     /// The maximum quantity of an order
     /// </summary>
     public decimal MaxQuantity { get; set; }
+
     /// <summary>
     /// The tick size of the quantity. The quantity can not have more precision as this and can only be incremented in steps of this.
     /// </summary>
@@ -128,12 +142,12 @@ public record BinanceSymbolMinNotionalFilter : BinanceSymbolFilter
     /// <summary>
     /// Whether or not this filter is applied to market orders. If so the average trade price is used.
     /// </summary>
-    public bool ApplyToMarketOrders { get; set; }
+    public bool? ApplyToMarketOrders { get; set; }
 
     /// <summary>
     /// The amount of minutes the average price of trades is calculated over for market orders. 0 means the last price is used
     /// </summary>
-    public int AveragePriceMinutes { get; set; }
+    public int? AveragePriceMinutes { get; set; }
 }
 
 /// <summary>
@@ -220,16 +234,30 @@ public record BinanceSymbolTrailingDeltaFilter : BinanceSymbolFilter
     /// The MinTrailingAboveDelta filter defines the minimum amount in Basis Point or BIPS above the price to activate the order.
     /// </summary>
     public int MinTrailingAboveDelta { get; set; }
+
     /// <summary>
     /// The MaxTrailingAboveDelta filter defines the maximum amount in Basis Point or BIPS above the price to activate the order.
     /// </summary>
     public int MaxTrailingAboveDelta { get; set; }
+
     /// <summary>
     /// The MinTrailingBelowDelta filter defines the minimum amount in Basis Point or BIPS below the price to activate the order.
     /// </summary>
     public int MinTrailingBelowDelta { get; set; }
+
     /// <summary>
     /// The MaxTrailingBelowDelta filter defines the minimum amount in Basis Point or BIPS below the price to activate the order.
     /// </summary>
     public int MaxTrailingBelowDelta { get; set; }
+}
+
+/// <summary>
+/// Max Iceberg Orders Filter
+/// </summary>
+public record BinanceMaxNumberOfIcebergOrdersFilter : BinanceSymbolFilter
+{
+    /// <summary>
+    /// Maximum number of iceberg orders for this symbol
+    /// </summary>
+    public int MaxNumIcebergOrders { get; set; }
 }

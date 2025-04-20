@@ -3,7 +3,7 @@
 /// <summary>
 /// Tick info
 /// </summary>
-public abstract class BinanceStreamTickBase : BinanceSocketEvent, IBinanceTick
+public abstract record BinanceStreamTickBase : BinanceSocketEvent, IBinanceTick
 {
     /// <summary>
     /// The symbol this data is for

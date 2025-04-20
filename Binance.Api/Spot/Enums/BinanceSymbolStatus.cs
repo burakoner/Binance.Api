@@ -1,60 +1,85 @@
-﻿namespace Binance.Api.Enums;
+﻿namespace Binance.Api.Spot.Enums;
 
 /// <summary>
 /// Status of a symbol
 /// </summary>
-public enum SymbolStatus
+public enum BinanceSymbolStatus : byte
 {
     /// <summary>
     /// Not trading yet
     /// </summary>
-    PreTrading,
+    [Map("PRE_TRADING")]
+    PreTrading = 1,
+
     /// <summary>
     /// Pending trading
     /// </summary>
-    PendingTrading,
+    [Map("PENDING_TRADING")]
+    PendingTrading = 2,
+
     /// <summary>
     /// Trading
     /// </summary>
-    Trading,
+    [Map("TRADING")]
+    Trading = 3,
+
     /// <summary>
     /// No longer trading
     /// </summary>
-    PostTrading,
+    [Map("POST_TRADING")]
+    PostTrading = 4,
+
     /// <summary>
     /// Not trading
     /// </summary>
-    EndOfDay,
+    [Map("END_OF_DAY")]
+    EndOfDay = 5,
+
     /// <summary>
     /// Halted
     /// </summary>
-    Halt,
+    [Map("HALT")]
+    Halt = 6,
+
     /// <summary>
-    /// 
+    /// Auction Match
     /// </summary>
-    AuctionMatch,
+    [Map("AUCTION_MATCH")]
+    AuctionMatch = 7,
+
     /// <summary>
-    /// 
+    /// Break
     /// </summary>
-    Break,
+    [Map("BREAK")]
+    Break = 8,
+
     /// <summary>
     /// Closed
     /// </summary>
-    Close,
+    [Map("CLOSE")]
+    Close = 9,
+
     /// <summary>
     /// Pre delivering
     /// </summary>
-    PreDelivering,
+    [Map("PRE_DELIVERING")]
+    PreDelivering = 10,
+
     /// <summary>
     /// Delivering
     /// </summary>
-    Delivering,
+    [Map("DELIVERING")]
+    Delivering = 11,
+
     /// <summary>
     /// Pre settle
     /// </summary>
-    PreSettle,
+    [Map("PRE_SETTLE")]
+    PreSettle = 12,
+
     /// <summary>
     /// Settings
     /// </summary>
-    Settling
+    [Map("SETTLING")]
+    Settling = 13
 }

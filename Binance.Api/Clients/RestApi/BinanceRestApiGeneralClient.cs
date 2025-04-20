@@ -85,7 +85,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     }
 
     protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
-        => RootClient.Spot.GetServerTimeAsync();
+        => RootClient.Spot.General.GetTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
         => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);

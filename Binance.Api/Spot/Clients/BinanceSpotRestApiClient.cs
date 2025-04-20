@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Responses;
+﻿using Binance.Api.Spot.Enums;
 
 namespace Binance.Api.Spot;
 
@@ -137,7 +137,7 @@ public class BinanceSpotRestApiClient : RestApiClient
 
     /// <inheritdoc/>
     protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
-        => GetServerTimeAsync();
+        => General.GetTimeAsync();
 
     /// <inheritdoc/>
     protected override TimeSyncInfo GetTimeSyncInfo()
@@ -184,7 +184,7 @@ public class BinanceSpotRestApiClient : RestApiClient
     internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(Uri uri,
         string symbol,
         OrderSide side,
-        SpotOrderType type,
+        BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string? newClientOrderId = null,
@@ -202,7 +202,7 @@ public class BinanceSpotRestApiClient : RestApiClient
     {
         symbol.ValidateBinanceSymbol();
 
-        if (quoteQuantity != null && type != SpotOrderType.Market)
+        if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
@@ -242,7 +242,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         return await SendRequestInternal<BinancePlacedOrder>(uri, HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
     }
 
-    internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, SpotOrderType? type, CancellationToken ct)
+    internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
     {
         var outputQuantity = quantity;
         var outputQuoteQuantity = quoteQuantity;
@@ -253,12 +253,12 @@ public class BinanceSpotRestApiClient : RestApiClient
             return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
 
         if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ClientOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
-            await GetExchangeInfoAsync(ct).ConfigureAwait(false);
+            await General.GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        var symbolData = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Name, symbol, StringComparison.CurrentCultureIgnoreCase));
+        var symbolData = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase));
         if (symbolData == null)
             return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Symbol {symbol} not found");
 
@@ -271,12 +271,12 @@ public class BinanceSpotRestApiClient : RestApiClient
             }
         }
 
-        if (symbolData.LotSizeFilter != null || symbolData.MarketLotSizeFilter != null && type == SpotOrderType.Market)
+        if (symbolData.LotSizeFilter != null || symbolData.MarketLotSizeFilter != null && type == BinanceSpotOrderType.Market)
         {
             var minQty = symbolData.LotSizeFilter?.MinQuantity;
             var maxQty = symbolData.LotSizeFilter?.MaxQuantity;
             var stepSize = symbolData.LotSizeFilter?.StepSize;
-            if (type == SpotOrderType.Market && symbolData.MarketLotSizeFilter != null)
+            if (type == BinanceSpotOrderType.Market && symbolData.MarketLotSizeFilter != null)
             {
                 minQty = symbolData.MarketLotSizeFilter.MinQuantity;
                 if (symbolData.MarketLotSizeFilter.MaxQuantity != 0)
@@ -410,7 +410,7 @@ public class BinanceSpotRestApiClient : RestApiClient
     #region System Status
     public async Task<RestCallResult<BinanceSystemStatus>> GetSystemStatusAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<BinanceSystemStatus>(_.GetUrl(sapi, v1, systemStatusEndpoint), HttpMethod.Get, ct).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSystemStatus>(GetUrl(sapi, v1, systemStatusEndpoint), HttpMethod.Get, ct).ConfigureAwait(false);
     }
     #endregion
 
@@ -440,7 +440,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         var requestWeight = limit == null ? 1 : limit <= 100 ? 1 : limit <= 500 ? 5 : limit <= 1000 ? 10 : 50;
-        var result = await SendRequestInternal<BinanceOrderBook>(_.GetUrl(api, v3, orderBookEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceOrderBook>(GetUrl(api, v3, orderBookEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
         if (result)
             result.Data.Symbol = symbol;
         return result;
@@ -455,7 +455,7 @@ public class BinanceSpotRestApiClient : RestApiClient
 
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(_.GetUrl(api, v3, recentTradesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(GetUrl(api, v3, recentTradesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceRecentTrade>>(result.Data);
     }
     #endregion
@@ -469,7 +469,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(_.GetUrl(api, v3, historicalTradesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(GetUrl(api, v3, historicalTradesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceRecentTrade>>(result.Data);
     }
     #endregion
@@ -486,7 +486,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceAggregatedTrade>>(_.GetUrl(api, v3, aggregatedTradesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceAggregatedTrade>>(GetUrl(api, v3, aggregatedTradesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -503,7 +503,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<IEnumerable<BinanceSpotKline>>(_.GetUrl(api, v3, klinesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, klinesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceKline>>(result.Data);
     }
     #endregion
@@ -521,7 +521,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<IEnumerable<BinanceSpotKline>>(_.GetUrl(api, v3, uiKlinesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, uiKlinesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceKline>>(result.Data);
     }
     #endregion
@@ -532,7 +532,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         symbol.ValidateBinanceSymbol();
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
 
-        return await SendRequestInternal<BinanceAveragePrice>(_.GetUrl(api, v3, averagePriceEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceAveragePrice>(GetUrl(api, v3, averagePriceEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -542,7 +542,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         symbol.ValidateBinanceSymbol();
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
 
-        var result = await SendRequestInternal<Binance24HPrice>(_.GetUrl(api, v3, price24HEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await SendRequestInternal<Binance24HPrice>(GetUrl(api, v3, price24HEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         return result.As<IBinanceTick>(result.Data);
     }
 
@@ -554,13 +554,13 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object> { { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" } };
         var symbolCount = symbols.Count();
         var weight = symbolCount <= 20 ? 1 : symbolCount <= 100 ? 20 : 40;
-        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(_.GetUrl(api, v3, price24HEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(GetUrl(api, v3, price24HEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceTick>>(result.Data);
     }
 
     public async Task<RestCallResult<IEnumerable<IBinanceTick>>> GetTickersAsync(CancellationToken ct = default)
     {
-        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(_.GetUrl(api, v3, price24HEndpoint), HttpMethod.Get, ct, requestWeight: 40).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(GetUrl(api, v3, price24HEndpoint), HttpMethod.Get, ct, requestWeight: 40).ConfigureAwait(false);
         return result.As<IEnumerable<IBinanceTick>>(result.Data);
     }
     #endregion
@@ -574,7 +574,7 @@ public class BinanceSpotRestApiClient : RestApiClient
                 { "symbol", symbol }
             };
 
-        return await SendRequestInternal<BinancePrice>(_.GetUrl(api, v3, allPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinancePrice>(GetUrl(api, v3, allPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
 
     public async Task<RestCallResult<IEnumerable<BinancePrice>>> GetPricesAsync(IEnumerable<string> symbols, CancellationToken ct = default)
@@ -583,12 +583,12 @@ public class BinanceSpotRestApiClient : RestApiClient
             symbol.ValidateBinanceSymbol();
 
         var parameters = new Dictionary<string, object> { { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" } };
-        return await SendRequestInternal<IEnumerable<BinancePrice>>(_.GetUrl(api, v3, allPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinancePrice>>(GetUrl(api, v3, allPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
 
     public async Task<RestCallResult<IEnumerable<BinancePrice>>> GetPricesAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<IEnumerable<BinancePrice>>(_.GetUrl(api, v3, allPricesEndpoint), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinancePrice>>(GetUrl(api, v3, allPricesEndpoint), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
@@ -598,7 +598,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         symbol.ValidateBinanceSymbol();
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
 
-        return await SendRequestInternal<BinanceBookPrice>(_.GetUrl(api, v3, bookPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBookPrice>(GetUrl(api, v3, bookPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
 
     public async Task<RestCallResult<IEnumerable<BinanceBookPrice>>> GetBookPricesAsync(IEnumerable<string> symbols, CancellationToken ct = default)
@@ -607,12 +607,12 @@ public class BinanceSpotRestApiClient : RestApiClient
             symbol.ValidateBinanceSymbol();
         var parameters = new Dictionary<string, object> { { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" } };
 
-        return await SendRequestInternal<IEnumerable<BinanceBookPrice>>(_.GetUrl(api, v3, bookPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBookPrice>>(GetUrl(api, v3, bookPricesEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
 
     public async Task<RestCallResult<IEnumerable<BinanceBookPrice>>> GetBookPricesAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<IEnumerable<BinanceBookPrice>>(_.GetUrl(api, v3, bookPricesEndpoint), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBookPrice>>(GetUrl(api, v3, bookPricesEndpoint), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
@@ -623,7 +623,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object> { { "symbol", symbol } };
         parameters.AddOptionalParameter("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
 
-        var result = await SendRequestInternal<Binance24HPrice>(_.GetUrl(api, v3, rollingWindowPriceEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        var result = await SendRequestInternal<Binance24HPrice>(GetUrl(api, v3, rollingWindowPriceEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
         return result.As<IBinance24HPrice>(result.Data);
     }
 
@@ -636,7 +636,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 2, 100);
-        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(_.GetUrl(api, v3, rollingWindowPriceEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(GetUrl(api, v3, rollingWindowPriceEndpoint), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight).ConfigureAwait(false);
         return result.As<IEnumerable<IBinance24HPrice>>(result.Data);
     }
 
@@ -661,7 +661,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
 
-        return await SendRequestInternal<IEnumerable<BinanceUserAsset>>(_.GetUrl(sapi, v1, userCoinsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceUserAsset>>(GetUrl(sapi, v1, userCoinsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -669,20 +669,20 @@ public class BinanceSpotRestApiClient : RestApiClient
     public async Task<RestCallResult<IEnumerable<BinanceSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null,
         CancellationToken ct = default) =>
-        await GetDailyAccountSnapshot<IEnumerable<BinanceSpotAccountSnapshot>>(AccountType.Spot, startTime, endTime, limit, receiveWindow, ct).ConfigureAwait(false);
+        await GetDailyAccountSnapshot<IEnumerable<BinanceSpotAccountSnapshot>>(BinancePermissionType.Spot, startTime, endTime, limit, receiveWindow, ct).ConfigureAwait(false);
 
     public async Task<RestCallResult<IEnumerable<BinanceMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null,
         CancellationToken ct = default) =>
-        await GetDailyAccountSnapshot<IEnumerable<BinanceMarginAccountSnapshot>>(AccountType.Margin, startTime, endTime, limit, receiveWindow, ct).ConfigureAwait(false);
+        await GetDailyAccountSnapshot<IEnumerable<BinanceMarginAccountSnapshot>>(BinancePermissionType.Margin, startTime, endTime, limit, receiveWindow, ct).ConfigureAwait(false);
 
     public async Task<RestCallResult<IEnumerable<BinanceFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null,
         CancellationToken ct = default) =>
-        await GetDailyAccountSnapshot<IEnumerable<BinanceFuturesAccountSnapshot>>(AccountType.Futures, startTime, endTime, limit, receiveWindow, ct).ConfigureAwait(false);
+        await GetDailyAccountSnapshot<IEnumerable<BinanceFuturesAccountSnapshot>>(BinancePermissionType.Futures, startTime, endTime, limit, receiveWindow, ct).ConfigureAwait(false);
 
 
-    private async Task<RestCallResult<T>> GetDailyAccountSnapshot<T>(AccountType accountType, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null,
+    private async Task<RestCallResult<T>> GetDailyAccountSnapshot<T>(BinancePermissionType accountType, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null,
         CancellationToken ct = default) where T : class
     {
         limit?.ValidateIntBetween(nameof(limit), 5, 30);
@@ -696,7 +696,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceSnapshotWrapper<T>>(_.GetUrl(sapi, v1, accountSnapshotEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2400).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceSnapshotWrapper<T>>(GetUrl(sapi, v1, accountSnapshotEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2400).ConfigureAwait(false);
         if (!result.Success)
             return result.As<T>(default);
 
@@ -713,7 +713,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<object>(_.GetUrl(sapi, v1, disableFastWithdrawSwitchEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(sapi, v1, disableFastWithdrawSwitchEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -723,7 +723,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<object>(_.GetUrl(sapi, v1, enableFastWithdrawSwitchEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(sapi, v1, enableFastWithdrawSwitchEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -747,7 +747,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("walletType", walletType != null ? JsonConvert.SerializeObject(walletType, new WalletTypeConverter(false)) : null);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceWithdrawalPlaced>(_.GetUrl(sapi, v1, withdrawEndpoint), HttpMethod.Post, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceWithdrawalPlaced>(GetUrl(sapi, v1, withdrawEndpoint), HttpMethod.Post, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion
@@ -765,7 +765,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("limit", limit);
         parameters.AddOptionalParameter("offset", offset);
 
-        var result = await SendRequestInternal<IEnumerable<BinanceWithdrawal>>(_.GetUrl(sapi, v1, withdrawHistoryEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceWithdrawal>>(GetUrl(sapi, v1, withdrawHistoryEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion
@@ -783,7 +783,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceDeposit>>(
-                _.GetUrl(sapi, v1, depositHistoryEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters)
+                GetUrl(sapi, v1, depositHistoryEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters)
             .ConfigureAwait(false);
     }
     #endregion
@@ -800,7 +800,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("network", network);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceDepositAddress>(_.GetUrl(sapi, v1, depositAddressEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceDepositAddress>(GetUrl(sapi, v1, depositAddressEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -810,7 +810,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceAccountStatus>(_.GetUrl(sapi, v1, accountStatusEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceAccountStatus>(GetUrl(sapi, v1, accountStatusEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion
@@ -821,7 +821,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceResult<BinanceTradingStatus>>(_.GetUrl(sapi, v1, tradingStatusEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceResult<BinanceTradingStatus>>(GetUrl(sapi, v1, tradingStatusEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (!result)
             return result.As<BinanceTradingStatus>(default);
 
@@ -836,7 +836,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        var result = await SendRequestInternal<BinanceDustLogList>(_.GetUrl(sapi, v1, dustLogEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceDustLogList>(GetUrl(sapi, v1, dustLogEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion
@@ -847,7 +847,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceElligableDusts>(_.GetUrl(sapi, v1, dustElligableEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceElligableDusts>(GetUrl(sapi, v1, dustElligableEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -866,7 +866,7 @@ public class BinanceSpotRestApiClient : RestApiClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceDustTransferResult>(_.GetUrl(sapi, v1, dustTransferEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceDustTransferResult>(GetUrl(sapi, v1, dustTransferEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -880,7 +880,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceDividendRecord>>(_.GetUrl(sapi, v1, dividendRecordsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceDividendRecord>>(GetUrl(sapi, v1, dividendRecordsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -890,7 +890,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<Dictionary<string, BinanceAssetDetails>>(_.GetUrl(sapi, v1, assetDetailsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<Dictionary<string, BinanceAssetDetails>>(GetUrl(sapi, v1, assetDetailsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion
@@ -903,7 +903,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<IEnumerable<BinanceTradeFee>>(_.GetUrl(sapi, v1, tradeFeeEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<IEnumerable<BinanceTradeFee>>(GetUrl(sapi, v1, tradeFeeEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         return result;
     }
     #endregion
@@ -922,7 +922,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("toSymbol", toSymbol);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceTransaction>(_.GetUrl(sapi, v1, universalTransferEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceTransaction>(GetUrl(sapi, v1, universalTransferEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -939,7 +939,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("size", pageSize?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceTransfer>>(_.GetUrl(sapi, v1, universalTransferEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceTransfer>>(GetUrl(sapi, v1, universalTransferEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -951,7 +951,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("needBtcValuation", needBtcValuation?.ToString());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceFundingAsset>>(_.GetUrl(sapi, v1, fundingWalletEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceFundingAsset>>(GetUrl(sapi, v1, fundingWalletEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -962,7 +962,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("asset", asset);
         parameters.AddOptionalParameter("needBtcValuation", needBtcValuation);
-        return await SendRequestInternal<IEnumerable<BinanceUserBalance>>(_.GetUrl(sapi, v3, balancesEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceUserBalance>>(GetUrl(sapi, v3, balancesEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
 
@@ -977,7 +977,7 @@ public class BinanceSpotRestApiClient : RestApiClient
                 { "targetAsset", targetAsset }
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        return await SendRequestInternal<BinanceConvertTransferResult>(_.GetUrl(sapi, v1, convertTransferEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceConvertTransferResult>(GetUrl(sapi, v1, convertTransferEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
 
@@ -995,7 +995,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("size", limit);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceQueryRecords<BinanceConvertTransferRecord>>(_.GetUrl(sapi, v1, convertTransferHistoryEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceQueryRecords<BinanceConvertTransferRecord>>(GetUrl(sapi, v1, convertTransferHistoryEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
 
@@ -1005,7 +1005,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceAPIKeyPermissions>(_.GetUrl(sapi, v1, apiRestrictionsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceAPIKeyPermissions>(GetUrl(sapi, v1, apiRestrictionsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -1016,7 +1016,7 @@ public class BinanceSpotRestApiClient : RestApiClient
     #region Test New Order 
     public async Task<RestCallResult<BinancePlacedOrder>> PlaceTestOrderAsync(string symbol,
         OrderSide side,
-        SpotOrderType type,
+        BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string? newClientOrderId = null,
@@ -1029,7 +1029,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        return await PlaceOrderInternal(_.GetUrl(api, v3, newTestOrderEndpoint),
+        return await PlaceOrderInternal(GetUrl(api, v3, newTestOrderEndpoint),
             symbol,
             side,
             type,
@@ -1053,7 +1053,7 @@ public class BinanceSpotRestApiClient : RestApiClient
     #region New Order
     public async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderAsync(string symbol,
         OrderSide side,
-        SpotOrderType type,
+        BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string? newClientOrderId = null,
@@ -1066,7 +1066,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        var result = await PlaceOrderInternal(_.GetUrl(api, v3, newOrderEndpoint),
+        var result = await PlaceOrderInternal(GetUrl(api, v3, newOrderEndpoint),
             symbol,
             side,
             type,
@@ -1106,7 +1106,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceOrderBase>(_.GetUrl(api, v3, cancelOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceOrderBase>(GetUrl(api, v3, cancelOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result)
             InvokeOrderCanceled(result.Data.Id);
         return result;
@@ -1124,14 +1124,14 @@ public class BinanceSpotRestApiClient : RestApiClient
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(_.GetUrl(api, v3, cancelAllOpenOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(GetUrl(api, v3, cancelAllOpenOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
     #region Cancel an Existing Order and Send a New Order
     public async Task<RestCallResult<BinanceReplaceOrderResult>> ReplaceOrderAsync(string symbol,
         OrderSide side,
-        SpotOrderType type,
+        BinanceSpotOrderType type,
         CancelReplaceMode cancelReplaceMode,
         long? cancelOrderId = null,
         string? cancelClientOrderId = null,
@@ -1155,7 +1155,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         if (cancelOrderId == null && cancelClientOrderId == null || cancelOrderId != null && cancelClientOrderId != null)
             throw new ArgumentException("1 of either should be specified, cancelOrderId or cancelClientOrderId");
 
-        if (quoteQuantity != null && type != SpotOrderType.Market)
+        if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
@@ -1196,7 +1196,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("trailingDelta", trailingDelta);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        var result = await SendRequestInternal<BinanceReplaceOrderResult>(_.GetUrl(api, v3, cancelReplaceOrderEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceReplaceOrderResult>(GetUrl(api, v3, cancelReplaceOrderEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result && result.Raw != null)
         {
             // Attempt to parse the error
@@ -1228,7 +1228,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("symbol", symbol);
 
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(_.GetUrl(api, v3, openOrdersEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(api, v3, openOrdersEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
     }
     #endregion
 
@@ -1247,7 +1247,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrder>(_.GetUrl(api, v3, queryOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrder>(GetUrl(api, v3, queryOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
@@ -1267,7 +1267,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(_.GetUrl(api, v3, allOrdersEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(api, v3, allOrdersEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -1319,7 +1319,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("trailingDelta", trailingDelta);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrderOcoList>(_.GetUrl(api, v3, newOcoOrderEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(api, v3, newOcoOrderEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -1340,7 +1340,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrderOcoList>(_.GetUrl(api, v3, cancelOcoOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(api, v3, cancelOcoOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -1355,7 +1355,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceOrderOcoList>(_.GetUrl(api, v3, getOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(api, v3, getOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
@@ -1374,7 +1374,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(_.GetUrl(api, v3, getAllOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(api, v3, getAllOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -1384,7 +1384,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(_.GetUrl(api, v3, getOpenOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(api, v3, getOpenOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3).ConfigureAwait(false);
     }
     #endregion
 
@@ -1394,7 +1394,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinanceAccountInfo>(_.GetUrl(api, v3, accountInfoEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceAccountInfo>(GetUrl(api, v3, accountInfoEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -1415,7 +1415,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceTrade>>(_.GetUrl(api, v3, myTradesEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceTrade>>(GetUrl(api, v3, myTradesEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -1425,7 +1425,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(_.GetUrl(api, v3, orderRateLimitEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(api, v3, orderRateLimitEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 
@@ -1436,7 +1436,7 @@ public class BinanceSpotRestApiClient : RestApiClient
     #region Create a ListenKey (Spot)
     public async Task<RestCallResult<string>> CreateSpotUserStreamListenKeyAsync(CancellationToken ct = default)
     {
-        var result = await SendRequestInternal<BinanceListenKey>(_.GetUrl(api, v3, spotCreateListenKeyEndpoint), HttpMethod.Post, ct, true).ConfigureAwait(false);
+        var result = await SendRequestInternal<BinanceListenKey>(GetUrl(api, v3, spotCreateListenKeyEndpoint), HttpMethod.Post, ct, true).ConfigureAwait(false);
         return result.As(result.Data?.ListenKey!);
     }
     #endregion
@@ -1451,7 +1451,7 @@ public class BinanceSpotRestApiClient : RestApiClient
                 { "listenKey", listenKey }
             };
 
-        return await SendRequestInternal<object>(_.GetUrl(api, v3, spotUpdateListenKeyEndpoint), HttpMethod.Put, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(api, v3, spotUpdateListenKeyEndpoint), HttpMethod.Put, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 
@@ -1465,7 +1465,7 @@ public class BinanceSpotRestApiClient : RestApiClient
                 { "listenKey", listenKey }
             };
 
-        return await SendRequestInternal<object>(_.GetUrl(api, v3, spotDeleteListenKeyEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<object>(GetUrl(api, v3, spotDeleteListenKeyEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
 

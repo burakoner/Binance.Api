@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Models.RestApi;
 
 /// <summary>
 /// Order info
@@ -40,7 +42,7 @@ public record BinanceOrderBase
     {
         get
         {
-            if (_price == 0 && Type == SpotOrderType.Market && QuantityFilled != 0)
+            if (_price == 0 && Type == BinanceSpotOrderType.Market && QuantityFilled != 0)
                 return QuoteQuantityFilled / QuantityFilled;
             return _price;
         }
@@ -83,7 +85,7 @@ public record BinanceOrderBase
     /// The type of the order
     /// </summary>
     [JsonConverter(typeof(SpotOrderTypeConverter))]
-    public SpotOrderType Type { get; set; }
+    public BinanceSpotOrderType Type { get; set; }
     /// <summary>
     /// The side of the order
     /// </summary>

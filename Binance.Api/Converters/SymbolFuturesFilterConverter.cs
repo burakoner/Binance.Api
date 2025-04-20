@@ -16,7 +16,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
         BinanceFuturesSymbolFilter result;
         switch (type)
         {
-            case SymbolFilterType.LotSize:
+            case BinanceSymbolFilterType.LotSize:
                 result = new BinanceFuturesSymbolLotSizeFilter
                 {
                     MaxQuantity = (decimal)obj["maxQty"],
@@ -24,7 +24,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                     StepSize = (decimal)obj["stepSize"]
                 };
                 break;
-            case SymbolFilterType.MarketLotSize:
+            case BinanceSymbolFilterType.MarketLotSize:
                 result = new BinanceFuturesSymbolMarketLotSizeFilter
                 {
                     MaxQuantity = (decimal)obj["maxQty"],
@@ -32,7 +32,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                     StepSize = (decimal)obj["stepSize"]
                 };
                 break;
-            case SymbolFilterType.Price:
+            case BinanceSymbolFilterType.Price:
                 result = new BinanceFuturesSymbolPriceFilter
                 {
                     MaxPrice = (decimal)obj["maxPrice"],
@@ -40,13 +40,13 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                     TickSize = (decimal)obj["tickSize"]
                 };
                 break;
-            case SymbolFilterType.MaxNumberOrders:
+            case BinanceSymbolFilterType.MaxNumberOrders:
                 result = new BinanceFuturesSymbolMaxOrdersFilter
                 {
                     MaxNumberOrders = (int)obj["limit"]
                 };
                 break;
-            case SymbolFilterType.PricePercent:
+            case BinanceSymbolFilterType.PricePercent:
                 result = new BinanceFuturesSymbolPercentPriceFilter
                 {
                     MultiplierUp = (decimal)obj["multiplierUp"],
@@ -54,13 +54,13 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                     MultiplierDecimal = (int)obj["multiplierDecimal"]
                 };
                 break;
-            case SymbolFilterType.MaxNumberAlgorithmicOrders:
+            case BinanceSymbolFilterType.MaxNumberAlgorithmicOrders:
                 result = new BinanceFuturesSymbolMaxAlgorithmicOrdersFilter
                 {
                     MaxNumberAlgorithmicOrders = (int)obj["limit"]
                 };
                 break;
-            case SymbolFilterType.MinNotional:
+            case BinanceSymbolFilterType.MinNotional:
                 result = new BinanceFuturesSymbolMinNotionalFilter
                 {
                     MinNotional = obj.ContainsKey("notional") ? (decimal)obj["notional"] : 0
@@ -85,7 +85,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
 
         switch (filter.FilterType)
         {
-            case SymbolFilterType.LotSize:
+            case BinanceSymbolFilterType.LotSize:
                 var lotSizeFilter = (BinanceFuturesSymbolLotSizeFilter)filter;
                 writer.WritePropertyName("maxQty");
                 writer.WriteValue(lotSizeFilter.MaxQuantity);
@@ -94,7 +94,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                 writer.WritePropertyName("stepSize");
                 writer.WriteValue(lotSizeFilter.StepSize);
                 break;
-            case SymbolFilterType.MarketLotSize:
+            case BinanceSymbolFilterType.MarketLotSize:
                 var marketLotSizeFilter = (BinanceFuturesSymbolMarketLotSizeFilter)filter;
                 writer.WritePropertyName("maxQty");
                 writer.WriteValue(marketLotSizeFilter.MaxQuantity);
@@ -103,7 +103,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                 writer.WritePropertyName("stepSize");
                 writer.WriteValue(marketLotSizeFilter.StepSize);
                 break;
-            case SymbolFilterType.Price:
+            case BinanceSymbolFilterType.Price:
                 var priceFilter = (BinanceFuturesSymbolPriceFilter)filter;
                 writer.WritePropertyName("maxPrice");
                 writer.WriteValue(priceFilter.MaxPrice);
@@ -112,17 +112,17 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                 writer.WritePropertyName("tickSize");
                 writer.WriteValue(priceFilter.TickSize);
                 break;
-            case SymbolFilterType.MaxNumberAlgorithmicOrders:
+            case BinanceSymbolFilterType.MaxNumberAlgorithmicOrders:
                 var algoFilter = (BinanceFuturesSymbolMaxAlgorithmicOrdersFilter)filter;
                 writer.WritePropertyName("limit");
                 writer.WriteValue(algoFilter.MaxNumberAlgorithmicOrders);
                 break;
-            case SymbolFilterType.MaxNumberOrders:
+            case BinanceSymbolFilterType.MaxNumberOrders:
                 var orderFilter = (BinanceFuturesSymbolMaxOrdersFilter)filter;
                 writer.WritePropertyName("limit");
                 writer.WriteValue(orderFilter.MaxNumberOrders);
                 break;
-            case SymbolFilterType.PricePercent:
+            case BinanceSymbolFilterType.PricePercent:
                 var pricePercentFilter = (BinanceFuturesSymbolPercentPriceFilter)filter;
                 writer.WritePropertyName("multiplierUp");
                 writer.WriteValue(pricePercentFilter.MultiplierUp);
@@ -131,7 +131,7 @@ internal class SymbolFuturesFilterConverter : JsonConverter
                 writer.WritePropertyName("multiplierDecimal");
                 writer.WriteValue(pricePercentFilter.MultiplierDecimal);
                 break;
-            case SymbolFilterType.MinNotional:
+            case BinanceSymbolFilterType.MinNotional:
                 var minNotional = (BinanceFuturesSymbolMinNotionalFilter)filter;
                 writer.WritePropertyName("notional");
                 writer.WriteValue(minNotional.MinNotional);

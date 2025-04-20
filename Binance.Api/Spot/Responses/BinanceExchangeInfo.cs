@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Spot;
+﻿using Binance.Api.Spot.Responses;
+
+namespace Binance.Api.Spot;
 
 /// <summary>
 /// Exchange info
@@ -22,12 +24,12 @@ public record BinanceExchangeInfo
     public IEnumerable<BinanceRateLimit> RateLimits { get; set; } = [];
 
     /// <summary>
-    /// All symbols supported
-    /// </summary>
-    public IEnumerable<BinanceSymbol> Symbols { get; set; } = [];
-
-    /// <summary>
     /// Filters
     /// </summary>
     public IEnumerable<object> ExchangeFilters { get; set; } = [];
+
+    /// <summary>
+    /// All symbols supported
+    /// </summary>
+    public IEnumerable<BinanceSymbol> Symbols { get; set; } = [];
 }

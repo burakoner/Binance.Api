@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Account;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Information about an account
@@ -50,12 +52,12 @@ public record BinanceAccountInfo
     /// The type of account
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
-    public AccountType AccountType { get; set; }
+    public BinancePermissionType AccountType { get; set; }
     /// <summary>
     /// Permissions types
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(MapConverter))]
-    public IEnumerable<AccountType> Permissions { get; set; } = [];
+    public IEnumerable<BinancePermissionType> Permissions { get; set; } = [];
     /// <summary>
     /// List of assets with their current balances
     /// </summary>

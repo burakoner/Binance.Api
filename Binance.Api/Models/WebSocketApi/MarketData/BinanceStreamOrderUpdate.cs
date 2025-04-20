@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi.MarketData;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Models.WebSocketApi.MarketData;
 
 /// <summary>
 /// Update data about an order
@@ -29,7 +31,7 @@ public record BinanceStreamOrderUpdate : BinanceSocketEvent
     /// The type of the order
     /// </summary>
     [JsonProperty("o"), JsonConverter(typeof(SpotOrderTypeConverter))]
-    public SpotOrderType Type { get; set; }
+    public BinanceSpotOrderType Type { get; set; }
     /// <summary>
     /// The timespan the order is active
     /// </summary>

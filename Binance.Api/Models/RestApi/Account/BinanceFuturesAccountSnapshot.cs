@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Account;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Models.RestApi.Account;
 
 // NOTE this is a bit of a weird place for this, however it is a request on the normal client since it uses
 // the /sapi/ route instead of /fapi/. For lack of a better place keep it here
@@ -17,7 +19,7 @@ public record BinanceFuturesAccountSnapshot
     /// Account type the data is for
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
-    public AccountType Type { get; set; }
+    public BinancePermissionType Type { get; set; }
 
     /// <summary>
     /// Snapshot data

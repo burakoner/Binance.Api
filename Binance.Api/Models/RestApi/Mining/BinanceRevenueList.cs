@@ -39,7 +39,7 @@ public record BinanceRevenueItem
     /// Earning type
     /// </summary>
     [JsonConverter(typeof(BinanceEarningTypeConverter))]
-    public BinanceEarningType Type { get; set; }
+    public EarningType Type { get; set; }
     /// <summary>
     /// Day hashrate
     /// </summary>

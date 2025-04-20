@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Responses;
+﻿using Binance.Api.Spot.Enums;
 
 namespace Binance.Api.Clients.RestApi;
 
@@ -129,7 +129,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     }
 
     protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
-        => RootClient.Spot.GetServerTimeAsync();
+        => RootClient.Spot.General.GetTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
         => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
@@ -175,7 +175,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(Uri uri,
         string symbol,
         OrderSide side,
-        SpotOrderType type,
+        BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string newClientOrderId = null,
@@ -193,7 +193,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     {
         symbol.ValidateBinanceSymbol();
 
-        if (quoteQuantity != null && type != SpotOrderType.Market)
+        if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
@@ -233,7 +233,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         return await SendRequestInternal<BinancePlacedOrder>(uri, HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
     }
 
-    internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, SpotOrderType? type, CancellationToken ct)
+    internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
     {
         var outputQuantity = quantity;
         var outputQuoteQuantity = quoteQuantity;
@@ -244,12 +244,12 @@ public class BinanceRestApiMarginClient : RestApiClient
             return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
 
         if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ClientOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
-            await RootClient.Spot.GetExchangeInfoAsync(ct).ConfigureAwait(false);
+            await RootClient.Spot.General.GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        var symbolData = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Name, symbol, StringComparison.CurrentCultureIgnoreCase));
+        var symbolData = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase));
         if (symbolData == null)
             return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Symbol {symbol} not found");
 
@@ -262,12 +262,12 @@ public class BinanceRestApiMarginClient : RestApiClient
             }
         }
 
-        if (symbolData.LotSizeFilter != null || symbolData.MarketLotSizeFilter != null && type == SpotOrderType.Market)
+        if (symbolData.LotSizeFilter != null || symbolData.MarketLotSizeFilter != null && type == BinanceSpotOrderType.Market)
         {
             var minQty = symbolData.LotSizeFilter?.MinQuantity;
             var maxQty = symbolData.LotSizeFilter?.MaxQuantity;
             var stepSize = symbolData.LotSizeFilter?.StepSize;
-            if (type == SpotOrderType.Market && symbolData.MarketLotSizeFilter != null)
+            if (type == BinanceSpotOrderType.Market && symbolData.MarketLotSizeFilter != null)
             {
                 minQty = symbolData.MarketLotSizeFilter.MinQuantity;
                 if (symbolData.MarketLotSizeFilter.MaxQuantity != 0)
@@ -427,15 +427,15 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     #region Exchange Information
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
-         => GetExchangeInfoAsync([], ct);
+         => GetExchangeInfoAsync(Array.Empty<string>(), ct);
 
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync([symbol], ct);
 
-    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(AccountType permission, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
          => GetExchangeInfoAsync([permission], ct);
 
-    public async Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(AccountType[] permissions, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType[] permissions, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
 
@@ -620,7 +620,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     #region Margin Account New Order
     public async Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol,
         OrderSide side,
-        SpotOrderType type,
+        BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string newClientOrderId = null,

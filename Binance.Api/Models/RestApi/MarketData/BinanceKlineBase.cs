@@ -3,7 +3,7 @@
 /// <summary>
 /// Candlestick information for symbol
 /// </summary>
-public abstract class BinanceKlineBase : IBinanceKline
+public abstract record BinanceKlineBase : IBinanceKline
 {
     /// <summary>
     /// The time this candlestick opened

@@ -6,7 +6,7 @@ public record BinanceFuturesSymbolFilter
     /// <summary>
     /// The type of this filter
     /// </summary>
-    public SymbolFilterType FilterType { get; set; }
+    public BinanceSymbolFilterType FilterType { get; set; }
 }
 
 /// <summary>

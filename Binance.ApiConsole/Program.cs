@@ -8,12 +8,19 @@ namespace Binance.ApiConsole
     {
         static async Task Main(string[] args)
         {
-            var api = new BinanceRestApiClient();
+            var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
+            {
+                RawResponse = true,
+            });
 
-            // Server (Public)
-            var server_01 = await api.Spot.PingAsync();
-            var server_02 = await api.Spot.GetServerTimeAsync();
-            var server_03 = await api.Spot.GetExchangeInfoAsync();
+            // Spot General (Public)
+            var server_01 = await api.Spot.General.PingAsync();
+            var server_02 = await api.Spot.General.GetTimeAsync();
+            var server_03 = await api.Spot.General.GetExchangeInfoAsync();
+
+
+
+
             var server_04 = await api.Spot.GetSystemStatusAsync();
 
             /**/

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Account;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Margin account snapshot
@@ -14,7 +16,7 @@ public record BinanceMarginAccountSnapshot
     /// Account type the data is for
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
-    public AccountType Type { get; set; }
+    public BinancePermissionType Type { get; set; }
     /// <summary>
     /// Snapshot data
     /// </summary>

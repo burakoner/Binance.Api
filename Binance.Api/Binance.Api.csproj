@@ -20,6 +20,7 @@
 		<NeutralLanguage>en</NeutralLanguage>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>
+			Version 5.5.0 - 01 May 2021
 			Version 2.0.0 - 07 May 2024
 		</PackageReleaseNotes>
 		<PackageIcon>Binance.png</PackageIcon>
@@ -51,11 +52,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ApiSharp" Version="3.3.1" />
+		<PackageReference Include="ApiSharp" Version="3.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Spot\Enums\" />
 	  <Folder Include="Spot\Requests\" />
 	</ItemGroup>
 

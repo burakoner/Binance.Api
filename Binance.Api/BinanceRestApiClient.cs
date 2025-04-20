@@ -9,7 +9,7 @@ public sealed class BinanceRestApiClient
     public BinanceRestApiClientOptions ClientOptions { get; }
 
     // Master Clients
-    public BinanceRestApiSpotClient Spot { get; }
+    public BinanceSpotRestApiClient Spot { get; }
     public BinanceRestApiMarginClient Margin { get; }
     private BinanceRestApiGeneralClient General { get; }
     public BinanceRestApiCoinFuturesClient CoinFutures { get; }
@@ -53,7 +53,7 @@ public sealed class BinanceRestApiClient
         Logger = logger ?? LoggerFactory.Create(c => { }).CreateLogger(typeof(BinanceRestApiClient));
         ClientOptions = options;
 
-        Spot = new BinanceRestApiSpotClient(this);
+        Spot = new BinanceSpotRestApiClient(this);
         Margin = new BinanceRestApiMarginClient(this);
         General = new BinanceRestApiGeneralClient(this);
         CoinFutures = new BinanceRestApiCoinFuturesClient(this);

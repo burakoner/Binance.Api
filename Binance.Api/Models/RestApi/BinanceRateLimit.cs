@@ -13,7 +13,7 @@ public record BinanceRateLimit
     /// <summary>
     /// The type the rate limit applies to
     /// </summary>
-    [JsonProperty("rateLimitType"), JsonConverter(typeof(RateLimitConverter))]
+    [JsonProperty("rateLimitType")]
     public RateLimitType Type { get; set; }
 
     /// <summary>

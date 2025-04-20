@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Converters;
+﻿using Binance.Api.Spot.Enums;
+
+namespace Binance.Api.Converters;
 
 internal class SpotOrderTypeConverter : JsonConverter
 {
@@ -14,20 +16,20 @@ internal class SpotOrderTypeConverter : JsonConverter
         quotes = useQuotes;
     }
 
-    private readonly Dictionary<SpotOrderType, string> values = new Dictionary<SpotOrderType, string>
+    private readonly Dictionary<BinanceSpotOrderType, string> values = new Dictionary<BinanceSpotOrderType, string>
     {
-        { SpotOrderType.Limit, "LIMIT" },
-        { SpotOrderType.Market, "MARKET" },
-        { SpotOrderType.LimitMaker, "LIMIT_MAKER" },
-        { SpotOrderType.StopLoss, "STOP_LOSS" },
-        { SpotOrderType.StopLossLimit, "STOP_LOSS_LIMIT" },
-        { SpotOrderType.TakeProfit, "TAKE_PROFIT" },
-        { SpotOrderType.TakeProfitLimit, "TAKE_PROFIT_LIMIT" }
+        { BinanceSpotOrderType.Limit, "LIMIT" },
+        { BinanceSpotOrderType.Market, "MARKET" },
+        { BinanceSpotOrderType.LimitMaker, "LIMIT_MAKER" },
+        { BinanceSpotOrderType.StopLoss, "STOP_LOSS" },
+        { BinanceSpotOrderType.StopLossLimit, "STOP_LOSS_LIMIT" },
+        { BinanceSpotOrderType.TakeProfit, "TAKE_PROFIT" },
+        { BinanceSpotOrderType.TakeProfitLimit, "TAKE_PROFIT_LIMIT" }
     };
 
     public override bool CanConvert(Type objectType)
     {
-        return objectType == typeof(SpotOrderType);
+        return objectType == typeof(BinanceSpotOrderType);
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -38,8 +40,8 @@ internal class SpotOrderTypeConverter : JsonConverter
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         if (quotes)
-            writer.WriteValue(values[(SpotOrderType)value!]);
+            writer.WriteValue(values[(BinanceSpotOrderType)value!]);
         else
-            writer.WriteRawValue(values[(SpotOrderType)value!]);
+            writer.WriteRawValue(values[(BinanceSpotOrderType)value!]);
     }
 }

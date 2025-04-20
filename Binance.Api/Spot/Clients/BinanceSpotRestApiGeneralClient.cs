@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Responses;
+﻿using Binance.Api.Spot.Enums;
 
 namespace Binance.Api.Spot;
 
@@ -19,18 +19,24 @@ public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
     internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
 
-    public async Task<RestCallResult<long>> PingAsync(CancellationToken ct = default)
+    public async Task<RestCallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
     {
         var sw = Stopwatch.StartNew();
         var result = await __.SendRequestInternal<object>(__.GetUrl(api, v3, "ping"), HttpMethod.Get, ct).ConfigureAwait(false);
         sw.Stop();
-        return result ? result.As(sw.ElapsedMilliseconds) : result.As<long>(default!);
+
+        return result.Success
+            ? result.As(sw.Elapsed)
+            : result.AsError<TimeSpan>(result.Error);
     }
 
-    public async Task<RestCallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default)
+    public async Task<RestCallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
     {
         var result = await __.SendRequestInternal<BinanceServerTime>(__.GetUrl(api, v3, "time"), HttpMethod.Get, ct, ignoreRatelimit: true).ConfigureAwait(false);
-        return result.As(result.Data?.ServerTime ?? default);
+
+        return result.Success
+            ? result.As(result.Data?.ServerTime ?? default)
+            : result.AsError<DateTime>(result.Error);
     }
 
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
@@ -39,10 +45,10 @@ public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync([symbol], ct);
 
-    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(AccountType permission, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
          => GetExchangeInfoAsync([permission], ct);
 
-    public async Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(AccountType[] permissions, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType[] permissions, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
 
