@@ -1,16 +1,21 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of the Binance system
-/// </summary>
-public enum SystemStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Operational
+    /// Status of the Binance system
     /// </summary>
-    Normal,
-    /// <summary>
-    /// In maintenance
-    /// </summary>
-    Maintenance
+    public enum SystemStatus
+    {
+        /// <summary>
+        /// Operational
+        /// </summary>
+        [Map("0")]
+        Normal,
+        /// <summary>
+        /// In maintenance
+        /// </summary>
+        [Map("1")]
+        Maintenance
+    }
 }

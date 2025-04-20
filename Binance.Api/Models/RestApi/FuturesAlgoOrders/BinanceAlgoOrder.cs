@@ -32,7 +32,7 @@ public record BinanceAlgoOrder
     /// Order side
     /// </summary>
     [JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
+    public BinanceSpotOrderSide Side { get; set; }
     /// <summary>
     /// Position side
     /// </summary>

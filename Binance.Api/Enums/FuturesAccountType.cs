@@ -1,18 +1,22 @@
 ﻿
-namespace Binance.Api.Enums;
 
-/// <summary>
-/// Futures account type
-/// </summary>
-public enum FuturesAccountType
+
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// USDT Margined Futures
+    /// Futures account type
     /// </summary>
-    UsdtMarginedFutures,
-
-    /// <summary>
-    /// COIN Margined Futures
-    /// </summary>
-    CoinMarginedFutures
+    public enum FuturesAccountType
+    {
+        /// <summary>
+        /// USDT Margined Futures
+        /// </summary>
+        [Map("1")]
+        UsdtMarginedFutures,
+        /// <summary>
+        /// COIN Margined Futures
+        /// </summary>
+        [Map("2")]
+        CoinMarginedFutures
+    }
 }

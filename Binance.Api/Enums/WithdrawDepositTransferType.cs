@@ -1,16 +1,21 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Transfer type
-/// </summary>
-public enum WithdrawDepositTransferType
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Internal transfer
+    /// Transfer type
     /// </summary>
-    Internal,
-    /// <summary>
-    /// External transfer
-    /// </summary>
-    External
+    public enum WithdrawDepositTransferType
+    {
+        /// <summary>
+        /// Internal transfer
+        /// </summary>
+        [Map("1")]
+        Internal,
+        /// <summary>
+        /// External transfer
+        /// </summary>
+        [Map("0")]
+        External
+    }
 }

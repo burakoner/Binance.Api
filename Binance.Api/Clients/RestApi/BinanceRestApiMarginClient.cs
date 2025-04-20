@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Enums;
+﻿using Binance.Api.Margin.Enums;
 
 namespace Binance.Api.Clients.RestApi;
 
@@ -174,18 +174,18 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(Uri uri,
         string symbol,
-        OrderSide side,
+        BinanceSpotOrderSide side,
         BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string newClientOrderId = null,
         decimal? price = null,
-        TimeInForce? timeInForce = null,
+        BinanceSpotTimeInForce? timeInForce = null,
         decimal? stopPrice = null,
         decimal? icebergQty = null,
-        SideEffectType? sideEffectType = null,
+        BinanceSideEffectType? sideEffectType = null,
         bool? isIsolated = null,
-        OrderResponseType? orderResponseType = null,
+        BinanceSpotOrderResponseType? orderResponseType = null,
         int? trailingDelta = null,
         int? receiveWindow = null,
         int weight = 1,
@@ -240,7 +240,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         var outputPrice = price;
         var outputStopPrice = stopPrice;
 
-        if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.None)
+        if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
             return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
 
         if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ClientOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
@@ -282,7 +282,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                 outputQuantity = BinanceHelpers.ClampQuantity(minQty.Value, maxQty!.Value, stepSize!.Value, quantity.Value);
                 if (outputQuantity != quantity.Value)
                 {
-                    if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+                    if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                     {
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: LotSize filter failed. Original quantity: {quantity}, Closest allowed: {outputQuantity}");
                     }
@@ -296,7 +296,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         {
             if (quoteQuantity < symbolData.MinNotionalFilter.MinNotional)
             {
-                if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+                if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                 {
                     return BinanceTradeRuleResult.CreateFailed(
                         $"Trade rules check failed: MinNotional filter failed. Order value: {quoteQuantity}, minimal order value: {symbolData.MinNotionalFilter.MinNotional}");
@@ -317,7 +317,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                 outputPrice = BinanceHelpers.ClampPrice(symbolData.PriceFilter.MinPrice, symbolData.PriceFilter.MaxPrice, price.Value);
                 if (outputPrice != price)
                 {
-                    if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+                    if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter max/min failed. Original price: {price}, Closest allowed: {outputPrice}");
 
                     Logger.Log(LogLevel.Information, $"price clamped from {price} to {outputPrice} based on price filter");
@@ -329,7 +329,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                         symbolData.PriceFilter.MaxPrice, stopPrice.Value);
                     if (outputStopPrice != stopPrice)
                     {
-                        if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+                        if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                         {
                             return BinanceTradeRuleResult.CreateFailed(
                                 $"Trade rules check failed: Stop price filter max/min failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
@@ -347,7 +347,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                 outputPrice = BinanceHelpers.FloorPrice(symbolData.PriceFilter.TickSize, price.Value);
                 if (outputPrice != beforePrice)
                 {
-                    if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+                    if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter tick failed. Original price: {price}, Closest allowed: {outputPrice}");
 
                     Logger.Log(LogLevel.Information, $"price floored from {beforePrice} to {outputPrice} based on price filter");
@@ -359,7 +359,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                     outputStopPrice = BinanceHelpers.FloorPrice(symbolData.PriceFilter.TickSize, stopPrice.Value);
                     if (outputStopPrice != beforeStopPrice)
                     {
-                        if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+                        if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                         {
                             return BinanceTradeRuleResult.CreateFailed(
                                 $"Trade rules check failed: Stop price filter tick failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
@@ -379,7 +379,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         var notional = currentQuantity * outputPrice.Value;
         if (notional < symbolData.MinNotionalFilter.MinNotional)
         {
-            if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
+            if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
             {
                 return BinanceTradeRuleResult.CreateFailed(
                     $"Trade rules check failed: MinNotional filter failed. Order quantity: {notional}, minimal order quantity: {symbolData.MinNotionalFilter.MinNotional}");
@@ -619,18 +619,18 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     #region Margin Account New Order
     public async Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol,
-        OrderSide side,
+        BinanceSpotOrderSide side,
         BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string newClientOrderId = null,
         decimal? price = null,
-        TimeInForce? timeInForce = null,
+        BinanceSpotTimeInForce? timeInForce = null,
         decimal? stopPrice = null,
         decimal? icebergQuantity = null,
-        SideEffectType? sideEffectType = null,
+        BinanceSideEffectType? sideEffectType = null,
         bool? isIsolated = null,
-        OrderResponseType? orderResponseType = null,
+        BinanceSpotOrderResponseType? orderResponseType = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
@@ -884,20 +884,20 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     #region Margin Account New OCO Order
     public async Task<RestCallResult<BinanceMarginOrderOcoList>> PlaceMarginOCOOrderAsync(string symbol,
-        OrderSide side,
+        BinanceSpotOrderSide side,
         decimal price,
         decimal stopPrice,
         decimal quantity,
         decimal? stopLimitPrice = null,
-        TimeInForce? stopLimitTimeInForce = null,
+        BinanceSpotTimeInForce? stopLimitTimeInForce = null,
         decimal? stopIcebergQuantity = null,
         decimal? limitIcebergQuantity = null,
-        SideEffectType? sideEffectType = null,
+        BinanceSideEffectType? sideEffectType = null,
         bool? isIsolated = null,
         string listClientOrderId = null,
         string limitClientOrderId = null,
         string stopClientOrderId = null,
-        OrderResponseType? orderResponseType = null,
+        BinanceSpotOrderResponseType? orderResponseType = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {

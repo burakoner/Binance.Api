@@ -1,14 +1,14 @@
 ﻿namespace Binance.Api.Converters;
 
-internal class OrderResponseTypeConverter : BaseConverter<OrderResponseType>
+internal class OrderResponseTypeConverter : BaseConverter<BinanceSpotOrderResponseType>
 {
     public OrderResponseTypeConverter() : this(true) { }
     public OrderResponseTypeConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<OrderResponseType, string>> Mapping => new List<KeyValuePair<OrderResponseType, string>>
+    protected override List<KeyValuePair<BinanceSpotOrderResponseType, string>> Mapping => new List<KeyValuePair<BinanceSpotOrderResponseType, string>>
     {
-        new KeyValuePair<OrderResponseType, string>(OrderResponseType.Acknowledge, "ACK"),
-        new KeyValuePair<OrderResponseType, string>(OrderResponseType.Result, "RESULT"),
-        new KeyValuePair<OrderResponseType, string>( OrderResponseType.Full, "FULL")
+        new KeyValuePair<BinanceSpotOrderResponseType, string>(BinanceSpotOrderResponseType.Acknowledge, "ACK"),
+        new KeyValuePair<BinanceSpotOrderResponseType, string>(BinanceSpotOrderResponseType.Result, "RESULT"),
+        new KeyValuePair<BinanceSpotOrderResponseType, string>( BinanceSpotOrderResponseType.Full, "FULL")
     };
 }

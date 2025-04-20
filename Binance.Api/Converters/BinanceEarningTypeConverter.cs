@@ -15,7 +15,7 @@ internal class BinanceEarningTypeConverter : BaseConverter<EarningType>
         new KeyValuePair<EarningType, string>(EarningType.MiningAddress, "5"),
         new KeyValuePair<EarningType, string>(EarningType.IncomeTransfer, "6"),
         new KeyValuePair<EarningType, string>(EarningType.PoolSavings, "7"),
-        new KeyValuePair<EarningType, string>(EarningType.Transfered, "8"),
+        new KeyValuePair<EarningType, string>(EarningType.Transferred, "8"),
         new KeyValuePair<EarningType, string>(EarningType.IncomeTransfer, "31"),
         new KeyValuePair<EarningType, string>(EarningType.HashrateResaleMiningWallet, "32"),
         new KeyValuePair<EarningType, string>(EarningType.HashrateResalePoolSavings, "33")

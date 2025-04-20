@@ -1,25 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Rate limit on what unit
-/// </summary>
-public enum RateLimitInterval
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Seconds
+    /// Rate limit on what unit
     /// </summary>
-    [Map("SECOND")]
-    Second,
-
-    /// <summary>
-    /// Minutes
-    /// </summary>
-    [Map("MINUTE")]
-    Minute,
-
-    /// <summary>
-    /// Days
-    /// </summary>
-    [Map("DAY")]
-    Day
+    public enum RateLimitInterval
+    {
+        /// <summary>
+        /// Seconds
+        /// </summary>
+        [Map("SECOND")]
+        Second,
+        /// <summary>
+        /// Minutes
+        /// </summary>
+        [Map("MINUTE")]
+        Minute,
+        /// <summary>
+        /// Days
+        /// </summary>
+        [Map("DAY")]
+        Day
+    }
 }

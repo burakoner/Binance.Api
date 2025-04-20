@@ -1,4 +1,6 @@
-﻿using Binance.Api.Spot.Enums;
+﻿using Binance.Api.Margin.Enums;
+using Microsoft.Extensions.Options;
+using System.ComponentModel;
 
 namespace Binance.Api.Spot;
 
@@ -41,25 +43,6 @@ public class BinanceSpotRestApiClient : RestApiClient
     // TODO: Get Cloud-Mining payment and refund history (USER_DATA)
     // TODO: Query auto-converting stable coins (USER_DATA)
     // TODO: Switch on/off BUSD and stable coins conversion (USER_DATA)
-
-    // Trading
-    private const string newTestOrderEndpoint = "order/test";
-    private const string newOrderEndpoint = "order";
-    private const string cancelOrderEndpoint = "order";
-    private const string cancelAllOpenOrderEndpoint = "openOrders";
-    private const string queryOrderEndpoint = "order";
-    private const string cancelReplaceOrderEndpoint = "order/cancelReplace";
-    private const string openOrdersEndpoint = "openOrders";
-    private const string allOrdersEndpoint = "allOrders";
-    private const string newOcoOrderEndpoint = "order/oco";
-    private const string cancelOcoOrderEndpoint = "orderList";
-    private const string getOcoOrderEndpoint = "orderList";
-    private const string getAllOcoOrderEndpoint = "allOrderList";
-    private const string getOpenOcoOrderEndpoint = "openOrderList";
-    private const string accountInfoEndpoint = "account";
-    private const string myTradesEndpoint = "myTrades";
-    private const string orderRateLimitEndpoint = "rateLimit/order";
-    // TODO: Query Prevented Matches (USER_DATA)
 
     // User Data Stream
     private const string spotCreateListenKeyEndpoint = "userDataStream";
@@ -170,27 +153,30 @@ public class BinanceSpotRestApiClient : RestApiClient
         return result;
     }
 
-    internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(Uri uri,
+    internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(
+        Uri uri,
         string symbol,
-        OrderSide side,
+        BinanceSpotOrderSide side,
         BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
-        string? newClientOrderId = null,
         decimal? price = null,
-        TimeInForce? timeInForce = null,
         decimal? stopPrice = null,
-        decimal? icebergQty = null,
-        SideEffectType? sideEffectType = null,
-        bool? isIsolated = null,
-        OrderResponseType? orderResponseType = null,
+        decimal? icebergQuantity = null,
+        string? newClientOrderId = null,
+        BinanceSpotTimeInForce? timeInForce = null,
+        BinanceSpotOrderResponseType? orderResponseType = null,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         int? trailingDelta = null,
+        int? strategyId = null,
+        int? strategyType = null,
         int? receiveWindow = null,
+        bool? isIsolated = null,
+        bool? autoRepayAtCancel = null,
+        BinanceSideEffectType? sideEffectType = null,
         int weight = 1,
         CancellationToken ct = default)
     {
-        symbol.ValidateBinanceSymbol();
-
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
@@ -200,7 +186,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         var rulesCheck = await CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            Logger?.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinancePlacedOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -208,38 +194,38 @@ public class BinanceSpotRestApiClient : RestApiClient
         price = rulesCheck.Price;
         stopPrice = rulesCheck.StopPrice;
         quoteQuantity = rulesCheck.QuoteQuantity;
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, ClientOptions.AllowAppendingClientOrderId);
 
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol },
-                { "side", JsonConvert.SerializeObject(side, new OrderSideConverter(false)) },
-                { "type", JsonConvert.SerializeObject(type, new SpotOrderTypeConverter(false)) }
-            };
-        parameters.AddOptionalParameter("quantity", quantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("quoteOrderQty", quoteQuantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
-        parameters.AddOptionalParameter("price", price?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("timeInForce", timeInForce == null ? null : JsonConvert.SerializeObject(timeInForce, new TimeInForceConverter(false)));
-        parameters.AddOptionalParameter("stopPrice", stopPrice?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("icebergQty", icebergQty?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("sideEffectType", sideEffectType == null ? null : JsonConvert.SerializeObject(sideEffectType, new SideEffectTypeConverter(false)));
-        parameters.AddOptionalParameter("isIsolated", isIsolated);
-        parameters.AddOptionalParameter("newOrderRespType", orderResponseType == null ? null : JsonConvert.SerializeObject(orderResponseType, new OrderResponseTypeConverter(false)));
-        parameters.AddOptionalParameter("trailingDelta", trailingDelta);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+        };
+        parameters.AddEnum("side", side);
+        parameters.AddEnum("type", type);
+        parameters.AddOptional("quantity", quantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("quoteOrderQty", quoteQuantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("newClientOrderId", clientOrderId);
+        parameters.AddOptional("price", price?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalEnum("timeInForce", timeInForce);
+        parameters.AddOptional("stopPrice", stopPrice?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("icebergQty", icebergQuantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalEnum("sideEffectType", sideEffectType);
+        parameters.AddOptional("isIsolated", isIsolated);
+        parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
+        parameters.AddOptional("trailingDelta", trailingDelta);
+        parameters.AddOptional("strategyId", strategyId);
+        parameters.AddOptional("strategyType", strategyType);
+        parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
+        parameters.AddOptional("autoRepayAtCancel", autoRepayAtCancel);
+        parameters.AddOptional("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinancePlacedOrder>(uri, HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
     }
 
     internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
     {
-        var outputQuantity = quantity;
-        var outputQuoteQuantity = quoteQuantity;
-        var outputPrice = price;
-        var outputStopPrice = stopPrice;
-
-        if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.None)
-            return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
+        if (ClientOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
+            return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
 
         if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ClientOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
             await General.GetExchangeInfoAsync(ct).ConfigureAwait(false);
@@ -247,152 +233,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        var symbolData = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase));
-        if (symbolData == null)
-            return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Symbol {symbol} not found");
-
-        if (type != null)
-        {
-            if (!symbolData.OrderTypes.Contains(type.Value))
-            {
-                return BinanceTradeRuleResult.CreateFailed(
-                    $"Trade rules check failed: {type} order type not allowed for {symbol}");
-            }
-        }
-
-        if (symbolData.LotSizeFilter != null || symbolData.MarketLotSizeFilter != null && type == BinanceSpotOrderType.Market)
-        {
-            var minQty = symbolData.LotSizeFilter?.MinQuantity;
-            var maxQty = symbolData.LotSizeFilter?.MaxQuantity;
-            var stepSize = symbolData.LotSizeFilter?.StepSize;
-            if (type == BinanceSpotOrderType.Market && symbolData.MarketLotSizeFilter != null)
-            {
-                minQty = symbolData.MarketLotSizeFilter.MinQuantity;
-                if (symbolData.MarketLotSizeFilter.MaxQuantity != 0)
-                    maxQty = symbolData.MarketLotSizeFilter.MaxQuantity;
-
-                if (symbolData.MarketLotSizeFilter.StepSize != 0)
-                    stepSize = symbolData.MarketLotSizeFilter.StepSize;
-            }
-
-            if (minQty.HasValue && quantity.HasValue)
-            {
-                outputQuantity = BinanceHelpers.ClampQuantity(minQty.Value, maxQty!.Value, stepSize!.Value, quantity.Value);
-                if (outputQuantity != quantity.Value)
-                {
-                    if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-                    {
-                        return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: LotSize filter failed. Original quantity: {quantity}, Closest allowed: {outputQuantity}");
-                    }
-
-                    Logger.Log(LogLevel.Information, $"Quantity clamped from {quantity} to {outputQuantity} based on lot size filter");
-                }
-            }
-        }
-
-        if (symbolData.MinNotionalFilter != null && outputQuoteQuantity != null)
-        {
-            if (quoteQuantity < symbolData.MinNotionalFilter.MinNotional)
-            {
-                if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-                {
-                    return BinanceTradeRuleResult.CreateFailed(
-                        $"Trade rules check failed: MinNotional filter failed. Order value: {quoteQuantity}, minimal order value: {symbolData.MinNotionalFilter.MinNotional}");
-                }
-
-                outputQuoteQuantity = symbolData.MinNotionalFilter.MinNotional;
-                Logger.Log(LogLevel.Information, $"QuoteQuantity adjusted from {quoteQuantity} to {outputQuoteQuantity} based on min notional filter");
-            }
-        }
-
-        if (price == null)
-            return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, null, outputStopPrice);
-
-        if (symbolData.PriceFilter != null)
-        {
-            if (symbolData.PriceFilter.MaxPrice != 0 && symbolData.PriceFilter.MinPrice != 0)
-            {
-                outputPrice = BinanceHelpers.ClampPrice(symbolData.PriceFilter.MinPrice, symbolData.PriceFilter.MaxPrice, price.Value);
-                if (outputPrice != price)
-                {
-                    if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-                        return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter max/min failed. Original price: {price}, Closest allowed: {outputPrice}");
-
-                    Logger.Log(LogLevel.Information, $"price clamped from {price} to {outputPrice} based on price filter");
-                }
-
-                if (stopPrice != null)
-                {
-                    outputStopPrice = BinanceHelpers.ClampPrice(symbolData.PriceFilter.MinPrice,
-                        symbolData.PriceFilter.MaxPrice, stopPrice.Value);
-                    if (outputStopPrice != stopPrice)
-                    {
-                        if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-                        {
-                            return BinanceTradeRuleResult.CreateFailed(
-                                $"Trade rules check failed: Stop price filter max/min failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
-                        }
-
-                        Logger.Log(LogLevel.Information,
-                            $"Stop price clamped from {stopPrice} to {outputStopPrice} based on price filter");
-                    }
-                }
-            }
-
-            if (symbolData.PriceFilter.TickSize != 0)
-            {
-                var beforePrice = outputPrice;
-                outputPrice = BinanceHelpers.FloorPrice(symbolData.PriceFilter.TickSize, price.Value);
-                if (outputPrice != beforePrice)
-                {
-                    if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-                        return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter tick failed. Original price: {price}, Closest allowed: {outputPrice}");
-
-                    Logger.Log(LogLevel.Information, $"price floored from {beforePrice} to {outputPrice} based on price filter");
-                }
-
-                if (stopPrice != null)
-                {
-                    var beforeStopPrice = outputStopPrice;
-                    outputStopPrice = BinanceHelpers.FloorPrice(symbolData.PriceFilter.TickSize, stopPrice.Value);
-                    if (outputStopPrice != beforeStopPrice)
-                    {
-                        if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-                        {
-                            return BinanceTradeRuleResult.CreateFailed(
-                                $"Trade rules check failed: Stop price filter tick failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
-                        }
-
-                        Logger.Log(LogLevel.Information,
-                            $"Stop price floored from {beforeStopPrice} to {outputStopPrice} based on price filter");
-                    }
-                }
-            }
-        }
-
-        if (symbolData.MinNotionalFilter == null || quantity == null || outputPrice == null)
-            return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
-
-        var currentQuantity = outputQuantity ?? quantity.Value;
-        var notional = currentQuantity * outputPrice.Value;
-        if (notional < symbolData.MinNotionalFilter.MinNotional)
-        {
-            if (ClientOptions.SpotOptions.TradeRulesBehavior == TradeRulesBehavior.ThrowError)
-            {
-                return BinanceTradeRuleResult.CreateFailed(
-                    $"Trade rules check failed: MinNotional filter failed. Order quantity: {notional}, minimal order quantity: {symbolData.MinNotionalFilter.MinNotional}");
-            }
-
-            if (symbolData.LotSizeFilter == null)
-                return BinanceTradeRuleResult.CreateFailed("Trade rules check failed: MinNotional filter failed. Unable to auto comply because LotSizeFilter not present");
-
-            var minQuantity = symbolData.MinNotionalFilter.MinNotional / outputPrice.Value;
-            var stepSize = symbolData.LotSizeFilter!.StepSize;
-            outputQuantity = BinanceHelpers.Floor(minQuantity + (stepSize - minQuantity % stepSize));
-            Logger.Log(LogLevel.Information, $"Quantity clamped from {currentQuantity} to {outputQuantity} based on min notional filter");
-        }
-
-        return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
+        return BinanceHelpers.ValidateTradeRules(Logger, ClientOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
     #endregion
 
@@ -777,426 +618,6 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceAPIKeyPermissions>(GetUrl(sapi, v1, apiRestrictionsEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
-    }
-    #endregion
-
-    #endregion
-
-    #region Trading Methods
-
-    #region Test New Order 
-    public async Task<RestCallResult<BinancePlacedOrder>> PlaceTestOrderAsync(string symbol,
-        OrderSide side,
-        BinanceSpotOrderType type,
-        decimal? quantity = null,
-        decimal? quoteQuantity = null,
-        string? newClientOrderId = null,
-        decimal? price = null,
-        TimeInForce? timeInForce = null,
-        decimal? stopPrice = null,
-        decimal? icebergQty = null,
-        OrderResponseType? orderResponseType = null,
-        int? trailingDelta = null,
-        int? receiveWindow = null,
-        CancellationToken ct = default)
-    {
-        return await PlaceOrderInternal(GetUrl(api, v3, newTestOrderEndpoint),
-            symbol,
-            side,
-            type,
-            quantity,
-            quoteQuantity,
-            newClientOrderId,
-            price,
-            timeInForce,
-            stopPrice,
-            icebergQty,
-            null,
-            null,
-            orderResponseType,
-            trailingDelta,
-            receiveWindow,
-            1,
-            ct).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region New Order
-    public async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderAsync(string symbol,
-        OrderSide side,
-        BinanceSpotOrderType type,
-        decimal? quantity = null,
-        decimal? quoteQuantity = null,
-        string? newClientOrderId = null,
-        decimal? price = null,
-        TimeInForce? timeInForce = null,
-        decimal? stopPrice = null,
-        decimal? icebergQty = null,
-        OrderResponseType? orderResponseType = null,
-        int? trailingDelta = null,
-        int? receiveWindow = null,
-        CancellationToken ct = default)
-    {
-        var result = await PlaceOrderInternal(GetUrl(api, v3, newOrderEndpoint),
-            symbol,
-            side,
-            type,
-            quantity,
-            quoteQuantity,
-            newClientOrderId,
-            price,
-            timeInForce,
-            stopPrice,
-            icebergQty,
-            null,
-            null,
-            orderResponseType,
-            trailingDelta,
-            receiveWindow,
-            1,
-            ct).ConfigureAwait(false);
-        if (result)
-            InvokeOrderPlaced(result.Data.Id);
-        return result;
-    }
-    #endregion
-
-    #region Cancel Order
-    public async Task<RestCallResult<BinanceOrderBase>> CancelOrderAsync(string symbol, long? orderId = null, string origClientOrderId = null, string newClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
-            throw new ArgumentException("Either orderId or origClientOrderId must be sent");
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol }
-            };
-        parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
-        parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        var result = await SendRequestInternal<BinanceOrderBase>(GetUrl(api, v3, cancelOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
-        if (result)
-            InvokeOrderCanceled(result.Data.Id);
-        return result;
-    }
-    #endregion
-
-    #region Cancel All Open Orders on a Symbol
-    public async Task<RestCallResult<IEnumerable<BinanceOrderBase>>> CancelAllOrdersAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol }
-            };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<IEnumerable<BinanceOrderBase>>(GetUrl(api, v3, cancelAllOpenOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Cancel an Existing Order and Send a New Order
-    public async Task<RestCallResult<BinanceReplaceOrderResult>> ReplaceOrderAsync(string symbol,
-        OrderSide side,
-        BinanceSpotOrderType type,
-        CancelReplaceMode cancelReplaceMode,
-        long? cancelOrderId = null,
-        string? cancelClientOrderId = null,
-        string? newCancelClientOrderId = null,
-        string? newClientOrderId = null,
-        decimal? quantity = null,
-        decimal? quoteQuantity = null,
-        decimal? price = null,
-        TimeInForce? timeInForce = null,
-        decimal? stopPrice = null,
-        decimal? icebergQty = null,
-        OrderResponseType? orderResponseType = null,
-        int? trailingDelta = null,
-        int? strategyId = null,
-        int? strategyType = null,
-        int? receiveWindow = null,
-        CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-
-        if (cancelOrderId == null && cancelClientOrderId == null || cancelOrderId != null && cancelClientOrderId != null)
-            throw new ArgumentException("1 of either should be specified, cancelOrderId or cancelClientOrderId");
-
-        if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
-            throw new ArgumentException("quoteQuantity is only valid for market orders");
-
-        if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
-            throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
-
-        var rulesCheck = await CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
-        if (!rulesCheck.Passed)
-        {
-            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinanceReplaceOrderResult>(new ArgumentError(rulesCheck.ErrorMessage!));
-        }
-
-        quantity = rulesCheck.Quantity;
-        price = rulesCheck.Price;
-        stopPrice = rulesCheck.StopPrice;
-        quoteQuantity = rulesCheck.QuoteQuantity;
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol },
-                { "side", JsonConvert.SerializeObject(side, new OrderSideConverter(false)) },
-                { "type", JsonConvert.SerializeObject(type, new SpotOrderTypeConverter(false)) },
-                { "cancelReplaceMode", MapConverter.GetString(cancelReplaceMode) }
-            };
-        parameters.AddOptionalParameter("cancelNewClientOrderId", newCancelClientOrderId);
-        parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
-        parameters.AddOptionalParameter("cancelOrderId", cancelOrderId);
-        parameters.AddOptionalParameter("strategyId", strategyId);
-        parameters.AddOptionalParameter("strategyType", strategyType);
-        parameters.AddOptionalParameter("cancelOrigClientOrderId", cancelClientOrderId);
-        parameters.AddOptionalParameter("quantity", quantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("quoteOrderQty", quoteQuantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("price", price?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("timeInForce", timeInForce == null ? null : JsonConvert.SerializeObject(timeInForce, new TimeInForceConverter(false)));
-        parameters.AddOptionalParameter("stopPrice", stopPrice?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("icebergQty", icebergQty?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("newOrderRespType", orderResponseType == null ? null : JsonConvert.SerializeObject(orderResponseType, new OrderResponseTypeConverter(false)));
-        parameters.AddOptionalParameter("trailingDelta", trailingDelta);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        var result = await SendRequestInternal<BinanceReplaceOrderResult>(GetUrl(api, v3, cancelReplaceOrderEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
-        if (!result && result.Raw != null)
-        {
-            // Attempt to parse the error
-            var jsonData = result.Raw.ToJToken(Logger);
-            if (jsonData != null)
-            {
-                var dataNode = jsonData["data"];
-                if (dataNode == null)
-                    return result;
-
-                var error = dataNode?["cancelResult"]?.ToString() == "FAILURE" ? dataNode!["cancelResponse"] : jsonData["data"]!["newOrderResponse"];
-                if (error != null && error.HasValues)
-                    return result.AsError<BinanceReplaceOrderResult>(new ServerError(error!.Value<int>("code"), error.Value<string>("msg")!));
-            }
-        }
-
-        if (result && result.Data.NewOrderResult == OrderOperationResult.Success)
-            InvokeOrderPlaced(result.Data.NewOrderResponse!.Id);
-        return result;
-    }
-    #endregion
-
-    #region Current Open Orders
-    public async Task<RestCallResult<IEnumerable<BinanceOrder>>> GetOpenOrdersAsync(string symbol = null, int? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol?.ValidateBinanceSymbol();
-
-        var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("symbol", symbol);
-
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(api, v3, openOrdersEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Query Order
-    public async Task<RestCallResult<BinanceOrder>> GetOrderAsync(string symbol, long? orderId = null, string origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-        if (orderId == null && origClientOrderId == null)
-            throw new ArgumentException("Either orderId or origClientOrderId must be sent");
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol }
-            };
-        parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<BinanceOrder>(GetUrl(api, v3, queryOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region All Orders 
-    public async Task<RestCallResult<IEnumerable<BinanceOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol }
-            };
-        parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<IEnumerable<BinanceOrder>>(GetUrl(api, v3, allOrdersEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region New OCO
-    public async Task<RestCallResult<BinanceOrderOcoList>> PlaceOcoOrderAsync(string symbol,
-        OrderSide side,
-        decimal quantity,
-        decimal price,
-        decimal stopPrice,
-        decimal? stopLimitPrice = null,
-        string listClientOrderId = null,
-        string limitClientOrderId = null,
-        string stopClientOrderId = null,
-        decimal? limitIcebergQuantity = null,
-        decimal? stopIcebergQuantity = null,
-        TimeInForce? stopLimitTimeInForce = null,
-        int? trailingDelta = null,
-        int? receiveWindow = null,
-        CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-
-        var rulesCheck = await CheckTradeRules(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
-        if (!rulesCheck.Passed)
-        {
-            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinanceOrderOcoList>(new ArgumentError(rulesCheck.ErrorMessage!));
-        }
-
-        quantity = rulesCheck.Quantity!.Value;
-        price = rulesCheck.Price!.Value;
-        stopPrice = rulesCheck.StopPrice!.Value;
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol },
-                { "side", JsonConvert.SerializeObject(side, new OrderSideConverter(false)) },
-                { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
-                { "price", price.ToString(CultureInfo.InvariantCulture) },
-                { "stopPrice", stopPrice.ToString(CultureInfo.InvariantCulture) }
-            };
-        parameters.AddOptionalParameter("stopLimitPrice", stopLimitPrice?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("listClientOrderId", listClientOrderId);
-        parameters.AddOptionalParameter("limitClientOrderId", limitClientOrderId);
-        parameters.AddOptionalParameter("stopClientOrderId", stopClientOrderId);
-        parameters.AddOptionalParameter("limitIcebergQty", limitIcebergQuantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("stopIcebergQty", stopIcebergQuantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("stopLimitTimeInForce", stopLimitTimeInForce == null ? null : JsonConvert.SerializeObject(stopLimitTimeInForce, new TimeInForceConverter(false)));
-        parameters.AddOptionalParameter("trailingDelta", trailingDelta);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(api, v3, newOcoOrderEndpoint), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Cancel OCO 
-    public async Task<RestCallResult<BinanceOrderOcoList>> CancelOcoOrderAsync(string symbol, long? orderListId = null, string listClientOrderId = null, string newClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-
-        if (!orderListId.HasValue && string.IsNullOrEmpty(listClientOrderId))
-            throw new ArgumentException("Either orderListId or listClientOrderId must be sent");
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol }
-            };
-        parameters.AddOptionalParameter("orderListId", orderListId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("listClientOrderId", listClientOrderId);
-        parameters.AddOptionalParameter("newClientOrderId", newClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(api, v3, cancelOcoOrderEndpoint), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Query OCO
-    public async Task<RestCallResult<BinanceOrderOcoList>> GetOcoOrderAsync(long? orderListId = null, string origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        if (orderListId == null && origClientOrderId == null)
-            throw new ArgumentException("Either orderListId or origClientOrderId must be sent");
-
-        var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("orderListId", orderListId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<BinanceOrderOcoList>(GetUrl(api, v3, getOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Query All OCO
-    public async Task<RestCallResult<IEnumerable<BinanceOrderOcoList>>> GetOcoOrdersAsync(long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        if (fromId != null && (startTime != null || endTime != null))
-            throw new ArgumentException("Start/end time can only be provided without fromId parameter");
-
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-
-        var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(api, v3, getAllOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Query Open OCO
-    public async Task<RestCallResult<IEnumerable<BinanceOrderOcoList>>> GetOpenOcoOrdersAsync(long? receiveWindow = null, CancellationToken ct = default)
-    {
-        var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<IEnumerable<BinanceOrderOcoList>>(GetUrl(api, v3, getOpenOcoOrderEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Account Information
-    public async Task<RestCallResult<BinanceAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default)
-    {
-        var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<BinanceAccountInfo>(GetUrl(api, v3, accountInfoEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Account Trade List
-    public async Task<RestCallResult<IEnumerable<BinanceTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-
-        var parameters = new Dictionary<string, object>
-            {
-                { "symbol", symbol }
-            };
-        parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<IEnumerable<BinanceTrade>>(GetUrl(api, v3, myTradesEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
-    }
-    #endregion
-
-    #region Query Current Order Count Usage
-    public async Task<RestCallResult<IEnumerable<BinanceOrderRateLimit>>> GetOrderRateLimitStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
-    {
-        var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-        return await SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(api, v3, orderRateLimitEndpoint), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
 

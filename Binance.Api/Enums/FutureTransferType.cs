@@ -1,24 +1,31 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Futures account transfer type
-/// </summary>
-public enum FuturesTransferType
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// From spot to USDT-M futures account
+    /// Futures account transfer type
     /// </summary>
-    FromSpotToUsdtFutures,
-    /// <summary>
-    /// From USDT-M futures to spot account
-    /// </summary>
-    FromUsdtFuturesToSpot,
-    /// <summary>
-    /// From spot to COIN-M futures account
-    /// </summary>
-    FromSpotToCoinFutures,
-    /// <summary>
-    /// From COIN-M futures to spot account
-    /// </summary>
-    FromCoinFuturesToSpot
+    public enum FuturesTransferType
+    {
+        /// <summary>
+        /// From spot to USDT-M futures account
+        /// </summary>
+        [Map("1")]
+        FromSpotToUsdtFutures,
+        /// <summary>
+        /// From USDT-M futures to spot account
+        /// </summary>
+        [Map("2")]
+        FromUsdtFuturesToSpot,
+        /// <summary>
+        /// From spot to COIN-M futures account
+        /// </summary>
+        [Map("3")]
+        FromSpotToCoinFutures,
+        /// <summary>
+        /// From COIN-M futures to spot account
+        /// </summary>
+        [Map("4")]
+        FromCoinFuturesToSpot
+    }
 }

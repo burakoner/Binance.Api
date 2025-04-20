@@ -76,7 +76,7 @@ public record BinanceFuturesPlacedOrder
     /// The side of the order
     /// </summary>
     [JsonProperty("side"), JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
+    public BinanceSpotOrderSide Side { get; set; }
 
     /// <summary>
     /// The position side of the order
@@ -106,7 +106,7 @@ public record BinanceFuturesPlacedOrder
     /// For what time the order lasts
     /// </summary>
     [JsonProperty("timeInForce"), JsonConverter(typeof(TimeInForceConverter))]
-    public TimeInForce TimeInForce { get; set; }
+    public BinanceSpotTimeInForce TimeInForce { get; set; }
 
     /// <summary>
     /// The type of the order

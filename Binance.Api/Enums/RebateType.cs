@@ -1,16 +1,17 @@
-﻿namespace Binance.Api.Enums;
-
-/// <summary>
-/// Type of rebate
-/// </summary>
-public enum RebateType
+﻿namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Commission rebate
+    /// Type of rebate
     /// </summary>
-    CommissionRebate = 1,
-    /// <summary>
-    /// Referral kickback
-    /// </summary>
-    ReferralKickback = 2
+    public enum RebateType
+    {
+        /// <summary>
+        /// Commission rebate
+        /// </summary>
+        CommissionRebate = 1,
+        /// <summary>
+        /// Referral kickback
+        /// </summary>
+        ReferralKickback = 2
+    }
 }

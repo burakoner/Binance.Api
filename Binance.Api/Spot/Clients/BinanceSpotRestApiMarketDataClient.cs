@@ -11,7 +11,6 @@ public class BinanceSpotRestApiMarketDataClient(BinanceSpotRestApiClient parent)
     internal BinanceRestApiClient _ { get; } = parent._;
     internal BinanceSpotRestApiClient __ { get; } = parent;
     internal ILogger? Logger { get; } = parent.Logger;
-    internal BinanceRestApiClientOptions ClientOptions { get; } = parent.ClientOptions;
 
     public async Task<RestCallResult<BinanceOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
@@ -29,7 +28,7 @@ public class BinanceSpotRestApiMarketDataClient(BinanceSpotRestApiClient parent)
         return result;
     }
 
-    public async Task<RestCallResult<IEnumerable<IBinanceRecentTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
@@ -37,11 +36,10 @@ public class BinanceSpotRestApiMarketDataClient(BinanceSpotRestApiClient parent)
         var parameters = new ParameterCollection { { "symbol", symbol } };
         parameters.AddOptionalString("limit", limit);
 
-        var result = await __.SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(__.GetUrl(api, v3, "trades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25).ConfigureAwait(false);
-        return result.As<IEnumerable<IBinanceRecentTrade>>(result.Data);
+        return __.SendRequestInternal<IEnumerable<BinanceSpotTrade>>(__.GetUrl(api, v3, "trades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
     }
 
-    public async Task<RestCallResult<IEnumerable<IBinanceRecentTrade>>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotTrade>>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
@@ -50,8 +48,7 @@ public class BinanceSpotRestApiMarketDataClient(BinanceSpotRestApiClient parent)
         parameters.AddOptionalString("limit", limit);
         parameters.AddOptionalString("fromId", fromId);
 
-        var result = await __.SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(__.GetUrl(api, v3, "historicalTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25).ConfigureAwait(false);
-        return result.As<IEnumerable<IBinanceRecentTrade>>(result.Data);
+        return __.SendRequestInternal<IEnumerable<BinanceSpotTrade>>(__.GetUrl(api, v3, "historicalTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceAggregatedTrade>>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)

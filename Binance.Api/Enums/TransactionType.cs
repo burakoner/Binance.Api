@@ -1,16 +1,17 @@
-﻿namespace Binance.Api.Enums;
-
-/// <summary>
-/// Transaction type
-/// </summary>
-public enum TransactionType
+﻿namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Deposit
+    /// Transaction type
     /// </summary>
-    Deposit,
-    /// <summary>
-    /// Withdrawal
-    /// </summary>
-    Withdrawal
+    public enum TransactionType
+    {
+        /// <summary>
+        /// Deposit
+        /// </summary>
+        Deposit,
+        /// <summary>
+        /// Withdrawal
+        /// </summary>
+        Withdrawal
+    }
 }

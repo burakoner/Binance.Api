@@ -1,16 +1,21 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Direction of a transfer
-/// </summary>
-public enum TransferDirection
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Roll-in
+    /// Direction of a transfer
     /// </summary>
-    RollIn,
-    /// <summary>
-    /// Roll-out
-    /// </summary>
-    RollOut
+    public enum TransferDirection
+    {
+        /// <summary>
+        /// Roll-in
+        /// </summary>
+        [Map("ROLL_IN")]
+        RollIn,
+        /// <summary>
+        /// Roll-out
+        /// </summary>
+        [Map("ROLL_OUT")]
+        RollOut
+    }
 }

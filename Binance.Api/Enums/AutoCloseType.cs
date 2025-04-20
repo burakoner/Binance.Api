@@ -1,17 +1,22 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Type of auto close
-/// </summary>
-public enum AutoCloseType
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// ADL
+    /// Type of auto close
     /// </summary>
-    ADL,
+    public enum AutoCloseType
+    {
+        /// <summary>
+        /// ADL
+        /// </summary>
+        [Map("ADL")]
+        ADL,
 
-    /// <summary>
-    /// Liquidation
-    /// </summary>
-    Liquidation
+        /// <summary>
+        /// Liquidation
+        /// </summary>
+        [Map("LIQUIDATION")]
+        Liquidation
+    }
 }

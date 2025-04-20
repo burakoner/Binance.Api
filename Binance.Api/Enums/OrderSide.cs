@@ -1,16 +1,21 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// The side of an order
-/// </summary>
-public enum OrderSide
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Buy
+    /// The side of an order
     /// </summary>
-    Buy,
-    /// <summary>
-    /// Sell
-    /// </summary>
-    Sell
+    public enum OrderSide
+    {
+        /// <summary>
+        /// Buy
+        /// </summary>
+        [Map("BUY")]
+        Buy,
+        /// <summary>
+        /// Sell
+        /// </summary>
+        [Map("SELL")]
+        Sell
+    }
 }

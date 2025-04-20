@@ -11,7 +11,6 @@ public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
     internal BinanceRestApiClient _ { get; } = parent._;
     internal BinanceSpotRestApiClient __ { get; } = parent;
     internal ILogger? Logger { get; } = parent.Logger;
-    internal BinanceRestApiClientOptions ClientOptions { get; } = parent.ClientOptions;
 
     // Internal
     internal BinanceExchangeInfo? ExchangeInfo { get; private set; }

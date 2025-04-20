@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Enums;
+﻿using Binance.Net.Enums;
 
 namespace Binance.Api.Models.RestApi;
 
@@ -80,7 +80,7 @@ public record BinanceOrderBase
     /// How long the order is active
     /// </summary>
     [JsonConverter(typeof(TimeInForceConverter))]
-    public TimeInForce TimeInForce { get; set; }
+    public BinanceSpotTimeInForce TimeInForce { get; set; }
     /// <summary>
     /// The type of the order
     /// </summary>
@@ -90,7 +90,7 @@ public record BinanceOrderBase
     /// The side of the order
     /// </summary>
     [JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
+    public BinanceSpotOrderSide Side { get; set; }
     /// <summary>
     /// The stop price
     /// </summary>

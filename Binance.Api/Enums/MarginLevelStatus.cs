@@ -1,29 +1,37 @@
 ﻿
-namespace Binance.Api.Enums;
 
-/// <summary>
-/// Margin level status
-/// </summary>
-public enum MarginLevelStatus
+
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Excessive
+    /// Margin level status
     /// </summary>
-    Excessive,
-    /// <summary>
-    /// Normal
-    /// </summary>
-    Normal,
-    /// <summary>
-    /// Margin call
-    /// </summary>
-    MarginCall,
-    /// <summary>
-    /// Pre-liquidation
-    /// </summary>
-    PreLiquidation,
-    /// <summary>
-    /// Force liquidation
-    /// </summary>
-    ForceLiquidation
+    public enum MarginLevelStatus
+    {
+        /// <summary>
+        /// Excessive
+        /// </summary>
+        [Map("EXCESSIVE")]
+        Excessive,
+        /// <summary>
+        /// Normal
+        /// </summary>
+        [Map("NORMAL")]
+        Normal,
+        /// <summary>
+        /// Margin call
+        /// </summary>
+        [Map("MARGIN_CALL")]
+        MarginCall,
+        /// <summary>
+        /// Pre-liquidation
+        /// </summary>
+        [Map("PRE_LIQUIDATION")]
+        PreLiquidation,
+        /// <summary>
+        /// Force liquidation
+        /// </summary>
+        [Map("FORCE_LIQUIDATION")]
+        ForceLiquidation
+    }
 }

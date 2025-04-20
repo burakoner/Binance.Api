@@ -1,21 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Types of indicators
-/// </summary>
-[JsonConverter(typeof(IndicatorTypeConverter))]
-public enum IndicatorType
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Unfilled ratio
+    /// Types of indicators
     /// </summary>
-    UnfilledRatio,
-    /// <summary>
-    /// Expired orders ratio
-    /// </summary>
-    ExpirationRatio,
-    /// <summary>
-    /// Canceled orders ratio
-    /// </summary>
-    CancelationRatio
+    public enum IndicatorType
+    {
+        /// <summary>
+        /// Unfilled ratio
+        /// </summary>
+        [Map("UFR")]
+        UnfilledRatio,
+        /// <summary>
+        /// Expired orders ratio
+        /// </summary>
+        [Map("IFER")]
+        ExpirationRatio,
+        /// <summary>
+        /// Canceled orders ratio
+        /// </summary>
+        [Map("GCR")]
+        CancelationRatio
+    }
 }

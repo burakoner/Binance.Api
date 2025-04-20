@@ -6,7 +6,7 @@ public class BinanceRestApiSpotClientOptions
     public string BaseAddress { get; set; }
 
     // Trade Rules
-    public TradeRulesBehavior TradeRulesBehavior { get; set; }
+    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; }
     public TimeSpan TradeRulesUpdateInterval { get; set; }
 
     public BinanceRestApiSpotClientOptions()
@@ -15,7 +15,7 @@ public class BinanceRestApiSpotClientOptions
         BaseAddress = "https://api.binance.com";
 
         // Trade Rules Behaviour
-        TradeRulesBehavior = TradeRulesBehavior.None;
+        TradeRulesBehavior = BinanceTradeRulesBehavior.None;
         TradeRulesUpdateInterval = TimeSpan.FromMinutes(60);
     }
 }

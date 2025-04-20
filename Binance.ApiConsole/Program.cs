@@ -14,12 +14,13 @@ namespace Binance.ApiConsole
                 RawResponse = true,
             });
 
-            /*
+            /**/
             // Spot General (Public)
             var spot_101 = await api.Spot.General.PingAsync();
             var spot_102 = await api.Spot.General.GetTimeAsync();
             var spot_103 = await api.Spot.General.GetExchangeInfoAsync();
 
+            /*
             // Spot General (Public)
             var spot_201 = await api.Spot.MarketData.GetOrderBookAsync("BTCUSDT");
             var spot_202 = await api.Spot.MarketData.GetRecentTradesAsync("BTCUSDT");

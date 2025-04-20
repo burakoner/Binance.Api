@@ -1,20 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of a blvt action
-/// </summary>
-public enum BlvtStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Pending
+    /// Status of a blvt action
     /// </summary>
-    Pending,
-    /// <summary>
-    /// Success
-    /// </summary>
-    Success,
-    /// <summary>
-    /// Failure
-    /// </summary>
-    Failure
+    public enum BlvtStatus
+    {
+        /// <summary>
+        /// Pending
+        /// </summary>
+        [Map("P")]
+        Pending,
+        /// <summary>
+        /// Success
+        /// </summary>
+        [Map("S")]
+        Success,
+        /// <summary>
+        /// Failure
+        /// </summary>
+        [Map("F")]
+        Failure
+    }
 }

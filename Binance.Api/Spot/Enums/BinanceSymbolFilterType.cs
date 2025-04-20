@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Enums;
+﻿namespace Binance.Api.Spot.Enums;
 
 /// <summary>
 /// Filter type

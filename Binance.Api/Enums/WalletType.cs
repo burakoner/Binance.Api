@@ -1,16 +1,21 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Wallet type
-/// </summary>
-public enum WalletType
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Spot wallet
+    /// Wallet type
     /// </summary>
-    Spot,
-    /// <summary>
-    /// Funding wallet
-    /// </summary>
-    Funding
+    public enum WalletType
+    {
+        /// <summary>
+        /// Spot wallet
+        /// </summary>
+        [Map("0")]
+        Spot,
+        /// <summary>
+        /// Funding wallet
+        /// </summary>
+        [Map("1")]
+        Funding
+    }
 }

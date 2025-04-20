@@ -1,20 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of a product
-/// </summary>
-public enum ProductStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// All products
+    /// Status of a product
     /// </summary>
-    All,
-    /// <summary>
-    /// Products which are subscribable
-    /// </summary>
-    Subscribable,
-    /// <summary>
-    /// Products which are unsubscribable
-    /// </summary>
-    Unsubscribable
+    public enum ProductStatus
+    {
+        /// <summary>
+        /// All products
+        /// </summary>
+        [Map("ALL")]
+        All,
+        /// <summary>
+        /// Products which are subscribable
+        /// </summary>
+        [Map("SUBSCRIBABLE")]
+        Subscribable,
+        /// <summary>
+        /// Products which are unsubscribable
+        /// </summary>
+        [Map("UNSUBSCRIBABLE")]
+        Unsubscribable
+    }
 }

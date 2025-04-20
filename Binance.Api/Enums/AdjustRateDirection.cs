@@ -1,16 +1,21 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Rate direction
-/// </summary>
-public enum AdjustRateDirection
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Additional
+    /// Rate direction
     /// </summary>
-    Additional,
-    /// <summary>
-    /// Reduced
-    /// </summary>
-    Reduced
+    public enum AdjustRateDirection
+    {
+        /// <summary>
+        /// Additional
+        /// </summary>
+        [Map("ADDITIONAL")]
+        Additional,
+        /// <summary>
+        /// Reduced
+        /// </summary>
+        [Map("REDUCED")]
+        Reduced
+    }
 }

@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot.Converters;
-
-namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Spot.Responses;
 
 /// <summary>
 /// Symbol info
@@ -15,7 +13,6 @@ public record BinanceSymbol
     /// <summary>
     /// The status of the symbol
     /// </summary>
-    [JsonConverter(typeof(SymbolStatusConverter))]
     public BinanceSymbolStatus Status { get; set; }
 
     /// <summary>
@@ -42,7 +39,6 @@ public record BinanceSymbol
     /// <summary>
     /// Allowed order types
     /// </summary>
-    [JsonProperty(ItemConverterType = typeof(SpotOrderTypeConverter))]
     public IEnumerable<BinanceSpotOrderType> OrderTypes { get; set; } = [];
 
     /// <summary>
@@ -114,7 +110,6 @@ public record BinanceSymbol
     /// Default self trade prevention
     /// </summary>
     [JsonProperty("defaultSelfTradePreventionMode")]
-    [JsonConverter(typeof(MapConverter))]
     public BinanceSelfTradePreventionMode DefaultSelfTradePreventionMode { get; set; }
 
     /// <summary>

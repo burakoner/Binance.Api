@@ -1,24 +1,31 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of a fiat payment
-/// </summary>
-public enum FiatPaymentStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Still processing
+    /// Status of a fiat payment
     /// </summary>
-    Processing,
-    /// <summary>
-    /// Successfully completed
-    /// </summary>
-    Completed,
-    /// <summary>
-    /// Failed
-    /// </summary>
-    Failed,
-    /// <summary>
-    /// Refunded
-    /// </summary>
-    Refunded
+    public enum FiatPaymentStatus
+    {
+        /// <summary>
+        /// Still processing
+        /// </summary>
+        [Map("Processing")]
+        Processing,
+        /// <summary>
+        /// Successfully completed
+        /// </summary>
+        [Map("Completed")]
+        Completed,
+        /// <summary>
+        /// Failed
+        /// </summary>
+        [Map("Failed")]
+        Failed,
+        /// <summary>
+        /// Refunded
+        /// </summary>
+        [Map("Refunded")]
+        Refunded
+    }
 }

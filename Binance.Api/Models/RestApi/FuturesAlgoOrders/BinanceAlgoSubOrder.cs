@@ -77,7 +77,7 @@ public record BinanceAlgoSubOrder
     /// Side
     /// </summary>
     [JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
+    public BinanceSpotOrderSide Side { get; set; }
     /// <summary>
     /// Symbol
     /// </summary>

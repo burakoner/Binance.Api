@@ -1,23 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Operation result
-/// </summary>
-public enum OrderOperationResult
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Successful
+    /// Operation result
     /// </summary>
-    [Map("SUCCESS")]
-    Success,
-    /// <summary>
-    /// Failed
-    /// </summary>
-    [Map("FAILURE")]
-    Failure,
-    /// <summary>
-    /// Not attempted
-    /// </summary>
-    [Map("NOT_ATTEMPTED")]
-    NotAttempted
+    public enum OrderOperationResult
+    {
+        /// <summary>
+        /// Successful
+        /// </summary>
+        [Map("SUCCESS")]
+        Success,
+        /// <summary>
+        /// Failed
+        /// </summary>
+        [Map("FAILURE")]
+        Failure,
+        /// <summary>
+        /// Not attempted
+        /// </summary>
+        [Map("NOT_ATTEMPTED")]
+        NotAttempted
+    }
 }

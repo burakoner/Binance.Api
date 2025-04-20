@@ -3,12 +3,12 @@
 /// <summary>
 /// Trade rules behaviour
 /// </summary>
-public enum TradeRulesBehavior
+public enum BinanceTradeRulesBehavior : byte
 {
     /// <summary>
     /// None
     /// </summary>
-    None,
+    None = 0,
 
     /// <summary>
     /// Throw an error if not complying

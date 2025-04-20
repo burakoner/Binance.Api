@@ -41,7 +41,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// The side of the order
     /// </summary>
     [JsonProperty("S"), JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
+    public BinanceSpotOrderSide Side { get; set; }
     /// <summary>
     /// The type of the order
     /// </summary>
@@ -51,7 +51,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// The timespan the order is active
     /// </summary>
     [JsonProperty("f"), JsonConverter(typeof(TimeInForceConverter))]
-    public TimeInForce TimeInForce { get; set; }
+    public BinanceSpotTimeInForce TimeInForce { get; set; }
     /// <summary>
     /// The quantity of the order
     /// </summary>

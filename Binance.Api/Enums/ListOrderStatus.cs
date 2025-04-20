@@ -1,20 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// List order status
-/// </summary>
-public enum ListOrderStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Executing
+    /// List order status
     /// </summary>
-    Executing,
-    /// <summary>
-    /// Executed
-    /// </summary>
-    Done,
-    /// <summary>
-    /// Rejected
-    /// </summary>
-    Rejected
+    public enum ListOrderStatus
+    {
+        /// <summary>
+        /// Executing
+        /// </summary>
+        [Map("EXECUTING")]
+        Executing,
+        /// <summary>
+        /// Rejected
+        /// </summary>
+        [Map("REJECT")]
+        Rejected,
+        /// <summary>
+        /// Done
+        /// </summary>
+        [Map("ALL_DONE")]
+        Done
+    }
 }

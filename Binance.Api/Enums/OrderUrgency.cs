@@ -1,23 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Order urgency
-/// </summary>
-public enum OrderUrgency
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Low urgency
+    /// Order urgency
     /// </summary>
-    [Map("LOW")]
-    Low,
-    /// <summary>
-    /// Medium urgency
-    /// </summary>
-    [Map("MEDIUM")]
-    Medium,
-    /// <summary>
-    /// High urgency
-    /// </summary>
-    [Map("HIGH")]
-    High
+    public enum OrderUrgency
+    {
+        /// <summary>
+        /// Low urgency
+        /// </summary>
+        [Map("LOW")]
+        Low,
+        /// <summary>
+        /// Medium urgency
+        /// </summary>
+        [Map("MEDIUM")]
+        Medium,
+        /// <summary>
+        /// High urgency
+        /// </summary>
+        [Map("HIGH")]
+        High
+    }
 }

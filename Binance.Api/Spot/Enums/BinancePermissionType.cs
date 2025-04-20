@@ -3,13 +3,13 @@
 /// <summary>
 /// Type of account
 /// </summary>
-public enum BinancePermissionType:int
+public enum BinancePermissionType : int
 {
     /// <summary>
     /// Spot trading
     /// </summary>
     [Map("SPOT")]
-    Spot=1,
+    Spot = 1,
 
     /// <summary>
     /// Margin trading
@@ -39,7 +39,7 @@ public enum BinancePermissionType:int
     /// Trade group 1
     /// </summary>
     [Map("TRD_GRP_001")]
-    TradeGroup001,
+    TradeGroup001 = 101,
 
     /// <summary>
     /// Trade group 2
@@ -274,7 +274,7 @@ public enum BinancePermissionType:int
     /// </summary>
     [Map("TRD_GRP_040")]
     TradeGroup040,
-    
+
     /// <summary>
     /// Trade group 41
     /// </summary>

@@ -1,20 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// The status of a deposit
-/// </summary>
-public enum DepositStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Pending
+    /// The status of a deposit
     /// </summary>
-    Pending,
-    /// <summary>
-    /// Success
-    /// </summary>
-    Success,
-    /// <summary>
-    /// Completed
-    /// </summary>
-    Completed
+    public enum DepositStatus
+    {
+        /// <summary>
+        /// Pending
+        /// </summary>
+        [Map("0")]
+        Pending,
+        /// <summary>
+        /// Success
+        /// </summary>
+        [Map("1")]
+        Success,
+        /// <summary>
+        /// Completed
+        /// </summary>
+        [Map("6")]
+        Completed
+    }
 }

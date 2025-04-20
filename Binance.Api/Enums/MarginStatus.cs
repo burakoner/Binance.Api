@@ -1,24 +1,31 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of a margin action
-/// </summary>
-public enum MarginStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Pending to execution
+    /// Status of a margin action
     /// </summary>
-    Pending,
-    /// <summary>
-    /// Executed, waiting to be confirmed
-    /// </summary>
-    Completed,
-    /// <summary>
-    /// Successfully loaned/repayed
-    /// </summary>
-    Confirmed,
-    /// <summary>
-    /// execution failed, nothing happened to your account
-    /// </summary>
-    Failed
+    public enum MarginStatus
+    {
+        /// <summary>
+        /// Pending to execution
+        /// </summary>
+        [Map("PENDING")]
+        Pending,
+        /// <summary>
+        /// Executed, waiting to be confirmed
+        /// </summary>
+        [Map("COMPLETED")]
+        Completed,
+        /// <summary>
+        /// Successfully loaned/repaid
+        /// </summary>
+        [Map("CONFIRMED")]
+        Confirmed,
+        /// <summary>
+        /// execution failed, nothing happened to your account
+        /// </summary>
+        [Map("FAILED")]
+        Failed
+    }
 }

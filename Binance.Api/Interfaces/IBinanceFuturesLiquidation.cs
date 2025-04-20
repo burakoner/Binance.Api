@@ -32,11 +32,11 @@ public interface IBinanceFuturesLiquidation
     /// <summary>
     /// Time in force
     /// </summary>
-    TimeInForce TimeInForce { get; set; }
+    BinanceSpotTimeInForce TimeInForce { get; set; }
     /// <summary>
     /// Side
     /// </summary>
-    OrderSide Side { get; set; }
+    BinanceSpotOrderSide Side { get; set; }
     /// <summary>
     /// Side
     /// </summary>

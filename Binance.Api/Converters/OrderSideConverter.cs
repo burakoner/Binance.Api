@@ -1,13 +1,13 @@
 ﻿namespace Binance.Api.Converters;
 
-internal class OrderSideConverter : BaseConverter<OrderSide>
+internal class OrderSideConverter : BaseConverter<BinanceSpotOrderSide>
 {
     public OrderSideConverter() : this(true) { }
     public OrderSideConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<OrderSide, string>> Mapping => new List<KeyValuePair<OrderSide, string>>
+    protected override List<KeyValuePair<BinanceSpotOrderSide, string>> Mapping => new List<KeyValuePair<BinanceSpotOrderSide, string>>
     {
-        new KeyValuePair<OrderSide, string>(OrderSide.Buy, "BUY"),
-        new KeyValuePair<OrderSide, string>(OrderSide.Sell, "SELL")
+        new KeyValuePair<BinanceSpotOrderSide, string>(BinanceSpotOrderSide.Buy, "BUY"),
+        new KeyValuePair<BinanceSpotOrderSide, string>(BinanceSpotOrderSide.Sell, "SELL")
     };
 }

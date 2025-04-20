@@ -1,40 +1,51 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of a fiat payment
-/// </summary>
-public enum FiatWithdrawDepositStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Still processing
+    /// Status of a fiat payment
     /// </summary>
-    Processing,
-    /// <summary>
-    /// Successfully completed
-    /// </summary>
-    Successful,
-    /// <summary>
-    /// Failed
-    /// </summary>
-    Failed,
-    /// <summary>
-    /// Finished
-    /// </summary>
-    Finished,
-    /// <summary>
-    /// Refunding
-    /// </summary>
-    Refunding,
-    /// <summary>
-    /// Refunded
-    /// </summary>
-    Refunded,
-    /// <summary>
-    /// Refund failed
-    /// </summary>
-    RefundFailed,
-    /// <summary>
-    /// Expired
-    /// </summary>
-    Expired
+    public enum FiatWithdrawDepositStatus
+    {
+        /// <summary>
+        /// Still processing
+        /// </summary>
+        [Map("Processing")]
+        Processing,
+        /// <summary>
+        /// Successfully completed
+        /// </summary>
+        [Map("Successful")]
+        Successful,
+        /// <summary>
+        /// Failed
+        /// </summary>
+        [Map("Failed")]
+        Failed,
+        /// <summary>
+        /// Finished
+        /// </summary>
+        [Map("Finished")]
+        Finished,
+        /// <summary>
+        /// Refunding
+        /// </summary>
+        [Map("Refunding")]
+        Refunding,
+        /// <summary>
+        /// Refunded
+        /// </summary>
+        [Map("Refunded")]
+        Refunded,
+        /// <summary>
+        /// Refund failed
+        /// </summary>
+        [Map("Refund Failed")]
+        RefundFailed,
+        /// <summary>
+        /// Expired
+        /// </summary>
+        [Map("Expired")]
+        Expired
+    }
 }

@@ -32,7 +32,7 @@ public record BinanceForcedLiquidation
     /// Side
     /// </summary>
     [JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
+    public BinanceSpotOrderSide Side { get; set; }
     /// <summary>
     /// Symbol
     /// </summary>
@@ -41,7 +41,7 @@ public record BinanceForcedLiquidation
     /// Time in force
     /// </summary>
     [JsonConverter(typeof(TimeInForceConverter))]
-    public TimeInForce TimeInForce { get; set; }
+    public BinanceSpotTimeInForce TimeInForce { get; set; }
     /// <summary>
     /// Last update time
     /// </summary>

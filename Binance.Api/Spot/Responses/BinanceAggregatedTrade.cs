@@ -3,7 +3,7 @@
 /// <summary>
 /// Compressed aggregated trade information. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
 /// </summary>
-public record BinanceAggregatedTrade : IBinanceAggregatedTrade
+public record BinanceAggregatedTrade
 {
     /// <summary>
     /// The id of this aggregation

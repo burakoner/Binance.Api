@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot.Converters;
-
-namespace Binance.Api.Models.RestApi;
+﻿namespace Binance.Api.Spot.Responses;
 
 /// <summary>
 /// A filter for order placed on a symbol.

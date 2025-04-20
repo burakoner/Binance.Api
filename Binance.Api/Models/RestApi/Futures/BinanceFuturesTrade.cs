@@ -1,102 +1,65 @@
 ﻿namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
-/// Trade info
+/// Recent trade info
 /// </summary>
-public record BinanceFuturesTrade
+public abstract record BinanceRecentTrade : IBinanceRecentTrade
 {
     /// <summary>
-    /// The symbol
+    /// The id of the trade
     /// </summary>
-    public string Symbol { get; set; } = "";
-
-    /// <summary>
-    /// Is buyer
-    /// </summary>
-    public bool Buyer { get; set; }
-    /// <summary>
-    /// Paid fee
-    /// </summary>
-    [JsonProperty("commission")]
-    public decimal Fee { get; set; }
-
-    /// <summary>
-    /// Asset the fee is paid in
-    /// </summary>
-    [JsonProperty("commissionAsset")]
-    public string FeeAsset { get; set; } = "";
-    /// <summary>
-    /// Trade id
-    /// </summary>
-    public long Id { get; set; }
-    /// <summary>
-    /// Is maker
-    /// </summary>
-    public bool Maker { get; set; }
-    /// <summary>
-    /// Order id
-    /// </summary>
+    [JsonProperty("id")]
     public long OrderId { get; set; }
     /// <summary>
-    /// Price
+    /// The price of the trade
     /// </summary>
+    [JsonProperty("price")]
     public decimal Price { get; set; }
+    /// <inheritdoc />
+    public abstract decimal BaseQuantity { get; set; }
+    /// <inheritdoc />
+    public abstract decimal QuoteQuantity { get; set; }
     /// <summary>
-    /// Quantity
-    /// </summary>
-    [JsonProperty("qty")]
-    public decimal Quantity { get; set; }
-    /// <summary>
-    /// Realized pnl
-    /// </summary>
-    public decimal RealizedPnl { get; set; }
-    /// <summary>
-    /// Order side
-    /// </summary>
-    [JsonConverter(typeof(OrderSideConverter))]
-    public OrderSide Side { get; set; }
-    /// <summary>
-    /// Position side
-    /// </summary>
-    [JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
-    /// <summary>
-    /// Timestamp
+    /// The timestamp of the trade
     /// </summary>
     [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime Timestamp { get; set; }
+    public DateTime TradeTime { get; set; }
+    /// <summary>
+    /// Whether the buyer is maker
+    /// </summary>
+    [JsonProperty("isBuyerMaker")]
+    public bool BuyerIsMaker { get; set; }
+    /// <summary>
+    /// Whether the trade was made at the best match
+    /// </summary>
+    [JsonProperty("isBestMatch")]
+    public bool IsBestMatch { get; set; }
 }
 
 /// <summary>
-/// Trade details
+/// Recent trade with quote quantity
 /// </summary>
-public record BinanceFuturesUsdtTrade : BinanceFuturesTrade
+public record BinanceRecentTradeQuote : BinanceRecentTrade
 {
-    /// <summary>
-    /// Quote quantity
-    /// </summary>
+    /// <inheritdoc />
     [JsonProperty("quoteQty")]
-    public decimal QuoteQuantity { get; set; }
+    public override decimal QuoteQuantity { get; set; }
+
+    /// <inheritdoc />
+    [JsonProperty("qty")]
+    public override decimal BaseQuantity { get; set; }
 }
 
 /// <summary>
-/// Trade details
+/// Recent trade with base quantity
 /// </summary>
-public record BinanceFuturesCoinTrade : BinanceFuturesTrade
+public record BinanceRecentTradeBase : BinanceRecentTrade
 {
-    /// <summary>
-    /// The pair
-    /// </summary>
-    public string Pair { get; set; } = "";
+    /// <inheritdoc />
+    [JsonProperty("qty")]
+    public override decimal QuoteQuantity { get; set; }
 
-    /// <summary>
-    /// The margin asset
-    /// </summary>
-    public string MarginAsset { get; set; } = "";
-
-    /// <summary>
-    /// Base quantity
-    /// </summary>
+    /// <inheritdoc />
     [JsonProperty("baseQty")]
-    public decimal BaseQuantity { get; set; }
+    public override decimal BaseQuantity { get; set; }
 }

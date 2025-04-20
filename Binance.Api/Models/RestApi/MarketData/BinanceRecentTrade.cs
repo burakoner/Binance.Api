@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
 /// Recent trade info
@@ -43,7 +43,7 @@ public abstract record BinanceRecentTrade : IBinanceRecentTrade
 /// <summary>
 /// Recent trade with quote quantity
 /// </summary>
-public record BinanceRecentTradeQuote : BinanceRecentTrade
+public record BinanceUsdtFuturesRecentTrade : BinanceRecentTrade
 {
     /// <inheritdoc />
     [JsonProperty("quoteQty")]
@@ -57,7 +57,7 @@ public record BinanceRecentTradeQuote : BinanceRecentTrade
 /// <summary>
 /// Recent trade with base quantity
 /// </summary>
-public record BinanceRecentTradeBase : BinanceRecentTrade
+public record BinanceCoinUsdtFuturesRecentTrade : BinanceRecentTrade
 {
     /// <inheritdoc />
     [JsonProperty("qty")]

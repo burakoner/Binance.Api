@@ -1,36 +1,46 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// The status of a withdrawal
-/// </summary>
-public enum WithdrawalStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Email has been send
+    /// The status of a withdrawal
     /// </summary>
-    EmailSend,
-    /// <summary>
-    /// Withdrawal has been canceled
-    /// </summary>
-    Canceled,
-    /// <summary>
-    /// Withdrawal is awaiting approval
-    /// </summary>
-    AwaitingApproval,
-    /// <summary>
-    /// Withdrawal has been rejected
-    /// </summary>
-    Rejected,
-    /// <summary>
-    /// Withdrawal is processing
-    /// </summary>
-    Processing,
-    /// <summary>
-    /// Withdrawal has failed
-    /// </summary>
-    Failure,
-    /// <summary>
-    /// Withdrawal has been processed
-    /// </summary>
-    Completed
+    public enum WithdrawalStatus
+    {
+        /// <summary>
+        /// Email has been send
+        /// </summary>
+        [Map("0")]
+        EmailSend,
+        /// <summary>
+        /// Withdrawal has been canceled
+        /// </summary>
+        [Map("1")]
+        Canceled,
+        /// <summary>
+        /// Withdrawal is awaiting approval
+        /// </summary>
+        [Map("2")]
+        AwaitingApproval,
+        /// <summary>
+        /// Withdrawal has been rejected
+        /// </summary>
+        [Map("3")]
+        Rejected,
+        /// <summary>
+        /// Withdrawal is processing
+        /// </summary>
+        [Map("4")]
+        Processing,
+        /// <summary>
+        /// Withdrawal has failed
+        /// </summary>
+        [Map("5")]
+        Failure,
+        /// <summary>
+        /// Withdrawal has been processed
+        /// </summary>
+        [Map("6")]
+        Completed
+    }
 }

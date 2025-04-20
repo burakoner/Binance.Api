@@ -1,20 +1,26 @@
-﻿namespace Binance.Api.Enums;
+﻿
 
-/// <summary>
-/// Status of a transfer between spot and futures account
-/// </summary>
-public enum FuturesTransferStatus
+namespace Binance.Net.Enums
 {
     /// <summary>
-    /// Pending to execute
+    /// Status of a transfer between spot and futures account
     /// </summary>
-    Pending,
-    /// <summary>
-    /// Successfully transferred
-    /// </summary>
-    Confirmed,
-    /// <summary>
-    /// Execution failed
-    /// </summary>
-    Failed
+    public enum FuturesTransferStatus
+    {
+        /// <summary>
+        /// Pending to execute
+        /// </summary>
+        [Map("PENDING")]
+        Pending,
+        /// <summary>
+        /// Successfully transferred
+        /// </summary>
+        [Map("CONFIRMED")]
+        Confirmed,
+        /// <summary>
+        /// Execution failed
+        /// </summary>
+        [Map("FAILED")]
+        Failed
+    }
 }
