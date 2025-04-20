@@ -7,15 +7,29 @@ internal class BinanceAuthenticationProvider(ApiCredentials credentials) : Authe
         // Check Point
         if (!signed) return;
 
-        // Api Key
-        headers.Add("X-MBX-APIKEY", Credentials.Key!.GetString());
-
         // Timestamp
         var timestamp = GetMillisecondTimestamp(apiClient);
-        query.Add("timestamp", timestamp);
+        if (method == HttpMethod.Get) query.Add("timestamp", timestamp);
+        else body.Add("timestamp", timestamp);
+
+        // Set Uri Parameters
         uri = uri.SetParameters(query, serialization);
 
+        // Key
+        headers.Add("X-MBX-APIKEY", Credentials.Key.GetString());
+
         // Signature
-        headers.Add("signature", SignHMACSHA256(body == null || body.Count == 0 ? uri.Query.Replace("?", "") : body.ToFormData()));
+        if (Credentials.Type == ApiCredentialsType.HMAC)
+        {
+            var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
+            var signature = SignHMACSHA256(signbody).ToLowerInvariant();
+            query.Add("signature", signature);
+        }
+        else
+        {
+            var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
+            var signature = SignRSASHA256(Encoding.ASCII.GetBytes(signbody), SignatureOutputType.Base64);
+            query.Add("signature", signature);
+        }
     }
 }

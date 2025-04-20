@@ -1,19 +1,36 @@
 ﻿namespace Binance.Api;
 
+/// <summary>
+/// Binance Rest API Client
+/// </summary>
 public sealed class BinanceRestApiClient
 {
-    // Logger
+    // Internal
     internal ILogger Logger { get; }
+    internal BinanceRestApiClientOptions ClientOptions { get; }
 
-    // Options
-    public BinanceRestApiClientOptions ClientOptions { get; }
-
-    // Master Clients
+    /// <summary>
+    /// Binance Spot Rest API Client
+    /// </summary>
     public BinanceSpotRestApiClient Spot { get; }
+
+    /// <summary>
+    /// Binance Margin Rest API Client
+    /// </summary>
     public BinanceRestApiMarginClient Margin { get; }
-    private BinanceRestApiGeneralClient General { get; }
+
+    /// <summary>
+    /// Binance Coin Futures Rest API Client
+    /// </summary>
     public BinanceRestApiCoinFuturesClient CoinFutures { get; }
+
+    /// <summary>
+    /// Binance USDT Futures Rest API Client
+    /// </summary>
     public BinanceRestApiUsdtFuturesClient UsdtFutures { get; }
+
+    // General
+    private BinanceRestApiGeneralClient General { get; }
 
     // General Futures
     internal BinanceRestApiFuturesAlgoClient FuturesAlgo { get => General.FuturesAlgo; }
@@ -40,14 +57,34 @@ public sealed class BinanceRestApiClient
     public BinanceRestApiNftClient NFT { get => General.NFT; }
     public BinanceRestApiPayClient Pay { get => General.Pay; }
 
+    /// <summary>
+    /// Default Constructor
+    /// </summary>
     public BinanceRestApiClient() : this(null, new BinanceRestApiClientOptions())
     {
     }
 
+    /// <summary>
+    /// Constructor with logger
+    /// </summary>
+    /// <param name="logger">Logger</param>
+    public BinanceRestApiClient(ILogger logger) : this(logger, new BinanceRestApiClientOptions())
+    {
+    }
+
+    /// <summary>
+    /// Constructor with options
+    /// </summary>
+    /// <param name="options">Binance Rest API Client Options</param>
     public BinanceRestApiClient(BinanceRestApiClientOptions options) : this(null, options)
     {
     }
 
+    /// <summary>
+    /// Constructor with logger and options
+    /// </summary>
+    /// <param name="logger">Logger</param>
+    /// <param name="options">Binance Rest API Client Options</param>
     public BinanceRestApiClient(ILogger? logger, BinanceRestApiClientOptions options)
     {
         Logger = logger ?? LoggerFactory.Create(c => { }).CreateLogger(typeof(BinanceRestApiClient));

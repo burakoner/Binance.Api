@@ -11,7 +11,7 @@ public class BinanceSpotRestApiAccountClient(BinanceSpotRestApiClient parent)
     internal BinanceRestApiClient _ { get; } = parent._;
     internal BinanceSpotRestApiClient __ { get; } = parent;
     internal ILogger? Logger { get; } = parent.Logger;
-    internal BinanceRestApiClientOptions ClientOptions { get; } = parent.ClientOptions;
+    internal BinanceRestApiClientOptions ClientOptions { get; } = parent.Options;
 
     public Task<RestCallResult<BinanceSpotAccount>> GetAccountAsync(bool? omitZeroBalances = null, int? receiveWindow = null, CancellationToken ct = default)
     {
