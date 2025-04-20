@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi;
+﻿using Binance.Api.Spot.Responses;
+
+namespace Binance.Api.Models.WebSocketApi;
 
 /// <summary>
 /// Stream order book

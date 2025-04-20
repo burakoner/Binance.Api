@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Clients.StreamApi.Spot;
+﻿using Binance.Api.Spot.Responses;
+
+namespace Binance.Api.Clients.StreamApi.Spot;
 
 public class BinanceStreamSpotMarketDataClient
 {
@@ -70,19 +72,19 @@ public class BinanceStreamSpotMarketDataClient
 
     #region Kline/Candlestick Streams
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol,
-        KlineInterval interval, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
+        BinanceKlineInterval interval, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
         await SubscribeToKlineUpdatesAsync(new[] { symbol }, interval, onMessage, ct).ConfigureAwait(false);
 
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol,
-        IEnumerable<KlineInterval> intervals, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
+        IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
         await SubscribeToKlineUpdatesAsync(new[] { symbol }, intervals, onMessage, ct).ConfigureAwait(false);
 
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(IEnumerable<string> symbols,
-        KlineInterval interval, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
+        BinanceKlineInterval interval, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
         await SubscribeToKlineUpdatesAsync(symbols, new[] { interval }, onMessage, ct).ConfigureAwait(false);
 
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(IEnumerable<string> symbols,
-        IEnumerable<KlineInterval> intervals, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default)
+        IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
         foreach (var symbol in symbols)
@@ -92,7 +94,7 @@ public class BinanceStreamSpotMarketDataClient
         symbols = symbols.SelectMany(a =>
             intervals.Select(i =>
                 a.ToLower(CultureInfo.InvariantCulture) + klineStreamEndpoint + "_" +
-                JsonConvert.SerializeObject(i, new KlineIntervalConverter(false)))).ToArray();
+                MapConverter.GetString(i))).ToArray();
         return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
     }
     #endregion
@@ -176,13 +178,13 @@ public class BinanceStreamSpotMarketDataClient
 
     #region Partial Book Depth Streams
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(string symbol,
-        int levels, int? updateInterval, Action<WebSocketDataEvent<IBinanceOrderBook>> onMessage, CancellationToken ct = default) =>
-        await SubscribeToPartialOrderBookUpdatesAsync(new[] { symbol }, levels, updateInterval, onMessage, ct)
+        int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOrderBook>> onMessage, CancellationToken ct = default) =>
+        await SubscribeToPartialOrderBookUpdatesAsync([symbol], levels, updateInterval, onMessage, ct)
             .ConfigureAwait(false);
 
     /// <inheritdoc />
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(
-        IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<IBinanceOrderBook>> onMessage, CancellationToken ct = default)
+        IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOrderBook>> onMessage, CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
         foreach (var symbol in symbols)
@@ -194,7 +196,7 @@ public class BinanceStreamSpotMarketDataClient
         var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<BinanceOrderBook>>>(data =>
         {
             data.Data.Data.Symbol = data.Data.Stream.Split('@')[0];
-            onMessage(data.As<IBinanceOrderBook>(data.Data.Data, data.Data.Data.Symbol));
+            onMessage(data.As<BinanceOrderBook>(data.Data.Data, data.Data.Data.Symbol));
         });
 
         symbols = symbols.Select(a =>

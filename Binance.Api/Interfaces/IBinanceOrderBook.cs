@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Interfaces;
+﻿using Binance.Api.Spot.Responses;
+
+namespace Binance.Api.Interfaces;
 
 /// <summary>
 /// The order book for a asset

@@ -45,3 +45,5 @@ global using System.Text.RegularExpressions;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using Binance.Api.Spot.Enums;
+global using Binance.Api.Spot.Responses;
+global using Binance.Net.Objects.Models.Spot;

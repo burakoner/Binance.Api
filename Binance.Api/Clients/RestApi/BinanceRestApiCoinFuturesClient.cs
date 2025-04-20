@@ -91,7 +91,7 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
 
     // Options
     public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
-    
+
     internal BinanceRestApiCoinFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
     {
         RootClient = root;
@@ -293,7 +293,7 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     }
 
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
-        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false, 
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
         Dictionary<string, object> queryParameters = null, Dictionary<string, object> bodyParameters = null, Dictionary<string, string> headerParameters = null,
         ArraySerialization? serialization = null, JsonSerializer deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
@@ -430,13 +430,14 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     #endregion
 
     #region Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "symbol", symbol },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
+
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
@@ -448,14 +449,15 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     #endregion
 
     #region Continuous Contract Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetContinuousContractKlinesAsync(string pair, ContractType contractType, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetContinuousContractKlinesAsync(string pair, ContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "pair", pair },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) },
                 { "contractType", JsonConvert.SerializeObject(contractType, new ContractTypeConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
+
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
@@ -467,13 +469,14 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     #endregion
 
     #region Index Price Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<BinanceFuturesMarkIndexKline>>> GetIndexPriceKlinesAsync(string pair, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceFuturesMarkIndexKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "pair", pair },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
+
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
@@ -484,14 +487,14 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     #endregion
 
     #region Mark Price Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<BinanceFuturesMarkIndexKline>>> GetMarkPriceKlinesAsync(string symbol, KlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceFuturesMarkIndexKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
 
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "symbol", symbol },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
 
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());

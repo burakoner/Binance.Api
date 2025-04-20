@@ -8,6 +8,6 @@ public class BinanceWebSocketApiClientOptions : WebSocketApiClientOptions
     public BinanceWebSocketApiClientOptions()
     {
         this.BaseAddress = "wss://stream.binance.com:9443/";
-        this.BlvtStreamAddress = BinanceApiAddresses.Default.BlvtSocketClientAddress;
+        this.BlvtStreamAddress = BinanceAddress.Default.BlvtSocketClientAddress;
     }
 }

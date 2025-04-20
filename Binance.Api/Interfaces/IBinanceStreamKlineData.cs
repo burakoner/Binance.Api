@@ -24,7 +24,7 @@ public interface IBinanceStreamKline : IBinanceKline
     /// <summary>
     /// Interval
     /// </summary>
-    KlineInterval Interval { get; set; }
+    BinanceKlineInterval Interval { get; set; }
     /// <summary>
     /// Is this kline final
     /// </summary>

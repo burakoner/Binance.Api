@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot.Enums;
-
-namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Spot;
 
 public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
 {
@@ -27,7 +25,7 @@ public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
 
         return result.Success
             ? result.As(sw.Elapsed)
-            : result.AsError<TimeSpan>(result.Error);
+            : result.AsError<TimeSpan>(result.Error!);
     }
 
     public async Task<RestCallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
@@ -36,7 +34,7 @@ public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
 
         return result.Success
             ? result.As(result.Data?.ServerTime ?? default)
-            : result.AsError<DateTime>(result.Error);
+            : result.AsError<DateTime>(result.Error!);
     }
 
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)

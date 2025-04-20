@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Spot.Responses;
 
 /// <summary>
 /// The order book for a asset
 /// </summary>
-public record BinanceOrderBook : IBinanceOrderBook
+public record BinanceOrderBook
 {
     /// <summary>
     /// The symbol of the order book 

@@ -45,16 +45,16 @@ public class BinanceRestApiBlvtClient
     #endregion
 
     #region Historical BLVT NAV Kline/Candlestick
-    public async Task<RestCallResult<IEnumerable<BinanceBlvtKline>>> GetLeveragedTokensHistoricalKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceBlvtKline>>> GetLeveragedTokensHistoricalKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         // TODO check if URL works
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
-        var parameters = new Dictionary<string, object>
+        var parameters = new ParameterCollection
             {
                 { "symbol", symbol },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));

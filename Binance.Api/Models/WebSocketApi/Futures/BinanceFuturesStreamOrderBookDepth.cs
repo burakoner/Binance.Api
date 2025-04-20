@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi.Futures;
+﻿using Binance.Api.Spot.Responses;
+
+namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>
 /// The order book for a asset

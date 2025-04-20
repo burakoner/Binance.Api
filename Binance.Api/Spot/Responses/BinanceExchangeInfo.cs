@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot.Responses;
-
-namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Exchange info

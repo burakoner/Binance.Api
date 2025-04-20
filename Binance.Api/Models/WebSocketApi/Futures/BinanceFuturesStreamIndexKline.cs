@@ -45,8 +45,7 @@ public record BinanceFuturesStreamIndexKline
     /// Kline interval
     /// </summary>
     [JsonProperty("i")]
-    [JsonConverter(typeof(KlineIntervalConverter))]
-    public KlineInterval Interval { get; set; }
+    public BinanceKlineInterval Interval { get; set; }
 
     /// <summary>
     /// Ignore

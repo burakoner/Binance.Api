@@ -408,13 +408,14 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     #endregion
 
     #region Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "symbol", symbol },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
+
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
@@ -426,14 +427,15 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     #endregion
 
     #region Continuous Contract Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetContinuousContractKlinesAsync(string pair, ContractType contractType, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetContinuousContractKlinesAsync(string pair, ContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "pair", pair },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) },
                 { "contractType", JsonConvert.SerializeObject(contractType, new ContractTypeConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
+
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
@@ -445,13 +447,14 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     #endregion
 
     #region Index Price Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetIndexPriceKlinesAsync(string pair, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<IBinanceKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "pair", pair },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
+
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
@@ -463,14 +466,14 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     #endregion
 
     #region Mark Price Kline/Candlestick Data
-    public async Task<RestCallResult<IEnumerable<BinanceFuturesMarkIndexKline>>> GetMarkPriceKlinesAsync(string symbol, KlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceFuturesMarkIndexKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
 
-        var parameters = new Dictionary<string, object> {
+        var parameters = new ParameterCollection {
                 { "symbol", symbol },
-                { "interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false)) }
             };
+        parameters.AddEnum("interval", interval);
 
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
@@ -513,51 +516,49 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     #endregion
 
     #region 24hr Ticker Price Change Statistics
-    public async Task<RestCallResult<IBinance24HPrice>> GetTickerAsync(string symbol, CancellationToken ct = default)
+    public  Task<RestCallResult<BinanceFullTicker>> GetTickerAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("symbol", symbol);
 
-        var result = await SendRequestInternal<Binance24HPrice>(GetUrl(price24HEndpoint, fapi, v1), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
-        return result.As<IBinance24HPrice>(result.Data);
+        return SendRequestInternal<BinanceFullTicker>(GetUrl(price24HEndpoint, fapi, v1), HttpMethod.Get, ct, false, queryParameters: parameters);
     }
 
-    public async Task<RestCallResult<IEnumerable<IBinance24HPrice>>> GetTickersAsync(CancellationToken ct = default)
+    public  Task<RestCallResult<IEnumerable<BinanceFullTicker>>> GetTickersAsync(CancellationToken ct = default)
     {
-        var result = await SendRequestInternal<IEnumerable<Binance24HPrice>>(GetUrl(price24HEndpoint, fapi, v1), HttpMethod.Get, ct, requestWeight: 40).ConfigureAwait(false);
-        return result.As<IEnumerable<IBinance24HPrice>>(result.Data);
+        return SendRequestInternal<IEnumerable<BinanceFullTicker>>(GetUrl(price24HEndpoint, fapi, v1), HttpMethod.Get, ct, requestWeight: 40);
     }
     #endregion
 
     #region Symbol Price Ticker
-    public async Task<RestCallResult<BinancePrice>> GetPriceAsync(string symbol, CancellationToken ct = default)
+    public async Task<RestCallResult<BinancePriceTicker>> GetPriceAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>
         {
             { "symbol", symbol }
         };
 
-        return await SendRequestInternal<BinancePrice>(GetUrl(allPricesEndpoint, fapi, v1), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinancePriceTicker>(GetUrl(allPricesEndpoint, fapi, v1), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinancePrice>>> GetPricesAsync(CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinancePriceTicker>>> GetPricesAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<IEnumerable<BinancePrice>>(GetUrl(allPricesEndpoint, fapi, v1), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinancePriceTicker>>(GetUrl(allPricesEndpoint, fapi, v1), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 
     #region Symbol Order Book Ticker
-    public async Task<RestCallResult<BinanceBookPrice>> GetBookPriceAsync(string symbol, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceBookTicker>> GetBookPriceAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("symbol", symbol);
 
-        return await SendRequestInternal<BinanceBookPrice>(GetUrl(bookPricesEndpoint, fapi, v1), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceBookTicker>(GetUrl(bookPricesEndpoint, fapi, v1), HttpMethod.Get, ct, false, queryParameters: parameters).ConfigureAwait(false);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceBookPrice>>> GetBookPricesAsync(CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceBookTicker>>> GetBookPricesAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<IEnumerable<BinanceBookPrice>>(GetUrl(bookPricesEndpoint, fapi, v1), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceBookTicker>>(GetUrl(bookPricesEndpoint, fapi, v1), HttpMethod.Get, ct, requestWeight: 2).ConfigureAwait(false);
     }
     #endregion
 

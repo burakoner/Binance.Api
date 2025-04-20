@@ -1,4 +1,4 @@
-namespace Binance.Api.Models.RestApi.MarketData;
+namespace Binance.Api.Spot.Responses;
 
 /// <summary>
 /// Current average price details for a symbol.
@@ -10,9 +10,16 @@ public record BinanceAveragePrice
     /// </summary>
     [JsonProperty("mins")]
     public int Minutes { get; set; }
+
     /// <summary>
     /// The average price
     /// </summary>
     [JsonProperty("price")]
     public decimal Price { get; set; }
+
+    /// <summary>
+    /// The last trade time
+    /// </summary>
+    [JsonProperty("closeTime"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime LastTradeTime { get; set; }
 }

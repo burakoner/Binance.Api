@@ -1,9 +1,9 @@
 ﻿namespace Binance.Api;
 
 /// <summary>
-/// BinanceApiAddresses
+/// BinanceAddress
 /// </summary>
-public class BinanceApiAddresses
+public class BinanceAddress
 {
     /// <summary>
     /// The address used by the BinanceClient for the Spot API
@@ -43,7 +43,7 @@ public class BinanceApiAddresses
     /// <summary>
     /// The default addresses to connect to the binance.com API
     /// </summary>
-    public static BinanceApiAddresses Default = new()
+    public static BinanceAddress Default = new()
     {
         RestClientAddress = "https://api.binance.com",
         SocketClientAddress = "wss://stream.binance.com:9443/",
@@ -57,7 +57,7 @@ public class BinanceApiAddresses
     /// <summary>
     /// The addresses to connect to the binance testnet
     /// </summary>
-    public static BinanceApiAddresses TestNet = new()
+    public static BinanceAddress TestNet = new()
     {
         RestClientAddress = "https://testnet.binance.vision",
         SocketClientAddress = "wss://testnet.binance.vision",
@@ -71,7 +71,7 @@ public class BinanceApiAddresses
     /// <summary>
     /// The addresses to connect to binance.us. (binance.us futures not are not available)
     /// </summary>
-    public static BinanceApiAddresses Us = new()
+    public static BinanceAddress Us = new()
     {
         RestClientAddress = "https://api.binance.us",
         SocketClientAddress = "wss://stream.binance.us:9443",

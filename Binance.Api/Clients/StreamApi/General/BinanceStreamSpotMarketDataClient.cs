@@ -41,15 +41,15 @@ public class BinanceStreamBlvtClient
 
     #region Blvt kline update
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBlvtKlineUpdatesAsync(string token,
-        KlineInterval interval, Action<WebSocketDataEvent<BinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
+        BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamKlineData>> onMessage, CancellationToken ct = default) =>
         SubscribeToBlvtKlineUpdatesAsync(new List<string> { token }, interval, onMessage, ct);
 
-    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBlvtKlineUpdatesAsync(IEnumerable<string> tokens, KlineInterval interval, Action<WebSocketDataEvent<BinanceStreamKlineData>> onMessage, CancellationToken ct = default)
+    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBlvtKlineUpdatesAsync(IEnumerable<string> tokens, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamKlineData>> onMessage, CancellationToken ct = default)
     {
         if (Options.BlvtStreamAddress == null)
             throw new Exception("No url found for Blvt stream, check the `BlvtStreamAddress` client option");
 
-        tokens = tokens.Select(a => a.ToUpper(CultureInfo.InvariantCulture) + bltvKlineEndpoint + "_" + JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false))).ToArray();
+        tokens = tokens.Select(a => a.ToUpper(CultureInfo.InvariantCulture) + bltvKlineEndpoint + "_" + MapConverter.GetString(interval)).ToArray();
         var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<BinanceStreamKlineData>>>(data => onMessage(data.As(data.Data.Data, data.Data.Data.Symbol)));
         return await SubscribeAsync(Options.BlvtStreamAddress, tokens, handler, ct).ConfigureAwait(false);
     }

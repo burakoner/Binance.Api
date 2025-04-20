@@ -1,4 +1,5 @@
 ﻿using Binance.Api;
+using Binance.Api.Spot.Enums;
 using System;
 using System.Threading.Tasks;
 
@@ -13,24 +14,51 @@ namespace Binance.ApiConsole
                 RawResponse = true,
             });
 
+            /*
             // Spot General (Public)
-            var server_01 = await api.Spot.General.PingAsync();
-            var server_02 = await api.Spot.General.GetTimeAsync();
-            var server_03 = await api.Spot.General.GetExchangeInfoAsync();
+            var spot_101 = await api.Spot.General.PingAsync();
+            var spot_102 = await api.Spot.General.GetTimeAsync();
+            var spot_103 = await api.Spot.General.GetExchangeInfoAsync();
 
+            // Spot General (Public)
+            var spot_201 = await api.Spot.MarketData.GetOrderBookAsync("BTCUSDT");
+            var spot_202 = await api.Spot.MarketData.GetRecentTradesAsync("BTCUSDT");
+            var spot_203 = await api.Spot.MarketData.GetTradeHistoryAsync("BTCUSDT");
+            var spot_204 = await api.Spot.MarketData.GetAggregatedTradeHistoryAsync("BTCUSDT");
+            var spot_205 = await api.Spot.MarketData.GetKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
+            var spot_206 = await api.Spot.MarketData.GetUiKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
+            var spot_207 = await api.Spot.MarketData.GetAveragePriceAsync("BTCUSDT");
+            var spot_211 = await api.Spot.MarketData.GetFullTickerAsync("BTCUSDT");
+            var spot_212 = await api.Spot.MarketData.GetFullTickersAsync(["BTCUSDT", "ETHUSDT"]);
+            var spot_213 = await api.Spot.MarketData.GetFullTickersAsync();
+            var spot_214 = await api.Spot.MarketData.GetMiniTickerAsync("BTCUSDT");
+            var spot_215 = await api.Spot.MarketData.GetMiniTickersAsync(["BTCUSDT", "ETHUSDT"]);
+            var spot_216 = await api.Spot.MarketData.GetMiniTickersAsync();
+            var spot_221 = await api.Spot.MarketData.GetTradingDayFullTickerAsync("BTCUSDT");
+            var spot_222 = await api.Spot.MarketData.GetTradingDayFullTickersAsync(["BTCUSDT", "ETHUSDT"]);
+            var spot_223 = await api.Spot.MarketData.GetTradingDayFullTickersAsync();
+            var spot_224 = await api.Spot.MarketData.GetTradingDayMiniTickerAsync("BTCUSDT");
+            var spot_225 = await api.Spot.MarketData.GetTradingDayMiniTickersAsync(["BTCUSDT", "ETHUSDT"]);
+            var spot_226 = await api.Spot.MarketData.GetTradingDayMiniTickersAsync();
+            var spot_231 = await api.Spot.MarketData.GetPriceAsync("BTCUSDT");
+            var spot_232 = await api.Spot.MarketData.GetPricesAsync(["BTCUSDT", "ETHUSDT"]);
+            var spot_233 = await api.Spot.MarketData.GetPricesAsync();
+            var spot_241 = await api.Spot.MarketData.GetRollingWindowTickerAsync("BTCUSDT");
+            var spot_242 = await api.Spot.MarketData.GetRollingWindowTickersAsync(["BTCUSDT", "ETHUSDT"], TimeSpan.FromHours(4));
+            */
 
 
 
             var server_04 = await api.Spot.GetSystemStatusAsync();
 
-            /**/
+            /** /
             // Market Data (Public)
             var mdata_01 = await api.Spot.GetOrderBookAsync("BTCUSDT");
             var mdata_02 = await api.Spot.GetRecentTradesAsync("BTCUSDT");
             var mdata_03 = await api.Spot.GetTradeHistoryAsync("BTCUSDT");
             var mdata_04 = await api.Spot.GetAggregatedTradeHistoryAsync("BTCUSDT");
-            var mdata_05 = await api.Spot.GetKlinesAsync("BTCUSDT", Api.Enums.KlineInterval.OneDay);
-            var mdata_06 = await api.Spot.GetUiKlinesAsync("BTCUSDT", Api.Enums.KlineInterval.OneDay);
+            var mdata_05 = await api.Spot.GetKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
+            var mdata_06 = await api.Spot.GetUiKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
             var mdata_07 = await api.Spot.GetCurrentAvgPriceAsync("BTCUSDT");
             var mdata_08 = await api.Spot.GetTickerAsync("BTCUSDT");
             var mdata_09 = await api.Spot.GetTickersAsync();

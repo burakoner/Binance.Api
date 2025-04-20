@@ -3,7 +3,7 @@
 /// <summary>
 /// Book price
 /// </summary>
-public record BinanceFuturesBookPrice : BinanceBookPrice
+public record BinanceFuturesBookPrice : BinanceBookTicker
 {
     /// <summary>
     /// Pair

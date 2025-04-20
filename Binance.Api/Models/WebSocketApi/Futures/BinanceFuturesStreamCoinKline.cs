@@ -52,8 +52,8 @@ public record BinanceFuturesStreamCoinKline : BinanceKlineBase, IBinanceStreamKl
     /// <summary>
     /// The interval of this candlestick
     /// </summary>
-    [JsonProperty("i"), JsonConverter(typeof(KlineIntervalConverter))]
-    public KlineInterval Interval { get; set; }
+    [JsonProperty("i")]
+    public BinanceKlineInterval Interval { get; set; }
     /// <summary>
     /// The first trade id in this candlestick
     /// </summary>

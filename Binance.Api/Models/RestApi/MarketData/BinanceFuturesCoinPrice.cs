@@ -1,9 +1,9 @@
 ﻿namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
-/// The price of a symbol
+/// Futures-Coin price
 /// </summary>
-public record BinancePrice
+public record BinanceFuturesCoinPrice
 {
     /// <summary>
     /// The symbol the price is for
@@ -18,13 +18,7 @@ public record BinancePrice
     /// </summary>
     [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime? Timestamp { get; set; }
-}
 
-/// <summary>
-/// Futures-Coin price
-/// </summary>
-public record BinanceFuturesCoinPrice : BinancePrice
-{
     /// <summary>
     /// Name of the pair
     /// </summary>

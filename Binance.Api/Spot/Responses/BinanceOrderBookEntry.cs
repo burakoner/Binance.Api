@@ -1,10 +1,10 @@
-﻿namespace Binance.Api.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Spot.Responses;
 
 /// <summary>
 /// An entry in the order book
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public record BinanceOrderBookEntry : ISymbolOrderBookEntry
+public record BinanceOrderBookEntry
 {
     /// <summary>
     /// The price of this order book entry

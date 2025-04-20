@@ -19,6 +19,7 @@ public interface IBinanceRecentTrade
     /// The base quantity of the trade
     /// </summary>
     decimal BaseQuantity { get; set; }
+
     /// <summary>
     /// The quote quantity of the trade
     /// </summary>
