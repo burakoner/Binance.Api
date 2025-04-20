@@ -1,11 +1,9 @@
-﻿
-
-namespace Binance.Net.Enums
+﻿namespace Binance.Api.Spot.Enums
 {
     /// <summary>
     /// Rate limit on what unit
     /// </summary>
-    public enum RateLimitInterval
+    public enum BinanceRateLimitInterval
     {
         /// <summary>
         /// Seconds

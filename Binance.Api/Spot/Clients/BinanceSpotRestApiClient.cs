@@ -1,6 +1,4 @@
 ﻿using Binance.Api.Margin.Enums;
-using Microsoft.Extensions.Options;
-using System.ComponentModel;
 
 namespace Binance.Api.Spot;
 
@@ -66,12 +64,14 @@ public class BinanceSpotRestApiClient : RestApiClient
     internal DateTime? LastExchangeInfoUpdate;
     internal TimeSyncState TimeSyncState = new("Binance Spot RestApi");
 
-    // Parent Clients
+    // Parent
     internal BinanceRestApiClient _ { get; }
 
-    // Public Clients
+    // Clients
     public BinanceSpotRestApiGeneralClient General { get; set; }
     public BinanceSpotRestApiMarketDataClient MarketData { get; set; }
+    public BinanceSpotRestApiTradingClient Trading { get; set; }
+    public BinanceSpotRestApiAccountClient Account { get; set; }
 
     // Options
     public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
@@ -82,6 +82,8 @@ public class BinanceSpotRestApiClient : RestApiClient
 
         General = new BinanceSpotRestApiGeneralClient(this);
         MarketData = new BinanceSpotRestApiMarketDataClient(this);
+        Trading = new BinanceSpotRestApiTradingClient(this);
+        Account = new BinanceSpotRestApiAccountClient(this);
 
         RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
@@ -153,7 +155,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         return result;
     }
 
-    internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(
+    internal async Task<RestCallResult<BinanceSpotOrder>> PlaceOrderInternal(
         Uri uri,
         string symbol,
         BinanceSpotOrderSide side,
@@ -167,8 +169,8 @@ public class BinanceSpotRestApiClient : RestApiClient
         BinanceSpotTimeInForce? timeInForce = null,
         BinanceSpotOrderResponseType? orderResponseType = null,
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
-        int? trailingDelta = null,
-        int? strategyId = null,
+        long? trailingDelta = null,
+        long? strategyId = null,
         int? strategyType = null,
         int? receiveWindow = null,
         bool? isIsolated = null,
@@ -187,7 +189,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         if (!rulesCheck.Passed)
         {
             Logger?.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinancePlacedOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
+            return new RestCallResult<BinanceSpotOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
         quantity = rulesCheck.Quantity;
@@ -219,7 +221,7 @@ public class BinanceSpotRestApiClient : RestApiClient
         parameters.AddOptional("autoRepayAtCancel", autoRepayAtCancel);
         parameters.AddOptional("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-        return await SendRequestInternal<BinancePlacedOrder>(uri, HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceSpotOrder>(uri, HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
     }
 
     internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)

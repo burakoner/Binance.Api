@@ -1,11 +1,9 @@
-﻿
-
-namespace Binance.Net.Enums
+﻿namespace Binance.Api.Spot.Enums
 {
     /// <summary>
     /// Type of rate limit
     /// </summary>
-    public enum RateLimitType
+    public enum BinanceRateLimitType
     {
         /// <summary>
         /// Request weight

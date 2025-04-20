@@ -3,24 +3,24 @@
 /// <summary>
 /// Test order commission info
 /// </summary>
-public record BinanceSpotTestOrderFee
+public record BinanceSpotOrderTest
 {
     /// <summary>
     /// Standard fee rates on trades from the order
     /// </summary>
     [JsonProperty("standardCommissionForOrder")]
-    public BinanceFee StandardFeeForOrder { get; set; } = null!;
+    public BinanceFee? StandardFeeForOrder { get; set; }
 
     /// <summary>
     /// Tax fee rates on trades from the order
     /// </summary>
     [JsonProperty("taxCommissionForOrder")]
-    public BinanceFee TaxFeeForOrder { get; set; } = null!;
+    public BinanceFee? TaxFeeForOrder { get; set; } = null!;
 
     /// <summary>
     /// Discount info
     /// </summary>
-    public BinanceDiscount Discount { get; set; } = null!;
+    public BinanceDiscount? Discount { get; set; } = null!;
 }
 
 /// <summary>

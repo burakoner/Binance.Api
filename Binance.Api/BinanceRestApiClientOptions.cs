@@ -60,7 +60,7 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
         };
 
         // Receive Window
-        ReceiveWindow = TimeSpan.FromSeconds(5);
+        ReceiveWindow = TimeSpan.FromSeconds(60);
 
         // Auto Timestamp
         AutoTimestamp = true;
