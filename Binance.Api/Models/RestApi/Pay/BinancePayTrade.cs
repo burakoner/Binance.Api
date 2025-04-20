@@ -33,7 +33,7 @@ public record BinancePayTrade
     /// Fund details
     /// </summary>
     [JsonProperty("fundsDetail")]
-    public IEnumerable<BinancePayTradeDetails> Details { get; set; } = Array.Empty<BinancePayTradeDetails>();
+    public IEnumerable<BinancePayTradeDetails> Details { get; set; } = [];
 }
 
 /// <summary>

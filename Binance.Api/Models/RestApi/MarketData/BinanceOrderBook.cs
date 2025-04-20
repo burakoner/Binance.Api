@@ -20,10 +20,10 @@ public record BinanceOrderBook : IBinanceOrderBook
     /// <summary>
     /// The list of bids
     /// </summary>
-    public IEnumerable<BinanceOrderBookEntry> Bids { get; set; } = Array.Empty<BinanceOrderBookEntry>();
+    public IEnumerable<BinanceOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of asks
     /// </summary>
-    public IEnumerable<BinanceOrderBookEntry> Asks { get; set; } = Array.Empty<BinanceOrderBookEntry>();
+    public IEnumerable<BinanceOrderBookEntry> Asks { get; set; } = [];
 }

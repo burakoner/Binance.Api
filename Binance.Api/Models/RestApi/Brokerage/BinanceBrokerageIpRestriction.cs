@@ -18,7 +18,7 @@ public record BinanceBrokerageIpRestrictionBase
     /// <summary>
     /// IP list
     /// </summary>
-    public IEnumerable<string> IpList { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IpList { get; set; } = [];
 
     /// <summary>
     /// Timestamp

@@ -16,7 +16,7 @@ public record BinanceMinerList
     /// <summary>
     /// Worker data
     /// </summary>
-    public IEnumerable<BinanceMinerInfo> WorkerDatas { get; set; } = Array.Empty<BinanceMinerInfo>();
+    public IEnumerable<BinanceMinerInfo> WorkerDatas { get; set; } = [];
 }
 
 /// <summary>

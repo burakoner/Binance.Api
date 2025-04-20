@@ -34,6 +34,6 @@ public record BinanceSpotAccountSnapshotData
     /// <summary>
     /// List of balances
     /// </summary>
-    public IEnumerable<BinanceBalance> Balances { get; set; } = Array.Empty<BinanceBalance>();
+    public IEnumerable<BinanceBalance> Balances { get; set; } = [];
 
 }

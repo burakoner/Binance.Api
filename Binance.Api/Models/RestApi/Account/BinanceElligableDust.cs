@@ -23,7 +23,7 @@ public record BinanceElligableDusts
     /// <summary>
     /// Assets
     /// </summary>
-    public IEnumerable<BinanceElligableDust> Details { get; set; } = Array.Empty<BinanceElligableDust>();
+    public IEnumerable<BinanceElligableDust> Details { get; set; } = [];
 }
 
 /// <summary>

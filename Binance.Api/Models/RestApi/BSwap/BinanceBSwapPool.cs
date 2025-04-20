@@ -16,5 +16,5 @@ public record BinanceBSwapPool
     /// <summary>
     /// Assets in the pool
     /// </summary>
-    public IEnumerable<string> Assets { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> Assets { get; set; } = [];
 }

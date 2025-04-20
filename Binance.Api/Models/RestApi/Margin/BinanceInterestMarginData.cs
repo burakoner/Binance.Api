@@ -51,6 +51,6 @@ public record BinanceInterestMarginData
     /// Cross marginable pairs for this coin
     /// </summary>
     [JsonProperty("marginablePairs")]
-    public string[] MarginablePairs { get; set; } = Array.Empty<string>();s
+    public string[] MarginablePairs { get; set; } = [];
 
 }

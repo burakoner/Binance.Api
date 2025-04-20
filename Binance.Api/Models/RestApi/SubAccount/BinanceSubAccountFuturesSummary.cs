@@ -42,7 +42,7 @@ public record BinanceSubAccountFuturesSummary
     /// Sub accounts info
     /// </summary>
     [JsonProperty("subAccountList")]
-    public IEnumerable<BinanceSubAccountFuturesInfo> SubAccounts { get; set; } = Array.Empty<BinanceSubAccountFuturesInfo>();
+    public IEnumerable<BinanceSubAccountFuturesInfo> SubAccounts { get; set; } = [];
 }
 
 /// <summary>

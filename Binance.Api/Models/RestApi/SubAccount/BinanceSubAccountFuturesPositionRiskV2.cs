@@ -9,13 +9,13 @@ public record BinanceSubAccountFuturesPositionRiskV2
     /// Futures account response (USDT margined)
     /// </summary>
     [JsonProperty("futurePositionRiskVos")]
-    public IEnumerable<BinanceSubAccountFuturesPositionRisk> UsdtMarginedFutures { get; set; } = Array.Empty<BinanceSubAccountFuturesPositionRisk>();
+    public IEnumerable<BinanceSubAccountFuturesPositionRisk> UsdtMarginedFutures { get; set; } = [];
 
     /// <summary>
     /// Delivery account response (COIN margined)
     /// </summary>
     [JsonProperty("deliveryPositionRiskVos")]
-    public IEnumerable<BinanceSubAccountFuturesPositionRiskCoin> CoinMarginedFutures { get; set; } = Array.Empty<BinanceSubAccountFuturesPositionRiskCoin>();
+    public IEnumerable<BinanceSubAccountFuturesPositionRiskCoin> CoinMarginedFutures { get; set; } = [];
 }
 
 /// <summary>

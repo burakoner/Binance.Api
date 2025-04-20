@@ -34,11 +34,11 @@ public record BinanceFuturesAccountSnapshotData
     /// <summary>
     /// List of assets
     /// </summary>
-    public IEnumerable<BinanceFuturesAsset> Assets { get; set; } = Array.Empty<BinanceFuturesAsset>();
+    public IEnumerable<BinanceFuturesAsset> Assets { get; set; } = [];
     /// <summary>
     /// List of positions
     /// </summary>
-    public IEnumerable<BinanceFuturesSnapshotPosition> Position { get; set; } = Array.Empty<BinanceFuturesSnapshotPosition>();
+    public IEnumerable<BinanceFuturesSnapshotPosition> Position { get; set; } = [];
 }
 
 /// <summary>

@@ -60,12 +60,4 @@ public sealed class BinanceRestApiClient
         UsdtFutures = new BinanceRestApiUsdtFuturesClient(this);
     }
 
-    internal Uri GetUrl(string api, string version, string endpoint)
-    {
-        var url = ClientOptions.BaseAddress.AppendPath(api);
-        if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
-        if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
-
-        return new Uri(url);
-    }
 }

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Clients.RestApi;
+﻿using Binance.Api.Spot.Responses;
+
+namespace Binance.Api.Clients.RestApi;
 
 public class BinanceRestApiMarginClient : RestApiClient
 {
@@ -425,13 +427,13 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     #region Exchange Information
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
-         => GetExchangeInfoAsync(Array.Empty<string>(), ct);
+         => GetExchangeInfoAsync([], ct);
 
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
-         => GetExchangeInfoAsync(new string[] { symbol }, ct);
+         => GetExchangeInfoAsync([symbol], ct);
 
     public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(AccountType permission, CancellationToken ct = default)
-         => GetExchangeInfoAsync(new AccountType[] { permission }, ct);
+         => GetExchangeInfoAsync([permission], ct);
 
     public async Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(AccountType[] permissions, CancellationToken ct = default)
     {

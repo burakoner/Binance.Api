@@ -18,7 +18,7 @@ public record BinanceStreamPositionsUpdate : BinanceSocketEvent
     /// Balances
     /// </summary>
     [JsonProperty("B")]
-    public IEnumerable<BinanceStreamBalance> Balances { get; set; } = Array.Empty<BinanceStreamBalance>();
+    public IEnumerable<BinanceStreamBalance> Balances { get; set; } = [];
 }
 
 /// <summary>

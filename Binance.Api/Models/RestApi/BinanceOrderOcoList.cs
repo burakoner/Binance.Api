@@ -40,11 +40,11 @@ public record BinanceOrderOcoList
     /// <summary>
     /// The order in this list
     /// </summary>
-    public IEnumerable<BinanceOrderId> Orders { get; set; } = Array.Empty<BinanceOrderId>();
+    public IEnumerable<BinanceOrderId> Orders { get; set; } = [];
     /// <summary>
     /// The order details
     /// </summary>
-    public IEnumerable<BinancePlacedOcoOrder> OrderReports { get; set; } = Array.Empty<BinancePlacedOcoOrder>();
+    public IEnumerable<BinancePlacedOcoOrder> OrderReports { get; set; } = [];
 }
 
 /// <summary>

@@ -20,7 +20,7 @@ public record BinanceFuturesSymbolBracket
     /// <summary>
     /// Brackets
     /// </summary>
-    public IEnumerable<BinanceFuturesBracket> Brackets { get; set; } = Array.Empty<BinanceFuturesBracket>();
+    public IEnumerable<BinanceFuturesBracket> Brackets { get; set; } = [];
 
 }
 

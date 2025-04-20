@@ -16,7 +16,7 @@ public record BinanceHashrateResaleDetails
     /// <summary>
     /// Transfer details
     /// </summary>
-    public IEnumerable<BinanceHashrateResaleDetailsItem> ProfitTransferDetails { get; set; } = Array.Empty<BinanceHashrateResaleDetailsItem>();
+    public IEnumerable<BinanceHashrateResaleDetailsItem> ProfitTransferDetails { get; set; } = [];
 }
 
 /// <summary>

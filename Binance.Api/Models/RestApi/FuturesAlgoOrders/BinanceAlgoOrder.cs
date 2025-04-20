@@ -12,7 +12,7 @@ public record BinanceAlgoOrders
     /// <summary>
     /// Orders
     /// </summary>
-    public IEnumerable<BinanceAlgoOrder> Orders { get; set; } = Array.Empty<BinanceAlgoOrder>();
+    public IEnumerable<BinanceAlgoOrder> Orders { get; set; } = [];
 }
 
 /// <summary>

@@ -17,7 +17,7 @@ public record BinanceHashrateResaleList
     /// Details
     /// </summary>
     [JsonProperty("configDetails")]
-    public IEnumerable<BinanceHashrateResaleItem> ResaleItmes { get; set; } = Array.Empty<BinanceHashrateResaleItem>();
+    public IEnumerable<BinanceHashrateResaleItem> ResaleItmes { get; set; } = [];
 }
 
 /// <summary>

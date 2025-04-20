@@ -29,11 +29,11 @@ public record BinanceFuturesCoinAccountInfo
     /// <summary>
     /// Account assets
     /// </summary>
-    public IEnumerable<BinanceFuturesAccountAsset> Assets { get; set; } = Array.Empty<BinanceFuturesAccountAsset>();
+    public IEnumerable<BinanceFuturesAccountAsset> Assets { get; set; } = [];
     /// <summary>
     /// Account positions
     /// </summary>
-    public IEnumerable<BinancePositionInfoCoin> Positions { get; set; } = Array.Empty<BinancePositionInfoCoin>();
+    public IEnumerable<BinancePositionInfoCoin> Positions { get; set; } = [];
     /// <summary>
     /// Update time
     /// </summary>

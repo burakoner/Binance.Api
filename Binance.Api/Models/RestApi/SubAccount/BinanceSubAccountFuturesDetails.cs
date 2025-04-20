@@ -16,7 +16,7 @@ public record BinanceSubAccountFuturesDetails
     /// <summary>
     /// List of asset details
     /// </summary>
-    public IEnumerable<BinanceSubAccountFuturesAsset> Assets { get; set; } = Array.Empty<BinanceSubAccountFuturesAsset>();
+    public IEnumerable<BinanceSubAccountFuturesAsset> Assets { get; set; } = [];
     /// <summary>
     /// Can deposit
     /// </summary>

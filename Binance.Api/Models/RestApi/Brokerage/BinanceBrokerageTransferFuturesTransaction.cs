@@ -19,7 +19,7 @@ public record BinanceBrokerageTransferFuturesTransactions
     /// Transfer
     /// </summary>
     [JsonProperty("transfer")]
-    public IEnumerable<BinanceBrokerageTransferFuturesTransaction> Transactions { get; set; } = Array.Empty<BinanceBrokerageTransferFuturesTransaction>();
+    public IEnumerable<BinanceBrokerageTransferFuturesTransaction> Transactions { get; set; } = [];
 }
 
 /// <summary>

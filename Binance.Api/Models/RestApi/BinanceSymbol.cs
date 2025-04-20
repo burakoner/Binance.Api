@@ -37,7 +37,7 @@ public record BinanceSymbol
     /// Allowed order types
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(SpotOrderTypeConverter))]
-    public IEnumerable<SpotOrderType> OrderTypes { get; set; } = Array.Empty<SpotOrderType>();
+    public IEnumerable<SpotOrderType> OrderTypes { get; set; } = [];
     /// <summary>
     /// Ice berg orders allowed
     /// </summary>
@@ -81,11 +81,11 @@ public record BinanceSymbol
     /// Permissions types
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(MapConverter))]
-    public IEnumerable<AccountType> Permissions { get; set; } = Array.Empty<AccountType>();
+    public IEnumerable<AccountType> Permissions { get; set; } = [];
     /// <summary>
     /// Filters for order on this symbol
     /// </summary>
-    public IEnumerable<BinanceSymbolFilter> Filters { get; set; } = Array.Empty<BinanceSymbolFilter>();
+    public IEnumerable<BinanceSymbolFilter> Filters { get; set; } = [];
 
     /// <summary>
     /// Filter for max amount of iceberg parts for this symbol

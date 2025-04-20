@@ -25,7 +25,7 @@ public record BinanceBlvtInfoUpdate : BinanceSocketEvent
     /// Baskets
     /// </summary>
     [JsonProperty("b")]
-    public IEnumerable<BlvtBasket> Baskets { get; set; } = Array.Empty<BlvtBasket>();
+    public IEnumerable<BlvtBasket> Baskets { get; set; } = [];
     /// <summary>
     /// Token issued
     /// </summary>

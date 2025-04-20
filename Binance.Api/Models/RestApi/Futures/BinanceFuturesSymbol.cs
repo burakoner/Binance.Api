@@ -8,7 +8,7 @@ public record BinanceFuturesSymbol
     /// <summary>
     /// Filters for order on this symbol
     /// </summary>
-    public IEnumerable<BinanceFuturesSymbolFilter> Filters { get; set; } = Array.Empty<BinanceFuturesSymbolFilter>();
+    public IEnumerable<BinanceFuturesSymbolFilter> Filters { get; set; } = [];
     /// <summary>
     /// Contract type
     /// </summary>
@@ -55,7 +55,7 @@ public record BinanceFuturesSymbol
     /// Allowed order types
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(FuturesOrderTypeConverter))]
-    public IEnumerable<FuturesOrderType> OrderTypes { get; set; } = Array.Empty<FuturesOrderType>();
+    public IEnumerable<FuturesOrderType> OrderTypes { get; set; } = [];
     /// <summary>
     /// The symbol
     /// </summary>
@@ -88,7 +88,7 @@ public record BinanceFuturesSymbol
     /// <summary>
     /// Sub types
     /// </summary>
-    public IEnumerable<string> UnderlyingSubType { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> UnderlyingSubType { get; set; } = [];
 
     /// <summary>
     /// Liquidation fee
@@ -103,13 +103,13 @@ public record BinanceFuturesSymbol
     /// Currently Empty
     /// </summary>
     [JsonIgnore]
-    public object[] UnderlyingSupType { get; set; } = Array.Empty<object>();
+    public object[] UnderlyingSupType { get; set; } = [];
 
     /// <summary>
     /// Allowed order time in force
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(TimeInForceConverter))]
-    public IEnumerable<TimeInForce> TimeInForce { get; set; } = Array.Empty<TimeInForce>();
+    public IEnumerable<TimeInForce> TimeInForce { get; set; } = [];
     /// <summary>
     /// Filter for the max accuracy of the price for this symbol
     /// </summary>

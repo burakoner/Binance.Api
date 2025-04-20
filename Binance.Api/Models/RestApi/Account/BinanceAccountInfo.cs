@@ -55,9 +55,9 @@ public record BinanceAccountInfo
     /// Permissions types
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(MapConverter))]
-    public IEnumerable<AccountType> Permissions { get; set; } = Array.Empty<AccountType>();
+    public IEnumerable<AccountType> Permissions { get; set; } = [];
     /// <summary>
     /// List of assets with their current balances
     /// </summary>
-    public IEnumerable<BinanceBalance> Balances { get; set; } = Array.Empty<BinanceBalance>();
+    public IEnumerable<BinanceBalance> Balances { get; set; } = [];
 }

@@ -16,7 +16,7 @@ public record BinanceRevenueList
     /// <summary>
     /// Revenue items
     /// </summary>
-    public IEnumerable<BinanceRevenueItem> AccountProfits { get; set; } = Array.Empty<BinanceRevenueItem>();
+    public IEnumerable<BinanceRevenueItem> AccountProfits { get; set; } = [];
 }
 
 /// <summary>

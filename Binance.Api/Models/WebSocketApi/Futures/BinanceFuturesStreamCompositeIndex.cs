@@ -20,7 +20,7 @@ public record BinanceFuturesStreamCompositeIndex : BinanceSocketEvent
     /// Composition
     /// </summary>
     [JsonProperty("c")]
-    public IEnumerable<BinanceFuturesStreamCompositeIndexAsset> Composition { get; set; } = Array.Empty<BinanceFuturesStreamCompositeIndexAsset>();
+    public IEnumerable<BinanceFuturesStreamCompositeIndexAsset> Composition { get; set; } = [];
 }
 
 /// <summary>

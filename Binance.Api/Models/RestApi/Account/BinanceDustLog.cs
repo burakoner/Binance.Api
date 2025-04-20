@@ -12,7 +12,7 @@ public record BinanceDustLogList
     /// <summary>
     /// Rows
     /// </summary>
-    public IEnumerable<BinanceDustLog> UserAssetDribblets { get; set; } = Array.Empty<BinanceDustLog>();
+    public IEnumerable<BinanceDustLog> UserAssetDribblets { get; set; } = [];
 }
 
 /// <summary>
@@ -39,7 +39,7 @@ public record BinanceDustLog
     /// Detail logs
     /// </summary>
     [JsonProperty("userAssetDribbletDetails")]
-    public IEnumerable<BinanceDustLogDetails> Logs { get; set; } = Array.Empty<BinanceDustLogDetails>();
+    public IEnumerable<BinanceDustLogDetails> Logs { get; set; } =  [];
     /// <summary>
     /// Timestamp
     /// </summary>

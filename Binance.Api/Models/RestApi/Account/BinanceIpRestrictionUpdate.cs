@@ -11,7 +11,7 @@ public record BinanceIpRestrictionUpdate
     /// <summary>
     /// Ip Whitelist
     /// </summary>
-    public IEnumerable<string> IpList { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IpList { get; set; } = [];
 
     /// <summary>
     /// Update Time

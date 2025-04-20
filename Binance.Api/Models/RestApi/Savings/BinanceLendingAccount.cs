@@ -38,7 +38,7 @@ public record BinanceLendingAccount
     /// Position amounts
     /// </summary>
     [JsonProperty("positionAmountVos")]
-    public IEnumerable<BinanceLendingPositionAmount> PositionAmounts { get; set; } = Array.Empty<BinanceLendingPositionAmount>();
+    public IEnumerable<BinanceLendingPositionAmount> PositionAmounts { get; set; } = [];
 }
 
 /// <summary>

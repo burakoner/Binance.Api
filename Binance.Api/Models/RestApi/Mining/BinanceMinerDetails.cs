@@ -17,7 +17,7 @@ public record BinanceMinerDetails
     /// <summary>
     /// Hash rate data
     /// </summary>
-    public IEnumerable<BinanceHashRate> HashRateDatas { get; set; } = Array.Empty<BinanceHashRate>();
+    public IEnumerable<BinanceHashRate> HashRateDatas { get; set; } = [];
 }
 
 /// <summary>

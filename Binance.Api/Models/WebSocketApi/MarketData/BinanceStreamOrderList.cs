@@ -52,7 +52,7 @@ public record BinanceStreamOrderList : BinanceSocketEvent
     /// The order in this list
     /// </summary>
     [JsonProperty("O")]
-    public IEnumerable<BinanceStreamOrderId> Orders { get; set; } = Array.Empty<BinanceStreamOrderId>();
+    public IEnumerable<BinanceStreamOrderId> Orders { get; set; } = [];
     /// <summary>
     /// The listen key the update was for
     /// </summary>

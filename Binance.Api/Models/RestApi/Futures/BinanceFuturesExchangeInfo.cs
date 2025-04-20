@@ -17,11 +17,11 @@ public record BinanceFuturesExchangeInfo
     /// <summary>
     /// The rate limits used
     /// </summary>
-    public IEnumerable<BinanceRateLimit> RateLimits { get; set; } = Array.Empty<BinanceRateLimit>();
+    public IEnumerable<BinanceRateLimit> RateLimits { get; set; } = [];
     /// <summary>
     /// Filters
     /// </summary>
-    public IEnumerable<object> ExchangeFilters { get; set; } = Array.Empty<object>();
+    public IEnumerable<object> ExchangeFilters { get; set; } = [];
 }
 
 /// <summary>
@@ -32,12 +32,12 @@ public record BinanceFuturesUsdtExchangeInfo : BinanceFuturesExchangeInfo
     /// <summary>
     /// All symbols supported
     /// </summary>
-    public IEnumerable<BinanceFuturesUsdtSymbol> Symbols { get; set; } = Array.Empty<BinanceFuturesUsdtSymbol>();
+    public IEnumerable<BinanceFuturesUsdtSymbol> Symbols { get; set; } = [];
 
     /// <summary>
     /// All assets
     /// </summary>
-    public IEnumerable<BinanceFuturesUsdtAsset> Assets { get; set; } = Array.Empty<BinanceFuturesUsdtAsset>();
+    public IEnumerable<BinanceFuturesUsdtAsset> Assets { get; set; } = [];
 }
 
 /// <summary>
@@ -48,5 +48,5 @@ public record BinanceFuturesCoinExchangeInfo : BinanceFuturesExchangeInfo
     /// <summary>
     /// All symbols supported
     /// </summary>
-    public IEnumerable<BinanceFuturesCoinSymbol> Symbols { get; set; } = Array.Empty<BinanceFuturesCoinSymbol>();
+    public IEnumerable<BinanceFuturesCoinSymbol> Symbols { get; set; } = [];
 }

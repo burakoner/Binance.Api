@@ -20,7 +20,7 @@ public record BinanceRebateWrapper
     /// <summary>
     /// Rebate data for this page
     /// </summary>
-    public IEnumerable<BinanceRebate> Data { get; set; } = Array.Empty<BinanceRebate>();
+    public IEnumerable<BinanceRebate> Data { get; set; } = [];
 }
 
 /// <summary>

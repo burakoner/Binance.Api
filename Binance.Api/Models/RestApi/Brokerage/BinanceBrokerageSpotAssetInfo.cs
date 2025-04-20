@@ -8,7 +8,7 @@ public record BinanceBrokerageSpotAssetInfo
     /// <summary>
     /// Data
     /// </summary>
-    public IEnumerable<BinanceBrokerageSubAccountSpotAssetInfo> Data { get; set; } = Array.Empty<BinanceBrokerageSubAccountSpotAssetInfo>();
+    public IEnumerable<BinanceBrokerageSubAccountSpotAssetInfo> Data { get; set; } = [];
 
     /// <summary>
     /// Timestamp

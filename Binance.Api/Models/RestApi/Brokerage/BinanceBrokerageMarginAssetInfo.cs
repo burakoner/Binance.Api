@@ -8,7 +8,7 @@ public record BinanceBrokerageMarginAssetInfo
     /// <summary>
     /// Data
     /// </summary>
-    public IEnumerable<BinanceBrokerageSubAccountMarginAssetInfo> Data { get; set; } = Array.Empty<BinanceBrokerageSubAccountMarginAssetInfo>();
+    public IEnumerable<BinanceBrokerageSubAccountMarginAssetInfo> Data { get; set; } = [];
 
     /// <summary>
     /// Timestamp

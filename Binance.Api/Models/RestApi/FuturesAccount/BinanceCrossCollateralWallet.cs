@@ -28,7 +28,7 @@ public record BinanceCrossCollateralWallet
     /// <summary>
     /// Cross collaterals
     /// </summary>
-    public IEnumerable<BinanceCrossCollateralWalletEntry> CrossCollaterals { get; set; } = Array.Empty<BinanceCrossCollateralWalletEntry>();
+    public IEnumerable<BinanceCrossCollateralWalletEntry> CrossCollaterals { get; set; } = [];
 }
 
 /// <summary>

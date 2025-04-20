@@ -41,11 +41,11 @@ public record BinanceFuturesStreamOrderBookDepth : BinanceSocketEvent, IBinanceF
     /// The list of diff bids
     /// </summary>
     [JsonProperty("b")]
-    public IEnumerable<BinanceOrderBookEntry> Bids { get; set; } = Array.Empty<BinanceOrderBookEntry>();
+    public IEnumerable<BinanceOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of diff asks
     /// </summary>
     [JsonProperty("a")]
-    public IEnumerable<BinanceOrderBookEntry> Asks { get; set; } = Array.Empty<BinanceOrderBookEntry>();
+    public IEnumerable<BinanceOrderBookEntry> Asks { get; set; } = [];
 }

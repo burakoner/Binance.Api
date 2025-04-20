@@ -8,7 +8,7 @@ public record BinanceFuturesAccountInfo
     /// <summary>
     /// Information about an account assets
     /// </summary>
-    public IEnumerable<BinanceFuturesAccountAsset> Assets { get; set; } = Array.Empty<BinanceFuturesAccountAsset>();
+    public IEnumerable<BinanceFuturesAccountAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Boolean indicating if this account can deposit
@@ -39,7 +39,7 @@ public record BinanceFuturesAccountInfo
     /// <summary>
     /// Information about an account positions
     /// </summary>
-    public IEnumerable<BinancePositionInfoUsdt> Positions { get; set; } = Array.Empty<BinancePositionInfoUsdt>();
+    public IEnumerable<BinancePositionInfoUsdt> Positions { get; set; } = [];
 
     /// <summary>
     /// Total initial margin

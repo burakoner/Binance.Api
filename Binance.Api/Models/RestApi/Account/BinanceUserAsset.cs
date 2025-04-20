@@ -62,5 +62,5 @@ public record BinanceUserAsset
     /// <summary>
     /// Networks
     /// </summary>
-    public IEnumerable<BinanceNetwork> NetworkList { get; set; } = Array.Empty<BinanceNetwork>();
+    public IEnumerable<BinanceNetwork> NetworkList { get; set; } = [];
 }

@@ -37,13 +37,13 @@ public record BinanceFuturesStreamAccountUpdateData
     /// Balances
     /// </summary>
     [JsonProperty("B")]
-    public IEnumerable<BinanceFuturesStreamBalance> Balances { get; set; } = Array.Empty<BinanceFuturesStreamBalance>();
+    public IEnumerable<BinanceFuturesStreamBalance> Balances { get; set; } = [];
 
     /// <summary>
     /// Positions
     /// </summary>
     [JsonProperty("P")]
-    public IEnumerable<BinanceFuturesStreamPosition> Positions { get; set; } = Array.Empty<BinanceFuturesStreamPosition>();
+    public IEnumerable<BinanceFuturesStreamPosition> Positions { get; set; } = [];
 }
 
 /// <summary>

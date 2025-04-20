@@ -18,7 +18,7 @@ public record BinanceDustTransferResult
     /// <summary>
     /// Transfer entries
     /// </summary>
-    public IEnumerable<BinanceDustTransferResultEntry> TransferResult { get; set; } = Array.Empty<BinanceDustTransferResultEntry>();
+    public IEnumerable<BinanceDustTransferResultEntry> TransferResult { get; set; } = [];
 }
 
 /// <summary>

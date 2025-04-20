@@ -31,6 +31,7 @@ global using Binance.Api.Models.RestApi.UserDataStream;
 global using Binance.Api.Models.WebSocketApi;
 global using Binance.Api.Models.WebSocketApi.MarketData;
 global using Binance.Api.Options.RestApi;
+global using Binance.Api.Spot;
 global using Microsoft.Extensions.Logging;
 global using Newtonsoft.Json;
 global using Newtonsoft.Json.Linq;

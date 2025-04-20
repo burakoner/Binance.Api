@@ -9,7 +9,7 @@ public record BinanceQueryRecords<T>
     /// <summary>
     /// The list records
     /// </summary>
-    public IEnumerable<T> Rows { get; set; } = Array.Empty<T>();
+    public IEnumerable<T> Rows { get; set; } = [];
 
     /// <summary>
     /// The total count of the records

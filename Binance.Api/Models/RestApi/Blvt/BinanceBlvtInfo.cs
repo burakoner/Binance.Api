@@ -46,7 +46,7 @@ public record BinanceBlvtInfo
     /// <summary>
     /// Current baskets
     /// </summary>
-    public IEnumerable<BlvtCurrentBasket> CurrentBaskets { get; set; } = Array.Empty<BlvtCurrentBasket>();
+    public IEnumerable<BlvtCurrentBasket> CurrentBaskets { get; set; } = [];
     /// <summary>
     /// Redeem fee percentage
     /// </summary>
