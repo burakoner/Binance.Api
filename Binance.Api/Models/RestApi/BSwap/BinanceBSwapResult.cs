@@ -3,7 +3,7 @@
 /// <summary>
 /// Swap result
 /// </summary>
-public class BinanceBSwapResult
+public record BinanceBSwapResult
 {
     /// <summary>
     /// Swap id

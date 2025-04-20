@@ -1,7 +1,7 @@
 ﻿namespace Binance.Api.Models.RestApi.Futures;
 
 [JsonConverter(typeof(SymbolFuturesFilterConverter))]
-public class BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The type of this filter
@@ -12,7 +12,7 @@ public class BinanceFuturesSymbolFilter
 /// <summary>
 /// Price filter
 /// </summary>
-public class BinanceFuturesSymbolPriceFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolPriceFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The minimal price the order can be for
@@ -31,7 +31,7 @@ public class BinanceFuturesSymbolPriceFilter : BinanceFuturesSymbolFilter
 /// <summary>
 /// Lot size filter
 /// </summary>
-public class BinanceFuturesSymbolLotSizeFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolLotSizeFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The minimal quantity of an order
@@ -50,7 +50,7 @@ public class BinanceFuturesSymbolLotSizeFilter : BinanceFuturesSymbolFilter
 /// <summary>
 /// Market lot size filter
 /// </summary>
-public class BinanceFuturesSymbolMarketLotSizeFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolMarketLotSizeFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The minimal quantity of an order
@@ -69,7 +69,7 @@ public class BinanceFuturesSymbolMarketLotSizeFilter : BinanceFuturesSymbolFilte
 /// <summary>
 ///Max orders filter
 /// </summary>
-public class BinanceFuturesSymbolMaxOrdersFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolMaxOrdersFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The max number of orders for this symbol
@@ -80,7 +80,7 @@ public class BinanceFuturesSymbolMaxOrdersFilter : BinanceFuturesSymbolFilter
 /// <summary>
 /// Max algo orders filter
 /// </summary>
-public class BinanceFuturesSymbolMaxAlgorithmicOrdersFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolMaxAlgorithmicOrdersFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The max number of Algorithmic orders for this symbol
@@ -91,7 +91,7 @@ public class BinanceFuturesSymbolMaxAlgorithmicOrdersFilter : BinanceFuturesSymb
 /// <summary>
 /// Price percentage filter
 /// </summary>
-public class BinanceFuturesSymbolPercentPriceFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolPercentPriceFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The max factor the price can deviate up
@@ -110,7 +110,7 @@ public class BinanceFuturesSymbolPercentPriceFilter : BinanceFuturesSymbolFilter
 /// <summary>
 /// Min notional filter
 /// </summary>
-public class BinanceFuturesSymbolMinNotionalFilter : BinanceFuturesSymbolFilter
+public record BinanceFuturesSymbolMinNotionalFilter : BinanceFuturesSymbolFilter
 {
     /// <summary>
     /// The minimal total quote quantity of an order. This is calculated by Price * Quantity.

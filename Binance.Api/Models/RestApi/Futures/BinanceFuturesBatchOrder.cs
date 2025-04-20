@@ -3,12 +3,12 @@
 /// <summary>
 /// Parameters for a new futures batch order
 /// </summary>
-public class BinanceFuturesBatchOrder
+public record BinanceFuturesBatchOrder
 {
     /// <summary>
     /// Symbol of the order
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Side of the order
     /// </summary>
@@ -40,7 +40,7 @@ public class BinanceFuturesBatchOrder
     /// <summary>
     /// A unique id among open orders. Automatically generated if not sent.
     /// </summary>
-    public string NewClientOrderId { get; set; }
+    public string NewClientOrderId { get; set; } = "";
     /// <summary>
     /// Used with Stop/StopMarket or TakeProfit/TakeProfitMarket orders.
     /// </summary>

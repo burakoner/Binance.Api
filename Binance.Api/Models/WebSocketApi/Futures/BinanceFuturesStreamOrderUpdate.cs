@@ -3,7 +3,7 @@ namespace Binance.Api.Models.WebSocketApi.Futures;
 /// <summary>
 /// Order update
 /// </summary>
-public class BinanceFuturesStreamOrderUpdate : BinanceSocketEvent
+public record BinanceFuturesStreamOrderUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// Update data
@@ -19,24 +19,24 @@ public class BinanceFuturesStreamOrderUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 }
 
 /// <summary>
 /// Update data about an order
 /// </summary>
-public class BinanceFuturesStreamOrderUpdateData
+public record BinanceFuturesStreamOrderUpdateData
 {
     /// <summary>
     /// The symbol the order is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The new client order id
     /// </summary>
     [JsonProperty("c")]
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; set; } = "";
     /// <summary>
     /// The side of the order
     /// </summary>
@@ -111,7 +111,7 @@ public class BinanceFuturesStreamOrderUpdateData
     /// The asset the fee was taken from
     /// </summary>
     [JsonProperty("N")]
-    public string FeeAsset { get; set; }
+    public string FeeAsset { get; set; } = "";
     /// <summary>
     /// The time of the update
     /// </summary>

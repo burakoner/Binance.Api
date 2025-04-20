@@ -3,12 +3,12 @@
 /// <summary>
 /// Information about an asset balance
 /// </summary>
-public class BinanceBalance : IBinanceBalance
+public record BinanceBalance : IBinanceBalance
 {
     /// <summary>
     /// The asset this balance is for
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The quantity that isn't locked in a trade
     /// </summary>

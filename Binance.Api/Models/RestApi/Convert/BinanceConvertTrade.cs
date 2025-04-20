@@ -3,24 +3,24 @@
 /// <summary>
 /// Convert trade info
 /// </summary>
-public class BinanceConvertTrade
+public record BinanceConvertTrade
 {
     /// <summary>
     /// Quote id
     /// </summary>
-    public string QuoteId { get; set; }
+    public string QuoteId { get; set; } = "";
     /// <summary>
     /// Order id
     /// </summary>
-    public string OrderId { get; set; }
+    public string OrderId { get; set; } = "";
     /// <summary>
     /// Order status
     /// </summary>
-    public string OrderStatus { get; set; }
+    public string OrderStatus { get; set; } = "";
     /// <summary>
     /// From asset
     /// </summary>
-    public string FromAsset { get; set; }
+    public string FromAsset { get; set; } = "";
     /// <summary>
     /// From quantity
     /// </summary>
@@ -29,7 +29,7 @@ public class BinanceConvertTrade
     /// <summary>
     /// To asset
     /// </summary>
-    public string ToAsset { get; set; }
+    public string ToAsset { get; set; } = "";
     /// <summary>
     /// To quantity
     /// </summary>

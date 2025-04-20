@@ -3,17 +3,17 @@
 /// <summary>
 /// The result of replacing an order
 /// </summary>
-public class BinanceReplaceOrderResult : BinanceReplaceResult
+public record BinanceReplaceOrderResult : BinanceReplaceResult
 {
     /// <summary>
     /// Cancel result
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public OrderOperationResult CancelResult { get; set; }
     /// <summary>
     /// New order result
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public OrderOperationResult NewOrderResult { get; set; }
     /// <summary>
     /// Cancel order response. Make sure to check that the CancelResult is Success, else the CancelResponse.Message will contain more info
@@ -28,13 +28,13 @@ public class BinanceReplaceOrderResult : BinanceReplaceResult
 /// <summary>
 /// Replace order
 /// </summary>
-public class BinanceReplaceOrder : BinancePlacedOrder
+public record BinanceReplaceOrder : BinancePlacedOrder
 {
     /// <summary>
     /// Failure message
     /// </summary>
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
     /// <summary>
     /// Error code if not successful
     /// </summary>
@@ -44,13 +44,13 @@ public class BinanceReplaceOrder : BinancePlacedOrder
 /// <summary>
 /// Replace cancel order info
 /// </summary>
-public class BinanceReplaceCancelOrder : BinanceOrderBase
+public record BinanceReplaceCancelOrder : BinanceOrderBase
 {
     /// <summary>
     /// Failure message
     /// </summary>
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
     /// <summary>
     /// Error code if not successful
     /// </summary>
@@ -60,13 +60,13 @@ public class BinanceReplaceCancelOrder : BinanceOrderBase
 /// <summary>
 /// Replace result
 /// </summary>
-public class BinanceReplaceResult
+public record BinanceReplaceResult
 {
     /// <summary>
     /// Failure message
     /// </summary>
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
     /// <summary>
     /// Error code if not successful
     /// </summary>

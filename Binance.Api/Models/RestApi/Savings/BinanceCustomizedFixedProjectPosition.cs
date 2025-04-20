@@ -3,12 +3,12 @@
 /// <summary>
 /// Customized fixed project position
 /// </summary>
-public class BinanceCustomizedFixedProjectPosition
+public record BinanceCustomizedFixedProjectPosition
 {
     /// <summary>
     /// Asset name
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Can transfer
     /// </summary>
@@ -51,11 +51,11 @@ public class BinanceCustomizedFixedProjectPosition
     /// <summary>
     /// Project id
     /// </summary>
-    public string ProjectId { get; set; }
+    public string ProjectId { get; set; } = "";
     /// <summary>
     /// Project name
     /// </summary>
-    public string ProjectName { get; set; }
+    public string ProjectName { get; set; } = "";
     /// <summary>
     /// Time of purchase
     /// </summary>
@@ -64,7 +64,7 @@ public class BinanceCustomizedFixedProjectPosition
     /// <summary>
     /// Redeem date
     /// </summary>
-    public string RedeemDate { get; set; }
+    public string RedeemDate { get; set; } = "";
     /// <summary>
     /// Start time
     /// </summary>

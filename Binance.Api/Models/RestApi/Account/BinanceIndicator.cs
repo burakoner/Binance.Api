@@ -3,7 +3,7 @@
 /// <summary>
 /// Indicator info
 /// </summary>
-public class BinanceIndicator
+public record BinanceIndicator
 {
     /// <summary>
     /// Indicator name

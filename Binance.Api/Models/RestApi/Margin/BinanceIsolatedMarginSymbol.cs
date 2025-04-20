@@ -3,20 +3,20 @@
 /// <summary>
 /// Isolated margin symbol info
 /// </summary>
-public class BinanceIsolatedMarginSymbol
+public record BinanceIsolatedMarginSymbol
 {
     /// <summary>
     /// Symbol name
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Base asset
     /// </summary>
-    public string Base { get; set; }
+    public string Base { get; set; } = "";
     /// <summary>
     /// Quote asset
     /// </summary>
-    public string Quote { get; set; }
+    public string Quote { get; set; } = "";
     /// <summary>
     /// Margin trade
     /// </summary>

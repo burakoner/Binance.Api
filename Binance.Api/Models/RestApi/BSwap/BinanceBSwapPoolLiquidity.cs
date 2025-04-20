@@ -3,7 +3,7 @@
 /// <summary>
 /// Pool liquidity info
 /// </summary>
-public class BinanceBSwapPoolLiquidity
+public record BinanceBSwapPoolLiquidity
 {
     /// <summary>
     /// Id
@@ -13,7 +13,7 @@ public class BinanceBSwapPoolLiquidity
     /// <summary>
     /// Name
     /// </summary>
-    public string PoolName { get; set; }
+    public string PoolName { get; set; } = "";
     /// <summary>
     /// Update time
     /// </summary>
@@ -32,7 +32,7 @@ public class BinanceBSwapPoolLiquidity
 /// <summary>
 /// Pool share info
 /// </summary>
-public class BinancePoolShare
+public record BinancePoolShare
 {
     /// <summary>
     /// Share quantity

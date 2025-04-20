@@ -3,12 +3,12 @@
 /// <summary>
 /// Transaction download info
 /// </summary>
-public class BinanceFuturesDownloadLink
+public record BinanceFuturesDownloadLink
 {
     /// <summary>
     /// Download id
     /// </summary>
-    public string DownloadId { get; set; }
+    public string DownloadId { get; set; } = "";
     /// <summary>
     /// Is ready to download
     /// </summary>
@@ -16,7 +16,7 @@ public class BinanceFuturesDownloadLink
     /// <summary>
     /// Download url
     /// </summary>
-    public string Url { get; set; }
+    public string Url { get; set; } = "";
     /// <summary>
     /// Link expiration time
     /// </summary>

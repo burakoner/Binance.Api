@@ -3,12 +3,12 @@
 /// <summary>
 /// BNB Burn Status
 /// </summary>
-public class BinanceBrokerageBnbBurnStatus
+public record BinanceBrokerageBnbBurnStatus
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Is Spot BNB Burn

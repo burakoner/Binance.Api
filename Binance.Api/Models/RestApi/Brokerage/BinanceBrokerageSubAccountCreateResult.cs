@@ -3,18 +3,18 @@
 /// <summary>
 /// Sub Account Create Result
 /// </summary>
-public class BinanceBrokerageSubAccountCreateResult
+public record BinanceBrokerageSubAccountCreateResult
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
     /// <summary>
     /// Email
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Tag
     /// </summary>
-    public string Tag { get; set; }
+    public string Tag { get; set; } = "";
 }

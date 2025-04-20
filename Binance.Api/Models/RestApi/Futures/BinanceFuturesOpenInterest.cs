@@ -3,12 +3,12 @@
 /// <summary>
 /// Open interest
 /// </summary>
-public class BinanceFuturesOpenInterest
+public record BinanceFuturesOpenInterest
 {
     /// <summary>
     /// The symbol the information is about
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Open Interest info
@@ -25,12 +25,12 @@ public class BinanceFuturesOpenInterest
 /// <summary>
 /// Open interest
 /// </summary>
-public class BinanceFuturesCoinOpenInterest : BinanceFuturesOpenInterest
+public record BinanceFuturesCoinOpenInterest : BinanceFuturesOpenInterest
 {
     /// <summary>
     /// The pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
     /// <summary>
     /// The contract type
     /// </summary>

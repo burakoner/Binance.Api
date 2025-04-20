@@ -3,16 +3,16 @@
 /// <summary>
 /// The order book for a asset
 /// </summary>
-public class BinanceFuturesOrderBook : BinanceOrderBook
+public record BinanceFuturesOrderBook : BinanceOrderBook
 {
     /// <summary>
     /// Pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
     /// <summary>
     /// The symbol of the order book 
     /// </summary>
-    public new string Symbol { get; set; }
+    public new string Symbol { get; set; } = "";
 
     /// <summary>
     /// The symbol of the order book 

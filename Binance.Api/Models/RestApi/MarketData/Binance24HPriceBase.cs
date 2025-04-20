@@ -8,7 +8,7 @@ public abstract class Binance24HPriceBase : IBinance24HPrice
     /// <summary>
     /// The symbol the price is for
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The actual price change in the last 24 hours
     /// </summary>

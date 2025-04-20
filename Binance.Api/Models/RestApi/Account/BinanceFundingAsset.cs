@@ -3,12 +3,12 @@
 /// <summary>
 /// Funding wallet asset
 /// </summary>
-public class BinanceFundingAsset
+public record BinanceFundingAsset
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Quantity available
     /// </summary>

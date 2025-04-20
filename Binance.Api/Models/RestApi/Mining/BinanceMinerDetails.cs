@@ -3,17 +3,17 @@
 /// <summary>
 /// Miner details
 /// </summary>
-public class BinanceMinerDetails
+public record BinanceMinerDetails
 {
     /// <summary>
     /// Name of the worker
     /// </summary>
-    public string WorkerName { get; set; }
+    public string WorkerName { get; set; } = "";
 
     /// <summary>
     /// Data type
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = "";
     /// <summary>
     /// Hash rate data
     /// </summary>
@@ -23,7 +23,7 @@ public class BinanceMinerDetails
 /// <summary>
 /// Hash rate
 /// </summary>
-public class BinanceHashRate
+public record BinanceHashRate
 {
     /// <summary>
     /// Timestamp

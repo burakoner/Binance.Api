@@ -3,18 +3,18 @@
 /// <summary>
 /// Adjust result
 /// </summary>
-public class BinanceCrossCollateralAdjustLtvResult
+public record BinanceCrossCollateralAdjustLtvResult
 {
     /// <summary>
     /// Collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Loan asset
     /// </summary>
     [JsonProperty("loanCoin")]
-    public string LoanAsset { get; set; }
+    public string LoanAsset { get; set; } = "";
     /// <summary>
     /// The direction
     /// </summary>

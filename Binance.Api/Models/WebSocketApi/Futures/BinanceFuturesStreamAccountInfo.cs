@@ -3,7 +3,7 @@ namespace Binance.Api.Models.WebSocketApi.Futures;
 /// <summary>
 /// Account update
 /// </summary>
-public class BinanceFuturesStreamAccountUpdate : BinanceSocketEvent
+public record BinanceFuturesStreamAccountUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// The update data
@@ -19,13 +19,13 @@ public class BinanceFuturesStreamAccountUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 }
 
 /// <summary>
 /// Account update data
 /// </summary>
-public class BinanceFuturesStreamAccountUpdateData
+public record BinanceFuturesStreamAccountUpdateData
 {
     /// <summary>
     /// Account update reason type
@@ -49,13 +49,13 @@ public class BinanceFuturesStreamAccountUpdateData
 /// <summary>
 /// Information about an asset balance
 /// </summary>
-public class BinanceFuturesStreamBalance
+public record BinanceFuturesStreamBalance
 {
     /// <summary>
     /// The asset this balance is for
     /// </summary>
     [JsonProperty("a")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The quantity that isn't locked in a trade
     /// </summary>
@@ -76,13 +76,13 @@ public class BinanceFuturesStreamBalance
 /// <summary>
 /// Information about an asset position
 /// </summary>
-public class BinanceFuturesStreamPosition
+public record BinanceFuturesStreamPosition
 {
     /// <summary>
     /// The symbol this balance is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The quantity of the position
     /// </summary>

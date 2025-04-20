@@ -50,7 +50,7 @@ public class BinanceRestApiFuturesAlgoClient
                 { "symbol", symbol },
                 { "side", JsonConvert.SerializeObject(side, new OrderSideConverter(false)) },
                 { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
-                { "urgency", EnumConverter.GetString(urgency) },
+                { "urgency", MapConverter.GetString(urgency) },
             };
         parameters.AddOptionalParameter("positionSide", positionSide == null ? null : JsonConvert.SerializeObject(positionSide, new PositionSideConverter(false)));
         parameters.AddOptionalParameter("clientAlgoId", clientOrderId);

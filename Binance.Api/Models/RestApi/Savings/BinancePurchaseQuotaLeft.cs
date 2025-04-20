@@ -3,12 +3,12 @@
 /// <summary>
 /// Purchase quota left
 /// </summary>
-public class BinancePurchaseQuotaLeft
+public record BinancePurchaseQuotaLeft
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// The quota left

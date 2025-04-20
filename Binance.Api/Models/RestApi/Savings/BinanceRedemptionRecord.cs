@@ -3,7 +3,7 @@
 /// <summary>
 /// Redemption record
 /// </summary>
-public class BinanceRedemptionRecord
+public record BinanceRedemptionRecord
 {
     /// <summary>
     /// Quantity purchased
@@ -13,7 +13,7 @@ public class BinanceRedemptionRecord
     /// <summary>
     /// Asset name
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -36,11 +36,11 @@ public class BinanceRedemptionRecord
     /// <summary>
     /// Id of the project
     /// </summary>
-    public string ProjectId { get; set; }
+    public string ProjectId { get; set; } = "";
     /// <summary>
     /// Name of the project
     /// </summary>
-    public string ProjectName { get; set; }
+    public string ProjectName { get; set; } = "";
     /// <summary>
     /// Principal
     /// </summary>
@@ -49,5 +49,5 @@ public class BinanceRedemptionRecord
     /// <summary>
     /// Purchase status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 }

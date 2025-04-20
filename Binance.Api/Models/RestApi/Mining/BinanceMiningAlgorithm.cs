@@ -3,18 +3,18 @@
 /// <summary>
 /// Mining coin info
 /// </summary>
-public class BinanceMiningAlgorithm
+public record BinanceMiningAlgorithm
 {
     /// <summary>
     /// The name of the algorithm
     /// </summary>
     [JsonProperty("algoName")]
-    public string AlgorithmName { get; set; }
+    public string AlgorithmName { get; set; } = "";
     /// <summary>
     /// The id of the algorithm
     /// </summary>
     [JsonProperty("algoId")]
-    public string AlgorithmId { get; set; }
+    public string AlgorithmId { get; set; } = "";
     /// <summary>
     /// The pool index
     /// </summary>
@@ -23,5 +23,5 @@ public class BinanceMiningAlgorithm
     /// <summary>
     /// The unit of measurement
     /// </summary>
-    public string Unit { get; set; }
+    public string Unit { get; set; } = "";
 }

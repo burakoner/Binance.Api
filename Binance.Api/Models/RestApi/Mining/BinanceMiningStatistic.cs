@@ -3,7 +3,7 @@
 /// <summary>
 /// Mining statistics
 /// </summary>
-public class BinanceMiningStatistic
+public record BinanceMiningStatistic
 {
     /// <summary>
     /// Hashrate last fifteen minutes
@@ -35,14 +35,14 @@ public class BinanceMiningStatistic
     /// <summary>
     /// User name
     /// </summary>
-    public string UserName { get; set; }
+    public string UserName { get; set; } = "";
     /// <summary>
     /// Hashrate unit
     /// </summary>
-    public string Unit { get; set; }
+    public string Unit { get; set; } = "";
     /// <summary>
     /// Algorithm
     /// </summary>
     [JsonProperty("algo")]
-    public string Algorithm { get; set; }
+    public string Algorithm { get; set; } = "";
 }

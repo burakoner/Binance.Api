@@ -5,12 +5,12 @@ namespace Binance.Api.Models.RestApi.SubAccount;
 /// <summary>
 /// Sub account margin trade details
 /// </summary>
-public class BinanceSubAccountMarginDetails
+public record BinanceSubAccountMarginDetails
 {
     /// <summary>
     /// Email of the account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Margin level
     /// </summary>
@@ -42,7 +42,7 @@ public class BinanceSubAccountMarginDetails
 /// <summary>
 /// Margin trade detail
 /// </summary>
-public class BinanceMarginTradeCoeff
+public record BinanceMarginTradeCoeff
 {
     /// <summary>
     /// Liquidation margin ratio

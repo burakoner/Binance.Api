@@ -3,12 +3,12 @@
 /// <summary>
 /// Trade fee info
 /// </summary>
-public class BinanceTradeFee
+public record BinanceTradeFee
 {
     /// <summary>
     /// The symbol this fee is for
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The fee for trades where you're the maker
     /// </summary>

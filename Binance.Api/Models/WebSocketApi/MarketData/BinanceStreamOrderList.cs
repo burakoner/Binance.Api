@@ -3,7 +3,7 @@
 /// <summary>
 /// Order list info
 /// </summary>
-public class BinanceStreamOrderList : BinanceSocketEvent
+public record BinanceStreamOrderList : BinanceSocketEvent
 {
     /// <summary>
     /// The id of the order list
@@ -14,7 +14,7 @@ public class BinanceStreamOrderList : BinanceSocketEvent
     /// The contingency type
     /// </summary>
     [JsonProperty("c")]
-    public string ContingencyType { get; set; }
+    public string ContingencyType { get; set; } = "";
     /// <summary>
     /// The order list status
     /// </summary>
@@ -31,12 +31,12 @@ public class BinanceStreamOrderList : BinanceSocketEvent
     /// Rejection reason
     /// </summary>
     [JsonProperty("r")]
-    public string ListRejectReason { get; set; }
+    public string ListRejectReason { get; set; } = "";
     /// <summary>
     /// The client id of the order list
     /// </summary>
     [JsonProperty("C")]
-    public string ListClientOrderId { get; set; }
+    public string ListClientOrderId { get; set; } = "";
     /// <summary>
     /// The transaction time
     /// </summary>
@@ -47,7 +47,7 @@ public class BinanceStreamOrderList : BinanceSocketEvent
     /// The symbol of the order list
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The order in this list
     /// </summary>
@@ -56,19 +56,19 @@ public class BinanceStreamOrderList : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 }
 
 /// <summary>
 /// Order reference
 /// </summary>
-public class BinanceStreamOrderId
+public record BinanceStreamOrderId
 {
     /// <summary>
     /// The symbol of the order
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The id of the order
     /// </summary>
@@ -78,5 +78,5 @@ public class BinanceStreamOrderId
     /// The client order id
     /// </summary>
     [JsonProperty("c")]
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; set; } = "";
 }

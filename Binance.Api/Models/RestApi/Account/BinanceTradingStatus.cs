@@ -3,7 +3,7 @@
 /// <summary>
 /// Trade status
 /// </summary>
-public class BinanceTradingStatus
+public record BinanceTradingStatus
 {
     /// <summary>
     /// Is locked

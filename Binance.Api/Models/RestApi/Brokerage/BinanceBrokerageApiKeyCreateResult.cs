@@ -3,23 +3,23 @@
 /// <summary>
 /// Api Key Create Result
 /// </summary>
-public class BinanceBrokerageApiKeyCreateResult
+public record BinanceBrokerageApiKeyCreateResult
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Api Key
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } = "";
 
     /// <summary>
     /// Api Secret
     /// </summary>
     [JsonProperty("secretKey")]
-    public string ApiSecret { get; set; }
+    public string ApiSecret { get; set; } = "";
 
     /// <summary>
     /// Is Spot Trading Enabled

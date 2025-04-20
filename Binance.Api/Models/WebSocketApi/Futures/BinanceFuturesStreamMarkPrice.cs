@@ -3,13 +3,13 @@ namespace Binance.Api.Models.WebSocketApi.Futures;
 /// <summary>
 /// Mark price update
 /// </summary>
-public class BinanceFuturesStreamMarkPrice : BinanceSocketEvent, IBinanceFuturesMarkPrice
+public record BinanceFuturesStreamMarkPrice : BinanceSocketEvent, IBinanceFuturesMarkPrice
 {
     /// <summary>
     /// Symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Mark Price
@@ -39,7 +39,7 @@ public class BinanceFuturesStreamMarkPrice : BinanceSocketEvent, IBinanceFutures
 /// <summary>
 /// Mark price update
 /// </summary>
-public class BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
+public record BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
 {
     /// <summary>
     /// Mark Price
@@ -51,7 +51,7 @@ public class BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
 /// <summary>
 /// Mark price update
 /// </summary>
-public class BinanceFuturesCoinStreamMarkPrice : BinanceFuturesStreamMarkPrice
+public record BinanceFuturesCoinStreamMarkPrice : BinanceFuturesStreamMarkPrice
 {
     /// <summary>
     /// Mark Price

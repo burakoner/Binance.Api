@@ -3,7 +3,7 @@
 /// <summary>
 /// Leveraged token subscription info
 /// </summary>
-public class BinanceBlvtSubscription
+public record BinanceBlvtSubscription
 {
     /// <summary>
     /// Id
@@ -13,7 +13,7 @@ public class BinanceBlvtSubscription
     /// <summary>
     /// Token name
     /// </summary>
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Subscription quantity
     /// </summary>

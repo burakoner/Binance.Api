@@ -3,18 +3,18 @@
 /// <summary>
 /// Margin pair info
 /// </summary>
-public class BinanceMarginPair
+public record BinanceMarginPair
 {
     /// <summary>
     /// Base asset of the pair
     /// </summary>
     [JsonProperty("base")]
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// Quote asset of the pair
     /// </summary>
     [JsonProperty("quote")]
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// Id
     /// </summary>
@@ -34,5 +34,5 @@ public class BinanceMarginPair
     /// <summary>
     /// Symbol name
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Lending account
 /// </summary>
-public class BinanceLendingAccount
+public record BinanceLendingAccount
 {
     /// <summary>
     /// Total quantity in btc
@@ -44,7 +44,7 @@ public class BinanceLendingAccount
 /// <summary>
 /// Lending position amount
 /// </summary>
-public class BinanceLendingPositionAmount
+public record BinanceLendingPositionAmount
 {
     /// <summary>
     /// Amount of the asset
@@ -64,5 +64,5 @@ public class BinanceLendingPositionAmount
     /// <summary>
     /// Asset name
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 }

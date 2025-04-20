@@ -3,7 +3,7 @@
 /// <summary>
 /// Sub account transfer result
 /// </summary>
-public class BinanceSubAccountTransferResult
+public record BinanceSubAccountTransferResult
 {
     /// <summary>
     /// Whether the transfer was successful
@@ -13,5 +13,5 @@ public class BinanceSubAccountTransferResult
     /// The transaction id of the transfer
     /// </summary>
     [JsonProperty("txnId")]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
 }

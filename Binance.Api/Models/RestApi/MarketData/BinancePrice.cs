@@ -3,12 +3,12 @@
 /// <summary>
 /// The price of a symbol
 /// </summary>
-public class BinancePrice
+public record BinancePrice
 {
     /// <summary>
     /// The symbol the price is for
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The price of the symbol
     /// </summary>
@@ -23,11 +23,11 @@ public class BinancePrice
 /// <summary>
 /// Futures-Coin price
 /// </summary>
-public class BinanceFuturesCoinPrice : BinancePrice
+public record BinanceFuturesCoinPrice : BinancePrice
 {
     /// <summary>
     /// Name of the pair
     /// </summary>
     [JsonProperty("ps")]
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 }

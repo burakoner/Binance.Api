@@ -3,7 +3,7 @@
 /// <summary>
 /// Margin update
 /// </summary>
-public class BinanceFuturesStreamMarginUpdate : BinanceSocketEvent
+public record BinanceFuturesStreamMarginUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// Cross Wallet Balance. Only pushed with crossed position margin call
@@ -18,19 +18,19 @@ public class BinanceFuturesStreamMarginUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 }
 
 /// <summary>
 /// Update data about an margin
 /// </summary>
-public class BinanceFuturesStreamMarginPosition
+public record BinanceFuturesStreamMarginPosition
 {
     /// <summary>
     /// Symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Position Side

@@ -3,7 +3,7 @@
 /// <summary>
 /// Information about leverage of symbol changed
 /// </summary>
-public class BinanceFuturesStreamConfigUpdate : BinanceSocketEvent
+public record BinanceFuturesStreamConfigUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// Leverage Update data
@@ -25,19 +25,19 @@ public class BinanceFuturesStreamConfigUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 }
 
 /// <summary>
 /// Config update data
 /// </summary>
-public class BinanceFuturesStreamLeverageUpdateData
+public record BinanceFuturesStreamLeverageUpdateData
 {
     /// <summary>
     /// The symbol this balance is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// The symbol this leverage is for
@@ -49,7 +49,7 @@ public class BinanceFuturesStreamLeverageUpdateData
 /// <summary>
 /// Position mode update data
 /// </summary>
-public class BinanceFuturesStreamConfigUpdateData
+public record BinanceFuturesStreamConfigUpdateData
 {
     /// <summary>
     /// Multi-Assets Mode

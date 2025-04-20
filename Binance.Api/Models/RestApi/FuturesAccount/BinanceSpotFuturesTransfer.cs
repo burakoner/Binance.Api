@@ -3,12 +3,12 @@
 /// <summary>
 /// Transfer info
 /// </summary>
-public class BinanceSpotFuturesTransfer
+public record BinanceSpotFuturesTransfer
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The transaction id
     /// </summary>

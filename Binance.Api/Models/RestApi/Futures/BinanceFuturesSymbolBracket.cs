@@ -3,13 +3,13 @@
 /// <summary>
 /// Notional and Leverage Brackets
 /// </summary>
-public class BinanceFuturesSymbolBracket
+public record BinanceFuturesSymbolBracket
 {
     /// <summary>
     /// Symbol or pair
     /// </summary>
     [JsonProperty("symbol")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     [JsonProperty("pair")]
     private string Pair
@@ -27,7 +27,7 @@ public class BinanceFuturesSymbolBracket
 /// <summary>
 /// Bracket
 /// </summary>
-public class BinanceFuturesBracket
+public record BinanceFuturesBracket
 {
     /// <summary>
     /// Bracket

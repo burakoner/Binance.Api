@@ -8,12 +8,12 @@ internal class BinanceSubAccountWrapper
 /// <summary>
 /// Sub account details
 /// </summary>
-public class BinanceSubAccount
+public record BinanceSubAccount
 {
     /// <summary>
     /// The email associated with the sub account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Is account frozen
     /// </summary>

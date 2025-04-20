@@ -3,12 +3,12 @@
 /// <summary>
 /// Sub account futures trading enabled
 /// </summary>
-public class BinanceSubAccountFuturesEnabled
+public record BinanceSubAccountFuturesEnabled
 {
     /// <summary>
     /// Email of the account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Whether futures trading is enabled
     /// </summary>

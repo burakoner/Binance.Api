@@ -3,7 +3,7 @@
 /// <summary>
 /// Swap record
 /// </summary>
-public class BinanceBSwapRecord
+public record BinanceBSwapRecord
 {
     /// <summary>
     /// Swap id
@@ -23,11 +23,11 @@ public class BinanceBSwapRecord
     /// <summary>
     /// Base asset
     /// </summary>
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// Quote asset
     /// </summary>
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// Base quantity
     /// </summary>

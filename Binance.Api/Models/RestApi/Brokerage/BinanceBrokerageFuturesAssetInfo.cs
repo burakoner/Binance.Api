@@ -3,7 +3,7 @@
 /// <summary>
 /// Futures Asset Info
 /// </summary>
-public class BinanceBrokerageFuturesAssetInfo
+public record BinanceBrokerageFuturesAssetInfo
 {
     /// <summary>
     /// Data
@@ -20,12 +20,12 @@ public class BinanceBrokerageFuturesAssetInfo
 /// <summary>
 /// Account Futures Asset Info
 /// </summary>
-public class BinanceBrokerageSubAccountFuturesAssetInfo
+public record BinanceBrokerageSubAccountFuturesAssetInfo
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Futures enable

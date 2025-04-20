@@ -3,12 +3,12 @@
 /// <summary>
 /// Isolated margin account asset
 /// </summary>
-public class BinanceIsolatedMarginAccountAsset
+public record BinanceIsolatedMarginAccountAsset
 {
     /// <summary>
     /// Asset name
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// If borrow is enabled
     /// </summary>

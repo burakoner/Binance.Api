@@ -3,13 +3,13 @@
 /// <summary>
 /// A event received by a Binance websocket
 /// </summary>
-public class BinanceSocketEvent
+public record BinanceSocketEvent
 {
     /// <summary>
     /// The type of the event
     /// </summary>
     [JsonProperty("e")]
-    public string Event { get; set; }
+    public string Event { get; set; } = "";
     /// <summary>
     /// The time the event happened
     /// </summary>

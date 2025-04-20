@@ -3,10 +3,10 @@
 /// <summary>
 /// Book price
 /// </summary>
-public class BinanceFuturesBookPrice : BinanceBookPrice
+public record BinanceFuturesBookPrice : BinanceBookPrice
 {
     /// <summary>
     /// Pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 }

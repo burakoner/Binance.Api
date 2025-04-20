@@ -3,23 +3,23 @@
 /// <summary>
 /// Deposit address info for a sub-account
 /// </summary>
-public class BinanceSubAccountDepositAddress
+public record BinanceSubAccountDepositAddress
 {
     /// <summary>
     /// The deposit address
     /// </summary>
-    public string Address { get; set; }
+    public string Address { get; set; } = "";
     /// <summary>
     /// Asset type
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Tag for the deposit address
     /// </summary>
-    public string Tag { get; set; }
+    public string Tag { get; set; } = "";
     /// <summary>
     /// Url
     /// </summary>
-    public string Url { get; set; }
+    public string Url { get; set; } = "";
 }

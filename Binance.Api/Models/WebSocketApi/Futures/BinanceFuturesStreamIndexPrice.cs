@@ -3,13 +3,13 @@
 /// <summary>
 /// Index price update
 /// </summary>
-public class BinanceFuturesStreamIndexPrice : BinanceSocketEvent
+public record BinanceFuturesStreamIndexPrice : BinanceSocketEvent
 {
     /// <summary>
     /// The pair
     /// </summary>
     [JsonProperty("i")]
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
     /// <summary>
     /// The index price
     /// </summary>

@@ -9,7 +9,7 @@ public abstract class BinanceStreamMiniTickBase : BinanceSocketEvent, IBinanceMi
     /// The symbol this data is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// The current day close price. This is the latest price for this symbol.
@@ -49,7 +49,7 @@ public abstract class BinanceStreamMiniTickBase : BinanceSocketEvent, IBinanceMi
 /// <summary>
 /// Stream mini tick
 /// </summary>
-public class BinanceStreamMiniTick : BinanceStreamMiniTickBase
+public record BinanceStreamMiniTick : BinanceStreamMiniTickBase
 {
     /// <inheritdoc/>
     [JsonProperty("v")]
@@ -62,7 +62,7 @@ public class BinanceStreamMiniTick : BinanceStreamMiniTickBase
 /// <summary>
 /// Stream mini tick
 /// </summary>
-public class BinanceStreamCoinMiniTick : BinanceStreamMiniTickBase
+public record BinanceStreamCoinMiniTick : BinanceStreamMiniTickBase
 {
     /// <inheritdoc/>
     [JsonProperty("q")]

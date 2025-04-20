@@ -3,7 +3,7 @@
 /// <summary>
 /// Response to the change in initial leverage request
 /// </summary>
-public class BinanceFuturesInitialLeverageChangeResult
+public record BinanceFuturesInitialLeverageChangeResult
 {
     /// <summary>
     /// New leverage multiplier
@@ -14,15 +14,15 @@ public class BinanceFuturesInitialLeverageChangeResult
     /// Maximum value that can be held
     /// NOTE: string type, because the value van be 'inf' (infinite)
     /// </summary>
-    public string MaxNotionalValue { get; set; }
+    public string MaxNotionalValue { get; set; } = "";
 
     /// <summary>
     /// Max quantity
     /// </summary>
     [JsonProperty("maxQty")]
-    public string MaxQuantity { get; set; }
+    public string MaxQuantity { get; set; } = "";
     /// <summary>
     /// Symbol the request is for
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 }

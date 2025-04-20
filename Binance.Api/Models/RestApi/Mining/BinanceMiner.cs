@@ -3,7 +3,7 @@
 /// <summary>
 /// Miner list
 /// </summary>
-public class BinanceMinerList
+public record BinanceMinerList
 {
     /// <summary>
     /// Total number of entries
@@ -22,16 +22,16 @@ public class BinanceMinerList
 /// <summary>
 /// Miner details
 /// </summary>
-public class BinanceMinerInfo
+public record BinanceMinerInfo
 {
     /// <summary>
     /// Worker id
     /// </summary>
-    public string WorkerId { get; set; }
+    public string WorkerId { get; set; } = "";
     /// <summary>
     /// Worker name
     /// </summary>
-    public string WorkerName { get; set; }
+    public string WorkerName { get; set; } = "";
     /// <summary>
     /// Status
     /// </summary>

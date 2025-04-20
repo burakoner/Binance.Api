@@ -3,13 +3,13 @@
 /// <summary>
 /// The order book for a asset
 /// </summary>
-public class BinanceOrderBook : IBinanceOrderBook
+public record BinanceOrderBook : IBinanceOrderBook
 {
     /// <summary>
     /// The symbol of the order book 
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// The ID of the last update

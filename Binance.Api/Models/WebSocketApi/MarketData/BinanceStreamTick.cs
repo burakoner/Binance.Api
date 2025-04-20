@@ -9,7 +9,7 @@ public abstract class BinanceStreamTickBase : BinanceSocketEvent, IBinanceTick
     /// The symbol this data is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The price change of this symbol
     /// </summary>
@@ -113,7 +113,7 @@ public abstract class BinanceStreamTickBase : BinanceSocketEvent, IBinanceTick
 /// <summary>
 /// Stream tick
 /// </summary>
-public class BinanceStreamTick : BinanceStreamTickBase
+public record BinanceStreamTick : BinanceStreamTickBase
 {
     /// <summary>
     /// Total traded volume in the base asset
@@ -130,7 +130,7 @@ public class BinanceStreamTick : BinanceStreamTickBase
 /// <summary>
 /// Stream tick
 /// </summary>
-public class BinanceStreamCoinTick : BinanceStreamTickBase
+public record BinanceStreamCoinTick : BinanceStreamTickBase
 {
     /// <summary>
     /// Total traded volume in the base asset

@@ -3,19 +3,19 @@
 /// <summary>
 /// The result of placing a new order
 /// </summary>
-public class BinanceFuturesPlacedOrder
+public record BinanceFuturesPlacedOrder
 {
     /// <summary>
     /// The symbol the order is for
     /// </summary>
     [JsonProperty("symbol")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Pair
     /// </summary>
     [JsonProperty("pair")]
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 
     /// <summary>
     /// The order id as assigned by Binance
@@ -26,7 +26,7 @@ public class BinanceFuturesPlacedOrder
     /// The order id as assigned by the client
     /// </summary>
     [JsonProperty("clientOrderId")]
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; set; } = "";
     /// <summary>
     /// The price of the order
     /// </summary>

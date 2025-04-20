@@ -3,7 +3,7 @@
 /// <summary>
 /// Asset dusts that can be converted to BNB
 /// </summary>
-public class BinanceElligableDusts
+public record BinanceElligableDusts
 {
     /// <summary>
     /// Total BTC value
@@ -29,16 +29,16 @@ public class BinanceElligableDusts
 /// <summary>
 /// Asset which can be converted
 /// </summary>
-public class BinanceElligableDust
+public record BinanceElligableDust
 {
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Full name of the asset
     /// </summary>
-    public string AssetFullName { get; set; }
+    public string AssetFullName { get; set; } = "";
     /// <summary>
     /// Amount free
     /// </summary>

@@ -3,12 +3,12 @@
 /// <summary>
 /// Open Interest History info
 /// </summary>
-public class BinanceFuturesOpenInterestHistory
+public record BinanceFuturesOpenInterestHistory
 {
     /// <summary>
     /// The symbol the information is about
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Total open interest

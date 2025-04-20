@@ -3,7 +3,7 @@
 /// <summary>
 /// Transfer history entry
 /// </summary>
-public class BinanceTransferHistory
+public record BinanceTransferHistory
 {
     /// <summary>
     /// Quanity of the transfer
@@ -13,11 +13,11 @@ public class BinanceTransferHistory
     /// <summary>
     /// Asset of the transfer
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Status of the transfer
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
     /// <summary>
     /// Timestamp of the transaction
     /// </summary>

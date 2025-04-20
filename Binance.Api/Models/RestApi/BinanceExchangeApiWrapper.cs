@@ -3,8 +3,8 @@
 internal class BinanceExchangeApiWrapper<T>
 {
     public int Code { get; set; }
-    public string Message { get; set; }
-    public string MessageDetail { get; set; }
+    public string? Message { get; set; }
+    public string? MessageDetail { get; set; }
 
     public T Data { get; set; } = default!;
 

@@ -3,13 +3,13 @@
 /// <summary>
 /// Blvt info update
 /// </summary>
-public class BinanceBlvtInfoUpdate : BinanceSocketEvent
+public record BinanceBlvtInfoUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// Token name
     /// </summary>
     [JsonProperty("s")]
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Token issued
     /// </summary>
@@ -46,13 +46,13 @@ public class BinanceBlvtInfoUpdate : BinanceSocketEvent
 /// <summary>
 /// Basket
 /// </summary>
-public class BlvtBasket
+public record BlvtBasket
 {
     /// <summary>
     /// Symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Position
     /// </summary>

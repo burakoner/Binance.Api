@@ -3,13 +3,13 @@
 /// <summary>
 /// Composite index info
 /// </summary>
-public class BinanceFuturesStreamCompositeIndex : BinanceSocketEvent
+public record BinanceFuturesStreamCompositeIndex : BinanceSocketEvent
 {
     /// <summary>
     /// The symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The price
     /// </summary>
@@ -26,18 +26,18 @@ public class BinanceFuturesStreamCompositeIndex : BinanceSocketEvent
 /// <summary>
 /// Composite index asset info
 /// </summary>
-public class BinanceFuturesStreamCompositeIndexAsset
+public record BinanceFuturesStreamCompositeIndexAsset
 {
     /// <summary>
     /// Base asset name
     /// </summary>
     [JsonProperty("b")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Quote asset name
     /// </summary>
     [JsonProperty("q")]
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// Weight in quantity
     /// </summary>

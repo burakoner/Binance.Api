@@ -3,13 +3,13 @@
 /// <summary>
 /// Sub-account Status on Margin/Futures
 /// </summary>
-public class BinanceSubAccountStatus
+public record BinanceSubAccountStatus
 {
     /// <summary>
     /// User email
     /// </summary>
     [JsonProperty("email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
 
     /// <summary>
     /// Sub account user enabled
@@ -45,5 +45,5 @@ public class BinanceSubAccountStatus
     /// User mobile number
     /// </summary>
     [JsonProperty("mobile")]
-    public string MobileNumber { get; set; }
+    public string MobileNumber { get; set; } = "";
 }

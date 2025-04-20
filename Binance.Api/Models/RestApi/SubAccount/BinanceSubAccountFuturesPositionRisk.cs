@@ -3,7 +3,7 @@
 /// <summary>
 /// Sub account position risk
 /// </summary>
-public class BinanceSubAccountFuturesPositionRisk
+public record BinanceSubAccountFuturesPositionRisk
 {
     /// <summary>
     /// The entry price
@@ -33,7 +33,7 @@ public class BinanceSubAccountFuturesPositionRisk
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Unrealized profit
     /// </summary>

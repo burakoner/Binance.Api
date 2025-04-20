@@ -3,13 +3,13 @@
 /// <summary>
 /// Wrapper for kline information for a symbol
 /// </summary>
-public class BinanceFuturesStreamCoinKlineData : BinanceSocketEvent, IBinanceStreamKlineData
+public record BinanceFuturesStreamCoinKlineData : BinanceSocketEvent, IBinanceStreamKlineData
 {
     /// <summary>
     /// The symbol the data is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// The data
@@ -22,7 +22,7 @@ public class BinanceFuturesStreamCoinKlineData : BinanceSocketEvent, IBinanceStr
 /// <summary>
 /// The kline data
 /// </summary>
-public class BinanceFuturesStreamCoinKline : BinanceKlineBase, IBinanceStreamKline
+public record BinanceFuturesStreamCoinKline : BinanceKlineBase, IBinanceStreamKline
 {
     /// <summary>
     /// The open time of this candlestick
@@ -48,7 +48,7 @@ public class BinanceFuturesStreamCoinKline : BinanceKlineBase, IBinanceStreamKli
     /// The symbol this candlestick is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The interval of this candlestick
     /// </summary>

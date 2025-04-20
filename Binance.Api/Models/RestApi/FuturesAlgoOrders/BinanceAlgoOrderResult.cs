@@ -3,12 +3,12 @@
 /// <summary>
 /// Algo order result
 /// </summary>
-public class BinanceAlgoOrderResult : BinanceResult
+public record BinanceAlgoOrderResult : BinanceResult
 {
     /// <summary>
     /// Order id
     /// </summary>
-    public string ClientAlgoId { get; set; }
+    public string ClientAlgoId { get; set; } = "";
     /// <summary>
     /// Successful
     /// </summary>

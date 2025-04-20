@@ -3,17 +3,17 @@
 /// <summary>
 /// Binance pay trade
 /// </summary>
-public class BinancePayTrade
+public record BinancePayTrade
 {
     /// <summary>
     /// Order type
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public PayOrderType OrderType { get; set; }
     /// <summary>
     /// Transaction id
     /// </summary>
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
     /// <summary>
     /// Transaction time
     /// </summary>
@@ -28,7 +28,7 @@ public class BinancePayTrade
     /// Asset
     /// </summary>
     [JsonProperty("currency")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Fund details
     /// </summary>
@@ -39,13 +39,13 @@ public class BinancePayTrade
 /// <summary>
 /// Pay trade funds details
 /// </summary>
-public class BinancePayTradeDetails
+public record BinancePayTradeDetails
 {
     /// <summary>
     /// Asset
     /// </summary>
     [JsonProperty("currency")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Quantity
     /// </summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Staking result
 /// </summary>
-public class BinanceStakingResult
+public record BinanceStakingResult
 {
     /// <summary>
     /// Successful
@@ -14,10 +14,10 @@ public class BinanceStakingResult
 /// <summary>
 /// Staking result
 /// </summary>
-public class BinanceStakingPositionResult : BinanceStakingResult
+public record BinanceStakingPositionResult : BinanceStakingResult
 {
     /// <summary>
     /// Id of the position
     /// </summary>
-    public string PositionId { get; set; }
+    public string PositionId { get; set; } = "";
 }

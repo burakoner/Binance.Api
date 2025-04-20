@@ -3,12 +3,12 @@
 /// <summary>
 /// Sub account margin trading enabled
 /// </summary>
-public class BinanceSubAccountMarginEnabled
+public record BinanceSubAccountMarginEnabled
 {
     /// <summary>
     /// Email of the account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Whether Margin trading is enabled
     /// </summary>

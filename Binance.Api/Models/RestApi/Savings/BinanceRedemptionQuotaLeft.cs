@@ -3,12 +3,12 @@
 /// <summary>
 /// Redemption quota left
 /// </summary>
-public class BinanceRedemptionQuotaLeft
+public record BinanceRedemptionQuotaLeft
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Daily quota
     /// </summary>

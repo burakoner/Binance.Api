@@ -3,7 +3,7 @@
 /// <summary>
 /// Isolated margin transfer
 /// </summary>
-public class BinanceIsolatedMarginTransfer
+public record BinanceIsolatedMarginTransfer
 {
     /// <summary>
     /// Quantity of the transfer
@@ -13,12 +13,12 @@ public class BinanceIsolatedMarginTransfer
     /// <summary>
     /// Transfer asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Status of the transfer
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
     /// <summary>
     /// Timestamp of the transfer
     /// </summary>
@@ -28,7 +28,7 @@ public class BinanceIsolatedMarginTransfer
     /// Transaction id
     /// </summary>
     [JsonProperty("txId")]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
     /// <summary>
     /// From
     /// </summary>

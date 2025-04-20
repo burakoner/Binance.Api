@@ -3,12 +3,12 @@
 /// <summary>
 /// Historical staking info
 /// </summary>
-public class BinanceStakingHistory
+public record BinanceStakingHistory
 {
     /// <summary>
     /// Position id
     /// </summary>
-    public string PositionId { get; set; }
+    public string PositionId { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -18,11 +18,11 @@ public class BinanceStakingHistory
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Project
     /// </summary>
-    public string Project { get; set; }
+    public string Project { get; set; } = "";
     /// <summary>
     /// Quantity
     /// </summary>
@@ -40,9 +40,9 @@ public class BinanceStakingHistory
     /// <summary>
     /// Type
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = "";
     /// <summary>
     /// Status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 }

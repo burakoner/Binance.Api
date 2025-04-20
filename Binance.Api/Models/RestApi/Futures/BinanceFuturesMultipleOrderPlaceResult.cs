@@ -7,5 +7,5 @@ internal class BinanceFuturesMultipleOrderPlaceResult : BinanceFuturesPlacedOrde
 {
     public int Code { get; set; }
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 }

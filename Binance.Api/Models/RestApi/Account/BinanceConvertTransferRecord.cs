@@ -3,7 +3,7 @@
 /// <summary>
 /// Result of a convert transfer operation
 /// </summary>
-public class BinanceConvertTransferRecord
+public record BinanceConvertTransferRecord
 {
     /// <summary>
     /// Transfer id
@@ -13,7 +13,7 @@ public class BinanceConvertTransferRecord
     /// <summary>
     /// Status of the transfer (definitions currently unknown)
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -26,7 +26,7 @@ public class BinanceConvertTransferRecord
     /// <summary>
     /// Deducted asset
     /// </summary>
-    public string DeductedAsset { get; set; }
+    public string DeductedAsset { get; set; } = "";
     /// <summary>
     /// Deducted quantity
     /// </summary>
@@ -35,7 +35,7 @@ public class BinanceConvertTransferRecord
     /// <summary>
     /// Target asset
     /// </summary>
-    public string TargetAsset { get; set; }
+    public string TargetAsset { get; set; } = "";
     /// <summary>
     /// Target quantity
     /// </summary>
@@ -44,5 +44,5 @@ public class BinanceConvertTransferRecord
     /// <summary>
     /// Account type
     /// </summary>
-    public string AccountType { get; set; }
+    public string AccountType { get; set; } = "";
 }

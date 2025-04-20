@@ -3,13 +3,13 @@
 /// <summary>
 /// Information about an asset for a user
 /// </summary>
-public class BinanceUserAsset
+public record BinanceUserAsset
 {
     /// <summary>
     /// Asset code
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Deposit all is enabled
     /// </summary>
@@ -54,7 +54,7 @@ public class BinanceUserAsset
     /// <summary>
     /// Name of the asset
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// Currently withdrawing
     /// </summary>

@@ -3,17 +3,17 @@
 /// <summary>
 /// IP Restriction
 /// </summary>
-public class BinanceBrokerageIpRestrictionBase
+public record BinanceBrokerageIpRestrictionBase
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Api key
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } = "";
 
     /// <summary>
     /// IP list
@@ -30,7 +30,7 @@ public class BinanceBrokerageIpRestrictionBase
 /// <summary>
 /// IP Restriction
 /// </summary>
-public class BinanceBrokerageIpRestriction : BinanceBrokerageIpRestrictionBase
+public record BinanceBrokerageIpRestriction : BinanceBrokerageIpRestrictionBase
 {
     /// <summary>
     /// Ip Restrict

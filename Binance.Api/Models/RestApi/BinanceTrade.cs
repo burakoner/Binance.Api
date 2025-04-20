@@ -3,12 +3,12 @@
 /// <summary>
 /// Information about a trade
 /// </summary>
-public class BinanceTrade
+public record BinanceTrade
 {
     /// <summary>
     /// The symbol the trade is for
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The id of the trade
     /// </summary>
@@ -46,7 +46,7 @@ public class BinanceTrade
     /// The asset the fee is paid in
     /// </summary>
     [JsonProperty("commissionAsset")]
-    public string FeeAsset { get; set; }
+    public string FeeAsset { get; set; } = "";
     /// <summary>
     /// The time the trade was made
     /// </summary>

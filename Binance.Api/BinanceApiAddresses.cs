@@ -1,46 +1,49 @@
 ﻿namespace Binance.Api;
 
+/// <summary>
+/// BinanceApiAddresses
+/// </summary>
 public class BinanceApiAddresses
 {
     /// <summary>
     /// The address used by the BinanceClient for the Spot API
     /// </summary>
-    public string RestClientAddress { get; set; }
+    public string RestClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceSocketClient for the Spot API
     /// </summary>
-    public string SocketClientAddress { get; set; }
+    public string SocketClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceSocketClient for connecting to the BLVT streams
     /// </summary>
-    public string BlvtSocketClientAddress { get; set; }
+    public string BlvtSocketClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceClient for the USD futures API
     /// </summary>
-    public string UsdFuturesRestClientAddress { get; set; }
+    public string UsdFuturesRestClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceSocketClient for the USD futures API
     /// </summary>
-    public string UsdFuturesSocketClientAddress { get; set; }
+    public string UsdFuturesSocketClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceClient for the COIN futures API
     /// </summary>
-    public string CoinFuturesRestClientAddress { get; set; }
+    public string CoinFuturesRestClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceSocketClient for the Coin futures API
     /// </summary>
-    public string CoinFuturesSocketClientAddress { get; set; }
+    public string CoinFuturesSocketClientAddress { get; set; } = "";
 
     /// <summary>
     /// The default addresses to connect to the binance.com API
     /// </summary>
-    public static BinanceApiAddresses Default = new BinanceApiAddresses
+    public static BinanceApiAddresses Default = new()
     {
         RestClientAddress = "https://api.binance.com",
         SocketClientAddress = "wss://stream.binance.com:9443/",
@@ -54,7 +57,7 @@ public class BinanceApiAddresses
     /// <summary>
     /// The addresses to connect to the binance testnet
     /// </summary>
-    public static BinanceApiAddresses TestNet = new BinanceApiAddresses
+    public static BinanceApiAddresses TestNet = new()
     {
         RestClientAddress = "https://testnet.binance.vision",
         SocketClientAddress = "wss://testnet.binance.vision",
@@ -68,7 +71,7 @@ public class BinanceApiAddresses
     /// <summary>
     /// The addresses to connect to binance.us. (binance.us futures not are not available)
     /// </summary>
-    public static BinanceApiAddresses Us = new BinanceApiAddresses
+    public static BinanceApiAddresses Us = new()
     {
         RestClientAddress = "https://api.binance.us",
         SocketClientAddress = "wss://stream.binance.us:9443",

@@ -3,7 +3,7 @@
 /// <summary>
 /// The status of Binance
 /// </summary>
-public class BinanceSystemStatus
+public record BinanceSystemStatus
 {
     /// <summary>
     /// Status
@@ -14,5 +14,5 @@ public class BinanceSystemStatus
     /// Additional info
     /// </summary>
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string Message { get; set; } = "";
 }

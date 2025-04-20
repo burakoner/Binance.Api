@@ -37,7 +37,7 @@ public abstract class BinanceRecentTrade : IBinanceRecentTrade
 /// <summary>
 /// Recent trade with quote quantity
 /// </summary>
-public class BinanceRecentTradeQuote : BinanceRecentTrade
+public record BinanceRecentTradeQuote : BinanceRecentTrade
 {
     /// <inheritdoc />
     [JsonProperty("quoteQty")]
@@ -51,7 +51,7 @@ public class BinanceRecentTradeQuote : BinanceRecentTrade
 /// <summary>
 /// Recent trade with base quantity
 /// </summary>
-public class BinanceRecentTradeBase : BinanceRecentTrade
+public record BinanceRecentTradeBase : BinanceRecentTrade
 {
     /// <inheritdoc />
     [JsonProperty("qty")]

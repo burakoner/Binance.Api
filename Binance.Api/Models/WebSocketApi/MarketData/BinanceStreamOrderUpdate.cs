@@ -3,7 +3,7 @@
 /// <summary>
 /// Update data about an order
 /// </summary>
-public class BinanceStreamOrderUpdate : BinanceSocketEvent
+public record BinanceStreamOrderUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// The id of the order as assigned by Binance
@@ -14,12 +14,12 @@ public class BinanceStreamOrderUpdate : BinanceSocketEvent
     /// The symbol the order is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The new client order id
     /// </summary>
     [JsonProperty("c")]
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; set; } = "";
     /// <summary>
     /// The side of the order
     /// </summary>
@@ -64,7 +64,7 @@ public class BinanceStreamOrderUpdate : BinanceSocketEvent
     /// The original client order id
     /// </summary>
     [JsonProperty("C")]
-    public string OriginalClientOrderId { get; set; }
+    public string OriginalClientOrderId { get; set; } = "";
     /// <summary>
     /// The execution type
     /// </summary>
@@ -104,7 +104,7 @@ public class BinanceStreamOrderUpdate : BinanceSocketEvent
     /// The asset the fee was taken from
     /// </summary>
     [JsonProperty("N")]
-    public string FeeAsset { get; set; }
+    public string FeeAsset { get; set; } = "";
     /// <summary>
     /// The time of the update
     /// </summary>
@@ -153,7 +153,7 @@ public class BinanceStreamOrderUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key for which the update was
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 
     // These are unused properties, but are mapped to prevent mapping error of lower/upper case
     /// <summary>

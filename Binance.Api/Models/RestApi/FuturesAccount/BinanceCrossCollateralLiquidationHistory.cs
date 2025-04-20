@@ -3,7 +3,7 @@
 /// <summary>
 /// Liquidation history
 /// </summary>
-public class BinanceCrossCollateralLiquidationHistory
+public record BinanceCrossCollateralLiquidationHistory
 {
     /// <summary>
     /// Quantity for liquidation
@@ -15,7 +15,7 @@ public class BinanceCrossCollateralLiquidationHistory
     /// Collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Start time of liquidation
     /// </summary>
@@ -25,7 +25,7 @@ public class BinanceCrossCollateralLiquidationHistory
     /// Asset
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Rest collateral quantity after liquidation
     /// </summary>
@@ -40,5 +40,5 @@ public class BinanceCrossCollateralLiquidationHistory
     /// <summary>
     /// Status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 }

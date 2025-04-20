@@ -3,12 +3,12 @@
 /// <summary>
 /// Portfolio margin collateral rate info
 /// </summary>
-public class BinancePortfolioMarginCollateralRate
+public record BinancePortfolioMarginCollateralRate
 {
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Collateral rate

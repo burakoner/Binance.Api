@@ -3,13 +3,13 @@
 /// <summary>
 /// Symbol info
 /// </summary>
-public class BinanceSymbol
+public record BinanceSymbol
 {
     /// <summary>
     /// The symbol
     /// </summary>
     [JsonProperty("symbol")]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// The status of the symbol
     /// </summary>
@@ -18,7 +18,7 @@ public class BinanceSymbol
     /// <summary>
     /// The base asset
     /// </summary>
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// The precision of the base asset
     /// </summary>
@@ -26,7 +26,7 @@ public class BinanceSymbol
     /// <summary>
     /// The quote asset
     /// </summary>
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// The precision of the quote asset
     /// </summary>
@@ -80,7 +80,7 @@ public class BinanceSymbol
     /// <summary>
     /// Permissions types
     /// </summary>
-    [JsonProperty(ItemConverterType = typeof(EnumConverter))]
+    [JsonProperty(ItemConverterType = typeof(MapConverter))]
     public IEnumerable<AccountType> Permissions { get; set; } = Array.Empty<AccountType>();
     /// <summary>
     /// Filters for order on this symbol

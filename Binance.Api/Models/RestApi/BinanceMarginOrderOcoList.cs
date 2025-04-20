@@ -3,7 +3,7 @@
 /// <summary>
 /// Oco info
 /// </summary>
-public class BinanceMarginOrderOcoList : BinanceOrderOcoList
+public record BinanceMarginOrderOcoList : BinanceOrderOcoList
 {
     /// <summary>
     /// Margin buy borrow quantity
@@ -13,7 +13,7 @@ public class BinanceMarginOrderOcoList : BinanceOrderOcoList
     /// <summary>
     /// Margin buy borrow asset
     /// </summary>
-    public string MarginBuyBorrowAsset { get; set; }
+    public string MarginBuyBorrowAsset { get; set; } = "";
     /// <summary>
     /// Is isolated margin
     /// </summary>

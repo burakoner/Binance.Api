@@ -3,7 +3,7 @@
 /// <summary>
 /// Result of a convert transfer operation
 /// </summary>
-public class BinanceConvertTransferResult
+public record BinanceConvertTransferResult
 {
     /// <summary>
     /// Transfer id
@@ -13,5 +13,5 @@ public class BinanceConvertTransferResult
     /// <summary>
     /// Status of the transfer (definitions currently unknown)
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 }

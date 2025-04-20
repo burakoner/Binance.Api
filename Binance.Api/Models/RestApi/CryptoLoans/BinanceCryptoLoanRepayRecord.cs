@@ -3,18 +3,18 @@
 /// <summary>
 /// Repay record
 /// </summary>
-public class BinanceCryptoLoanRepayRecord
+public record BinanceCryptoLoanRepayRecord
 {
     /// <summary>
     /// The loaning asset
     /// </summary>
     [JsonProperty("loanCoin")]
-    public string LoanAsset { get; set; }
+    public string LoanAsset { get; set; } = "";
     /// <summary>
     /// The collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Borrow order id
     /// </summary>
@@ -27,7 +27,7 @@ public class BinanceCryptoLoanRepayRecord
     /// <summary>
     /// Status of the repay
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public BorrowStatus RepayStatus { get; set; }
     /// <summary>
     /// Collateral return

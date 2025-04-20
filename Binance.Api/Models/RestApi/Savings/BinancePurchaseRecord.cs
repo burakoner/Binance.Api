@@ -3,7 +3,7 @@
 /// <summary>
 /// Purchase record
 /// </summary>
-public class BinancePurchaseRecord
+public record BinancePurchaseRecord
 {
     /// <summary>
     /// Quantity purchased
@@ -13,7 +13,7 @@ public class BinancePurchaseRecord
     /// <summary>
     /// Asset name
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -31,14 +31,14 @@ public class BinancePurchaseRecord
     /// <summary>
     /// Name of the product
     /// </summary>
-    public string ProductName { get; set; }
+    public string ProductName { get; set; } = "";
     /// <summary>
     /// Purchase id
     /// </summary>
-    public string PurchaseId { get; set; }
+    public string PurchaseId { get; set; } = "";
 
     /// <summary>
     /// Purchase status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 }

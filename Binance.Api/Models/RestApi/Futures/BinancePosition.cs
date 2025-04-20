@@ -3,12 +3,12 @@
 /// <summary>
 /// Base position info
 /// </summary>
-public class BinancePositionBase
+public record BinancePositionBase
 {
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Entry price
     /// </summary>
@@ -34,7 +34,7 @@ public class BinancePositionBase
 /// <summary>
 /// Position info
 /// </summary>
-public class BinancePositionInfoBase : BinancePositionBase
+public record BinancePositionInfoBase : BinancePositionBase
 {
     /// <summary>
     /// Initial margin
@@ -77,7 +77,7 @@ public class BinancePositionInfoBase : BinancePositionBase
 /// <summary>
 /// Usdt position info
 /// </summary>
-public class BinancePositionInfoUsdt : BinancePositionInfoBase
+public record BinancePositionInfoUsdt : BinancePositionInfoBase
 {
     /// <summary>
     /// Max notional
@@ -88,7 +88,7 @@ public class BinancePositionInfoUsdt : BinancePositionInfoBase
 /// <summary>
 /// Coin position info
 /// </summary>
-public class BinancePositionInfoCoin : BinancePositionInfoBase
+public record BinancePositionInfoCoin : BinancePositionInfoBase
 {
     /// <summary>
     /// Max quantity
@@ -100,7 +100,7 @@ public class BinancePositionInfoCoin : BinancePositionInfoBase
 /// <summary>
 /// Base position details
 /// </summary>
-public class BinancePositionDetailsBase : BinancePositionBase
+public record BinancePositionDetailsBase : BinancePositionBase
 {
     /// <summary>
     /// Margin type
@@ -144,7 +144,7 @@ public class BinancePositionDetailsBase : BinancePositionBase
 /// <summary>
 /// Usdt position details
 /// </summary>
-public class BinancePositionDetailsUsdt : BinancePositionDetailsBase
+public record BinancePositionDetailsUsdt : BinancePositionDetailsBase
 {
     /// <summary>
     /// Max notional
@@ -156,7 +156,7 @@ public class BinancePositionDetailsUsdt : BinancePositionDetailsBase
 /// <summary>
 /// Coin position info
 /// </summary>
-public class BinancePositionDetailsCoin : BinancePositionDetailsBase
+public record BinancePositionDetailsCoin : BinancePositionDetailsBase
 {
     /// <summary>
     /// Max quantity

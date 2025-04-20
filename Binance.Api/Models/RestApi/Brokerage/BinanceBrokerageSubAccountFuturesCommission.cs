@@ -3,22 +3,22 @@
 /// <summary>
 /// Sub Account Futures Commission
 /// </summary>
-public class BinanceBrokerageSubAccountFuturesCommission
+public record BinanceBrokerageSubAccountFuturesCommission
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 
     /// <summary>
     /// USDT-Ⓜ futures commission adjustment for maker

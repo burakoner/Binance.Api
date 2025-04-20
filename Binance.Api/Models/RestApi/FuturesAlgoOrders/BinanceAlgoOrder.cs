@@ -3,7 +3,7 @@
 /// <summary>
 /// Algo orders
 /// </summary>
-public class BinanceAlgoOrders
+public record BinanceAlgoOrders
 {
     /// <summary>
     /// Total items
@@ -18,7 +18,7 @@ public class BinanceAlgoOrders
 /// <summary>
 /// Algo order info
 /// </summary>
-public class BinanceAlgoOrder
+public record BinanceAlgoOrder
 {
     /// <summary>
     /// Algo id
@@ -27,7 +27,7 @@ public class BinanceAlgoOrder
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Order side
     /// </summary>
@@ -61,7 +61,7 @@ public class BinanceAlgoOrder
     /// <summary>
     /// Client algo id
     /// </summary>
-    public string ClientAlgoId { get; set; }
+    public string ClientAlgoId { get; set; } = "";
     /// <summary>
     /// Book time
     /// </summary>
@@ -75,14 +75,14 @@ public class BinanceAlgoOrder
     /// <summary>
     /// Status
     /// </summary>
-    public string AlgoStatus { get; set; }
+    public string AlgoStatus { get; set; } = "";
     /// <summary>
     /// Algo type
     /// </summary>
-    public string AlgoType { get; set; }
+    public string AlgoType { get; set; } = "";
     /// <summary>
     /// Urgency
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public OrderUrgency? Urgency { get; set; }
 }

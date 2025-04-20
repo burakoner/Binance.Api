@@ -3,12 +3,12 @@
 /// <summary>
 /// Savings product
 /// </summary>
-public class BinanceSavingsProduct
+public record BinanceSavingsProduct
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Average annual interest rage
     /// </summary>
@@ -38,7 +38,7 @@ public class BinanceSavingsProduct
     /// <summary>
     /// Product id
     /// </summary>
-    public string ProductId { get; set; }
+    public string ProductId { get; set; } = "";
     /// <summary>
     /// Purchased quantity
     /// </summary>
@@ -47,7 +47,7 @@ public class BinanceSavingsProduct
     /// <summary>
     /// Status of the product
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
     /// <summary>
     /// Upper limit
     /// </summary>

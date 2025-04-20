@@ -3,7 +3,7 @@
 /// <summary>
 /// Redeem result
 /// </summary>
-public class BinanceBlvtRedeemResult
+public record BinanceBlvtRedeemResult
 {
     /// <summary>
     /// Id
@@ -17,7 +17,7 @@ public class BinanceBlvtRedeemResult
     /// <summary>
     /// Name of the token
     /// </summary>
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Redemption value in usdt
     /// </summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Portfolio margin account info
 /// </summary>
-public class BinancePortfolioMarginInfo
+public record BinancePortfolioMarginInfo
 {
     /// <summary>
     /// Portfolio margin account maintenance margin rate
@@ -22,6 +22,6 @@ public class BinancePortfolioMarginInfo
     /// <summary>
     /// Account status
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public PortfolioMarginAccountStatus AccountStatus { get; set; }
 }

@@ -3,12 +3,12 @@
 /// <summary>
 /// Buy/sell volume ratio
 /// </summary>
-public class BinanceFuturesCoinBuySellVolumeRatio
+public record BinanceFuturesCoinBuySellVolumeRatio
 {
     /// <summary>
     /// The pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
     /// <summary>
     /// Contract type
     /// </summary>

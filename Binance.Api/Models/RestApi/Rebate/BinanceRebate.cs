@@ -3,7 +3,7 @@
 /// <summary>
 /// Rebates page wrapper
 /// </summary>
-public class BinanceRebateWrapper
+public record BinanceRebateWrapper
 {
     /// <summary>
     /// The current page
@@ -26,12 +26,12 @@ public class BinanceRebateWrapper
 /// <summary>
 /// Rebate info
 /// </summary>
-public class BinanceRebate
+public record BinanceRebate
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Type of rebate
     /// </summary>

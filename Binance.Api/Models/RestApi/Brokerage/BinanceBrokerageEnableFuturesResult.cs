@@ -3,12 +3,12 @@
 /// <summary>
 /// Enable Futures Result
 /// </summary>
-public class BinanceBrokerageEnableFuturesResult
+public record BinanceBrokerageEnableFuturesResult
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Is Futures Enabled

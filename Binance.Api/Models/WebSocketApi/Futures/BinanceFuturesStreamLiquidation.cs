@@ -3,7 +3,7 @@ namespace Binance.Api.Models.WebSocketApi.Futures;
 /// <summary>
 /// A event received by a Binance websocket
 /// </summary>
-public class BinanceFuturesStreamLiquidationData : BinanceSocketEvent
+public record BinanceFuturesStreamLiquidationData : BinanceSocketEvent
 {
     /// <summary>
     /// The data of the event
@@ -15,13 +15,13 @@ public class BinanceFuturesStreamLiquidationData : BinanceSocketEvent
 /// <summary>
 /// 
 /// </summary>
-public class BinanceFuturesStreamLiquidation : IBinanceFuturesLiquidation
+public record BinanceFuturesStreamLiquidation : IBinanceFuturesLiquidation
 {
     /// <summary>
     /// Symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Liquidation Sided

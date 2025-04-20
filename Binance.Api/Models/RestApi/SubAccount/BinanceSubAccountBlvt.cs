@@ -3,12 +3,12 @@
 /// <summary>
 /// Sub account details
 /// </summary>
-public class BinanceSubAccountBlvt
+public record BinanceSubAccountBlvt
 {
     /// <summary>
     /// The email associated with the sub account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Blvt enabled
     /// </summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Spot Asset Info
 /// </summary>
-public class BinanceBrokerageSpotAssetInfo
+public record BinanceBrokerageSpotAssetInfo
 {
     /// <summary>
     /// Data
@@ -20,12 +20,12 @@ public class BinanceBrokerageSpotAssetInfo
 /// <summary>
 /// Account Spot Asset Info
 /// </summary>
-public class BinanceBrokerageSubAccountSpotAssetInfo
+public record BinanceBrokerageSubAccountSpotAssetInfo
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Total Balance Of Btc

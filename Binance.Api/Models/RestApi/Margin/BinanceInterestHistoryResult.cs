@@ -3,16 +3,16 @@
 /// <summary>
 /// Interest history entry info
 /// </summary>
-public class BinanceInterestHistory
+public record BinanceInterestHistory
 {
     /// <summary>
     /// Isolated symbol
     /// </summary>
-    public string IsolatedSymbol { get; set; }
+    public string IsolatedSymbol { get; set; } = "";
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The quantity of interest
     /// </summary>
@@ -34,5 +34,5 @@ public class BinanceInterestHistory
     /// <summary>
     /// Type of interest
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = "";
 }

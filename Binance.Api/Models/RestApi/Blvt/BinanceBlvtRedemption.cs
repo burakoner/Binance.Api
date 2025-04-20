@@ -3,7 +3,7 @@
 /// <summary>
 /// Redemption info
 /// </summary>
-public class BinanceBlvtRedemption
+public record BinanceBlvtRedemption
 {
     /// <summary>
     /// Id
@@ -13,7 +13,7 @@ public class BinanceBlvtRedemption
     /// <summary>
     /// Token name
     /// </summary>
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Redemption quantity
     /// </summary>

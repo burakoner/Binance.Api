@@ -3,7 +3,7 @@
 /// <summary>
 /// Interest record
 /// </summary>
-public class BinanceLendingInterestHistory
+public record BinanceLendingInterestHistory
 {
     /// <summary>
     /// Interest
@@ -12,7 +12,7 @@ public class BinanceLendingInterestHistory
     /// <summary>
     /// Asset name
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -27,5 +27,5 @@ public class BinanceLendingInterestHistory
     /// <summary>
     /// Name of the product
     /// </summary>
-    public string ProductName { get; set; }
+    public string ProductName { get; set; } = "";
 }

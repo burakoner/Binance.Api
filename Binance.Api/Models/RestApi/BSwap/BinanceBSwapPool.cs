@@ -3,7 +3,7 @@
 /// <summary>
 /// Swap pool info
 /// </summary>
-public class BinanceBSwapPool
+public record BinanceBSwapPool
 {
     /// <summary>
     /// Id
@@ -12,7 +12,7 @@ public class BinanceBSwapPool
     /// <summary>
     /// Name
     /// </summary>
-    public string PoolName { get; set; }
+    public string PoolName { get; set; } = "";
     /// <summary>
     /// Assets in the pool
     /// </summary>

@@ -1,11 +1,9 @@
-﻿using Binance.Api.Models.RestApi.Margin;
-
-namespace Binance.Api.Models.RestApi.Account;
+﻿namespace Binance.Api.Models.RestApi.Account;
 
 /// <summary>
 /// Margin account snapshot
 /// </summary>
-public class BinanceMarginAccountSnapshot
+public record BinanceMarginAccountSnapshot
 {
     /// <summary>
     /// Timestamp of the data
@@ -15,7 +13,7 @@ public class BinanceMarginAccountSnapshot
     /// <summary>
     /// Account type the data is for
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public AccountType Type { get; set; }
     /// <summary>
     /// Snapshot data
@@ -27,7 +25,7 @@ public class BinanceMarginAccountSnapshot
 /// <summary>
 /// Margin snapshot data
 /// </summary>
-public class BinanceMarginAccountSnapshotData
+public record BinanceMarginAccountSnapshotData
 {
     /// <summary>
     /// The margin level

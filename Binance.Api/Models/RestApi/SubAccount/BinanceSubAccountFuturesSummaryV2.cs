@@ -3,7 +3,7 @@
 /// <summary>
 /// Sub account futures summary
 /// </summary>
-public class BinanceSubAccountFuturesSummaryV2
+public record BinanceSubAccountFuturesSummaryV2
 {
     /// <summary>
     /// Futures account response (USDT margined)
@@ -18,21 +18,21 @@ public class BinanceSubAccountFuturesSummaryV2
     public BinanceSubAccountFuturesDeliverySummary CoinMarginedFutures { get; set; } = default!;
 }
 
-public class BinanceSubAccountFuturesDeliverySummary
+public record BinanceSubAccountFuturesDeliverySummary
 {
     public decimal TotalMarginBalanceOfBTC { get; set; }
     public decimal TotalUnrealizedProfitOfBTC { get; set; }
     public decimal TotalWalletBalanceOfBTC { get; set; }
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     public IEnumerable<BinanceSubAccountFuturesDeliveryAccount> SubAccountList { get; set; } = Array.Empty<BinanceSubAccountFuturesDeliveryAccount>();
 }
 
-public class BinanceSubAccountFuturesDeliveryAccount
+public record BinanceSubAccountFuturesDeliveryAccount
 {
     /// <summary>
     /// Email of the sub account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
 
     /// <summary>
     /// Total margin balance
@@ -52,5 +52,5 @@ public class BinanceSubAccountFuturesDeliveryAccount
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 }

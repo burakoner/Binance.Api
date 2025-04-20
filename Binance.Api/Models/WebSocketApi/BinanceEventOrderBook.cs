@@ -3,7 +3,7 @@
 /// <summary>
 /// Stream order book
 /// </summary>
-public class BinanceEventOrderBook : BinanceOrderBook, IBinanceEventOrderBook
+public record BinanceEventOrderBook : BinanceOrderBook, IBinanceEventOrderBook
 {
     /// <summary>
     /// The id of this update, can be synced with BinanceClient.Spot.GetOrderBook to update the order book
@@ -21,7 +21,7 @@ public class BinanceEventOrderBook : BinanceOrderBook, IBinanceEventOrderBook
     /// Event type
     /// </summary>
     [JsonProperty("e")]
-    internal string EventType { get; set; }
+    internal string EventType { get; set; } = "";
 
     /// <summary>
     /// Event time of the update

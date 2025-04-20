@@ -3,12 +3,12 @@
 /// <summary>
 /// Brokerage Rebate
 /// </summary>
-public class BinanceBrokerageRebate
+public record BinanceBrokerageRebate
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Income
@@ -18,17 +18,17 @@ public class BinanceBrokerageRebate
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Trade Id
     /// </summary>
-    public string TradeId { get; set; }
+    public string TradeId { get; set; } = "";
 
     /// <summary>
     /// Date

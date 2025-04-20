@@ -3,22 +3,22 @@
 /// <summary>
 /// Network for an asset
 /// </summary>
-public class BinanceNetwork
+public record BinanceNetwork
 {
     /// <summary>
     /// Regex for an address on the network
     /// </summary>
-    public string AddressRegex { get; set; }
+    public string AddressRegex { get; set; } = "";
     /// <summary>
     /// Asset name
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Deposit description
     /// </summary>
     [JsonProperty("depositDesc")]
-    public string DepositDescription { get; set; }
+    public string DepositDescription { get; set; } = "";
     /// <summary>
     /// Deposit enabled
     /// </summary>
@@ -31,7 +31,7 @@ public class BinanceNetwork
     /// <summary>
     /// Regex for a memo
     /// </summary>
-    public string MemoRegex { get; set; }
+    public string MemoRegex { get; set; } = "";
     /// <summary>
     /// Minimal confirmations for balance confirmation
     /// </summary>
@@ -40,11 +40,11 @@ public class BinanceNetwork
     /// <summary>
     /// Name
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// Network
     /// </summary>
-    public string Network { get; set; }
+    public string Network { get; set; } = "";
     /// <summary>
     /// Reset address status
     /// </summary>
@@ -52,7 +52,7 @@ public class BinanceNetwork
     /// <summary>
     /// Tips
     /// </summary>
-    public string SpecialTips { get; set; }
+    public string SpecialTips { get; set; } = "";
     /// <summary>
     /// Confirmation number for balance unlock
     /// </summary>
@@ -62,7 +62,7 @@ public class BinanceNetwork
     /// Withdraw description
     /// </summary>
     [JsonProperty("withdrawDesc")]
-    public string WithdrawDescription { get; set; }
+    public string WithdrawDescription { get; set; } = "";
     /// <summary>
     /// Withdraw is enabled
     /// </summary>

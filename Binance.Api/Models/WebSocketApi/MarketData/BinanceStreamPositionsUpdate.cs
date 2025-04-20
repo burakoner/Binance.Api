@@ -3,7 +3,7 @@
 /// <summary>
 /// Positions update
 /// </summary>
-public class BinanceStreamPositionsUpdate : BinanceSocketEvent
+public record BinanceStreamPositionsUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// Time of last account update
@@ -13,7 +13,7 @@ public class BinanceStreamPositionsUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
     /// <summary>
     /// Balances
     /// </summary>
@@ -24,13 +24,13 @@ public class BinanceStreamPositionsUpdate : BinanceSocketEvent
 /// <summary>
 /// Information about an asset balance
 /// </summary>
-public class BinanceStreamBalance : IBinanceBalance
+public record BinanceStreamBalance : IBinanceBalance
 {
     /// <summary>
     /// The asset this balance is for
     /// </summary>
     [JsonProperty("a")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The quantity that isn't locked in a trade
     /// </summary>

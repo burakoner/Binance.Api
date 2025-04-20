@@ -3,16 +3,16 @@
 /// <summary>
 /// Loan info
 /// </summary>
-public class BinanceLoan
+public record BinanceLoan
 {
     /// <summary>
     /// Isolated symbol
     /// </summary>
-    public string IsolatedSymbol { get; set; }
+    public string IsolatedSymbol { get; set; } = "";
     /// <summary>
     /// The asset of the loan
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The transaction id of the loan
     /// </summary>

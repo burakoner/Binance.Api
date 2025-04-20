@@ -4,7 +4,7 @@
 /// Blvt kline
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public class BinanceBlvtKline
+public record BinanceBlvtKline
 {
     /// <summary>
     /// The time this candlestick opened
@@ -43,7 +43,7 @@ public class BinanceBlvtKline
     [ArrayProperty(6), JsonConverter(typeof(DateTimeConverter))]
     public DateTime CloseTime { get; set; }
 
-    [ArrayProperty(7)] internal string Ignore { get; set; }
+    [ArrayProperty(7)] internal string? Ignore { get; set; }
 
     /// <summary>
     /// Number of updates

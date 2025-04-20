@@ -3,12 +3,12 @@
 /// <summary>
 /// Information about an account asset
 /// </summary>
-public class BinanceFuturesAccountAsset
+public record BinanceFuturesAccountAsset
 {
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Initial Margin

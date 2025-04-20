@@ -3,7 +3,7 @@
 /// <summary>
 /// Dividend record
 /// </summary>
-public class BinanceDividendRecord
+public record BinanceDividendRecord
 {
     /// <summary>
     /// Id
@@ -17,7 +17,7 @@ public class BinanceDividendRecord
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Timestamp of the transaction
     /// </summary>
@@ -27,10 +27,10 @@ public class BinanceDividendRecord
     /// Transaction id
     /// </summary>
     [JsonProperty("tranId")]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
     /// <summary>
     /// Info
     /// </summary>
     [JsonProperty("enInfo")]
-    public string Info { get; set; }
+    public string Info { get; set; } = "";
 }

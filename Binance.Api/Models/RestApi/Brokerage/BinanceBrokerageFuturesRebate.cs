@@ -3,12 +3,12 @@
 /// <summary>
 /// Futures Commission Rebate
 /// </summary>
-public class BinanceBrokerageFuturesRebate
+public record BinanceBrokerageFuturesRebate
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Income
@@ -18,12 +18,12 @@ public class BinanceBrokerageFuturesRebate
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// TradeId

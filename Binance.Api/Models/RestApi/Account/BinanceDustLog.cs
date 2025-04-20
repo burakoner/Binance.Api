@@ -3,7 +3,7 @@
 /// <summary>
 /// Dust log response details
 /// </summary>
-public class BinanceDustLogList
+public record BinanceDustLogList
 {
     /// <summary>
     /// Total counts of exchange
@@ -18,7 +18,7 @@ public class BinanceDustLogList
 /// <summary>
 /// Dust log details
 /// </summary>
-public class BinanceDustLog
+public record BinanceDustLog
 {
     /// <summary>
     /// Total transferred
@@ -51,7 +51,7 @@ public class BinanceDustLog
 /// <summary>
 /// Dust log entry details
 /// </summary>
-public class BinanceDustLogDetails
+public record BinanceDustLogDetails
 {
     /// <summary>
     /// Transaction id
@@ -83,5 +83,5 @@ public class BinanceDustLogDetails
     /// Asset
     /// </summary>
     [JsonProperty("fromAsset")]
-    public string FromAsset { get; set; }
+    public string FromAsset { get; set; } = "";
 }

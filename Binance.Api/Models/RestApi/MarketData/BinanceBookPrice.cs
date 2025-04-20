@@ -3,12 +3,12 @@
 /// <summary>
 /// Information about the best price/quantity available for a symbol
 /// </summary>
-public class BinanceBookPrice : IBinanceBookPrice
+public record BinanceBookPrice : IBinanceBookPrice
 {
     /// <summary>
     /// The symbol the information is about
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The highest bid price for the symbol
     /// </summary>

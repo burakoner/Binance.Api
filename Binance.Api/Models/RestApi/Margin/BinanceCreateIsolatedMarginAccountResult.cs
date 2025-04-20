@@ -3,7 +3,7 @@
 /// <summary>
 /// Result of creating isolated margin account
 /// </summary>
-public class BinanceCreateIsolatedMarginAccountResult
+public record BinanceCreateIsolatedMarginAccountResult
 {
     /// <summary>
     /// Success
@@ -13,5 +13,5 @@ public class BinanceCreateIsolatedMarginAccountResult
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 }

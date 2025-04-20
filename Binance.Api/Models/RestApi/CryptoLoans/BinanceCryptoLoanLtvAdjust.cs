@@ -3,22 +3,22 @@
 /// <summary>
 /// Adjust info
 /// </summary>
-public class BinanceCryptoLoanLtvAdjust
+public record BinanceCryptoLoanLtvAdjust
 {
     /// <summary>
     /// The loaning asset
     /// </summary>
     [JsonProperty("loanCoin")]
-    public string LoanAsset { get; set; }
+    public string LoanAsset { get; set; } = "";
     /// <summary>
     /// The collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Direction
     /// </summary>
-    public string Direction { get; set; }
+    public string Direction { get; set; } = "";
     /// <summary>
     /// Amount
     /// </summary>

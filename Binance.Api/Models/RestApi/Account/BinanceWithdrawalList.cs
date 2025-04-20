@@ -3,16 +3,16 @@
 /// <summary>
 /// Information about a withdrawal
 /// </summary>
-public class BinanceWithdrawal
+public record BinanceWithdrawal
 {
     /// <summary>
     /// The id of the withdrawal
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; set; } = "";
     /// <summary>
     /// Withdraw order id
     /// </summary>
-    public string WithdrawOrderId { get; set; }
+    public string WithdrawOrderId { get; set; } = "";
     /// <summary>
     /// The time the withdrawal was applied for
     /// </summary>
@@ -25,16 +25,16 @@ public class BinanceWithdrawal
     /// <summary>
     /// The address the asset was withdrawn to
     /// </summary>
-    public string Address { get; set; }
+    public string Address { get; set; } = "";
     /// <summary>
     /// Tag for the address
     /// </summary>
-    public string AddressTag { get; set; }
+    public string AddressTag { get; set; } = "";
     /// <summary>
     /// The transaction id of the withdrawal
     /// </summary>
     [JsonProperty("txId")]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
     /// <summary>
     /// Transaction fee for the withdrawal
     /// </summary>
@@ -43,11 +43,11 @@ public class BinanceWithdrawal
     /// The asset that was withdrawn
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Network that was used
     /// </summary>
-    public string Network { get; set; }
+    public string Network { get; set; } = "";
     /// <summary>
     /// Confirm times for withdraw
     /// </summary>

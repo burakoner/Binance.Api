@@ -3,7 +3,7 @@
 /// <summary>
 /// Enabled account limit
 /// </summary>
-public class BinanceIsolatedMarginAccountLimit
+public record BinanceIsolatedMarginAccountLimit
 {
     /// <summary>
     /// Current enabled accounts

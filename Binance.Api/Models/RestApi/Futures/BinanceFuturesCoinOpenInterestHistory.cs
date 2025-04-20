@@ -3,12 +3,12 @@
 /// <summary>
 /// Open Interest History info
 /// </summary>
-public class BinanceFuturesCoinOpenInterestHistory
+public record BinanceFuturesCoinOpenInterestHistory
 {
     /// <summary>
     /// The symbol the information is about
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 
     /// <summary>
     /// Contract type

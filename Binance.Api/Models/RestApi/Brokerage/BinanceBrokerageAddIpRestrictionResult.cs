@@ -3,22 +3,22 @@
 /// <summary>
 /// Add IP Restriction Result
 /// </summary>
-public class BinanceBrokerageAddIpRestrictionResult
+public record BinanceBrokerageAddIpRestrictionResult
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Api key
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } = "";
 
     /// <summary>
     /// IP
     /// </summary>
-    public string Ip { get; set; }
+    public string Ip { get; set; } = "";
 
     /// <summary>
     /// Timestamp

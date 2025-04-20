@@ -3,12 +3,12 @@
 /// <summary>
 /// Exchange info
 /// </summary>
-public class BinanceExchangeInfo
+public record BinanceExchangeInfo
 {
     /// <summary>
     /// The timezone the server uses
     /// </summary>
-    public string TimeZone { get; set; }
+    public string TimeZone { get; set; } = "";
     /// <summary>
     /// The current server time
     /// </summary>

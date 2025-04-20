@@ -3,12 +3,12 @@
 /// <summary>
 /// Asset info
 /// </summary>
-public class BinanceFuturesUsdtAsset
+public record BinanceFuturesUsdtAsset
 {
     /// <summary>
     /// Name of the asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Whether the asset can be used as margin in Multi-Assets mode
     /// </summary>

@@ -3,12 +3,12 @@
 /// <summary>
 /// Leveraged tokens user limits
 /// </summary>
-public class BinanceBlvtUserLimit
+public record BinanceBlvtUserLimit
 {
     /// <summary>
     /// Token name
     /// </summary>
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Daily purchase limit
     /// </summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Swap pool config
 /// </summary>
-public class BinanceBSwapPoolConfig
+public record BinanceBSwapPoolConfig
 {
     /// <summary>
     /// Id
@@ -12,7 +12,7 @@ public class BinanceBSwapPoolConfig
     /// <summary>
     /// Name
     /// </summary>
-    public string PoolName { get; set; }
+    public string PoolName { get; set; } = "";
     /// <summary>
     /// Update time
     /// </summary>
@@ -32,7 +32,7 @@ public class BinanceBSwapPoolConfig
 /// <summary>
 /// Asset config
 /// </summary>
-public class PoolAssetConfig
+public record PoolAssetConfig
 {
     /// <summary>
     /// Minimal add
@@ -55,12 +55,12 @@ public class PoolAssetConfig
 /// <summary>
 /// Liquidity info
 /// </summary>
-public class PoolLiquidity
+public record PoolLiquidity
 {
     /// <summary>
     /// Constant a
     /// </summary>
-    public string ConstantA { get; set; }
+    public string ConstantA { get; set; } = "";
     /// <summary>
     /// Minimal redeem share
     /// </summary>

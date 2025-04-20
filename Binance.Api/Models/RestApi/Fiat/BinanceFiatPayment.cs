@@ -3,13 +3,13 @@
 /// <summary>
 /// Fiat payment info
 /// </summary>
-public class BinanceFiatPayment
+public record BinanceFiatPayment
 {
     /// <summary>
     /// Order number
     /// </summary>
     [JsonProperty("orderNo")]
-    public string OrderNumber { get; set; }
+    public string OrderNumber { get; set; } = "";
     /// <summary>
     /// The input quantity
     /// </summary>
@@ -19,7 +19,7 @@ public class BinanceFiatPayment
     /// The fiat asset
     /// </summary>
     [JsonProperty("fiatCurrency")]
-    public string FiatAsset { get; set; }
+    public string FiatAsset { get; set; } = "";
     /// <summary>
     /// The output quantity
     /// </summary>
@@ -29,7 +29,7 @@ public class BinanceFiatPayment
     /// The crypto asset
     /// </summary>
     [JsonProperty("cryptoCurrency")]
-    public string CryptoAsset { get; set; }
+    public string CryptoAsset { get; set; } = "";
     /// <summary>
     /// The total fee of the order
     /// </summary>

@@ -3,18 +3,18 @@
 /// <summary>
 /// Open borrow order info
 /// </summary>
-public class BinanceCryptoLoanOpenBorrowOrder
+public record BinanceCryptoLoanOpenBorrowOrder
 {
     /// <summary>
     /// The loaning asset
     /// </summary>
     [JsonProperty("loanCoin")]
-    public string LoanAsset { get; set; }
+    public string LoanAsset { get; set; } = "";
     /// <summary>
     /// The collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// The collateral quantity
     /// </summary>

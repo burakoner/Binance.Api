@@ -3,7 +3,7 @@
 /// <summary>
 /// Operation record
 /// </summary>
-public class BinanceBSwapOperation
+public record BinanceBSwapOperation
 {
     /// <summary>
     /// Operation id
@@ -17,7 +17,7 @@ public class BinanceBSwapOperation
     /// <summary>
     /// Pool name
     /// </summary>
-    public string PoolName { get; set; }
+    public string PoolName { get; set; } = "";
     /// <summary>
     /// Operation
     /// </summary>

@@ -3,17 +3,17 @@
 /// <summary>
 /// Sub Account Api Key
 /// </summary>
-public class BinanceBrokerageSubAccountApiKey
+public record BinanceBrokerageSubAccountApiKey
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Api Key
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } = "";
 
     /// <summary>
     /// Is Spot Trading Enabled

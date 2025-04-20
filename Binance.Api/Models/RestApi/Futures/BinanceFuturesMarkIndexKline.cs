@@ -4,7 +4,7 @@
 /// Kline for mark or index price
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public class BinanceFuturesMarkIndexKline
+public record BinanceFuturesMarkIndexKline
 {
     /// <summary>
     /// The time this candlestick opened
@@ -32,14 +32,14 @@ public class BinanceFuturesMarkIndexKline
     [ArrayProperty(4)]
     public decimal ClosePrice { get; set; }
 
-    [ArrayProperty(5)] internal string Ignore1 { get; set; }
+    [ArrayProperty(5)] internal string? Ignore1 { get; set; }
     /// <summary>
     /// The close time of this candlestick
     /// </summary>
     [ArrayProperty(6), JsonConverter(typeof(DateTimeConverter))]
     public DateTime CloseTime { get; set; }
 
-    [ArrayProperty(7)] internal string Ignore2 { get; set; }
+    [ArrayProperty(7)] internal string? Ignore2 { get; set; }
     /// <summary>
     /// Number of basic data
     /// </summary>

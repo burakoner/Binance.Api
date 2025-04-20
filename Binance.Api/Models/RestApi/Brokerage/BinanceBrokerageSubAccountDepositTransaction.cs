@@ -3,22 +3,22 @@
 /// <summary>
 /// Sub Account Deposit Transaction
 /// </summary>
-public class BinanceBrokerageSubAccountDepositTransaction
+public record BinanceBrokerageSubAccountDepositTransaction
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Address
     /// </summary>
-    public string Address { get; set; }
+    public string Address { get; set; } = "";
 
     /// <summary>
     /// Address Tag
     /// </summary>
-    public string AddressTag { get; set; }
+    public string AddressTag { get; set; } = "";
 
     /// <summary>
     /// Quantity
@@ -30,7 +30,7 @@ public class BinanceBrokerageSubAccountDepositTransaction
     /// Asset
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Date
@@ -41,7 +41,7 @@ public class BinanceBrokerageSubAccountDepositTransaction
     /// <summary>
     /// Network
     /// </summary>
-    public string Network { get; set; }
+    public string Network { get; set; } = "";
 
     /// <summary>
     /// Status
@@ -52,15 +52,15 @@ public class BinanceBrokerageSubAccountDepositTransaction
     /// Transaction Id
     /// </summary>
     [JsonProperty("txId")]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
 
     /// <summary>
     /// Source Address
     /// </summary>
-    public string SourceAddress { get; set; }
+    public string SourceAddress { get; set; } = "";
 
     /// <summary>
     /// Confirm Times
     /// </summary>
-    public string ConfirmTimes { get; set; }
+    public string ConfirmTimes { get; set; } = "";
 }

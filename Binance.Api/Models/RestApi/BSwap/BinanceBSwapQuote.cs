@@ -3,16 +3,16 @@
 /// <summary>
 /// Quote info
 /// </summary>
-public class BinanceBSwapQuote
+public record BinanceBSwapQuote
 {
     /// <summary>
     /// Quote asset
     /// </summary>
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// Base asset
     /// </summary>
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// Quote quantity
     /// </summary>

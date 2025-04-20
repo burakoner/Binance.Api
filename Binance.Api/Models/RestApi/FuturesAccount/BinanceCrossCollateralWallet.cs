@@ -3,7 +3,7 @@
 /// <summary>
 /// Cross colateral wallet info
 /// </summary>
-public class BinanceCrossCollateralWallet
+public record BinanceCrossCollateralWallet
 {
     /// <summary>
     /// Total cross collateral
@@ -24,7 +24,7 @@ public class BinanceCrossCollateralWallet
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Cross collaterals
     /// </summary>
@@ -34,18 +34,18 @@ public class BinanceCrossCollateralWallet
 /// <summary>
 /// Cross collateral data
 /// </summary>
-public class BinanceCrossCollateralWalletEntry
+public record BinanceCrossCollateralWalletEntry
 {
     /// <summary>
     /// Loan asset
     /// </summary>
     [JsonProperty("loanCoin")]
-    public string LoanAsset { get; set; }
+    public string LoanAsset { get; set; } = "";
     /// <summary>
     /// Collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Quantity locked
     /// </summary>

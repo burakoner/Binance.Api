@@ -3,7 +3,7 @@
 /// <summary>
 /// Sub account position risk
 /// </summary>
-public class BinanceSubAccountFuturesPositionRiskV2
+public record BinanceSubAccountFuturesPositionRiskV2
 {
     /// <summary>
     /// Futures account response (USDT margined)
@@ -21,7 +21,7 @@ public class BinanceSubAccountFuturesPositionRiskV2
 /// <summary>
 /// Sub account position risk
 /// </summary>
-public class BinanceSubAccountFuturesPositionRiskCoin
+public record BinanceSubAccountFuturesPositionRiskCoin
 {
     /// <summary>
     /// The entry price
@@ -73,7 +73,7 @@ public class BinanceSubAccountFuturesPositionRiskCoin
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Unrealized profit

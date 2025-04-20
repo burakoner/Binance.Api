@@ -3,13 +3,13 @@
 /// <summary>
 /// The order book for a asset
 /// </summary>
-public class BinanceFuturesStreamOrderBookDepth : BinanceSocketEvent, IBinanceFuturesEventOrderBook
+public record BinanceFuturesStreamOrderBookDepth : BinanceSocketEvent, IBinanceFuturesEventOrderBook
 {
     /// <summary>
     /// The symbol of the order book (only filled from stream updates)
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// The time the event happened

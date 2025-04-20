@@ -3,22 +3,22 @@
 /// <summary>
 /// Borrow result
 /// </summary>
-public class BinanceCrossCollateralBorrowResult
+public record BinanceCrossCollateralBorrowResult
 {
     /// <summary>
     /// Id
     /// </summary>
-    public string BorrowId { get; set; }
+    public string BorrowId { get; set; } = "";
     /// <summary>
     /// The asset borrowed
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The asset used for collateral
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// The quantity borrowed
     /// </summary>

@@ -37,7 +37,7 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) }
+                { "product", MapConverter.GetString(product) }
             };
         parameters.AddOptionalParameter("asset", asset);
         parameters.AddOptionalParameter("current", page);
@@ -53,7 +53,7 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) },
+                { "product", MapConverter.GetString(product) },
                 { "productId", productId },
                 { "amount", quantity.ToString(CultureInfo.InvariantCulture) },
             };
@@ -69,7 +69,7 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) },
+                { "product", MapConverter.GetString(product) },
                 { "productId", productId },
             };
         parameters.AddOptionalParameter("positionId", positionId);
@@ -86,7 +86,7 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) }
+                { "product", MapConverter.GetString(product) }
             };
         parameters.AddOptionalParameter("productId", productId);
         parameters.AddOptionalParameter("current", page);
@@ -102,8 +102,8 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) },
-                { "txnType", EnumConverter.GetString(transactionType) }
+                { "product", MapConverter.GetString(product) },
+                { "txnType", MapConverter.GetString(transactionType) }
             };
         parameters.AddOptionalParameter("asset", asset);
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
@@ -121,7 +121,7 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) },
+                { "product", MapConverter.GetString(product) },
                 { "positionId", positionId },
                 { "renewable", renewable },
             };
@@ -136,7 +136,7 @@ public class BinanceRestApiStakingClient
     {
         var parameters = new Dictionary<string, object>()
             {
-                { "product", EnumConverter.GetString(product) },
+                { "product", MapConverter.GetString(product) },
                 { "productId", productId }
             };
         parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));

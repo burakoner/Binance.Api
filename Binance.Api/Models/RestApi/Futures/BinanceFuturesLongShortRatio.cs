@@ -3,18 +3,18 @@
 /// <summary>
 /// Long Short Ratio Info
 /// </summary>
-public class BinanceFuturesLongShortRatio
+public record BinanceFuturesLongShortRatio
 {
     /// <summary>
     /// The symbol or pair the information is about
     /// </summary>
     [JsonProperty("symbol")]
-    public string SymbolPair { get; set; }
+    public string SymbolPair { get; set; } = "";
 
     /// <summary>
     /// Pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 
     /// <summary>
     /// long/short ratio

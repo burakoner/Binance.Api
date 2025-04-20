@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -50,7 +51,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ApiSharp" Version="2.2.1" />
+		<PackageReference Include="ApiSharp" Version="3.3.1" />
 	</ItemGroup>
 
 </Project>

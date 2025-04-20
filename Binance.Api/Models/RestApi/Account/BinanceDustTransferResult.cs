@@ -3,7 +3,7 @@
 /// <summary>
 /// Result of dust transfer
 /// </summary>
-public class BinanceDustTransferResult
+public record BinanceDustTransferResult
 {
     /// <summary>
     /// Total service charge
@@ -24,7 +24,7 @@ public class BinanceDustTransferResult
 /// <summary>
 /// Dust transfer entry
 /// </summary>
-public class BinanceDustTransferResultEntry
+public record BinanceDustTransferResultEntry
 {
     /// <summary>
     /// Quantity of dust
@@ -34,7 +34,7 @@ public class BinanceDustTransferResultEntry
     /// <summary>
     /// Asset
     /// </summary>
-    public string FromAsset { get; set; }
+    public string FromAsset { get; set; } = "";
     /// <summary>
     /// Timestamp of conversion
     /// </summary>

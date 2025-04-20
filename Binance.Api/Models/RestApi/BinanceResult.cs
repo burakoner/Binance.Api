@@ -3,7 +3,7 @@
 /// <summary>
 /// Query result
 /// </summary>
-public class BinanceResult
+public record BinanceResult
 {
     /// <summary>
     /// Result code
@@ -21,7 +21,7 @@ public class BinanceResult
 /// Query result
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal class BinanceResult<T> : BinanceResult
+internal record BinanceResult<T> : BinanceResult
 {
     /// <summary>
     /// The data

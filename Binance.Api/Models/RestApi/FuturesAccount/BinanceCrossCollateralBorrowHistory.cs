@@ -3,12 +3,12 @@
 /// <summary>
 /// Borrow history
 /// </summary>
-public class BinanceCrossCollateralBorrowHistory
+public record BinanceCrossCollateralBorrowHistory
 {
     /// <summary>
     /// Id
     /// </summary>
-    public string BorrowId { get; set; }
+    public string BorrowId { get; set; } = "";
     /// <summary>
     /// Time of confirmation
     /// </summary>
@@ -19,7 +19,7 @@ public class BinanceCrossCollateralBorrowHistory
     /// Asset
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The collateral rate
     /// </summary>
@@ -41,7 +41,7 @@ public class BinanceCrossCollateralBorrowHistory
     /// Collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Collateral quantity
     /// </summary>

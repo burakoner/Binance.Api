@@ -3,20 +3,20 @@
 /// <summary>
 /// Staking position info
 /// </summary>
-public class BinanceStakingPosition
+public record BinanceStakingPosition
 {
     /// <summary>
     /// Position id
     /// </summary>
-    public string PositionId { get; set; }
+    public string PositionId { get; set; } = "";
     /// <summary>
     /// Project id
     /// </summary>
-    public string ProductId { get; set; }
+    public string ProductId { get; set; } = "";
     /// <summary>
     /// Locked asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Locked quantity
     /// </summary>
@@ -38,7 +38,7 @@ public class BinanceStakingPosition
     /// <summary>
     /// Reward asset
     /// </summary>
-    public string RewardAsset { get; set; }
+    public string RewardAsset { get; set; } = "";
     /// <summary>
     /// Apy
     /// </summary>
@@ -51,7 +51,7 @@ public class BinanceStakingPosition
     /// <summary>
     /// Rewards asset of extra staking type
     /// </summary>
-    public string ExtraRewardAsset { get; set; }
+    public string ExtraRewardAsset { get; set; } = "";
     /// <summary>
     /// Extra rewards Apy
     /// </summary>
@@ -114,9 +114,9 @@ public class BinanceStakingPosition
     /// <summary>
     /// Order type
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = "";
     /// <summary>
     /// Status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 }

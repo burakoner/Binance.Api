@@ -3,7 +3,7 @@
 /// <summary>
 /// Resale list
 /// </summary>
-public class BinanceHashrateResaleList
+public record BinanceHashrateResaleList
 {
     /// <summary>
     /// Total number of results
@@ -23,7 +23,7 @@ public class BinanceHashrateResaleList
 /// <summary>
 /// Resale item
 /// </summary>
-public class BinanceHashrateResaleItem
+public record BinanceHashrateResaleItem
 {
     /// <summary>
     /// Mining id
@@ -32,15 +32,15 @@ public class BinanceHashrateResaleItem
     /// <summary>
     /// From user
     /// </summary>
-    public string PoolUserName { get; set; }
+    public string PoolUserName { get; set; } = "";
     /// <summary>
     /// To user
     /// </summary>
-    public string ToPoolUserName { get; set; }
+    public string ToPoolUserName { get; set; } = "";
     /// <summary>
     /// Algorithm
     /// </summary>
-    public string AlgoName { get; set; }
+    public string AlgoName { get; set; } = "";
     /// <summary>
     /// Hash rate
     /// </summary>

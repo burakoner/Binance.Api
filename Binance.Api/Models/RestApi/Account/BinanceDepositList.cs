@@ -3,7 +3,7 @@
 /// <summary>
 /// Information about a deposit
 /// </summary>
-public class BinanceDeposit
+public record BinanceDeposit
 {
     /// <summary>
     /// Time the deposit was added to Binance
@@ -19,24 +19,24 @@ public class BinanceDeposit
     /// The asset deposited
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The address of the deposit
     /// </summary>
-    public string Address { get; set; }
+    public string Address { get; set; } = "";
     /// <summary>
     /// The tag of the address of the deposit
     /// </summary>
-    public string AddressTag { get; set; }
+    public string AddressTag { get; set; } = "";
     /// <summary>
     /// The network
     /// </summary>
-    public string Network { get; set; }
+    public string Network { get; set; } = "";
     /// <summary>
     /// The transaction id
     /// </summary>
     [JsonProperty("txId")]
-    public string Id { get; set; }
+    public string Id { get; set; } = "";
     /// <summary>
     /// The status of the deposit
     /// </summary>
@@ -53,10 +53,10 @@ public class BinanceDeposit
     /// Confirmations
     /// </summary>
     [JsonProperty("confirmTimes")]
-    public string Confirmations { get; set; }
+    public string Confirmations { get; set; } = "";
     /// <summary>
     /// Network confirmations for unlocking
     /// </summary>
     [JsonProperty("unlockConfirm")]
-    public string ConfirmationsForUnlock { get; set; }
+    public string ConfirmationsForUnlock { get; set; } = "";
 }

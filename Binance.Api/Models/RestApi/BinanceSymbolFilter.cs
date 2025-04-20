@@ -4,7 +4,7 @@
 /// A filter for order placed on a symbol.
 /// </summary>
 [JsonConverter(typeof(SymbolFilterConverter))]
-public class BinanceSymbolFilter
+public record BinanceSymbolFilter
 {
     /// <summary>
     /// The type of this filter
@@ -15,7 +15,7 @@ public class BinanceSymbolFilter
 /// <summary>
 /// Price filter
 /// </summary>
-public class BinanceSymbolPriceFilter : BinanceSymbolFilter
+public record BinanceSymbolPriceFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The minimal price the order can be for
@@ -34,7 +34,7 @@ public class BinanceSymbolPriceFilter : BinanceSymbolFilter
 /// <summary>
 /// Price percentage filter
 /// </summary>
-public class BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
+public record BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The max factor the price can deviate up
@@ -53,7 +53,7 @@ public class BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
 /// <summary>
 /// Price percentage filter
 /// </summary>
-public class BinanceSymbolPercentPriceBySideFilter : BinanceSymbolFilter
+public record BinanceSymbolPercentPriceBySideFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The max factor the price can deviate up for buys
@@ -80,7 +80,7 @@ public class BinanceSymbolPercentPriceBySideFilter : BinanceSymbolFilter
 /// <summary>
 /// Lot size filter
 /// </summary>
-public class BinanceSymbolLotSizeFilter : BinanceSymbolFilter
+public record BinanceSymbolLotSizeFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The minimal quantity of an order
@@ -99,7 +99,7 @@ public class BinanceSymbolLotSizeFilter : BinanceSymbolFilter
 /// <summary>
 /// Market lot size filter
 /// </summary>
-public class BinanceSymbolMarketLotSizeFilter : BinanceSymbolFilter
+public record BinanceSymbolMarketLotSizeFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The minimal quantity of an order
@@ -118,7 +118,7 @@ public class BinanceSymbolMarketLotSizeFilter : BinanceSymbolFilter
 /// <summary>
 /// Min notional filter
 /// </summary>
-public class BinanceSymbolMinNotionalFilter : BinanceSymbolFilter
+public record BinanceSymbolMinNotionalFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The minimal total quote quantity of an order. This is calculated by Price * Quantity.
@@ -139,7 +139,7 @@ public class BinanceSymbolMinNotionalFilter : BinanceSymbolFilter
 /// <summary>
 /// Notional filter
 /// </summary>
-public class BinanceSymbolNotionalFilter : BinanceSymbolFilter
+public record BinanceSymbolNotionalFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The minimal total quote quantity of an order. This is calculated by Price * Quantity.
@@ -170,7 +170,7 @@ public class BinanceSymbolNotionalFilter : BinanceSymbolFilter
 /// <summary>
 ///Max orders filter
 /// </summary>
-public class BinanceSymbolMaxOrdersFilter : BinanceSymbolFilter
+public record BinanceSymbolMaxOrdersFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The max number of orders for this symbol
@@ -181,7 +181,7 @@ public class BinanceSymbolMaxOrdersFilter : BinanceSymbolFilter
 /// <summary>
 /// Max algo orders filter
 /// </summary>
-public class BinanceSymbolMaxAlgorithmicOrdersFilter : BinanceSymbolFilter
+public record BinanceSymbolMaxAlgorithmicOrdersFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The max number of Algorithmic orders for this symbol
@@ -192,7 +192,7 @@ public class BinanceSymbolMaxAlgorithmicOrdersFilter : BinanceSymbolFilter
 /// <summary>
 /// Max iceberg parts filter
 /// </summary>
-public class BinanceSymbolIcebergPartsFilter : BinanceSymbolFilter
+public record BinanceSymbolIcebergPartsFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The max parts of an iceberg order for this symbol.
@@ -203,7 +203,7 @@ public class BinanceSymbolIcebergPartsFilter : BinanceSymbolFilter
 /// <summary>
 /// Max position filter
 /// </summary>
-public class BinanceSymbolMaxPositionFilter : BinanceSymbolFilter
+public record BinanceSymbolMaxPositionFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The MaxPosition filter defines the allowed maximum position an account can have on the base asset of a symbol.
@@ -214,7 +214,7 @@ public class BinanceSymbolMaxPositionFilter : BinanceSymbolFilter
 /// <summary>
 /// Trailing delta filter
 /// </summary>
-public class BinanceSymbolTrailingDeltaFilter : BinanceSymbolFilter
+public record BinanceSymbolTrailingDeltaFilter : BinanceSymbolFilter
 {
     /// <summary>
     /// The MinTrailingAboveDelta filter defines the minimum amount in Basis Point or BIPS above the price to activate the order.

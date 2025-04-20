@@ -3,12 +3,12 @@
 /// <summary>
 /// Index info
 /// </summary>
-public class BinanceFuturesCompositeIndexInfo
+public record BinanceFuturesCompositeIndexInfo
 {
     /// <summary>
     /// The symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>
@@ -18,7 +18,7 @@ public class BinanceFuturesCompositeIndexInfo
     /// <summary>
     /// Component asset
     /// </summary>
-    public string Component { get; set; }
+    public string Component { get; set; } = "";
 
     /// <summary>
     /// Base asset list
@@ -30,16 +30,16 @@ public class BinanceFuturesCompositeIndexInfo
 /// <summary>
 /// Composite index asset
 /// </summary>
-public class BinanceFuturesCompositeIndexInfoAsset
+public record BinanceFuturesCompositeIndexInfoAsset
 {
     /// <summary>
     /// Base asset name
     /// </summary>
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// Quote asset name
     /// </summary>
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// Weight in quantity
     /// </summary>

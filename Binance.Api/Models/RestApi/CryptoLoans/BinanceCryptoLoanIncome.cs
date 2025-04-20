@@ -3,12 +3,12 @@
 /// <summary>
 /// Crypto loan income info
 /// </summary>
-public class BinanceCryptoLoanIncome
+public record BinanceCryptoLoanIncome
 {
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Income type
     /// </summary>
@@ -29,5 +29,5 @@ public class BinanceCryptoLoanIncome
     /// Transaction id
     /// </summary>
     [JsonProperty("tranId")]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = "";
 }

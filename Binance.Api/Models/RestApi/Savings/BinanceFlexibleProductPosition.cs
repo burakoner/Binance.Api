@@ -3,7 +3,7 @@
 /// <summary>
 /// Flexible product position
 /// </summary>
-public class BinanceFlexibleProductPosition
+public record BinanceFlexibleProductPosition
 {
     /// <summary>
     /// Annual interest rate
@@ -12,7 +12,7 @@ public class BinanceFlexibleProductPosition
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Average annual interest rate
     /// </summary>
@@ -50,11 +50,11 @@ public class BinanceFlexibleProductPosition
     /// <summary>
     /// The product id
     /// </summary>
-    public string ProductId { get; set; }
+    public string ProductId { get; set; } = "";
     /// <summary>
     /// The product name
     /// </summary>
-    public string ProductName { get; set; }
+    public string ProductName { get; set; } = "";
     /// <summary>
     /// Redeeming quantity
     /// </summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Subscribe result
 /// </summary>
-public class BinanceBlvtSubscribeResult
+public record BinanceBlvtSubscribeResult
 {
     /// <summary>
     /// Id
@@ -17,7 +17,7 @@ public class BinanceBlvtSubscribeResult
     /// <summary>
     /// Name of the token
     /// </summary>
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Subscribed token quantity
     /// </summary>

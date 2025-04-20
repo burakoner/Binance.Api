@@ -3,12 +3,12 @@
 /// <summary>
 /// Interest rate history
 /// </summary>
-public class BinanceInterestRateHistory
+public record BinanceInterestRateHistory
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The daily interest
     /// </summary>
@@ -22,5 +22,5 @@ public class BinanceInterestRateHistory
     /// <summary>
     /// Vip level
     /// </summary>
-    public string VipLevel { get; set; }
+    public string VipLevel { get; set; } = "";
 }

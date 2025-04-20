@@ -3,7 +3,7 @@
 /// <summary>
 /// Sub order list
 /// </summary>
-public class BinanceAlgoSubOrderList
+public record BinanceAlgoSubOrderList
 {
     /// <summary>
     /// Amount of sub orders
@@ -28,7 +28,7 @@ public class BinanceAlgoSubOrderList
 /// <summary>
 /// Algo sub order info
 /// </summary>
-public class BinanceAlgoSubOrder
+public record BinanceAlgoSubOrder
 {
     /// <summary>
     /// Algo id
@@ -62,7 +62,7 @@ public class BinanceAlgoSubOrder
     /// <summary>
     /// Fee asset
     /// </summary>
-    public string FeeAsset { get; set; }
+    public string FeeAsset { get; set; } = "";
     /// <summary>
     /// Book time
     /// </summary>
@@ -81,7 +81,7 @@ public class BinanceAlgoSubOrder
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Sub id
     /// </summary>
@@ -89,7 +89,7 @@ public class BinanceAlgoSubOrder
     /// <summary>
     /// Time in force
     /// </summary>
-    public string TimeInForce { get; set; }
+    public string TimeInForce { get; set; } = "";
     /// <summary>
     /// Original quantity
     /// </summary>

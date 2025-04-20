@@ -3,12 +3,12 @@
 /// <summary>
 /// Sub accounts futures summary
 /// </summary>
-public class BinanceSubAccountFuturesSummary
+public record BinanceSubAccountFuturesSummary
 {
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Total initial margin
     /// </summary>
@@ -48,12 +48,12 @@ public class BinanceSubAccountFuturesSummary
 /// <summary>
 /// Sub account future details
 /// </summary>
-public class BinanceSubAccountFuturesInfo
+public record BinanceSubAccountFuturesInfo
 {
     /// <summary>
     /// Email of the sub account
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
     /// <summary>
     /// Total initial margin
     /// </summary>
@@ -85,5 +85,5 @@ public class BinanceSubAccountFuturesInfo
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 }

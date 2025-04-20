@@ -3,13 +3,13 @@
 /// <summary>
 /// Update when asset is withdrawn/deposited 
 /// </summary>
-public class BinanceStreamBalanceUpdate : BinanceSocketEvent
+public record BinanceStreamBalanceUpdate : BinanceSocketEvent
 {
     /// <summary>
     /// The asset which changed
     /// </summary>
     [JsonProperty("a")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The balance delta
     /// </summary>
@@ -18,7 +18,7 @@ public class BinanceStreamBalanceUpdate : BinanceSocketEvent
     /// <summary>
     /// The listen key the update was for
     /// </summary>
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
     /// <summary>
     /// The time the deposit/withdrawal was cleared
     /// </summary>

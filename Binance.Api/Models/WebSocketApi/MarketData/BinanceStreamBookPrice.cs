@@ -3,7 +3,7 @@
 /// <summary>
 /// Book tick
 /// </summary>
-public class BinanceStreamBookPrice : IBinanceBookPrice
+public record BinanceStreamBookPrice : IBinanceBookPrice
 {
     /// <summary>
     /// Update id
@@ -14,7 +14,7 @@ public class BinanceStreamBookPrice : IBinanceBookPrice
     /// The symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Price of the best bid
     /// </summary>

@@ -4,7 +4,7 @@
 /// An entry in the order book
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public class BinanceOrderBookEntry : ISymbolOrderBookEntry
+public record BinanceOrderBookEntry : ISymbolOrderBookEntry
 {
     /// <summary>
     /// The price of this order book entry

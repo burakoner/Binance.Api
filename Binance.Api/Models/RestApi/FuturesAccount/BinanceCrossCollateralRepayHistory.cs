@@ -3,12 +3,12 @@
 /// <summary>
 /// Repay history
 /// </summary>
-public class BinanceCrossCollateralRepayHistory
+public record BinanceCrossCollateralRepayHistory
 {
     /// <summary>
     /// Id
     /// </summary>
-    public string RepayId { get; set; }
+    public string RepayId { get; set; } = "";
     /// <summary>
     /// Time of confirmation
     /// </summary>
@@ -25,12 +25,12 @@ public class BinanceCrossCollateralRepayHistory
     /// Asset
     /// </summary>
     [JsonProperty("coin")]
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Quantity
     /// </summary>
@@ -48,7 +48,7 @@ public class BinanceCrossCollateralRepayHistory
     /// <summary>
     /// Repay type
     /// </summary>
-    public string RepayType { get; set; }
+    public string RepayType { get; set; } = "";
     /// <summary>
     /// Collateral repayment
     /// </summary>

@@ -3,13 +3,13 @@
 /// <summary>
 /// Wrapper for continuous kline information for a symbol
 /// </summary>
-public class BinanceStreamContinuousKlineData : BinanceSocketEvent, IBinanceStreamKlineData
+public record BinanceStreamContinuousKlineData : BinanceSocketEvent, IBinanceStreamKlineData
 {
     /// <summary>
     /// The symbol the data is for
     /// </summary>
     [JsonProperty("ps")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// The contract type

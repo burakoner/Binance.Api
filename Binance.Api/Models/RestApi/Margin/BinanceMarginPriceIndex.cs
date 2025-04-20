@@ -3,12 +3,12 @@
 /// <summary>
 /// Price index for a symbol
 /// </summary>
-public class BinanceMarginPriceIndex
+public record BinanceMarginPriceIndex
 {
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Price
     /// </summary>

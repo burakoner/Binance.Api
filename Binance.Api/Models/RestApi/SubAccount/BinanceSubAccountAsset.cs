@@ -6,6 +6,6 @@ internal class BinanceSubAccountAsset
 {
     public bool Success { get; set; } = true;
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
     public IEnumerable<BinanceBalance> Balances { get; set; } = Array.Empty<BinanceBalance>();
 }

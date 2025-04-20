@@ -3,52 +3,52 @@
 /// <summary>
 /// Info on a product
 /// </summary>
-public class BinanceProduct
+public record BinanceProduct
 {
     /// <summary>
     /// Name of the symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Status of the symbol
     /// </summary>
     [JsonProperty("st")]
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 
     /// <summary>
     /// Name of the base asset
     /// </summary>
     [JsonProperty("b")]
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// Name of the quote asset
     /// </summary>
     [JsonProperty("q")]
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
 
     /// <summary>
     /// Char of the base asset
     /// </summary>
     [JsonProperty("ba")]
-    public string BaseAssetChar { get; set; }
+    public string BaseAssetChar { get; set; } = "";
     /// <summary>
     /// Char of the quote asset
     /// </summary>
     [JsonProperty("qa")]
-    public string QuoteAssetChar { get; set; }
+    public string QuoteAssetChar { get; set; } = "";
 
     /// <summary>
     /// Base asset name
     /// </summary>
     [JsonProperty("an")]
-    public string BaseAssetName { get; set; }
+    public string BaseAssetName { get; set; } = "";
     /// <summary>
     /// Quote asset name
     /// </summary>
     [JsonProperty("qn")]
-    public string QuoteAssetName { get; set; }
+    public string QuoteAssetName { get; set; } = "";
 
     /// <summary>
     /// Open price

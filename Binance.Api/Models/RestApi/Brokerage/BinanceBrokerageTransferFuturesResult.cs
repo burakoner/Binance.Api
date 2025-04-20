@@ -3,13 +3,13 @@
 /// <summary>
 /// Transfer Futures Result
 /// </summary>
-public class BinanceBrokerageTransferFuturesResult
+public record BinanceBrokerageTransferFuturesResult
 {
     /// <summary>
     /// Transaction Id
     /// </summary>
     [JsonProperty("txnId")]
-    public string Id { get; set; }
+    public string Id { get; set; } = "";
 
     /// <summary>
     /// Success
@@ -20,5 +20,5 @@ public class BinanceBrokerageTransferFuturesResult
     /// Client Transfer Id
     /// </summary>
     [JsonProperty("clientTranId")]
-    public string ClientTransferId { get; set; }
+    public string ClientTransferId { get; set; } = "";
 }

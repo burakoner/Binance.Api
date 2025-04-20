@@ -3,12 +3,12 @@ namespace Binance.Api.Models.RestApi.Futures;
 /// <summary>
 /// Mark Price and Funding Rate
 /// </summary>
-public class BinanceFuturesMarkPrice : IBinanceFuturesMarkPrice
+public record BinanceFuturesMarkPrice : IBinanceFuturesMarkPrice
 {
     /// <summary>
     /// The symbol the information is about
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The current market price
     /// </summary>
@@ -47,10 +47,10 @@ public class BinanceFuturesMarkPrice : IBinanceFuturesMarkPrice
 /// <summary>
 /// Mark price for Coin-M future
 /// </summary>
-public class BinanceFuturesCoinMarkPrice : BinanceFuturesMarkPrice
+public record BinanceFuturesCoinMarkPrice : BinanceFuturesMarkPrice
 {
     /// <summary>
     /// The pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 }

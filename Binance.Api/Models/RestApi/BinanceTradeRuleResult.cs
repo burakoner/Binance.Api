@@ -7,7 +7,7 @@ internal class BinanceTradeRuleResult
     public decimal? QuoteQuantity { get; set; }
     public decimal? Price { get; set; }
     public decimal? StopPrice { get; set; }
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     public static BinanceTradeRuleResult CreatePassed(decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice)
     {

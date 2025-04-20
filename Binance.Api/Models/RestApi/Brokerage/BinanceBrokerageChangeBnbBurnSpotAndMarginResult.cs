@@ -3,12 +3,12 @@
 /// <summary>
 /// Enable Or Disable BNB Burn Spot And Margin Result
 /// </summary>
-public class BinanceBrokerageChangeBnbBurnSpotAndMarginResult
+public record BinanceBrokerageChangeBnbBurnSpotAndMarginResult
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Is Spot BNB Burn

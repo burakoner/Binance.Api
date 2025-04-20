@@ -3,7 +3,7 @@
 /// <summary>
 /// Information about an account
 /// </summary>
-public class BinanceAccountInfo
+public record BinanceAccountInfo
 {
     /// <summary>
     /// Fee percentage to pay when making trades
@@ -49,12 +49,12 @@ public class BinanceAccountInfo
     /// <summary>
     /// The type of account
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public AccountType AccountType { get; set; }
     /// <summary>
     /// Permissions types
     /// </summary>
-    [JsonProperty(ItemConverterType = typeof(EnumConverter))]
+    [JsonProperty(ItemConverterType = typeof(MapConverter))]
     public IEnumerable<AccountType> Permissions { get; set; } = Array.Empty<AccountType>();
     /// <summary>
     /// List of assets with their current balances

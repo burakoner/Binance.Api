@@ -3,12 +3,12 @@
 /// <summary>
 /// Trade info
 /// </summary>
-public class BinanceFuturesTrade
+public record BinanceFuturesTrade
 {
     /// <summary>
     /// The symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
 
     /// <summary>
     /// Is buyer
@@ -24,7 +24,7 @@ public class BinanceFuturesTrade
     /// Asset the fee is paid in
     /// </summary>
     [JsonProperty("commissionAsset")]
-    public string FeeAsset { get; set; }
+    public string FeeAsset { get; set; } = "";
     /// <summary>
     /// Trade id
     /// </summary>
@@ -70,7 +70,7 @@ public class BinanceFuturesTrade
 /// <summary>
 /// Trade details
 /// </summary>
-public class BinanceFuturesUsdtTrade : BinanceFuturesTrade
+public record BinanceFuturesUsdtTrade : BinanceFuturesTrade
 {
     /// <summary>
     /// Quote quantity
@@ -82,17 +82,17 @@ public class BinanceFuturesUsdtTrade : BinanceFuturesTrade
 /// <summary>
 /// Trade details
 /// </summary>
-public class BinanceFuturesCoinTrade : BinanceFuturesTrade
+public record BinanceFuturesCoinTrade : BinanceFuturesTrade
 {
     /// <summary>
     /// The pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 
     /// <summary>
     /// The margin asset
     /// </summary>
-    public string MarginAsset { get; set; }
+    public string MarginAsset { get; set; } = "";
 
     /// <summary>
     /// Base quantity

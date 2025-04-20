@@ -3,21 +3,21 @@
 /// <summary>
 /// Leveraged token info
 /// </summary>
-public class BinanceBlvtInfo
+public record BinanceBlvtInfo
 {
     /// <summary>
     /// Name of the token
     /// </summary>
-    public string TokenName { get; set; }
+    public string TokenName { get; set; } = "";
     /// <summary>
     /// Description of the token
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = "";
 
     /// <summary>
     /// Underlying asset
     /// </summary>
-    public string Underlying { get; set; }
+    public string Underlying { get; set; } = "";
     /// <summary>
     /// Token issued
     /// </summary>
@@ -25,7 +25,7 @@ public class BinanceBlvtInfo
     /// <summary>
     /// Basket
     /// </summary>
-    public string Basket { get; set; }
+    public string Basket { get; set; } = "";
     /// <summary>
     /// Nav
     /// </summary>
@@ -76,12 +76,12 @@ public class BinanceBlvtInfo
 /// <summary>
 /// Basket
 /// </summary>
-public class BlvtCurrentBasket
+public record BlvtCurrentBasket
 {
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Quantity
     /// </summary>

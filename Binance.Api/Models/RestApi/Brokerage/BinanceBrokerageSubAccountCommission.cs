@@ -3,12 +3,12 @@
 /// <summary>
 /// Sub Account Commission
 /// </summary>
-public class BinanceBrokerageSubAccountCommission
+public record BinanceBrokerageSubAccountCommission
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Maker Commission

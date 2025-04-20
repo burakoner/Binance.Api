@@ -3,12 +3,12 @@
 /// <summary>
 /// Bankruptcy loan info
 /// </summary>
-public class BinancePortfolioMarginLoan
+public record BinancePortfolioMarginLoan
 {
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Loan amount
     /// </summary>

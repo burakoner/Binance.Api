@@ -3,7 +3,7 @@
 /// <summary>
 /// Isolated margin account symbol
 /// </summary>
-public class BinanceIsolatedMarginAccountSymbol
+public record BinanceIsolatedMarginAccountSymbol
 {
     /// <summary>
     /// Base asset
@@ -18,7 +18,7 @@ public class BinanceIsolatedMarginAccountSymbol
     /// <summary>
     /// Symbol name
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Isolated created
     /// </summary>

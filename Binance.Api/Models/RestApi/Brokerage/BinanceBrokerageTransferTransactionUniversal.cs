@@ -3,24 +3,24 @@
 /// <summary>
 /// Transfer Transaction Universal
 /// </summary>
-public class BinanceBrokerageTransferTransactionUniversal
+public record BinanceBrokerageTransferTransactionUniversal
 {
     /// <summary>
     /// Transaction Id
     /// </summary>
     [JsonProperty("txnId")]
-    public string Id { get; set; }
+    public string Id { get; set; } = "";
 
     /// <summary>
     /// Client Transfer Id
     /// </summary>
     [JsonProperty("clientTranId")]
-    public string ClientTransferId { get; set; }
+    public string ClientTransferId { get; set; } = "";
 
     /// <summary>
     /// To id
     /// </summary>
-    public string ToId { get; set; }
+    public string ToId { get; set; } = "";
 
     /// <summary>
     /// From account type
@@ -37,7 +37,7 @@ public class BinanceBrokerageTransferTransactionUniversal
     /// <summary>
     /// Asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// Quantity

@@ -14,7 +14,7 @@ internal class BinanceSubAccountUniversalTransfersList
 /// <summary>
 /// Binance sub account universal transaction
 /// </summary>
-public class BinanceSubAccountUniversalTransferTransaction
+public record BinanceSubAccountUniversalTransferTransaction
 {
     /// <summary>
     /// Transaction id

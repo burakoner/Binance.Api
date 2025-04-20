@@ -3,19 +3,19 @@
 /// <summary>
 /// Cross margin interest data
 /// </summary>
-public class BinanceInterestMarginData
+public record BinanceInterestMarginData
 {
     /// <summary>
     /// Vip level
     /// </summary>
     [JsonProperty("vipLevel")]
-    public string VipLevel { get; set; }
+    public string VipLevel { get; set; } = "";
 
     /// <summary>
     /// The coin
     /// </summary>        
     [JsonProperty("coin")]
-    public string Coin { get; set; }
+    public string Coin { get; set; } = "";
 
     /// <summary>
     /// If coin can be transferred into cross
@@ -51,6 +51,6 @@ public class BinanceInterestMarginData
     /// Cross marginable pairs for this coin
     /// </summary>
     [JsonProperty("marginablePairs")]
-    public string[] MarginablePairs { get; set; }
+    public string[] MarginablePairs { get; set; } = Array.Empty<string>();s
 
 }

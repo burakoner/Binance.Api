@@ -1,6 +1,6 @@
 ﻿namespace Binance.Api.Models.RestApi.Account;
 
-public class BinanceIpRestrictionUpdate
+public record BinanceIpRestrictionUpdate
 {
     /// <summary>
     /// Ip Restriction Status
@@ -22,5 +22,5 @@ public class BinanceIpRestrictionUpdate
     /// <summary>
     /// The API key
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } = "";
 }

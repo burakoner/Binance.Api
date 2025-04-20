@@ -3,17 +3,17 @@
 /// <summary>
 /// Sub Account Coin Futures Commission
 /// </summary>
-public class BinanceBrokerageSubAccountCoinFuturesCommission
+public record BinanceBrokerageSubAccountCoinFuturesCommission
 {
     /// <summary>
     /// Sub Account Id
     /// </summary>
-    public string SubAccountId { get; set; }
+    public string SubAccountId { get; set; } = "";
 
     /// <summary>
     /// Pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
 
     /// <summary>
     /// COIN-Ⓜ futures commission adjustment for maker

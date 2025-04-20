@@ -48,9 +48,9 @@ public sealed class BinanceRestApiClient
     {
     }
 
-    public BinanceRestApiClient(ILogger logger, BinanceRestApiClientOptions options)
+    public BinanceRestApiClient(ILogger? logger, BinanceRestApiClientOptions options)
     {
-        Logger = logger;
+        Logger = logger ?? LoggerFactory.Create(c => { }).CreateLogger(typeof(BinanceRestApiClient));
         ClientOptions = options;
 
         Spot = new BinanceRestApiSpotClient(this);
@@ -58,5 +58,14 @@ public sealed class BinanceRestApiClient
         General = new BinanceRestApiGeneralClient(this);
         CoinFutures = new BinanceRestApiCoinFuturesClient(this);
         UsdtFutures = new BinanceRestApiUsdtFuturesClient(this);
+    }
+
+    internal Uri GetUrl(string api, string version, string endpoint)
+    {
+        var url = ClientOptions.BaseAddress.AppendPath(api);
+        if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
+        if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
+
+        return new Uri(url);
     }
 }

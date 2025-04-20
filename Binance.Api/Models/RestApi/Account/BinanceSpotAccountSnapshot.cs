@@ -3,7 +3,7 @@
 /// <summary>
 /// Snapshot data of a spot account
 /// </summary>
-public class BinanceSpotAccountSnapshot
+public record BinanceSpotAccountSnapshot
 {
     /// <summary>
     /// Timestamp of the data
@@ -13,7 +13,7 @@ public class BinanceSpotAccountSnapshot
     /// <summary>
     /// Account type the data is for
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public AccountType Type { get; set; }
     /// <summary>
     /// Snapshot data
@@ -25,7 +25,7 @@ public class BinanceSpotAccountSnapshot
 /// <summary>
 /// Data of the snapshot
 /// </summary>
-public class BinanceSpotAccountSnapshotData
+public record BinanceSpotAccountSnapshotData
 {
     /// <summary>
     /// The total value of assets in btc

@@ -3,13 +3,13 @@
 /// <summary>
 /// Aggregated information about trades for a symbol
 /// </summary>
-public class BinanceStreamTrade : BinanceSocketEvent, IBinanceTrade
+public record BinanceStreamTrade : BinanceSocketEvent, IBinanceTrade
 {
     /// <summary>
     /// The symbol the trade was for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The id of this trade
     /// </summary>

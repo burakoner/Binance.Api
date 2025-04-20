@@ -6,13 +6,13 @@
 /// Combined streams
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class BinanceCombinedStream<T>
+public record BinanceCombinedStream<T>
 {
     /// <summary>
     /// The stream combined
     /// </summary>
     [JsonProperty("stream")]
-    public string Stream { get; set; }
+    public string? Stream { get; set; }
 
     /// <summary>
     /// The data of stream

@@ -3,12 +3,12 @@
 /// <summary>
 /// Futures asset index
 /// </summary>
-public class BinanceFuturesAssetIndex
+public record BinanceFuturesAssetIndex
 {
     /// <summary>
     /// The symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Timestamp
     /// </summary>

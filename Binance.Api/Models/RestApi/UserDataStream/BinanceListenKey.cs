@@ -2,5 +2,5 @@
 
 internal class BinanceListenKey
 {
-    public string ListenKey { get; set; }
+    public string ListenKey { get; set; } = "";
 }

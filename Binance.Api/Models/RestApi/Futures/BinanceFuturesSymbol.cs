@@ -3,7 +3,7 @@
 /// <summary>
 /// Information about a futures symbol
 /// </summary>
-public class BinanceFuturesSymbol
+public record BinanceFuturesSymbol
 {
     /// <summary>
     /// Filters for order on this symbol
@@ -33,15 +33,15 @@ public class BinanceFuturesSymbol
     /// <summary>
     /// The base asset
     /// </summary>
-    public string BaseAsset { get; set; }
+    public string BaseAsset { get; set; } = "";
     /// <summary>
     /// Margin asset
     /// </summary>
-    public string MarginAsset { get; set; }
+    public string MarginAsset { get; set; } = "";
     /// <summary>
     /// The quote asset
     /// </summary>
-    public string QuoteAsset { get; set; }
+    public string QuoteAsset { get; set; } = "";
     /// <summary>
     /// The precision of the base asset
     /// </summary>
@@ -60,12 +60,12 @@ public class BinanceFuturesSymbol
     /// The symbol
     /// </summary>
     [JsonProperty("symbol")]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// Pair
     /// </summary>
     [JsonProperty("pair")]
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
     /// <summary>
     /// Delivery Date
     /// </summary>
@@ -155,7 +155,7 @@ public class BinanceFuturesSymbol
 /// <summary>
 /// Information about a futures symbol
 /// </summary>
-public class BinanceFuturesUsdtSymbol : BinanceFuturesSymbol
+public record BinanceFuturesUsdtSymbol : BinanceFuturesSymbol
 {
     /// <summary>
     /// The status of the symbol
@@ -173,7 +173,7 @@ public class BinanceFuturesUsdtSymbol : BinanceFuturesSymbol
 /// <summary>
 /// Information about a futures symbol
 /// </summary>
-public class BinanceFuturesCoinSymbol : BinanceFuturesSymbol
+public record BinanceFuturesCoinSymbol : BinanceFuturesSymbol
 {
 
     /// <summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Trade info
 /// </summary>
-public class BinanceOrderTrade
+public record BinanceOrderTrade
 {
     /// <summary>
     /// The id of the trade
@@ -28,5 +28,5 @@ public class BinanceOrderTrade
     /// The asset the fee is paid in
     /// </summary>
     [JsonProperty("commissionAsset")]
-    public string FeeAsset { get; set; }
+    public string FeeAsset { get; set; } = "";
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Result of the requested margin amount change
 /// </summary>
-public class BinanceFuturesPositionMarginResult
+public record BinanceFuturesPositionMarginResult
 {
     /// <summary>
     /// New margin amount
@@ -17,13 +17,13 @@ public class BinanceFuturesPositionMarginResult
     /// Message
     /// </summary>
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
     /// <summary>
     /// Maximum margin value
     /// NOTE: string type, because the value van be 'inf' (infinite)
     /// </summary>
-    public string MaxNotionalValue { get; set; }
+    public string MaxNotionalValue { get; set; } = "";
     /// <summary>
     /// Direction of the requested margin change
     /// </summary>

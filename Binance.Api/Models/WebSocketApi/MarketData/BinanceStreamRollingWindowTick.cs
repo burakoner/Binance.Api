@@ -3,13 +3,13 @@
 /// <summary>
 /// Rolling window tick info
 /// </summary>
-public class BinanceStreamRollingWindowTick : BinanceSocketEvent
+public record BinanceStreamRollingWindowTick : BinanceSocketEvent
 {
     /// <summary>
     /// The symbol this data is for
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The price change of this symbol
     /// </summary>

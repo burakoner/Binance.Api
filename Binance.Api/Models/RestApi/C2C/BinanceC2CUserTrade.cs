@@ -3,17 +3,17 @@
 /// <summary>
 /// C2C user trade
 /// </summary>
-public class BinanceC2CUserTrade
+public record BinanceC2CUserTrade
 {
     /// <summary>
     /// Order number
     /// </summary>
-    public string OrderNumber { get; set; }
+    public string OrderNumber { get; set; } = "";
     /// <summary>
     /// Advert number
     /// </summary>
     [JsonProperty("advNo")]
-    public string AdvertNumber { get; set; }
+    public string AdvertNumber { get; set; } = "";
     /// <summary>
     /// Trade type
     /// </summary>
@@ -22,15 +22,15 @@ public class BinanceC2CUserTrade
     /// <summary>
     /// Crypto asset traded
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Fiat type
     /// </summary>
-    public string Fiat { get; set; }
+    public string Fiat { get; set; } = "";
     /// <summary>
     /// Fiat symbol
     /// </summary>
-    public string FiatSymbol { get; set; }
+    public string FiatSymbol { get; set; } = "";
     /// <summary>
     /// Quantity traded
     /// </summary>
@@ -47,7 +47,7 @@ public class BinanceC2CUserTrade
     /// <summary>
     /// Order status
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public C2COrderStatus OrderStatus { get; set; }
     /// <summary>
     /// Creation time
@@ -62,9 +62,9 @@ public class BinanceC2CUserTrade
     /// <summary>
     /// Counter part nickname
     /// </summary>
-    public string CounterPartNickName { get; set; }
+    public string CounterPartNickName { get; set; } = "";
     /// <summary>
     /// Advertisement role
     /// </summary>
-    public string AdvertisementRole { get; set; }
+    public string AdvertisementRole { get; set; } = "";
 }

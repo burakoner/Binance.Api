@@ -3,7 +3,7 @@
 /// <summary>
 /// Revenue list
 /// </summary>
-public class BinanceOtherRevenueList
+public record BinanceOtherRevenueList
 {
     /// <summary>
     /// Total number of results
@@ -22,7 +22,7 @@ public class BinanceOtherRevenueList
 /// <summary>
 /// Revenue
 /// </summary>
-public class BinanceOtherRevenueItem
+public record BinanceOtherRevenueItem
 {
     /// <summary>
     /// Timestamp
@@ -34,7 +34,7 @@ public class BinanceOtherRevenueItem
     /// Coin
     /// </summary>
     [JsonProperty("coinName")]
-    public string Coin { get; set; }
+    public string Coin { get; set; } = "";
     /// <summary>
     /// Earning type
     /// </summary>

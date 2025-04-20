@@ -3,7 +3,7 @@
 /// <summary>
 /// Forced liquidation info
 /// </summary>
-public class BinanceForcedLiquidation
+public record BinanceForcedLiquidation
 {
     /// <summary>
     /// Average price
@@ -36,7 +36,7 @@ public class BinanceForcedLiquidation
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Time in force
     /// </summary>

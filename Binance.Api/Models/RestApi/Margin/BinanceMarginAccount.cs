@@ -3,7 +3,7 @@
 /// <summary>
 /// Information about margin account
 /// </summary>
-public class BinanceMarginAccount
+public record BinanceMarginAccount
 {
     /// <summary>
     /// Boolean indicating if this account can borrow
@@ -43,12 +43,12 @@ public class BinanceMarginAccount
 /// <summary>
 /// Information about an asset balance
 /// </summary>
-public class BinanceMarginBalance
+public record BinanceMarginBalance
 {
     /// <summary>
     /// The asset this balance is for
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The quantity that was borrowed
     /// </summary>

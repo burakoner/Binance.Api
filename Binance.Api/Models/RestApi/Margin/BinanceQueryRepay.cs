@@ -3,16 +3,16 @@
 /// <summary>
 /// Repay info
 /// </summary>
-public class BinanceRepay
+public record BinanceRepay
 {
     /// <summary>
     /// Isolated symbol
     /// </summary>
-    public string IsolatedSymbol { get; set; }
+    public string IsolatedSymbol { get; set; } = "";
     /// <summary>
     /// The asset of the repay
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// The transaction id of the repay
     /// </summary>`

@@ -16,23 +16,23 @@ namespace Binance.ApiConsole
             var server_03 = await api.Spot.GetExchangeInfoAsync();
             var server_04 = await api.Spot.GetSystemStatusAsync();
 
-            /*
+            /**/
             // Market Data (Public)
-            var mdata_01 = await api.Spot.MarketData.GetOrderBookAsync("BTCUSDT");
-            var mdata_02 = await api.Spot.MarketData.GetRecentTradesAsync("BTCUSDT");
-            var mdata_03 = await api.Spot.MarketData.GetTradeHistoryAsync("BTCUSDT");
-            var mdata_04 = await api.Spot.MarketData.GetAggregatedTradeHistoryAsync("BTCUSDT");
-            var mdata_05 = await api.Spot.MarketData.GetKlinesAsync("BTCUSDT", Api.Enums.KlineInterval.OneDay);
-            var mdata_06 = await api.Spot.MarketData.GetUiKlinesAsync("BTCUSDT", Api.Enums.KlineInterval.OneDay);
-            var mdata_07 = await api.Spot.MarketData.GetCurrentAvgPriceAsync("BTCUSDT");
-            var mdata_08 = await api.Spot.MarketData.GetTickerAsync("BTCUSDT");
-            var mdata_09 = await api.Spot.MarketData.GetTickersAsync();
-            var mdata_10 = await api.Spot.MarketData.GetPriceAsync("BTCUSDT");
-            var mdata_11 = await api.Spot.MarketData.GetPricesAsync();
-            var mdata_12 = await api.Spot.MarketData.GetBookPriceAsync("BTCUSDT");
-            var mdata_13 = await api.Spot.MarketData.GetBookPricesAsync();
-            var mdata_14 = await api.Spot.MarketData.GetRollingWindowTickerAsync("BTCUSDT");
-            */
+            var mdata_01 = await api.Spot.GetOrderBookAsync("BTCUSDT");
+            var mdata_02 = await api.Spot.GetRecentTradesAsync("BTCUSDT");
+            var mdata_03 = await api.Spot.GetTradeHistoryAsync("BTCUSDT");
+            var mdata_04 = await api.Spot.GetAggregatedTradeHistoryAsync("BTCUSDT");
+            var mdata_05 = await api.Spot.GetKlinesAsync("BTCUSDT", Api.Enums.KlineInterval.OneDay);
+            var mdata_06 = await api.Spot.GetUiKlinesAsync("BTCUSDT", Api.Enums.KlineInterval.OneDay);
+            var mdata_07 = await api.Spot.GetCurrentAvgPriceAsync("BTCUSDT");
+            var mdata_08 = await api.Spot.GetTickerAsync("BTCUSDT");
+            var mdata_09 = await api.Spot.GetTickersAsync();
+            var mdata_10 = await api.Spot.GetPriceAsync("BTCUSDT");
+            var mdata_11 = await api.Spot.GetPricesAsync();
+            var mdata_12 = await api.Spot.GetBookPriceAsync("BTCUSDT");
+            var mdata_13 = await api.Spot.GetBookPricesAsync();
+            var mdata_14 = await api.Spot.GetRollingWindowTickerAsync("BTCUSDT");
+            /**/
 
             /*
             // Account (Private)

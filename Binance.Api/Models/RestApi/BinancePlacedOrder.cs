@@ -3,7 +3,7 @@
 /// <summary>
 /// The result of placing a new order
 /// </summary>
-public class BinancePlacedOrder : BinanceOrderBase
+public record BinancePlacedOrder : BinanceOrderBase
 {
     /// <summary>
     /// The time the order was placed
@@ -25,5 +25,5 @@ public class BinancePlacedOrder : BinanceOrderBase
     /// <summary>
     /// Only present if a margin trade happened
     /// </summary>
-    public string MarginBuyBorrowAsset { get; set; }
+    public string MarginBuyBorrowAsset { get; set; } = "";
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Futures book price
 /// </summary>
-public class BinanceFuturesStreamBookPrice : BinanceStreamBookPrice
+public record BinanceFuturesStreamBookPrice : BinanceStreamBookPrice
 {
 
     /// <summary>
@@ -17,5 +17,5 @@ public class BinanceFuturesStreamBookPrice : BinanceStreamBookPrice
     [JsonProperty("E"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime EventTime { get; set; }
 
-    [JsonProperty("e")] private string Event { get; set; }
+    [JsonProperty("e")] private string Event { get; set; } = "";
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Resale list
 /// </summary>
-public class BinanceHashrateResaleDetails
+public record BinanceHashrateResaleDetails
 {
     /// <summary>
     /// Total number of results
@@ -22,7 +22,7 @@ public class BinanceHashrateResaleDetails
 /// <summary>
 /// Resale item
 /// </summary>
-public class BinanceHashrateResaleDetailsItem
+public record BinanceHashrateResaleDetailsItem
 {
     /// <summary>
     /// Config id
@@ -31,15 +31,15 @@ public class BinanceHashrateResaleDetailsItem
     /// <summary>
     /// From user
     /// </summary>
-    public string PoolUserName { get; set; }
+    public string PoolUserName { get; set; } = "";
     /// <summary>
     /// To user
     /// </summary>
-    public string ToPoolUserName { get; set; }
+    public string ToPoolUserName { get; set; } = "";
     /// <summary>
     /// Algorithm
     /// </summary>
-    public string AlgoName { get; set; }
+    public string AlgoName { get; set; } = "";
     /// <summary>
     /// Hash rate
     /// </summary>
@@ -53,7 +53,7 @@ public class BinanceHashrateResaleDetailsItem
     /// Coin name
     /// </summary>
     [JsonProperty("coinName")]
-    public string Coin { get; set; }
+    public string Coin { get; set; } = "";
     /// <summary>
     /// Transferred income
     /// </summary>

@@ -3,12 +3,12 @@
 /// <summary>
 /// Basis info
 /// </summary>
-public class BinanceFuturesBasis
+public record BinanceFuturesBasis
 {
     /// <summary>
     /// The pair
     /// </summary>
-    public string Pair { get; set; }
+    public string Pair { get; set; } = "";
     /// <summary>
     /// Contract type
     /// </summary>

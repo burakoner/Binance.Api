@@ -3,7 +3,7 @@
 /// <summary>
 /// Trading rules status
 /// </summary>
-public class BinanceFuturesTradingStatus
+public record BinanceFuturesTradingStatus
 {
     /// <summary>
     /// The trading rule indicators
@@ -19,7 +19,7 @@ public class BinanceFuturesTradingStatus
 /// <summary>
 /// Indicator details
 /// </summary>
-public class BinanceFuturesTradingStatusIndicator
+public record BinanceFuturesTradingStatusIndicator
 {
     /// <summary>
     /// Locked
@@ -33,7 +33,7 @@ public class BinanceFuturesTradingStatusIndicator
     /// <summary>
     /// The indicator name
     /// </summary>
-    public string Indicator { get; set; }
+    public string Indicator { get; set; } = "";
     /// <summary>
     /// Current value of the indicator
     /// </summary>

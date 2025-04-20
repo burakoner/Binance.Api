@@ -6,7 +6,7 @@
 /// <summary>
 /// Snapshot data of a futures account
 /// </summary>
-public class BinanceFuturesAccountSnapshot
+public record BinanceFuturesAccountSnapshot
 {
     /// <summary>
     /// Timestamp of the data
@@ -16,7 +16,7 @@ public class BinanceFuturesAccountSnapshot
     /// <summary>
     /// Account type the data is for
     /// </summary>
-    [JsonConverter(typeof(EnumConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public AccountType Type { get; set; }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class BinanceFuturesAccountSnapshot
 /// <summary>
 /// Data of the snapshot
 /// </summary>
-public class BinanceFuturesAccountSnapshotData
+public record BinanceFuturesAccountSnapshotData
 {
     /// <summary>
     /// List of assets
@@ -44,12 +44,12 @@ public class BinanceFuturesAccountSnapshotData
 /// <summary>
 /// Asset
 /// </summary>
-public class BinanceFuturesAsset
+public record BinanceFuturesAsset
 {
     /// <summary>
     /// Name of the asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Margin balance
     /// </summary>
@@ -63,12 +63,12 @@ public class BinanceFuturesAsset
 /// <summary>
 /// Position
 /// </summary>
-public class BinanceFuturesSnapshotPosition
+public record BinanceFuturesSnapshotPosition
 {
     /// <summary>
     /// The symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Entry price
     /// </summary>

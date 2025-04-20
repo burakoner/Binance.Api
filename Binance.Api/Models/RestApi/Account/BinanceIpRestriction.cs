@@ -3,7 +3,7 @@
 /// <summary>
 /// IP restriction info
 /// </summary>
-public class BinanceIpRestriction
+public record BinanceIpRestriction
 {
     /// <summary>
     /// Is currently restricted
@@ -13,7 +13,7 @@ public class BinanceIpRestriction
     /// <summary>
     /// Ip whitelist
     /// </summary>
-    public IEnumerable<string> IpList { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IpList { get; set; } = [];
     /// <summary>
     /// Update Time
     /// </summary>
@@ -22,5 +22,5 @@ public class BinanceIpRestriction
     /// <summary>
     /// The API key
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } = "";
 }

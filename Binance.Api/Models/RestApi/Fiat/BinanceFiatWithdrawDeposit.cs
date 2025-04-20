@@ -3,18 +3,18 @@
 /// <summary>
 /// Fiat payment info
 /// </summary>
-public class BinanceFiatWithdrawDeposit
+public record BinanceFiatWithdrawDeposit
 {
     /// <summary>
     /// Order number
     /// </summary>
     [JsonProperty("orderNo")]
-    public string OrderNumber { get; set; }
+    public string OrderNumber { get; set; } = "";
     /// <summary>
     /// The used asset
     /// </summary>
     [JsonProperty("fiatCurrency")]
-    public string FiatAsset { get; set; }
+    public string FiatAsset { get; set; } = "";
     /// <summary>
     /// The quantity
     /// </summary>
@@ -28,7 +28,7 @@ public class BinanceFiatWithdrawDeposit
     /// <summary>
     /// The method
     /// </summary>
-    public string Method { get; set; }
+    public string Method { get; set; } = "";
     /// <summary>
     /// The total fee of the order
     /// </summary>

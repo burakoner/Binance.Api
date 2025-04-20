@@ -3,17 +3,17 @@
 /// <summary>
 /// Information about an account
 /// </summary>
-public class BinanceFuturesAccountBalance
+public record BinanceFuturesAccountBalance
 {
     /// <summary>
     /// Account alias
     /// </summary>
-    public string AccountAlias { get; set; }
+    public string AccountAlias { get; set; } = "";
 
     /// <summary>
     /// The asset this balance is for
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
 
     /// <summary>
     /// The total balance of this asset

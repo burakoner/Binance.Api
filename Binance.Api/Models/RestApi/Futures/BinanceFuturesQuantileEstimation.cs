@@ -3,12 +3,12 @@
 /// <summary>
 /// Quantile estimation
 /// </summary>
-public class BinanceFuturesQuantileEstimation
+public record BinanceFuturesQuantileEstimation
 {
     /// <summary>
     /// The symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Quantile
     /// </summary>
@@ -18,7 +18,7 @@ public class BinanceFuturesQuantileEstimation
 /// <summary>
 /// Quantile info
 /// </summary>
-public class BinanceFuturesAdlQuantile
+public record BinanceFuturesAdlQuantile
 {
     /// <summary>
     /// Long position

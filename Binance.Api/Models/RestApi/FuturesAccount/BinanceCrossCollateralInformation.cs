@@ -3,18 +3,18 @@
 /// <summary>
 /// Collateral info
 /// </summary>
-public class BinanceCrossCollateralInformation
+public record BinanceCrossCollateralInformation
 {
     /// <summary>
     /// The loan asset
     /// </summary>
     [JsonProperty("loanCoin")]
-    public string LoanAsset { get; set; }
+    public string LoanAsset { get; set; } = "";
     /// <summary>
     /// The collateral asset
     /// </summary>
     [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; }
+    public string CollateralAsset { get; set; } = "";
     /// <summary>
     /// Rate
     /// </summary>

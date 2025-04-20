@@ -1,11 +1,7 @@
 ﻿namespace Binance.Api.Authentication;
 
-internal class BinanceAuthenticationProvider : AuthenticationProvider
+internal class BinanceAuthenticationProvider(ApiCredentials credentials) : AuthenticationProvider(credentials)
 {
-    public BinanceAuthenticationProvider(ApiCredentials credentials) : base(credentials)
-    {
-    }
-
     public override void AuthenticateRestApi(RestApiClient apiClient, Uri uri, HttpMethod method, bool signed, ArraySerialization serialization, SortedDictionary<string, object> query, SortedDictionary<string, object> body, string bodyContent, SortedDictionary<string, string> headers)
     {
         // Check Point
@@ -21,15 +17,5 @@ internal class BinanceAuthenticationProvider : AuthenticationProvider
 
         // Signature
         headers.Add("signature", SignHMACSHA256(body == null || body.Count == 0 ? uri.Query.Replace("?", "") : body.ToFormData()));
-    }
-
-    public override void AuthenticateTcpSocketApi()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void AuthenticateWebSocketApi()
-    {
-        throw new NotImplementedException();
     }
 }

@@ -3,12 +3,12 @@
 /// <summary>
 /// Binance project info
 /// </summary>
-public class BinanceProject
+public record BinanceProject
 {
     /// <summary>
     /// The asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Display priority
     /// </summary>
@@ -52,21 +52,21 @@ public class BinanceProject
     /// <summary>
     /// Project id
     /// </summary>
-    public string ProjectId { get; set; }
+    public string ProjectId { get; set; } = "";
 
     /// <summary>
     /// Project name
     /// </summary>
-    public string ProjectName { get; set; }
+    public string ProjectName { get; set; } = "";
     /// <summary>
     /// Status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
 
     /// <summary>
     /// Type
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = "";
     /// <summary>
     /// Has area limitation
     /// </summary>

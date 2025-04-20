@@ -3,7 +3,7 @@
 /// <summary>
 /// The result of placing a new OCO order
 /// </summary>
-public class BinanceOrderOcoList
+public record BinanceOrderOcoList
 {
     /// <summary>
     /// The id of the order list
@@ -13,7 +13,7 @@ public class BinanceOrderOcoList
     /// <summary>
     /// The contingency type
     /// </summary>
-    public string ContingencyType { get; set; }
+    public string ContingencyType { get; set; } = "";
     /// <summary>
     /// The order list status
     /// </summary>
@@ -27,7 +27,7 @@ public class BinanceOrderOcoList
     /// <summary>
     /// The client id of the order list
     /// </summary>
-    public string ListClientOrderId { get; set; }
+    public string ListClientOrderId { get; set; } = "";
     /// <summary>
     /// The transaction time
     /// </summary>
@@ -36,7 +36,7 @@ public class BinanceOrderOcoList
     /// <summary>
     /// The symbol of the order list
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The order in this list
     /// </summary>
@@ -50,12 +50,12 @@ public class BinanceOrderOcoList
 /// <summary>
 /// Order reference
 /// </summary>
-public class BinanceOrderId
+public record BinanceOrderId
 {
     /// <summary>
     /// The symbol of the order
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// The id of the order
     /// </summary>
@@ -63,13 +63,13 @@ public class BinanceOrderId
     /// <summary>
     /// The client order id
     /// </summary>
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; set; } = "";
 }
 
 /// <summary>
 /// The result of placing a new order
 /// </summary>
-public class BinancePlacedOcoOrder : BinanceOrderBase
+public record BinancePlacedOcoOrder : BinanceOrderBase
 {
     /// <summary>
     /// The time the order was placed

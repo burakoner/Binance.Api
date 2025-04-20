@@ -3,7 +3,7 @@
 /// <summary>
 /// Asset details
 /// </summary>
-public class BinanceAssetDetails
+public record BinanceAssetDetails
 {
     /// <summary>
     /// Minimal quantity you can withdraw
@@ -25,5 +25,5 @@ public class BinanceAssetDetails
     /// <summary>
     /// Status string for deposit
     /// </summary>
-    public string DepositTip { get; set; }
+    public string DepositTip { get; set; } = "";
 }

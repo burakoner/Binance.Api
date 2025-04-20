@@ -3,7 +3,7 @@
 /// <summary>
 /// Isolated margin account info
 /// </summary>
-public class BinanceIsolatedMarginAccount
+public record BinanceIsolatedMarginAccount
 {
     /// <summary>
     /// Account assets

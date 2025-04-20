@@ -3,12 +3,12 @@
 /// <summary>
 /// Exchange info
 /// </summary>
-public class BinanceFuturesExchangeInfo
+public record BinanceFuturesExchangeInfo
 {
     /// <summary>
     /// The timezone the server uses
     /// </summary>
-    public string TimeZone { get; set; }
+    public string TimeZone { get; set; } = "";
     /// <summary>
     /// The current server time
     /// </summary>
@@ -27,7 +27,7 @@ public class BinanceFuturesExchangeInfo
 /// <summary>
 /// Exchange info
 /// </summary>
-public class BinanceFuturesUsdtExchangeInfo : BinanceFuturesExchangeInfo
+public record BinanceFuturesUsdtExchangeInfo : BinanceFuturesExchangeInfo
 {
     /// <summary>
     /// All symbols supported
@@ -43,7 +43,7 @@ public class BinanceFuturesUsdtExchangeInfo : BinanceFuturesExchangeInfo
 /// <summary>
 /// Exchange info
 /// </summary>
-public class BinanceFuturesCoinExchangeInfo : BinanceFuturesExchangeInfo
+public record BinanceFuturesCoinExchangeInfo : BinanceFuturesExchangeInfo
 {
     /// <summary>
     /// All symbols supported

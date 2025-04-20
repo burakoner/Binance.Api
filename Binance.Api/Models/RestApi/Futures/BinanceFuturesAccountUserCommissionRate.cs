@@ -3,12 +3,12 @@
 /// <summary>
 /// User commission rate
 /// </summary>
-public class BinanceFuturesAccountUserCommissionRate
+public record BinanceFuturesAccountUserCommissionRate
 {
     /// <summary>
     /// Symbol
     /// </summary>
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = "";
     /// <summary>
     /// Maker commission rate
     /// </summary>

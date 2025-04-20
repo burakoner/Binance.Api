@@ -3,12 +3,12 @@
 /// <summary>
 /// Staking product info
 /// </summary>
-public class BinanceStakingProduct
+public record BinanceStakingProduct
 {
     /// <summary>
     /// Project id
     /// </summary>
-    public string ProjectId { get; set; }
+    public string ProjectId { get; set; } = "";
     /// <summary>
     /// Product details
     /// </summary>
@@ -23,16 +23,16 @@ public class BinanceStakingProduct
 /// <summary>
 /// Staking product details
 /// </summary>
-public class BinanceStakingProductDetails
+public record BinanceStakingProductDetails
 {
     /// <summary>
     /// Lock up asset
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Reward asset
     /// </summary>
-    public string RewardAsset { get; set; }
+    public string RewardAsset { get; set; } = "";
     /// <summary>
     /// Duration in days
     /// </summary>
@@ -50,7 +50,7 @@ public class BinanceStakingProductDetails
 /// <summary>
 /// Staking product quota
 /// </summary>
-public class BinanceStakingQuota
+public record BinanceStakingQuota
 {
     /// <summary>
     /// Total Personal quota

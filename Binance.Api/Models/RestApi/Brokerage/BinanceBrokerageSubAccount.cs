@@ -3,17 +3,17 @@
 /// <summary>
 /// Sub Account
 /// </summary>
-public class BinanceBrokerageSubAccount : BinanceBrokerageSubAccountCommission
+public record BinanceBrokerageSubAccount : BinanceBrokerageSubAccountCommission
 {
     /// <summary>
     /// Email
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
 
     /// <summary>
     /// Tag
     /// </summary>
-    public string Tag { get; set; }
+    public string Tag { get; set; } = "";
 
     /// <summary>
     /// Create Date

@@ -3,7 +3,7 @@ namespace Binance.Api.Models.RestApi.MarketData;
 /// <summary>
 /// Current average price details for a symbol.
 /// </summary>
-public class BinanceAveragePrice
+public record BinanceAveragePrice
 {
     /// <summary>
     /// Duration in minutes

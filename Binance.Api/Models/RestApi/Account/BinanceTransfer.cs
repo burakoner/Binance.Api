@@ -3,12 +3,12 @@
 /// <summary>
 /// Transfer info
 /// </summary>
-public class BinanceTransfer
+public record BinanceTransfer
 {
     /// <summary>
     /// The asset which was transfered
     /// </summary>
-    public string Asset { get; set; }
+    public string Asset { get; set; } = "";
     /// <summary>
     /// Quantity transfered
     /// </summary>
@@ -22,7 +22,7 @@ public class BinanceTransfer
     /// <summary>
     /// Status
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; set; } = "";
     /// <summary>
     /// Id
     /// </summary>

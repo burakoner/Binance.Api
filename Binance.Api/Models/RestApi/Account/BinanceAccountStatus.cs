@@ -3,11 +3,11 @@
 /// <summary>
 /// Account status info
 /// </summary>
-public class BinanceAccountStatus
+public record BinanceAccountStatus
 {
     /// <summary>
     /// The result status
     /// </summary>
     [JsonProperty("data")]
-    public string Data { get; set; }
+    public string Data { get; set; } = "";
 }

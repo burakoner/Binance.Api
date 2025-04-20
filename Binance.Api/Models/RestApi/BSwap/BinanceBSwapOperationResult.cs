@@ -3,7 +3,7 @@
 /// <summary>
 /// Operation result
 /// </summary>
-public class BinanceBSwapOperationResult
+public record BinanceBSwapOperationResult
 {
     /// <summary>
     /// Id of the operation

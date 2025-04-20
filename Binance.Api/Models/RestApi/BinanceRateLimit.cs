@@ -3,7 +3,7 @@
 /// <summary>
 /// Rate limit info
 /// </summary>
-public class BinanceRateLimit
+public record BinanceRateLimit
 {
     /// <summary>
     /// The interval the rate limit uses to count
