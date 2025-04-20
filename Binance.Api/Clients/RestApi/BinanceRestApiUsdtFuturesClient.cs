@@ -704,7 +704,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         {
             { "dualSidePosition", dualPositionSide.ToString().ToLower() }
         };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         return await SendRequestInternal<BinanceResult>(GetUrl(positionModeSideSetEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
@@ -713,7 +713,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<BinanceFuturesPositionMode>> GetPositionModeAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesPositionMode>(GetUrl(positionModeSideGetEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30).ConfigureAwait(false);
     }
@@ -726,7 +726,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         {
             { "multiAssetsMargin", enabled.ToString() }
         };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceResult>(GetUrl(futuresAccountMultiAssetsModeSetEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
@@ -736,7 +736,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<BinanceFuturesMultiAssetMode>> GetMultiAssetsModeAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesMultiAssetMode>(GetUrl(futuresAccountMultiAssetsModeGetEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30).ConfigureAwait(false);
     }
@@ -746,7 +746,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<IEnumerable<BinanceFuturesAccountBalance>>> GetBalancesAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesAccountBalance>>(GetUrl(futuresAccountBalanceEndpoint, fapi, "2"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
@@ -756,7 +756,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<BinanceFuturesAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesAccountInfo>(GetUrl(accountInfoEndpoint, fapi, "2"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
@@ -771,7 +771,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             { "symbol", symbol },
             { "leverage", leverage }
         };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         return await SendRequestInternal<BinanceFuturesInitialLeverageChangeResult>(GetUrl(changeInitialLeverageEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
@@ -784,7 +784,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             { "symbol", symbol },
             { "marginType", JsonConvert.SerializeObject(marginType, new FuturesMarginTypeConverter(false)) }
         };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         return await SendRequestInternal<BinanceFuturesChangeMarginTypeResult>(GetUrl(changeMarginTypeEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
     #endregion
@@ -799,7 +799,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             { "type", JsonConvert.SerializeObject(type, new FuturesMarginChangeDirectionTypeConverter(false)) }
         };
         parameters.AddOptionalParameter("positionSide", positionSide == null ? null : JsonConvert.SerializeObject(positionSide, new PositionSideConverter(false)));
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesPositionMarginResult>(GetUrl(positionMarginEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
@@ -815,7 +815,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         parameters.AddOptionalParameter("type", type.HasValue ? JsonConvert.SerializeObject(type, new FuturesMarginChangeDirectionTypeConverter(false)) : null);
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(positionMarginChangeHistoryEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
@@ -827,7 +827,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("symbol", symbol);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinancePositionDetailsUsdt>>(GetUrl(positionInformationEndpoint, fapi, "2"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
@@ -843,7 +843,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         parameters.AddOptionalParameter("incomeType", incomeType);
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesIncomeHistory>>(GetUrl(incomeHistoryEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30).ConfigureAwait(false);
@@ -856,7 +856,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         var url = GetUrl(leverageBracketEndpoint, fapi, v1);
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter(url.ToString().Contains("dapi") ? "pair" : "symbol", symbolOrPair);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesSymbolBracket>>(url, HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
@@ -867,7 +867,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("symbol", symbol);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         if (symbol == null)
             return await SendRequestInternal<IEnumerable<BinanceFuturesQuantileEstimation>>(GetUrl(adlQuantileEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
@@ -884,7 +884,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<BinanceFuturesTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesTradingStatus>(GetUrl(tradingStatusEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
 
@@ -898,7 +898,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         {
             { "symbol", symbol}
         };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         return await SendRequestInternal<BinanceFuturesAccountUserCommissionRate>(GetUrl(futuresAccountUserCommissionRateEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20).ConfigureAwait(false);
     }
     #endregion
@@ -911,7 +911,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             { "startTime", startTime.ConvertToMilliseconds() },
             { "endTime", endTime.ConvertToMilliseconds() },
         };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         return await SendRequestInternal<BinanceFuturesDownloadIdInfo>(GetUrl(downloadIdEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
@@ -923,7 +923,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     {
         { "downloadId", downloadId }
     };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         return await SendRequestInternal<BinanceFuturesDownloadLink>(GetUrl(downloadLinkEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
     #endregion
@@ -993,7 +993,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         parameters.AddOptionalParameter("reduceOnly", reduceOnly?.ToString().ToLower());
         parameters.AddOptionalParameter("closePosition", closePosition?.ToString().ToLower());
         parameters.AddOptionalParameter("newOrderRespType", orderResponseType == null ? null : JsonConvert.SerializeObject(orderResponseType, new OrderResponseTypeConverter(false)));
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("priceProtect", priceProtect?.ToString().ToUpper());
 
         var result = await SendRequestInternal<BinanceFuturesPlacedOrder>(GetUrl(newOrderEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
@@ -1054,7 +1054,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         }
 
         parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var response = await SendRequestInternal<IEnumerable<BinanceFuturesMultipleOrderPlaceResult>>(GetUrl(multipleNewOrdersEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!response.Success)
@@ -1084,7 +1084,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         };
         parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesOrder>(GetUrl(queryOrderEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
@@ -1102,7 +1102,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             };
         parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var result = await SendRequestInternal<BinanceFuturesCancelOrder>(GetUrl(cancelOrderEndpoint, fapi, v1), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
 
@@ -1118,7 +1118,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             {
                 { "symbol", symbol }
             };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesCancelAllOrders>(GetUrl(cancelAllOrdersEndpoint, fapi, v1), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
@@ -1147,7 +1147,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         if (origClientOrderIdList != null)
             parameters.AddOptionalParameter("origClientOrderIdList", $"[{string.Join(",", origClientOrderIdList.Select(id => $"\"{id}\""))}]");
 
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var response = await SendRequestInternal<IEnumerable<BinanceFuturesMultipleOrderCancelResult>>(GetUrl(cancelMultipleOrdersEndpoint, fapi, v1), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
 
@@ -1174,7 +1174,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
                 { "symbol", symbol },
                 { "countdownTime", (int)countDownTime.TotalMilliseconds }
             };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesCountDownResult>(GetUrl(countDownCancelAllEndpoint, fapi, v1), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
@@ -1192,7 +1192,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
             };
         parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("origClientOrderId", origClientOrderId);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceFuturesOrder>(GetUrl(openOrderEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
     }
@@ -1202,7 +1202,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetOpenOrdersAsync(string symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("symbol", symbol);
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesOrder>>(GetUrl(openOrdersEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 1).ConfigureAwait(false);
@@ -1221,7 +1221,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         parameters.AddOptionalParameter("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceFuturesOrder>>(GetUrl(allOrdersEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
@@ -1241,7 +1241,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<IEnumerable<BinanceRecentTradeQuote>>(GetUrl(myFuturesTradesEndpoint, fapi, v1), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
     }
@@ -1251,7 +1251,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     public async Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetForcedOrdersAsync(string symbol = null, AutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("symbol", symbol);
         parameters.AddOptionalParameter("autoCloseType", closeType.HasValue ? JsonConvert.SerializeObject(closeType, new AutoCloseTypeConverter(false)) : null);
         parameters.AddOptionalParameter("startTime", startTime.ConvertToMilliseconds());

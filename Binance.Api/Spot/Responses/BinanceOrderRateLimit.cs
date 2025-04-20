@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Models.RestApi;
+﻿namespace Binance.Api.Spot.Responses;
 
 /// <summary>
 /// Rate limit info

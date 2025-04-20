@@ -36,7 +36,7 @@ public class BinanceRestApiFuturesTransferClient
                 { "amount", quantity.ToString(CultureInfo.InvariantCulture) },
                 { "type", JsonConvert.SerializeObject(transferType, new FuturesTransferTypeConverter(false)) }
             };
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceTransaction>(GetUrl(futuresTransferEndpoint, sapi, "1"), HttpMethod.Post, ct, true, bodyParameters: parameters).ConfigureAwait(false);
     }
@@ -54,7 +54,7 @@ public class BinanceRestApiFuturesTransferClient
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("current", page?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalParameter("size", limit?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         return await SendRequestInternal<BinanceQueryRecords<BinanceSpotFuturesTransfer>>(GetUrl(futuresTransferHistoryEndpoint, sapi, "1"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }

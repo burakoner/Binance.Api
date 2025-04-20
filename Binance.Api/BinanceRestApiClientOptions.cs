@@ -5,7 +5,7 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     /// <summary>
     /// Receive Window
     /// </summary>
-    public TimeSpan ReceiveWindow { get; set; }
+    public TimeSpan? ReceiveWindow { get; set; }
 
     /// <summary>
     /// Whether to allow the client to adjust the clientOrderId parameter send by the user when placing orders to include a client reference. This reference is used by the exchange to allocate a small percentage of the paid trading fees to developer of this library. Defaults to false.<br />
@@ -58,9 +58,6 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
                 .AddPartialEndpointLimit("/sapi/", 12000, TimeSpan.FromMinutes(1))
                 .AddEndpointLimit("/api/v3/order", 50, TimeSpan.FromSeconds(10), HttpMethod.Post, true)
         };
-
-        // Receive Window
-        ReceiveWindow = TimeSpan.FromSeconds(60);
 
         // Auto Timestamp
         AutoTimestamp = true;

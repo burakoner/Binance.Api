@@ -20,7 +20,7 @@ namespace Binance.ApiConsole
             var spot_102 = await api.Spot.General.GetTimeAsync();
             var spot_103 = await api.Spot.General.GetExchangeInfoAsync();
 
-            // Spot General (Public)
+            // Spot Market Data (Public)
             var spot_201 = await api.Spot.MarketData.GetOrderBookAsync("BTCUSDT");
             var spot_202 = await api.Spot.MarketData.GetRecentTradesAsync("BTCUSDT");
             var spot_203 = await api.Spot.MarketData.GetTradeHistoryAsync("BTCUSDT");
@@ -45,9 +45,22 @@ namespace Binance.ApiConsole
             var spot_233 = await api.Spot.MarketData.GetPricesAsync();
             var spot_241 = await api.Spot.MarketData.GetRollingWindowTickerAsync("BTCUSDT");
             var spot_242 = await api.Spot.MarketData.GetRollingWindowTickersAsync(["BTCUSDT", "ETHUSDT"], TimeSpan.FromHours(4));
+
+            // Spot Trading (Private Signed)
+            var spot_301 = await api.Spot.Trading.PlaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
+            var spot_302 = await api.Spot.Trading.PlaceTestOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
+            var spot_303 = await api.Spot.Trading.GetOrderAsync("BTCUSDT", orderId: 100000001);
+            var spot_304 = await api.Spot.Trading.GetOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
+            var spot_305 = await api.Spot.Trading.CancelOrderAsync("BTCUSDT", orderId: 100000001);
+            var spot_306 = await api.Spot.Trading.CancelOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
+            var spot_307 = await api.Spot.Trading.CancelOrdersAsync("BTCUSDT");
+            var spot_308 = await api.Spot.Trading.ReplaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, BinanceSpotOrderCancelReplaceMode.StopOnFailure, cancelOrderId: 100000001, quantity:0.1m);
+            var spot_309 = await api.Spot.Trading.GetOpenOrdersAsync("BTCUSDT");
+            var spot_310 = await api.Spot.Trading.GetOrdersAsync("BTCUSDT");
             */
 
 
+            /**/
 
             var server_04 = await api.Spot.GetSystemStatusAsync();
 
@@ -105,30 +118,6 @@ namespace Binance.ApiConsole
             var account_30 = await api.Spot.Account.ConvertTransferAsync("---CLIENT-ORDER-ID---", "USDT", 10.0m, "BNB");
             var account_31 = await api.Spot.Account.GetConvertTransferHistoryAsync(new DateTime(2022, 7, 1), new DateTime(2022, 12, 31, 23, 59, 59));
             var account_32 = await api.Spot.Account.GetAPIKeyPermissionsAsync();
-            */
-
-            /*
-            // Trading (Private)
-            var trade_01 = await api.Spot.Trading.PlaceTestOrderAsync("BTCUSDT", OrderSide.Buy, SpotOrderType.Market, 0.01m);
-            var trade_02 = await api.Spot.Trading.PlaceOrderAsync("BTCUSDT", OrderSide.Buy, SpotOrderType.Market, 0.01m);
-            var trade_03 = await api.Spot.Trading.CancelOrderAsync("BTCUSDT", orderId: 100000001);
-            var trade_04 = await api.Spot.Trading.CancelOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
-            var trade_05 = await api.Spot.Trading.CancelAllOrdersAsync("BTCUSDT");
-            var trade_06 = await api.Spot.Trading.ReplaceOrderAsync("BTCUSDT", OrderSide.Buy, SpotOrderType.Market, CancelReplaceMode.StopOnFailure, ...);
-            var trade_07 = await api.Spot.Trading.GetOpenOrdersAsync("BTCUSDT");
-            var trade_08 = await api.Spot.Trading.GetOrderAsync("BTCUSDT", orderId: 100000001);
-            var trade_09 = await api.Spot.Trading.GetOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
-            var trade_10 = await api.Spot.Trading.GetOrdersAsync("BTCUSDT");
-            var trade_11 = await api.Spot.Trading.PlaceOcoOrderAsync("BTCUSDT", ...);
-            var trade_12 = await api.Spot.Trading.CancelOcoOrderAsync("BTCUSDT", orderListId: 100000001);
-            var trade_13 = await api.Spot.Trading.CancelOcoOrderAsync("BTCUSDT", listClientOrderId: "---CLIENT-ORDER-ID---");
-            var trade_14 = await api.Spot.Trading.GetOcoOrderAsync(orderListId: 100000001);
-            var trade_15 = await api.Spot.Trading.GetOcoOrderAsync(origClientOrderId: "---CLIENT-ORDER-ID---");
-            var trade_16 = await api.Spot.Trading.GetOcoOrdersAsync();
-            var trade_17 = await api.Spot.Trading.GetOpenOcoOrdersAsync();
-            var trade_18 = await api.Spot.Trading.GetAccountInfoAsync();
-            var trade_19 = await api.Spot.Trading.GetUserTradesAsync("BTCUSDT");
-            var trade_20 = await api.Spot.Trading.GetOrderRateLimitStatusAsync();
             */
 
             /*

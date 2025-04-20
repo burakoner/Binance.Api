@@ -35,7 +35,7 @@ public class BinanceRestApiC2cClient
         parameters.AddOptionalParameter("endTimestamp", endTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("page", page);
         parameters.AddOptionalParameter("rows", pageSize);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? ClientOptions.ReceiveWindow?.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var result = await SendRequestInternal<BinanceResult<IEnumerable<BinanceC2CUserTrade>>>(GetUrl(c2cTradeHistoryEndpoint, marginApi, marginVersion), HttpMethod.Get, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (!result.Success)

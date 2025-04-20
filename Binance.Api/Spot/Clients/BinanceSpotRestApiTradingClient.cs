@@ -116,7 +116,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         parameters.AddOptional("strategyType", strategyType);
         parameters.AddOptional("computeCommissionRates", computeFeeRates?.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptionalString("recvWindow", receiveWindow ?? Convert.ToInt32(__.ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         var weight = computeFeeRates == true ? 20 : 1;
         return await __.SendRequestInternal<BinanceSpotOrderTest>(__.GetUrl(api, v3, "order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
@@ -134,12 +134,12 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
             };
         parameters.AddOptionalString("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddString("recvWindow", receiveWindow ?? Convert.ToInt32(ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return __.SendRequestInternal<BinanceSpotOrder>(__.GetUrl(api, v3, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 4);
     }
 
-    public async Task<RestCallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
@@ -152,14 +152,14 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         parameters.AddOptionalString("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("newClientOrderId", newClientOrderId);
-        parameters.AddString("recvWindow", receiveWindow ?? Convert.ToInt32(ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         var result = await __.SendRequestInternal<BinanceSpotOrder>(__.GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) __.InvokeOrderCanceled(result.Data.Id);
         return result;
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
 
@@ -167,7 +167,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         {
             { "symbol", symbol }
         };
-        parameters.AddString("recvWindow", receiveWindow ?? Convert.ToInt32(ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         var result = await __.SendRequestInternal<IEnumerable<BinanceSpotOrder>>(__.GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) foreach (var order in result.Data) __.InvokeOrderCanceled(order.Id);
@@ -242,7 +242,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", receiveWindow ?? Convert.ToInt32(ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         var result = await __.SendRequestInternal<BinanceReplaceOrderResult>(__.GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result && result.Raw != null)
@@ -273,7 +273,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", receiveWindow ?? Convert.ToInt32(ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return await __.SendRequestInternal<IEnumerable<BinanceSpotOrder>>(__.GetUrl(api, v3, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
     }
@@ -290,7 +290,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", receiveWindow ?? Convert.ToInt32(ClientOptions.ReceiveWindow.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return __.SendRequestInternal<IEnumerable<BinanceSpotOrder>>(__.GetUrl(api, v3, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
