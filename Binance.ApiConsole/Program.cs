@@ -12,10 +12,7 @@ namespace Binance.ApiConsole
     {
         static async Task Main(string[] args)
         {
-            var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
-            {
-                RawResponse = true,
-            });
+            var api = new BinanceRestApiClient();
 
             // Spot > General Methods (PUBLIC)
             var spot_101 = await api.Spot.PingAsync();
