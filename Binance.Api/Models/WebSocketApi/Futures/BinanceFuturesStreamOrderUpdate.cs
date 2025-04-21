@@ -1,3 +1,5 @@
+using Binance.Api.Spot;
+
 namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>

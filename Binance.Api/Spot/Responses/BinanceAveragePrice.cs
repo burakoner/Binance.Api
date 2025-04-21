@@ -1,4 +1,4 @@
-namespace Binance.Api.Spot.Responses;
+namespace Binance.Api.Spot;
 
 /// <summary>
 /// Current average price details for a symbol.

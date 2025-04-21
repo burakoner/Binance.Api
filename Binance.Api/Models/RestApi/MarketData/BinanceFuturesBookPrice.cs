@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.MarketData;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.RestApi.MarketData;
 
 /// <summary>
 /// Book price

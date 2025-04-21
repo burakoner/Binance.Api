@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.RestApi;
 
 /// <summary>
 /// The result of placing a new OCO order

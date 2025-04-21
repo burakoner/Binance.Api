@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Margin;
+using Binance.Api.Spot;
 using Binance.Api.Wallet;
 
 namespace Binance.Api.Clients.RestApi;
@@ -103,7 +104,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     /// </summary>
     public event Action<long> OnOrderCanceled;
 
-    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
+    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base(root.Logger, root.RestOptions)
     {
         RootClient = root;
 

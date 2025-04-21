@@ -18,8 +18,6 @@ public class BinanceWalletRestApiClient(BinanceRestApiClient root)
     // Internal
     internal ILogger Logger => Logger;
     internal BinanceRestApiClientOptions Options => Options;
-    internal DateTime? LastExchangeInfoUpdate { get; private set; }
-    internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
 
     #region Internal Methods
     internal Task<RestCallResult<T>> RequestAsync<T>(

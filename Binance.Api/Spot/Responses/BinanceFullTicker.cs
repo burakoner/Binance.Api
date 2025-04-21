@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Price statistics of the last 24 hours

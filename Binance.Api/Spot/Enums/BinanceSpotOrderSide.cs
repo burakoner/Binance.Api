@@ -1,19 +1,19 @@
-﻿namespace Binance.Api.Spot.Enums;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// The side of an order
 /// </summary>
-public enum BinanceSpotOrderSide:byte
+public enum BinanceSpotOrderSide : byte
 {
     /// <summary>
     /// Buy
     /// </summary>
     [Map("BUY")]
-    Buy=1,
+    Buy = 1,
 
     /// <summary>
     /// Sell
     /// </summary>
     [Map("SELL")]
-    Sell
+    Sell = 2
 }

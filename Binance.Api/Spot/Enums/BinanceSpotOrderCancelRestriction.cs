@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Enums;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Restrictions for order cancelation

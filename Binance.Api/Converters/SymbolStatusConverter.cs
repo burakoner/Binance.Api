@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Enums;
+﻿using Binance.Api.Spot;
 
 namespace Binance.Api.Converters;
 

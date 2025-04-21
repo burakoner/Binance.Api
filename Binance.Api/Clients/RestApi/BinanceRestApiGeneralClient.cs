@@ -37,7 +37,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
+    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base(root.Logger, root.RestOptions)
     {
         RootClient = root;
 

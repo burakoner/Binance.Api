@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Interfaces;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Interfaces;
 
 /// <summary>
 /// Forced liquidation info

@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Models.RestApi;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Information about a trade

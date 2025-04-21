@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Spot.Enums;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// The interval for the kline, the int value represents the time in seconds
 /// </summary>
-public enum BinanceKlineInterval:int
+public enum BinanceKlineInterval : int
 {
     /// <summary>
     /// 1s

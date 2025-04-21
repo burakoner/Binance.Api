@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Information about the best price/quantity available for a symbol

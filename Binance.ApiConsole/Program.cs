@@ -1,6 +1,9 @@
 ﻿using Binance.Api;
-using Binance.Api.Spot.Enums;
+using Binance.Api.Shared;
+using Binance.Api.Spot;
+using Binance.Api.Wallet;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Binance.ApiConsole
@@ -15,13 +18,13 @@ namespace Binance.ApiConsole
                 ApiCredentials = new ApiSharp.Authentication.ApiCredentials("Ct9Grd1oV5jtXMv4GXNnYmEH2nJxjxNuMcsZOo9rQqkw9ebZqfBpYoQHyCzvtTXL", "uJJaUF9QnmI2G5ddcxo74eb2b8ipLK7us3TW8fGBAEZjlQuSI5Jf7sb0VuFikvkI"),
             });
 
-            // Spot General (Public)
+            // Spot > General Methods (PUBLIC)
             var spot_101 = await api.Spot.PingAsync();
             var spot_102 = await api.Spot.GetTimeAsync();
             var spot_103 = await api.Spot.GetExchangeInfoAsync();
 
             /**/
-            // Spot Market Data (Public)
+            // Spot > Market Data Methods (PUBLIC)
             var spot_201 = await api.Spot.GetOrderBookAsync("BTCUSDT");
             var spot_202 = await api.Spot.GetRecentTradesAsync("BTCUSDT");
             var spot_203 = await api.Spot.GetTradeHistoryAsync("BTCUSDT");
@@ -50,7 +53,7 @@ namespace Binance.ApiConsole
             var spot_251 = await api.Spot.GetRollingWindowTickerAsync("BTCUSDT");
             var spot_252 = await api.Spot.GetRollingWindowTickersAsync(["BTCUSDT", "ETHUSDT"], TimeSpan.FromHours(4));
 
-            // Spot Trading (Private Signed)
+            // Spot > Trading Methods (PRIVATE)
             var spot_301 = await api.Spot.PlaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
             var spot_302 = await api.Spot.PlaceTestOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
             var spot_303 = await api.Spot.GetOrderAsync("BTCUSDT", orderId: 100000001);
@@ -58,11 +61,11 @@ namespace Binance.ApiConsole
             var spot_305 = await api.Spot.CancelOrderAsync("BTCUSDT", orderId: 100000001);
             var spot_306 = await api.Spot.CancelOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
             var spot_307 = await api.Spot.CancelOrdersAsync("BTCUSDT");
-            var spot_308 = await api.Spot.ReplaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, BinanceSpotOrderCancelReplaceMode.StopOnFailure, cancelOrderId: 100000001, quantity:0.1m);
+            var spot_308 = await api.Spot.ReplaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, BinanceSpotOrderCancelReplaceMode.StopOnFailure, cancelOrderId: 100000001, quantity: 0.1m);
             var spot_309 = await api.Spot.GetOpenOrdersAsync("BTCUSDT");
             var spot_310 = await api.Spot.GetOrdersAsync("BTCUSDT");
 
-            // Spot Account (Private Signed)
+            // Spot > Account Methods (PRIVATE)
             var spot_401 = await api.Spot.GetAccountAsync();
             var spot_402 = await api.Spot.GetUserTradesAsync("BTCUSDT");
             var spot_403 = await api.Spot.GetOrderRateLimitStatusAsync();
@@ -70,9 +73,76 @@ namespace Binance.ApiConsole
             var spot_405 = await api.Spot.StartUserStreamAsync();
             var spot_406 = await api.Spot.KeepAliveUserStreamAsync("---LISTEN-KEY---");
             var spot_407 = await api.Spot.StopUserStreamAsync("---LISTEN-KEY---");
-            /**/
+
+            // Wallet > Capital Methods (PRIVATE)
+            var wallet_101= await api.Wallet.GetUserAssetsAsync();
+            var btcBalance = wallet_101.Data.FirstOrDefault(x => x.Asset == "BTC");
+            var usdtBalance = wallet_101.Data.FirstOrDefault(x => x.Asset == "USDT");
+            var wallet_102 = await api.Wallet.WithdrawAsync("---ASSET---", "---ADDRESS---", 0.01m);
+            var wallet_103 = await api.Wallet.GetWithdrawalHistoryAsync();
+            var wallet_104 = await api.Wallet.GetWithdrawalHistoryAsync("---ASSET---");
+            var wallet_105 = await api.Wallet.GetWithdrawalAddressesAsync();
+            var wallet_106 = await api.Wallet.GetDepositHistoryAsync();
+            var wallet_107 = await api.Wallet.GetDepositHistoryAsync("---ASSET---");
+            var wallet_108 = await api.Wallet.GetDepositAddressAsync("BTC");
+            var wallet_109 = await api.Wallet.GetDepositAddressAsync("USDT");
+            var wallet_110 = await api.Wallet.GetDepositAddressAsync("USDT", "TRX");
+
+            // Wallet > Asset Methods (PRIVATE)
+            var wallet_201 = await api.Wallet.GetAssetDetailsAsync();
+            var wallet_202 = await api.Wallet.GetWalletBalancesAsync();
+            var wallet_203 = await api.Wallet.GetWalletBalancesAsync("BTC");
+            var wallet_204 = await api.Wallet.GetBalancesAsync();
+            var wallet_205 = await api.Wallet.GetBalancesAsync("USDT");
+            var wallet_206 = await api.Wallet.TransferAsync(BinanceUniversalTransferType.FundingToUsdFutures, "USDT", 10.0m);
+            var wallet_207 = await api.Wallet.GetTransfersAsync(BinanceUniversalTransferType.FundingToUsdFutures);
+            var wallet_208 = await api.Wallet.SetBnbBurnStatusAsync(true, true);
+            var wallet_209 = await api.Wallet.GetAssetsForDustTransferAsync();
+            var wallet_210 = await api.Wallet.DustTransferAsync(["ASSET01", "ASSET02", "ASSET03"]);
+            var wallet_211 = await api.Wallet.GetDustLogAsync();
+            var wallet_212 = await api.Wallet.GetAssetDividendRecordsAsync();
+            var wallet_213 = await api.Wallet.GetTradeFeeAsync();
+            var wallet_214 = await api.Wallet.GetTradeFeeAsync("BTCUSDT");
+            var wallet_215 = await api.Wallet.GetFundingWalletAsync();
+            var wallet_216 = await api.Wallet.GetFundingWalletAsync("USDT");
+            var wallet_217 = await api.Wallet.GetCloudMiningHistoryAsync(DateTime.Now.AddDays(30), DateTime.Now);
+            var wallet_218 = await api.Wallet.GetDelistScheduleAsync();
+
+            // Wallet > Account Methods (PRIVATE)
+            var wallet_301 = await api.Wallet.GetAccountVipLevelAndStatusAsync();
+            var wallet_302 = await api.Wallet.GetDailySpotAccountSnapshotAsync();
+            var wallet_303 = await api.Wallet.GetDailyMarginAccountSnapshotAsync();
+            var wallet_304 = await api.Wallet.GetDailyFutureAccountSnapshotAsync();
+            var wallet_305 = await api.Wallet.DisableFastWithdrawSwitchAsync();
+            var wallet_306 = await api.Wallet.EnableFastWithdrawSwitchAsync();
+            var wallet_307 = await api.Wallet.GetAccountStatusAsync();
+            var wallet_308 = await api.Wallet.GetTradingStatusAsync();
+            var wallet_309 = await api.Wallet.GetAPIKeyPermissionsAsync();
+
+            // TODO: Wallet > Travel Rule (Local Entity) Methods (PRIVATE)
+
+            // Wallet > Other Methods (PUBLIC)
+            var wallet_501 = await api.Wallet.GetSystemStatusAsync();
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*
+            var account_30 = await api.Wallet.ConvertTransferAsync("---CLIENT-ORDER-ID---", "USDT", 10.0m, "BNB");
+            var account_31 = await api.Wallet.GetConvertTransferHistoryAsync(new DateTime(2022, 7, 1), new DateTime(2022, 12, 31, 23, 59, 59));
+            */
 
 
             /** /
@@ -92,44 +162,6 @@ namespace Binance.ApiConsole
             var mdata_13 = await api.Spot.GetBookPricesAsync();
             var mdata_14 = await api.Spot.GetRollingWindowTickerAsync("BTCUSDT");
             /**/
-
-            /*
-            // Account (Private)
-            var account_01 = await api.Spot.Account.GetUserAssetsAsync();
-            var btcBalance = account_01.Data.FirstOrDefault(x => x.Asset == "BTC");
-            var usdtBalance = account_01.Data.FirstOrDefault(x => x.Asset == "USDT");
-            var account_02 = await api.Spot.Account.GetDailySpotAccountSnapshotAsync();
-            var account_03 = await api.Spot.Account.GetDailyMarginAccountSnapshotAsync();
-            var account_04 = await api.Spot.Account.GetDailyFutureAccountSnapshotAsync();
-            var account_05 = await api.Spot.Account.EnableFastWithdrawSwitchAsync();
-            var account_06 = await api.Spot.Account.DisableFastWithdrawSwitchAsync();
-            var account_07 = await api.Spot.Account.WithdrawAsync("---ASSET---", "---ADDRESS---", 0.01m);
-            var account_08 = await api.Spot.Account.GetWithdrawalHistoryAsync("---ASSET---");
-            var account_09 = await api.Spot.Account.GetWithdrawalHistoryAsync();
-            var account_10 = await api.Spot.Account.GetDepositHistoryAsync("---ASSET---");
-            var account_11 = await api.Spot.Account.GetDepositHistoryAsync();
-            var account_12 = await api.Spot.Account.GetDepositAddressAsync("BTC");
-            var account_13 = await api.Spot.Account.GetDepositAddressAsync("USDT");
-            var account_14 = await api.Spot.Account.GetDepositAddressAsync("USDT", "TRX");
-            var account_15 = await api.Spot.Account.GetAccountStatusAsync();
-            var account_16 = await api.Spot.Account.GetTradingStatusAsync();
-            var account_17 = await api.Spot.Account.GetDustLogAsync();
-            var account_18 = await api.Spot.Account.GetAssetsForDustTransferAsync();
-            var account_19 = await api.Spot.Account.DustTransferAsync(new List<string> { "ASSET01", "ASSET02", "ASSET03" });
-            var account_20 = await api.Spot.Account.GetAssetDividendRecordsAsync();
-            var account_21 = await api.Spot.Account.GetAssetDetailsAsync();
-            var account_22 = await api.Spot.Account.GetTradeFeeAsync();
-            var account_23 = await api.Spot.Account.GetTradeFeeAsync("BTCUSDT");
-            var account_24 = await api.Spot.Account.TransferAsync(UniversalTransferType.FundingToUsdFutures, "USDT", 10.0m);
-            var account_25 = await api.Spot.Account.GetTransfersAsync(UniversalTransferType.FundingToUsdFutures);
-            var account_26 = await api.Spot.Account.GetFundingWalletAsync("USDT");
-            var account_27 = await api.Spot.Account.GetFundingWalletAsync();
-            var account_28 = await api.Spot.Account.GetBalancesAsync("USDT");
-            var account_29 = await api.Spot.Account.GetBalancesAsync();
-            var account_30 = await api.Spot.Account.ConvertTransferAsync("---CLIENT-ORDER-ID---", "USDT", 10.0m, "BNB");
-            var account_31 = await api.Spot.Account.GetConvertTransferHistoryAsync(new DateTime(2022, 7, 1), new DateTime(2022, 12, 31, 23, 59, 59));
-            var account_32 = await api.Spot.Account.GetAPIKeyPermissionsAsync();
-            */
 
             /*
             // User Stream (Private)

@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Models.RestApi.MarketData;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// The price of a symbol

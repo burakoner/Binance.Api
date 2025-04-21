@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi.MarketData;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.WebSocketApi.MarketData;
 
 /// <summary>
 /// Update data about an order

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Converters;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Converters;
 
 internal class OrderSideConverter : BaseConverter<BinanceSpotOrderSide>
 {

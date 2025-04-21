@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Internal;
+﻿namespace Binance.Api.Spot;
 
 internal class BinanceListenKey
 {

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi.Futures;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>
 /// Wrapper for kline information for a symbol

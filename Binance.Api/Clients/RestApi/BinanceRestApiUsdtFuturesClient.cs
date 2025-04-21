@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Clients.RestApi;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Clients.RestApi;
 
 public class BinanceRestApiUsdtFuturesClient : RestApiClient
 {
@@ -106,7 +108,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     /// </summary>
     public event Action<long> OnOrderCanceled;
 
-    internal BinanceRestApiUsdtFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
+    internal BinanceRestApiUsdtFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.RestOptions)
     {
         RootClient = root;
 

@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Converters;
+﻿namespace Binance.Api.Spot;
 
 internal class BinancePermissionTypeConverter : JsonConverter
 {

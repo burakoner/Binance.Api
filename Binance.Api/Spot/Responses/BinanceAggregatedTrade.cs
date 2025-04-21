@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Compressed aggregated trade information. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.

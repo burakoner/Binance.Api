@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Margin;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.RestApi.Margin;
 
 /// <summary>
 /// Forced liquidation info

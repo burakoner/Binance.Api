@@ -1,4 +1,4 @@
-﻿using Binance.Api.Spot.Responses;
+﻿using Binance.Api.Spot;
 
 namespace Binance.Api.Models.WebSocketApi;
 

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Parameters for a new futures batch order

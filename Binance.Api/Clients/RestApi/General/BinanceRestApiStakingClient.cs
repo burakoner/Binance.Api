@@ -19,7 +19,7 @@ public class BinanceRestApiStakingClient
 
     // Internal References
     internal BinanceRestApiGeneralClient MainClient { get; }
-    internal BinanceRestApiClientOptions ClientOptions { get => MainClient.RootClient.Options; }
+    internal BinanceRestApiClientOptions ClientOptions { get => MainClient.RootClient.RestOptions; }
     internal Uri GetUrl(string endpoint, string api, string version = null) => MainClient.GetUrl(endpoint, api, version);
     internal async Task<RestCallResult<T>> SendRequestInternal<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,

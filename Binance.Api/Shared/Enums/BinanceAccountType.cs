@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Enums;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Type of account

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.C2C;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.RestApi.C2C;
 
 /// <summary>
 /// C2C user trade

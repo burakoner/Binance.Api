@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿using Binance.Api.Spot;
+
+namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// The result of placing a new order

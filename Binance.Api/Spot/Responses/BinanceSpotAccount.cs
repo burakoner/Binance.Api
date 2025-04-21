@@ -1,4 +1,4 @@
-﻿namespace Binance.Net.Objects.Models.Spot;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Information about an account

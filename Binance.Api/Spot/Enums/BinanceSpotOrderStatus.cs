@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Enums;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// The status of an order
@@ -15,47 +15,47 @@ public enum BinanceSpotOrderStatus : byte
     /// Order is not yet active
     /// </summary>
     [Map("PENDING_NEW")]
-    PendingNew,
+    PendingNew = 2,
 
     /// <summary>
     /// Order is partly filled, still has quantity left to fill
     /// </summary>
     [Map("PARTIALLY_FILLED")]
-    PartiallyFilled,
+    PartiallyFilled = 3,
 
     /// <summary>
     /// The order has been filled and completed
     /// </summary>
     [Map("FILLED")]
-    Filled,
+    Filled = 4,
 
     /// <summary>
     /// The order has been canceled
     /// </summary>
     [Map("CANCELED")]
-    Canceled,
+    Canceled = 5,
 
     /// <summary>
     /// The order is in the process of being canceled  (currently unused)
     /// </summary>
     [Map("PENDING_CANCEL")]
-    PendingCancel,
+    PendingCancel = 6,
 
     /// <summary>
     /// The order has been rejected
     /// </summary>
     [Map("REJECTED")]
-    Rejected,
+    Rejected = 7,
 
     /// <summary>
     /// The order has expired
     /// </summary>
     [Map("EXPIRED")]
-    Expired,
+    Expired = 8,
 
     /// <summary>
     /// Expired because of trigger SelfTradePrevention
     /// </summary>
     [Map("EXPIRED_IN_MATCH")]
-    ExpiredInMatch
+    ExpiredInMatch = 9
 }

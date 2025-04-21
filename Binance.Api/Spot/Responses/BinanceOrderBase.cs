@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// The result of placing a new order

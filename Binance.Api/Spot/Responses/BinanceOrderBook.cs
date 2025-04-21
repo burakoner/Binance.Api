@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot.Responses;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// The order book for a asset
@@ -26,4 +26,23 @@ public record BinanceOrderBook
     /// The list of asks
     /// </summary>
     public IEnumerable<BinanceOrderBookEntry> Asks { get; set; } = [];
+}
+
+/// <summary>
+/// An entry in the order book
+/// </summary>
+[JsonConverter(typeof(ArrayConverter))]
+public record BinanceOrderBookEntry
+{
+    /// <summary>
+    /// The price of this order book entry
+    /// </summary>
+    [ArrayProperty(0)]
+    public decimal Price { get; set; }
+
+    /// <summary>
+    /// The quantity of this price in the order book
+    /// </summary>
+    [ArrayProperty(1)]
+    public decimal Quantity { get; set; }
 }
