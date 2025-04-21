@@ -47,6 +47,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Margin - Copy\**" />
+	  <EmbeddedResource Remove="Margin - Copy\**" />
+	  <None Remove="Margin - Copy\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="Binance.png" Pack="true" PackagePath="" />
 	</ItemGroup>
 
@@ -55,12 +61,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Margin - Copy\Clients\" />
-	  <Folder Include="Margin - Copy\Converters\" />
-	  <Folder Include="Margin - Copy\Enums\" />
-	  <Folder Include="Margin - Copy\Internal\" />
-	  <Folder Include="Margin - Copy\Requests\" />
-	  <Folder Include="Margin - Copy\Responses\" />
 	  <Folder Include="Margin\Clients\" />
 	  <Folder Include="Margin\Converters\" />
 	  <Folder Include="Margin\Internal\" />

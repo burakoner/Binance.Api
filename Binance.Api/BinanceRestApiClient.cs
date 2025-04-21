@@ -3,16 +3,17 @@
 /// <summary>
 /// Binance Rest API Client
 /// </summary>
-public sealed class BinanceRestApiClient
+public sealed class BinanceRestApiClient : RestApiClient
 {
     // Internal
-    internal ILogger Logger { get; }
-    internal BinanceRestApiClientOptions ClientOptions { get; }
+    internal ILogger Logger => this._logger;
+    internal TimeSyncState TimeSyncState { get; } = new("Binance");
+    internal BinanceRestApiClientOptions Options => (BinanceRestApiClientOptions)ClientOptions;
 
     /// <summary>
     /// Binance Spot Rest API Client
     /// </summary>
-    public BinanceSpotRestApi Spot { get; }
+    public BinanceSpotRestApiClient Spot { get; }
 
     /// <summary>
     /// Binance Margin Rest API Client
@@ -60,7 +61,7 @@ public sealed class BinanceRestApiClient
     /// <summary>
     /// Default Constructor
     /// </summary>
-    public BinanceRestApiClient() : this(null, new BinanceRestApiClientOptions())
+    public BinanceRestApiClient() : this(null, new())
     {
     }
 
@@ -68,7 +69,7 @@ public sealed class BinanceRestApiClient
     /// Constructor with logger
     /// </summary>
     /// <param name="logger">Logger</param>
-    public BinanceRestApiClient(ILogger logger) : this(logger, new BinanceRestApiClientOptions())
+    public BinanceRestApiClient(ILogger logger) : this(logger, new())
     {
     }
 
@@ -86,15 +87,64 @@ public sealed class BinanceRestApiClient
     /// <param name="logger">Logger</param>
     /// <param name="options">Binance Rest API Client Options</param>
     public BinanceRestApiClient(ILogger? logger, BinanceRestApiClientOptions options)
+        : base(logger ?? LoggerFactory.CreateLogger(typeof(BinanceRestApiClient)), options)
     {
-        Logger = logger ?? LoggerFactory.Create(c => { }).CreateLogger(typeof(BinanceRestApiClient));
-        ClientOptions = options;
+        RequestBodyFormat = RestRequestBodyFormat.FormData;
+        ArraySerialization = ArraySerialization.MultipleValues;
 
-        Spot = new BinanceSpotRestApi(this);
+        Spot = new BinanceSpotRestApiClient(this);
         Margin = new BinanceRestApiMarginClient(this);
         General = new BinanceRestApiGeneralClient(this);
         CoinFutures = new BinanceRestApiCoinFuturesClient(this);
         UsdtFutures = new BinanceRestApiUsdtFuturesClient(this);
     }
 
+    #region Overrided Methods
+    /// <inheritdoc/>
+    protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
+        => new BinanceAuthenticationProvider(credentials);
+
+    /// <inheritdoc/>
+    protected override Error ParseErrorResponse(JToken error)
+    {
+        if (!error.HasValues)
+            return new ServerError(error.ToString());
+
+        if (error["msg"] == null && error["code"] == null)
+            return new ServerError(error.ToString());
+
+        if (error["msg"] != null && error["code"] == null)
+            return new ServerError((string)error["msg"]!);
+
+        return new ServerError((int)error["code"]!, (string)error["msg"]!);
+    }
+
+    /// <inheritdoc/>
+    protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
+        => Spot.GetTimeAsync();
+
+    /// <inheritdoc/>
+    protected override TimeSyncInfo GetTimeSyncInfo()
+        => new(Logger, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
+
+    /// <inheritdoc/>
+    protected override TimeSpan GetTimeOffset()
+        => TimeSyncState.TimeOffset;
+    #endregion
+
+    #region Internal Methods
+    internal async Task<RestCallResult<T>> SendRequestInternal<T>(
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object>? queryParameters = null, Dictionary<string, object>? bodyParameters = null, Dictionary<string, string>? headerParameters = null,
+        ArraySerialization? serialization = null, JsonSerializer? deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
+    {
+        var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
+        if (!result && result.Error!.Code == -1021 && Options.AutoTimestamp)
+        {
+            Logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+            TimeSyncState.LastSyncTime = DateTime.MinValue;
+        }
+        return result;
+    }
+    #endregion
 }

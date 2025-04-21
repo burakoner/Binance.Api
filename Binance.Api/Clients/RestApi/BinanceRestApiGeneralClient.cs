@@ -37,7 +37,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceRestApiGeneralClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
     {
         RootClient = root;
 
@@ -85,7 +85,7 @@ public class BinanceRestApiGeneralClient : RestApiClient
     }
 
     protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
-        => RootClient.Spot.General.GetTimeAsync();
+        => RootClient.Spot.GetTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
         => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);

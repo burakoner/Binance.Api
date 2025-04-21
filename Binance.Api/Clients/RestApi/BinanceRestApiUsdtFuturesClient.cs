@@ -106,7 +106,7 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     /// </summary>
     public event Action<long> OnOrderCanceled;
 
-    internal BinanceRestApiUsdtFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceRestApiUsdtFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
     {
         RootClient = root;
 

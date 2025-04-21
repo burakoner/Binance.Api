@@ -102,7 +102,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     /// </summary>
     public event Action<long> OnOrderCanceled;
 
-    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceRestApiMarginClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
     {
         RootClient = root;
 
@@ -129,7 +129,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     }
 
     protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
-        => RootClient.Spot.General.GetTimeAsync();
+        => RootClient.Spot.GetTimeAsync();
 
     protected override TimeSyncInfo GetTimeSyncInfo()
         => new(Logger, ClientOptions.AutoTimestamp, ClientOptions.TimestampRecalculationInterval, TimeSyncState);
@@ -244,7 +244,7 @@ public class BinanceRestApiMarginClient : RestApiClient
             return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, outputPrice, outputStopPrice);
 
         if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ClientOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
-            await RootClient.Spot.General.GetExchangeInfoAsync(ct).ConfigureAwait(false);
+            await RootClient.Spot.GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");

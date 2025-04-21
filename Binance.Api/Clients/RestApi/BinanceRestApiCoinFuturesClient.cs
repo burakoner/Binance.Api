@@ -92,7 +92,7 @@ public class BinanceRestApiCoinFuturesClient : RestApiClient
     // Options
     public new BinanceRestApiClientOptions ClientOptions { get { return (BinanceRestApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceRestApiCoinFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceRestApiCoinFuturesClient(BinanceRestApiClient root) : base(root.Logger, root.Options)
     {
         RootClient = root;
 
