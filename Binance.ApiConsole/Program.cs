@@ -15,7 +15,6 @@ namespace Binance.ApiConsole
             var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
             {
                 RawResponse = true,
-                ApiCredentials = new ApiSharp.Authentication.ApiCredentials("Ct9Grd1oV5jtXMv4GXNnYmEH2nJxjxNuMcsZOo9rQqkw9ebZqfBpYoQHyCzvtTXL", "uJJaUF9QnmI2G5ddcxo74eb2b8ipLK7us3TW8fGBAEZjlQuSI5Jf7sb0VuFikvkI"),
             });
 
             // Spot > General Methods (PUBLIC)
