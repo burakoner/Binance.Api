@@ -16,7 +16,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// <summary>
     /// Binance Spot Rest API Client
     /// </summary>
-    public BinanceSpotRestApiClient Spot { get; }
+    public IBinanceSpotRestApiClient Spot { get; }
 
     /// <summary>
     /// Binance Wallet Rest API Client
