@@ -9,10 +9,10 @@
 	<PropertyGroup>
 		<PackageId>Binance.Api</PackageId>
 		<Authors>Burak Öner</Authors>
-		<Version>3.5.501</Version>
-		<FileVersion>3.5.501</FileVersion>
-		<PackageVersion>3.5.501</PackageVersion>
-		<AssemblyVersion>3.5.501</AssemblyVersion>
+		<Version>3.5.500</Version>
+		<FileVersion>3.5.500</FileVersion>
+		<PackageVersion>3.5.500</PackageVersion>
+		<AssemblyVersion>3.5.500</AssemblyVersion>
 		<Description>Up-to-date, most-complete, well-organized, well-documented, easy-to-use, multi-task and multi-thread compatible Binance Cryptocurrency Exchange Rest and Websocket Api Wrapper</Description>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageTags>Binance;BNB;BTC;Api;Client;Rest;Web;Websocket;Socket;Wrapper;Crypto;Currency;Cryptocurrency;Exchange;Trade;Trading;Bitcoin;Spot;Margin;Futures;Derivates;Stock;Options;Swap;</PackageTags>
@@ -20,7 +20,7 @@
 		<NeutralLanguage>en</NeutralLanguage>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>
-			Version 3.5.501 - 01 May 2021
+			Version 3.5.501 - 01 May 2025
 		</PackageReleaseNotes>
 		<PackageIcon>Binance.png</PackageIcon>
 		<PackageIconUrl />
@@ -47,12 +47,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Margin - Copy\**" />
-	  <EmbeddedResource Remove="Margin - Copy\**" />
-	  <None Remove="Margin - Copy\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="Binance.png" Pack="true" PackagePath="" />
 	</ItemGroup>
 
@@ -64,14 +58,10 @@
 	  <Folder Include="Margin\Clients\" />
 	  <Folder Include="Margin\Converters\" />
 	  <Folder Include="Margin\Internal\" />
-	  <Folder Include="Margin\Responses\" />
 	  <Folder Include="Margin\Requests\" />
-	  <Folder Include="Spot\Internal\" />
+	  <Folder Include="Models\RestApi\UserDataStream\" />
 	  <Folder Include="Spot\Requests\" />
-	  <Folder Include="Wallet\Internal\" />
 	  <Folder Include="Wallet\Converters\" />
-	  <Folder Include="Wallet\Enums\" />
-	  <Folder Include="Wallet\Responses\" />
 	  <Folder Include="Wallet\Requests\" />
 	</ItemGroup>
 

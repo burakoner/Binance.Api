@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Models.RestApi.C2C;
+using Binance.Api.Shared.Responses;
 
 namespace Binance.Api.Clients.RestApi.General;
 

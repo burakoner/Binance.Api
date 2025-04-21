@@ -36,7 +36,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     public event Action<long>? OnOrderCanceled;
 
     #region Internal Methods
-    internal Task<RestCallResult<T>> SendRequestInternal<T>(
+    internal Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
         Dictionary<string, object>? queryParameters = null,
         Dictionary<string, object>? bodyParameters = null,
@@ -45,7 +45,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         JsonSerializer? deserializer = null,
         bool ignoreRatelimit = false,
         int requestWeight = 1) where T : class
-        => SendRequestInternal<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
+        => _.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
@@ -55,10 +55,6 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
 
         return new Uri(url);
     }
-
-    internal string GetSymbolName(string baseAsset, string quoteAsset) => (baseAsset + quoteAsset).ToUpper(CultureInfo.InvariantCulture);
-
-    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (Options.ReceiveWindow != null ? Convert.ToInt32(Options.ReceiveWindow?.TotalMilliseconds) : null);
 
     internal async Task<BinanceTradeRuleResult> CheckTradeRules(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
     {
@@ -85,7 +81,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     public async Task<RestCallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
     {
         var sw = Stopwatch.StartNew();
-        var result = await SendRequestInternal<object>(GetUrl(api, v3, "ping"), HttpMethod.Get, ct).ConfigureAwait(false);
+        var result = await RequestAsync<object>(GetUrl(api, v3, "ping"), HttpMethod.Get, ct).ConfigureAwait(false);
         sw.Stop();
 
         return result.Success
@@ -101,7 +97,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     /// <returns>Server time</returns>
     public async Task<RestCallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
     {
-        var result = await SendRequestInternal<BinanceServerTime>(GetUrl(api, v3, "time"), HttpMethod.Get, ct, ignoreRatelimit: true).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceServerTime>(GetUrl(api, v3, "time"), HttpMethod.Get, ct, ignoreRatelimit: true).ConfigureAwait(false);
 
         return result.Success
             ? result.As(result.Data?.ServerTime ?? default)
@@ -196,7 +192,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("showPermissionSets", showPermissionSets?.ToString().ToLowerInvariant());
         parameters.AddOptionalEnum("symbolStatus", status);
 
-        var exchangeInfoResult = await SendRequestInternal<BinanceExchangeInfo>(GetUrl(api, v3, "exchangeInfo"), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 20).ConfigureAwait(false);
+        var exchangeInfoResult = await RequestAsync<BinanceExchangeInfo>(GetUrl(api, v3, "exchangeInfo"), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 20).ConfigureAwait(false);
         if (!exchangeInfoResult)
             return exchangeInfoResult;
 
@@ -225,7 +221,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptionalString("limit", limit);
 
         var requestWeight = limit == null ? 1 : limit <= 100 ? 5 : limit <= 500 ? 25 : limit <= 1000 ? 50 : 250;
-        var result = await SendRequestInternal<BinanceOrderBook>(GetUrl(api, v3, "depth"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceOrderBook>(GetUrl(api, v3, "depth"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
         if (!result) return result;
 
         result.Data.Symbol = symbol;
@@ -248,7 +244,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         var parameters = new ParameterCollection { { "symbol", symbol } };
         parameters.AddOptionalString("limit", limit);
 
-        return SendRequestInternal<IEnumerable<BinanceSpotTrade>>(GetUrl(api, v3, "trades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
+        return RequestAsync<IEnumerable<BinanceSpotTrade>>(GetUrl(api, v3, "trades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
     }
 
     /// <summary>
@@ -269,7 +265,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptionalString("limit", limit);
         parameters.AddOptionalString("fromId", fromId);
 
-        return SendRequestInternal<IEnumerable<BinanceSpotTrade>>(GetUrl(api, v3, "historicalTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
+        return RequestAsync<IEnumerable<BinanceSpotTrade>>(GetUrl(api, v3, "historicalTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
     }
 
     /// <summary>
@@ -294,7 +290,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return SendRequestInternal<IEnumerable<BinanceAggregatedTrade>>(GetUrl(api, v3, "aggTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<IEnumerable<BinanceAggregatedTrade>>(GetUrl(api, v3, "aggTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
     }
 
     /// <summary>
@@ -319,7 +315,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return SendRequestInternal<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, "klines"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, "klines"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -344,7 +340,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return SendRequestInternal<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, "uiKlines"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, "uiKlines"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -359,7 +355,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         symbol.ValidateBinanceSymbol();
         var parameters = new ParameterCollection { { "symbol", symbol } };
 
-        return await SendRequestInternal<BinanceAveragePrice>(GetUrl(api, v3, "avgPrice"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        return await RequestAsync<BinanceAveragePrice>(GetUrl(api, v3, "avgPrice"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -379,7 +375,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
             { "type", "FULL" }
         };
 
-        return SendRequestInternal<BinanceFullTicker>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<BinanceFullTicker>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -401,7 +397,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
 
         var symbolCount = symbols.Count();
         var weight = symbolCount <= 20 ? 2 : symbolCount <= 100 ? 40 : 80;
-        return SendRequestInternal<IEnumerable<BinanceFullTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceFullTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
     }
 
     /// <summary>
@@ -417,7 +413,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
             { "type", "FULL" }
         };
 
-        return SendRequestInternal<IEnumerable<BinanceFullTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
+        return RequestAsync<IEnumerable<BinanceFullTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
     }
 
     /// <summary>
@@ -437,7 +433,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
             { "type", "MINI" }
         };
 
-        return SendRequestInternal<BinanceMiniTicker>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<BinanceMiniTicker>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -459,7 +455,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
 
         var symbolCount = symbols.Count();
         var weight = symbolCount <= 20 ? 2 : symbolCount <= 100 ? 40 : 80;
-        return SendRequestInternal<IEnumerable<BinanceMiniTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceMiniTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
     }
 
     /// <summary>
@@ -475,7 +471,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
             { "type", "MINI" }
         };
 
-        return SendRequestInternal<IEnumerable<BinanceMiniTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
+        return RequestAsync<IEnumerable<BinanceMiniTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
     }
 
     /// <summary>
@@ -497,7 +493,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return SendRequestInternal<BinanceTradingDayFullTicker>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<BinanceTradingDayFullTicker>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
     }
 
     /// <summary>
@@ -522,7 +518,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
 
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 4, 200);
-        return SendRequestInternal<IEnumerable<BinanceTradingDayFullTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceTradingDayFullTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
     }
 
     /// <summary>
@@ -540,7 +536,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return SendRequestInternal<IEnumerable<BinanceTradingDayFullTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
+        return RequestAsync<IEnumerable<BinanceTradingDayFullTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
     }
 
     /// <summary>
@@ -562,7 +558,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return SendRequestInternal<BinanceTradingDayMiniTicker>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<BinanceTradingDayMiniTicker>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
     }
 
     /// <summary>
@@ -587,7 +583,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
 
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 4, 200);
-        return SendRequestInternal<IEnumerable<BinanceTradingDayMiniTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceTradingDayMiniTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
     }
 
     /// <summary>
@@ -605,7 +601,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return SendRequestInternal<IEnumerable<BinanceTradingDayMiniTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
+        return RequestAsync<IEnumerable<BinanceTradingDayMiniTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
     }
 
     /// <summary>
@@ -623,7 +619,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
                 { "symbol", symbol }
             };
 
-        return SendRequestInternal<BinancePriceTicker>(GetUrl(api, v3, "ticker/price"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<BinancePriceTicker>(GetUrl(api, v3, "ticker/price"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -639,7 +635,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
             symbol.ValidateBinanceSymbol();
 
         var parameters = new ParameterCollection { { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" } };
-        return SendRequestInternal<IEnumerable<BinancePriceTicker>>(GetUrl(api, v3, "ticker/price"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<IEnumerable<BinancePriceTicker>>(GetUrl(api, v3, "ticker/price"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
     }
 
     /// <summary>
@@ -650,7 +646,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     /// <returns>List of prices</returns>
     public Task<RestCallResult<IEnumerable<BinancePriceTicker>>> GetPriceTickersAsync(CancellationToken ct = default)
     {
-        return SendRequestInternal<IEnumerable<BinancePriceTicker>>(GetUrl(api, v3, "ticker/price"), HttpMethod.Get, ct, requestWeight: 4);
+        return RequestAsync<IEnumerable<BinancePriceTicker>>(GetUrl(api, v3, "ticker/price"), HttpMethod.Get, ct, requestWeight: 4);
     }
 
     /// <summary>
@@ -665,7 +661,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         symbol.ValidateBinanceSymbol();
         var parameters = new ParameterCollection { { "symbol", symbol } };
 
-        return SendRequestInternal<BinanceBookTicker>(GetUrl(api, v3, "ticker/bookTicker"), HttpMethod.Get, ct, false, queryParameters: parameters);
+        return RequestAsync<BinanceBookTicker>(GetUrl(api, v3, "ticker/bookTicker"), HttpMethod.Get, ct, false, queryParameters: parameters);
     }
 
     /// <summary>
@@ -680,7 +676,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
         var parameters = new ParameterCollection { { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" } };
 
-        return SendRequestInternal<IEnumerable<BinanceBookTicker>>(GetUrl(api, v3, "ticker/bookTicker"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<IEnumerable<BinanceBookTicker>>(GetUrl(api, v3, "ticker/bookTicker"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -691,7 +687,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     /// <returns>List of book prices</returns>
     public Task<RestCallResult<IEnumerable<BinanceBookTicker>>> GetBookTickersAsync(CancellationToken ct = default)
     {
-        return SendRequestInternal<IEnumerable<BinanceBookTicker>>(GetUrl(api, v3, "ticker/bookTicker"), HttpMethod.Get, ct, requestWeight: 2);
+        return RequestAsync<IEnumerable<BinanceBookTicker>>(GetUrl(api, v3, "ticker/bookTicker"), HttpMethod.Get, ct, requestWeight: 2);
     }
 
     /// <summary>
@@ -708,7 +704,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         var parameters = new ParameterCollection { { "symbol", symbol } };
         parameters.AddOptional("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
 
-        return SendRequestInternal<BinanceFullTicker>(GetUrl(api, v3, "ticker"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
+        return RequestAsync<BinanceFullTicker>(GetUrl(api, v3, "ticker"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
     /// <summary>
@@ -727,7 +723,7 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 4, 200);
-        return SendRequestInternal<IEnumerable<BinanceFullTicker>>(GetUrl(api, v3, "ticker"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceFullTicker>>(GetUrl(api, v3, "ticker"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
     }
 
     private string GetWindowSize(TimeSpan timeSpan)
@@ -796,9 +792,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await SendRequestInternal<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (result) InvokeOrderPlaced(result.Data.Id);
 
         return result;
@@ -861,10 +857,10 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("strategyType", strategyType);
         parameters.AddOptional("computeCommissionRates", computeFeeRates?.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var weight = computeFeeRates == true ? 20 : 1;
-        return await SendRequestInternal<BinanceSpotOrderTest>(GetUrl(api, v3, "order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
+        return await RequestAsync<BinanceSpotOrderTest>(GetUrl(api, v3, "order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
     }
 
     public Task<RestCallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -879,9 +875,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
             };
         parameters.AddOptionalString("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return SendRequestInternal<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 4);
     }
 
     public async Task<RestCallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -897,9 +893,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptionalString("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("newClientOrderId", newClientOrderId);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await SendRequestInternal<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) InvokeOrderCanceled(result.Data.Id);
         return result;
     }
@@ -912,9 +908,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await SendRequestInternal<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        var result = await RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) foreach (var order in result.Data) InvokeOrderCanceled(order.Id);
         return result;
     }
@@ -987,9 +983,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await SendRequestInternal<BinanceReplaceOrderResult>(GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceReplaceOrderResult>(GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result && result.Raw != null)
         {
             // Attempt to parse the error
@@ -1018,9 +1014,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return await SendRequestInternal<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
+        return await RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -1035,9 +1031,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return SendRequestInternal<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
     // TODO: New order using SOR (TRADE)
@@ -1049,9 +1045,9 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("omitZeroBalances", omitZeroBalances?.ToString().ToLowerInvariant());
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return SendRequestInternal<BinanceSpotAccount>(GetUrl(api, v3, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<BinanceSpotAccount>(GetUrl(api, v3, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -1068,18 +1064,18 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var weight = orderId.HasValue ? 5 : 20;
-        return SendRequestInternal<IEnumerable<BinanceSpotUserTrade>>(GetUrl(api, v3, "myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceSpotUserTrade>>(GetUrl(api, v3, "myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceOrderRateLimit>>> GetOrderRateLimitStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return SendRequestInternal<IEnumerable<BinanceOrderRateLimit>>(GetUrl(api, v3, "rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<IEnumerable<BinanceOrderRateLimit>>(GetUrl(api, v3, "rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
     public Task<RestCallResult<IEnumerable<BinancePreventedTrade>>> GetPreventedTradesAsync(string symbol, long? orderId = null, long? preventedMatchId = null, long? fromPreventedMatchId = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -1092,16 +1088,58 @@ public class BinanceSpotRestApiClient(BinanceRestApiClient root)
         parameters.AddOptional("preventedMatchId", preventedMatchId);
         parameters.AddOptional("fromPreventedMatchId", fromPreventedMatchId);
         parameters.AddOptional("size", limit);
-        parameters.AddOptional("recvWindow", ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var weight = preventedMatchId.HasValue ? 2 : 20;
         if (orderId.HasValue) weight = 20;
-        return SendRequestInternal<IEnumerable<BinancePreventedTrade>>(GetUrl(api, v3, "myPreventedMatches"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinancePreventedTrade>>(GetUrl(api, v3, "myPreventedMatches"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
     // TODO: Query Allocations (USER_DATA)
     // TODO: Query Commission Rates (USER_DATA)
     // TODO: Query Order Amendments (USER_DATA)
+
+    #endregion
+
+    #region User Data Stream
+    [Obsolete("[!IMPORTANT] " +
+        "These requests have been deprecated, which means we will remove them in the future. Please subscribe to the User Data Stream through the WebSocket API instead. " +
+        "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/user-data-stream-endpoints-deprecated")]
+    public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
+    {
+        var result = await RequestAsync<BinanceListenKey>(GetUrl(api, v3, "userDataStream"), HttpMethod.Post, ct, true, requestWeight: 2);
+        return result.As(result.Data?.ListenKey!);
+    }
+
+    [Obsolete("[!IMPORTANT] " +
+        "These requests have been deprecated, which means we will remove them in the future. Please subscribe to the User Data Stream through the WebSocket API instead. " +
+        "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/user-data-stream-endpoints-deprecated")]
+    public async Task<RestCallResult<bool>> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default)
+    {
+        listenKey.ValidateNotNull(nameof(listenKey));
+        var parameters = new ParameterCollection
+        {
+            { "listenKey", listenKey }
+        };
+
+        var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 2);
+        return result.As(result.Success);
+    }
+
+    [Obsolete("[!IMPORTANT] " +
+        "These requests have been deprecated, which means we will remove them in the future. Please subscribe to the User Data Stream through the WebSocket API instead. " +
+        "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/user-data-stream-endpoints-deprecated")]
+    public async Task<RestCallResult<bool>> StopUserStreamAsync(string listenKey, CancellationToken ct = default)
+    {
+        listenKey.ValidateNotNull(nameof(listenKey));
+        var parameters = new ParameterCollection
+        {
+            { "listenKey", listenKey }
+        };
+
+        var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 2);
+        return result.As(result.Success);
+    }
 
     #endregion
 

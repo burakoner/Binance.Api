@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.FuturesAlgoOrders;
+﻿using Binance.Api.Shared.Responses;
+
+namespace Binance.Api.Models.RestApi.FuturesAlgoOrders;
 
 /// <summary>
 /// Algo order result

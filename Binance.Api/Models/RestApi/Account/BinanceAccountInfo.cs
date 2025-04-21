@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Spot.Enums;
+using Binance.Api.Wallet.Responses;
 
 namespace Binance.Api.Models.RestApi.Account;
 

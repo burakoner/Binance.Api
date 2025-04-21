@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Models.RestApi.Mining;
+using Binance.Api.Shared.Responses;
 
 namespace Binance.Api.Clients.RestApi.General;
 

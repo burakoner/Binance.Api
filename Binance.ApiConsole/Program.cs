@@ -67,6 +67,9 @@ namespace Binance.ApiConsole
             var spot_402 = await api.Spot.GetUserTradesAsync("BTCUSDT");
             var spot_403 = await api.Spot.GetOrderRateLimitStatusAsync();
             var spot_404 = await api.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
+            var spot_405 = await api.Spot.StartUserStreamAsync();
+            var spot_406 = await api.Spot.KeepAliveUserStreamAsync("---LISTEN-KEY---");
+            var spot_407 = await api.Spot.StopUserStreamAsync("---LISTEN-KEY---");
             /**/
 
 

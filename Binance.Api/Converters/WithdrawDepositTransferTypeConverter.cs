@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Converters;
+﻿using Binance.Api.Wallet.Enums;
+
+namespace Binance.Api.Converters;
 
 internal class WithdrawDepositTransferTypeConverter : BaseConverter<WithdrawDepositTransferType>
 {
