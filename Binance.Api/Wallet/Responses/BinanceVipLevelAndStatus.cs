@@ -1,4 +1,4 @@
-﻿namespace Binance.Net.Objects.Models.Spot;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// VIP level and futures/margin enabled status

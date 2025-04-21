@@ -1,7 +1,6 @@
-﻿using Binance.Api.Margin.Responses;
-using Binance.Api.Spot.Enums;
+﻿using Binance.Api.Margin;
 
-namespace Binance.Api.Wallet.Responses;
+namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Margin account snapshot

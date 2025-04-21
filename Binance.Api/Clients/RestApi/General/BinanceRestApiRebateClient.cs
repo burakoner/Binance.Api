@@ -1,5 +1,4 @@
 ﻿using Binance.Api.Models.RestApi.Rebate;
-using Binance.Api.Shared.Responses;
 
 namespace Binance.Api.Clients.RestApi.General;
 

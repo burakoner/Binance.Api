@@ -1,6 +1,4 @@
-﻿using Binance.Api.Wallet.Enums;
-
-namespace Binance.Api.Wallet.Responses;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// The status of Binance
@@ -10,7 +8,6 @@ public record BinanceSystemStatus
     /// <summary>
     /// Status
     /// </summary>
-    [JsonConverter(typeof(SystemStatusConverter))]
     public SystemStatus Status { get; set; }
 
     /// <summary>

@@ -1,7 +1,4 @@
-﻿using Binance.Api.Shared.Responses;
-using Binance.Api.Spot.Internal;
-
-namespace Binance.Api.Clients.RestApi;
+﻿namespace Binance.Api.Clients.RestApi;
 
 public class BinanceRestApiCoinFuturesClient : RestApiClient
 {

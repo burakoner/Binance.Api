@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Shared.Responses;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Query result
@@ -14,7 +14,7 @@ public record BinanceResult
     /// Message
     /// </summary>
     [JsonProperty("msg")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 }
 
 /// <summary>

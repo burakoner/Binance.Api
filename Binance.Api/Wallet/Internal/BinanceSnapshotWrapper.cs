@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Wallet.Internal;
+﻿namespace Binance.Api.Wallet;
 
 internal class BinanceSnapshotWrapper<T>
 {

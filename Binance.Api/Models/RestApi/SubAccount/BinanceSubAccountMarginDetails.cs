@@ -1,4 +1,4 @@
-﻿using Binance.Api.Margin.Responses;
+﻿using Binance.Api.Margin;
 
 namespace Binance.Api.Models.RestApi.SubAccount;
 

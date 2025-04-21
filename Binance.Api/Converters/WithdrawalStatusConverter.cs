@@ -1,8 +1,8 @@
-﻿using Binance.Api.Wallet.Enums;
+﻿using Binance.Api.Wallet;
 
 namespace Binance.Api.Converters;
 
-internal class WithdrawalStatusConverter : BaseConverter<WithdrawalStatus>
+internal class WithdrawalStatusConverter : BaseConverter<BinanceWithdrawalStatus>
 {
     public WithdrawalStatusConverter() : this(true)
     {
@@ -12,14 +12,14 @@ internal class WithdrawalStatusConverter : BaseConverter<WithdrawalStatus>
     {
     }
 
-    protected override List<KeyValuePair<WithdrawalStatus, string>> Mapping => new List<KeyValuePair<WithdrawalStatus, string>>
+    protected override List<KeyValuePair<BinanceWithdrawalStatus, string>> Mapping => new List<KeyValuePair<BinanceWithdrawalStatus, string>>
     {
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.EmailSend, "0"),
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.Canceled, "1"),
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.AwaitingApproval, "2"),
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.Rejected, "3"),
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.Processing, "4"),
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.Failure, "5"),
-        new KeyValuePair<WithdrawalStatus, string>(WithdrawalStatus.Completed, "6")
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.EmailSend, "0"),
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.Canceled, "1"),
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.AwaitingApproval, "2"),
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.Rejected, "3"),
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.Processing, "4"),
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.Failure, "5"),
+        new KeyValuePair<BinanceWithdrawalStatus, string>(BinanceWithdrawalStatus.Completed, "6")
     };
 }

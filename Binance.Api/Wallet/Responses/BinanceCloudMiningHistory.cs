@@ -1,4 +1,4 @@
-﻿namespace Binance.Net.Objects.Models.Spot;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Cloud mining payment/refund history
@@ -21,7 +21,7 @@ public record BinanceCloudMiningHistory
     /// Type
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
-    public CloudMiningPaymentStatus Type { get; set; }
+    public BinanceCloudMiningPaymentStatus Type { get; set; }
 
     /// <summary>
     /// Asset

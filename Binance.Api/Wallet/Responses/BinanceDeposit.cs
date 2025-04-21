@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Wallet.Responses;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Information about a deposit
@@ -53,14 +53,12 @@ public record BinanceDeposit
     /// <summary>
     /// The status of the deposit
     /// </summary>
-    [JsonConverter(typeof(DepositStatusConverter))]
-    public DepositStatus Status { get; set; }
+    public BinanceDepositStatus Status { get; set; }
 
     /// <summary>
     /// The transfer type
     /// </summary>
-    [JsonConverter(typeof(WithdrawDepositTransferTypeConverter))]
-    public WithdrawDepositTransferType TransferType { get; set; }
+    public BinanceWithdrawDepositTransferType TransferType { get; set; }
 
     /// <summary>
     /// Confirmations
@@ -78,7 +76,7 @@ public record BinanceDeposit
     /// The wallet type
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
-    public WalletType WalletType { get; set; }
+    public BinanceWalletType WalletType { get; set; }
 
     /// <summary>
     /// Transaction source address. Note: Please note that the source address returned may not be accurate due to network-specific characteristics. If multiple source addresses found, only the first address will be returned

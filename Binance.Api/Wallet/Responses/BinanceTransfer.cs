@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Wallet.Responses;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Transfer info
@@ -19,7 +19,7 @@ public record BinanceTransfer
     /// <summary>
     /// Transfer type
     /// </summary>
-    public UniversalTransferType Type { get; set; }
+    public BinanceUniversalTransferType Type { get; set; }
 
     /// <summary>
     /// Status

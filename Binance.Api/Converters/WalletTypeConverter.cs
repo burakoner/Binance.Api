@@ -1,15 +1,15 @@
-﻿using Binance.Api.Wallet.Enums;
+﻿using Binance.Api.Wallet;
 
 namespace Binance.Api.Converters;
 
-internal class WalletTypeConverter : BaseConverter<WalletType>
+internal class WalletTypeConverter : BaseConverter<BinanceWalletType>
 {
     public WalletTypeConverter() : this(true) { }
     public WalletTypeConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<WalletType, string>> Mapping => new List<KeyValuePair<WalletType, string>>
+    protected override List<KeyValuePair<BinanceWalletType, string>> Mapping => new List<KeyValuePair<BinanceWalletType, string>>
     {
-        new KeyValuePair<WalletType, string>(WalletType.Spot, "0"),
-        new KeyValuePair<WalletType, string>(WalletType.Funding, "1"),
+        new KeyValuePair<BinanceWalletType, string>(BinanceWalletType.Spot, "0"),
+        new KeyValuePair<BinanceWalletType, string>(BinanceWalletType.Funding, "1"),
     };
 }

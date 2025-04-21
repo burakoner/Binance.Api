@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.SubAccount;
+﻿using Binance.Api.Wallet;
+
+namespace Binance.Api.Models.RestApi.SubAccount;
 
 /// <summary>
 /// Information about a deposit
@@ -48,6 +50,5 @@ public record BinanceSubAccountDeposit
     /// <summary>
     /// The status of the deposit
     /// </summary>
-    [JsonConverter(typeof(DepositStatusConverter))]
-    public DepositStatus Status { get; set; }
+    public BinanceDepositStatus Status { get; set; }
 }

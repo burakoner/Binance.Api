@@ -1,5 +1,5 @@
 ﻿using Binance.Api.Models.RestApi.SubAccount;
-using Binance.Api.Wallet.Responses;
+using Binance.Api.Wallet;
 
 namespace Binance.Api.Clients.RestApi.General;
 

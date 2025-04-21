@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Wallet.Responses;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Snapshot data of a spot account

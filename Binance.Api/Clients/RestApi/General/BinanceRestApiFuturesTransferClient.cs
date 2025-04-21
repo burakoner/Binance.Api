@@ -1,5 +1,4 @@
-﻿using Binance.Api.Models.RestApi.Futures;
-using Binance.Api.Wallet.Responses;
+﻿using Binance.Api.Wallet;
 
 namespace Binance.Api.Clients.RestApi.General;
 

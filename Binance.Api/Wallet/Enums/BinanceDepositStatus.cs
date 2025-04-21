@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Wallet.Enums;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// The status of a deposit
 /// </summary>
-public enum DepositStatus : byte
+public enum BinanceDepositStatus : byte
 {
     /// <summary>
     /// Pending

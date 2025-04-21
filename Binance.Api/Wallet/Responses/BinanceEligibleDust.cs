@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Wallet.Responses;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Asset dusts that can be converted to BNB

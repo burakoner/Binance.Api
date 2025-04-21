@@ -1,9 +1,9 @@
-﻿namespace Binance.Net.Enums;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Cloud mining payment status
 /// </summary>
-public enum CloudMiningPaymentStatus : int
+public enum BinanceCloudMiningPaymentStatus : int
 {
     /// <summary>
     /// Payment

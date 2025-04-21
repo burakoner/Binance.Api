@@ -1,7 +1,5 @@
-﻿using Binance.Api.Margin.Enums;
-using Binance.Api.Margin.Responses;
-using Binance.Api.Spot.Internal;
-using Binance.Api.Wallet.Responses;
+﻿using Binance.Api.Margin;
+using Binance.Api.Wallet;
 
 namespace Binance.Api.Clients.RestApi;
 

@@ -1,8 +1,4 @@
-﻿using Binance.Api.Shared.Responses;
-using Binance.Api.Wallet.Internal;
-using Binance.Api.Wallet.Responses;
-
-namespace Binance.Api.Wallet;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Binance Wallet Rest API Client
@@ -79,7 +75,7 @@ public class BinanceWalletRestApiClient(BinanceRestApiClient root)
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Withdrawal confirmation</returns>
-    public Task<RestCallResult<BinanceWithdrawalPlaced>> WithdrawAsync(string asset, string address, decimal quantity, string? withdrawOrderId = null, string? network = null, string? addressTag = null, string? name = null, bool? transactionFeeFlag = null, WalletType? walletType = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWithdrawalPlaced>> WithdrawAsync(string asset, string address, decimal quantity, string? withdrawOrderId = null, string? network = null, string? addressTag = null, string? name = null, bool? transactionFeeFlag = null, BinanceWalletType? walletType = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset.ValidateNotNull(nameof(asset));
         address.ValidateNotNull(nameof(address));
@@ -115,7 +111,7 @@ public class BinanceWalletRestApiClient(BinanceRestApiClient root)
     /// <param name="limit">Add limit. Default: 1000, Max: 1000</param>
     /// <param name="offset">Add offset</param>
     /// <returns>List of withdrawals</returns>
-    public Task<RestCallResult<IEnumerable<BinanceWithdrawal>>> GetWithdrawalHistoryAsync(string? asset = null, string? withdrawOrderId = null, WithdrawalStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, int? offset = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceWithdrawal>>> GetWithdrawalHistoryAsync(string? asset = null, string? withdrawOrderId = null, BinanceWithdrawalStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, int? offset = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("coin", asset);
@@ -161,7 +157,7 @@ public class BinanceWalletRestApiClient(BinanceRestApiClient root)
     /// <param name="includeSource">Include source address to response</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of deposits</returns>
-    public Task<RestCallResult<IEnumerable<BinanceDeposit>>> GetDepositHistoryAsync(string? asset = null, DepositStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? offset = null, int? limit = null, int? receiveWindow = null, bool includeSource = false, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceDeposit>>> GetDepositHistoryAsync(string? asset = null, BinanceDepositStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? offset = null, int? limit = null, int? receiveWindow = null, bool includeSource = false, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("coin", asset);
@@ -269,7 +265,7 @@ public class BinanceWalletRestApiClient(BinanceRestApiClient root)
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    public Task<RestCallResult<BinanceTransaction>> TransferAsync(UniversalTransferType type, string asset, decimal quantity, string? fromSymbol = null, string? toSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceTransaction>> TransferAsync(BinanceUniversalTransferType type, string asset, decimal quantity, string? fromSymbol = null, string? toSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -296,7 +292,7 @@ public class BinanceWalletRestApiClient(BinanceRestApiClient root)
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    public Task<RestCallResult<BinanceQueryRecords<BinanceTransfer>>> GetTransfersAsync(UniversalTransferType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceQueryRecords<BinanceTransfer>>> GetTransfersAsync(BinanceUniversalTransferType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddEnum("type", type);

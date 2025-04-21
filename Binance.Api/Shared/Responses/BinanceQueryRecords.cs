@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Models.RestApi;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Query results

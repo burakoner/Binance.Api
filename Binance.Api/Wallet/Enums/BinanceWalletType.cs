@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Wallet.Enums;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Wallet type
 /// </summary>
-public enum WalletType : byte
+public enum BinanceWalletType : byte
 {
     /// <summary>
     /// Spot wallet

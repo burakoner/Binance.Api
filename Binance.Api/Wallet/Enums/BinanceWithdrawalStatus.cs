@@ -1,49 +1,49 @@
-﻿namespace Binance.Api.Wallet.Enums;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// The status of a withdrawal
 /// </summary>
-public enum WithdrawalStatus
+public enum BinanceWithdrawalStatus : byte
 {
     /// <summary>
     /// Email has been send
     /// </summary>
     [Map("0")]
-    EmailSend,
+    EmailSend = 0,
 
     /// <summary>
     /// Withdrawal has been canceled
     /// </summary>
     [Map("1")]
-    Canceled,
+    Canceled = 1,
 
     /// <summary>
     /// Withdrawal is awaiting approval
     /// </summary>
     [Map("2")]
-    AwaitingApproval,
+    AwaitingApproval = 2,
 
     /// <summary>
     /// Withdrawal has been rejected
     /// </summary>
     [Map("3")]
-    Rejected,
+    Rejected = 3,
 
     /// <summary>
     /// Withdrawal is processing
     /// </summary>
     [Map("4")]
-    Processing,
+    Processing = 4,
 
     /// <summary>
     /// Withdrawal has failed
     /// </summary>
     [Map("5")]
-    Failure,
+    Failure = 5,
 
     /// <summary>
     /// Withdrawal has been processed
     /// </summary>
     [Map("6")]
-    Completed
+    Completed = 6
 }

@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Wallet.Responses;
+﻿namespace Binance.Api.Wallet;
 
 /// <summary>
 /// Information about a withdrawal
@@ -67,12 +67,12 @@ public record BinanceWithdrawal
     /// <summary>
     /// The status of the withdrawal
     /// </summary>
-    public WithdrawalStatus Status { get; set; }
+    public BinanceWithdrawalStatus Status { get; set; }
 
     /// <summary>
     /// Transfer type: 1 for internal transfer, 0 for external transfer 
     /// </summary>
-    public WithdrawDepositTransferType TransferType { get; set; }
+    public BinanceWithdrawDepositTransferType TransferType { get; set; }
 
     /// <summary>
     /// Transaction key
@@ -89,7 +89,7 @@ public record BinanceWithdrawal
     /// The wallet type the withdrawal was from
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
-    public WalletType WalletType { get; set; }
+    public BinanceWalletType WalletType { get; set; }
 
     /// <summary>
     /// The time the withdrawal was completed

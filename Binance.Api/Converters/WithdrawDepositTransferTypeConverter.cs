@@ -1,8 +1,8 @@
-﻿using Binance.Api.Wallet.Enums;
+﻿using Binance.Api.Wallet;
 
 namespace Binance.Api.Converters;
 
-internal class WithdrawDepositTransferTypeConverter : BaseConverter<WithdrawDepositTransferType>
+internal class WithdrawDepositTransferTypeConverter : BaseConverter<BinanceWithdrawDepositTransferType>
 {
     public WithdrawDepositTransferTypeConverter() : this(true)
     {
@@ -12,12 +12,12 @@ internal class WithdrawDepositTransferTypeConverter : BaseConverter<WithdrawDepo
     {
     }
 
-    protected override List<KeyValuePair<WithdrawDepositTransferType, string>> Mapping =>
-        new List<KeyValuePair<WithdrawDepositTransferType, string>>
+    protected override List<KeyValuePair<BinanceWithdrawDepositTransferType, string>> Mapping =>
+        new List<KeyValuePair<BinanceWithdrawDepositTransferType, string>>
         {
-            new KeyValuePair<WithdrawDepositTransferType, string>(
-                WithdrawDepositTransferType.Internal, "1"),
-            new KeyValuePair<WithdrawDepositTransferType, string>(
-                WithdrawDepositTransferType.External, "0"),
+            new KeyValuePair<BinanceWithdrawDepositTransferType, string>(
+                BinanceWithdrawDepositTransferType.Internal, "1"),
+            new KeyValuePair<BinanceWithdrawDepositTransferType, string>(
+                BinanceWithdrawDepositTransferType.External, "0"),
         };
 }
