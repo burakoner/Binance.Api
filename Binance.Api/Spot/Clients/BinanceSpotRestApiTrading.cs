@@ -1,17 +1,17 @@
 ﻿namespace Binance.Api.Spot;
 
-public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
+public class BinanceSpotRestApiTrading(BinanceSpotRestApi parent)
 {
     // Api
     private const string api = "api";
     private const string v1 = "1";
     private const string v3 = "3";
 
-    // Parent Clients
-    internal BinanceRestApiClient _ { get; } = parent._;
-    internal BinanceSpotRestApiClient __ { get; } = parent;
-    internal ILogger? Logger { get; } = parent.Logger;
-    internal BinanceRestApiClientOptions ClientOptions { get; } = parent.Options;
+    // Parent Objects
+    private BinanceRestApiClient _ => __._;
+    private BinanceSpotRestApi __ { get; } = parent;
+    private BinanceRestApiClientOptions _options => _.ClientOptions;
+    private ILogger _logger => _.Logger;
 
     public async Task<RestCallResult<BinanceSpotOrder>> PlaceOrderAsync(
         string symbol,
@@ -88,7 +88,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         var rulesCheck = await __.CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            Logger?.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            _logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceSpotOrderTest>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -210,7 +210,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         var rulesCheck = await __.CheckTradeRules(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            Logger?.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            _logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
             return new RestCallResult<BinanceReplaceOrderResult>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
@@ -248,7 +248,7 @@ public class BinanceSpotRestApiTradingClient(BinanceSpotRestApiClient parent)
         if (!result && result.Raw != null)
         {
             // Attempt to parse the error
-            var jsonData = result.Raw.ToJToken(Logger);
+            var jsonData = result.Raw.ToJToken(_logger);
             if (jsonData != null)
             {
                 var dataNode = jsonData["data"];

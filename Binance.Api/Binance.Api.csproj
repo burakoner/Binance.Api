@@ -62,6 +62,11 @@
 	  <Folder Include="Margin\Requests\" />
 	  <Folder Include="Spot\Internal\" />
 	  <Folder Include="Spot\Requests\" />
+	  <Folder Include="Wallet\Internal\" />
+	  <Folder Include="Wallet\Converters\" />
+	  <Folder Include="Wallet\Enums\" />
+	  <Folder Include="Wallet\Responses\" />
+	  <Folder Include="Wallet\Requests\" />
 	</ItemGroup>
 
 </Project>

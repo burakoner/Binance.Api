@@ -12,6 +12,7 @@ namespace Binance.ApiConsole
             var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
             {
                 RawResponse = true,
+                ApiCredentials = new ApiSharp.Authentication.ApiCredentials("Ct9Grd1oV5jtXMv4GXNnYmEH2nJxjxNuMcsZOo9rQqkw9ebZqfBpYoQHyCzvtTXL", "uJJaUF9QnmI2G5ddcxo74eb2b8ipLK7us3TW8fGBAEZjlQuSI5Jf7sb0VuFikvkI"),
             });
 
             // Spot General (Public)
@@ -69,11 +70,6 @@ namespace Binance.ApiConsole
             /**/
 
 
-            var spot_402 = await api.Spot.Account.GetUserTradesAsync("BTCUSDT");
-            var spot_301 = await api.Spot.Trading.PlaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
-
-
-            /**/
 
             var server_04 = await api.Spot.GetSystemStatusAsync();
 

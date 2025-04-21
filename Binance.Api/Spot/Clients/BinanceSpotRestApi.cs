@@ -3,7 +3,7 @@
 /// <summary>
 /// Binance Spot Rest API Client
 /// </summary>
-public class BinanceSpotRestApiClient : RestApiClient
+public class BinanceSpotRestApi : RestApiClient
 {
     // Api
     private const string v1 = "1";
@@ -46,13 +46,13 @@ public class BinanceSpotRestApiClient : RestApiClient
     /// <summary>
     /// Event triggered when an order is placed via this client. Only available for Spot orders
     /// </summary>
-    public event Action<long> OnOrderPlaced;
+    public event Action<long>? OnOrderPlaced;
 
     /// <summary>
     /// Event triggered when an order is canceled via this client. 
     /// Note that this does not trigger when using CancelAllOrdersAsync. Only available for Spot orders
     /// </summary>
-    public event Action<long> OnOrderCanceled;
+    public event Action<long>? OnOrderCanceled;
 
     // Parent
     internal BinanceRestApiClient _ { get; }
@@ -68,36 +68,38 @@ public class BinanceSpotRestApiClient : RestApiClient
     /// General Client
     /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints" /></para>
     /// </summary>
-    public BinanceSpotRestApiGeneralClient General { get; set; }
+    public BinanceSpotRestApiGeneral General { get; set; }
 
     /// <summary>
     /// Market Data Client
     /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints" /></para>
     /// </summary>
-    public BinanceSpotRestApiMarketDataClient MarketData { get; set; }
+    public BinanceSpotRestApiMarketData MarketData { get; set; }
 
     /// <summary>
     /// Trading Client
     /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints" /></para>
     /// </summary>
-    public BinanceSpotRestApiTradingClient Trading { get; set; }
+    public BinanceSpotRestApiTrading Trading { get; set; }
 
     /// <summary>
     /// Account Client
     /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints" /></para>
     /// </summary>
-    public BinanceSpotRestApiAccountClient Account { get; set; }
+    public BinanceSpotRestApiAccount Account { get; set; }
 
-    // Options
-
-    internal BinanceSpotRestApiClient(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
+    /// <summary>
+    /// Binance Spot Rest API Client
+    /// </summary>
+    /// <param name="root">Parent</param>
+    internal BinanceSpotRestApi(BinanceRestApiClient root) : base(root.Logger, root.ClientOptions)
     {
         _ = root;
 
-        General = new BinanceSpotRestApiGeneralClient(this);
-        MarketData = new BinanceSpotRestApiMarketDataClient(this);
-        Trading = new BinanceSpotRestApiTradingClient(this);
-        Account = new BinanceSpotRestApiAccountClient(this);
+        General = new BinanceSpotRestApiGeneral(this);
+        MarketData = new BinanceSpotRestApiMarketData(this);
+        Trading = new BinanceSpotRestApiTrading(this);
+        Account = new BinanceSpotRestApiAccount(this);
 
         RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
@@ -279,10 +281,6 @@ public class BinanceSpotRestApiClient : RestApiClient
 
         return data.As(data.Data.Data);
     }
-    #endregion
-
-    #region Market Data Methods
-
     #endregion
 
     #region Account Methods

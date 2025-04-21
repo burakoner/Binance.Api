@@ -4,17 +4,18 @@
 /// Binance Spot Rest API General Client
 /// </summary>
 /// <param name="parent">Parent Client</param>
-public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
+public class BinanceSpotRestApiGeneral(BinanceSpotRestApi parent)
 {
     // Api
     private const string api = "api";
     private const string v1 = "1";
     private const string v3 = "3";
 
-    // Parent Clients
-    internal BinanceRestApiClient _ { get; } = parent._;
-    internal BinanceSpotRestApiClient __ { get; } = parent;
-    internal ILogger? Logger { get; } = parent.Logger;
+    // Parent Objects
+    private BinanceRestApiClient _ => __._;
+    private BinanceSpotRestApi __ { get; } = parent;
+    private BinanceRestApiClientOptions _options => _.ClientOptions;
+    private ILogger _logger => _.Logger;
 
     // Internal
     internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
@@ -146,7 +147,7 @@ public class BinanceSpotRestApiGeneralClient(BinanceSpotRestApiClient parent)
 
         ExchangeInfo = exchangeInfoResult.Data;
         LastExchangeInfoUpdate = DateTime.UtcNow;
-        Logger?.Log(LogLevel.Information, "Trade rules updated");
+        _logger.Log(LogLevel.Information, "Trade rules updated");
         return exchangeInfoResult;
     }
 }

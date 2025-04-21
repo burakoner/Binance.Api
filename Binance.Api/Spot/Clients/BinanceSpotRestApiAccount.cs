@@ -1,17 +1,17 @@
 ﻿namespace Binance.Api.Spot;
 
-public class BinanceSpotRestApiAccountClient(BinanceSpotRestApiClient parent)
+public class BinanceSpotRestApiAccount(BinanceSpotRestApi parent)
 {
     // Api
     private const string api = "api";
     private const string v1 = "1";
     private const string v3 = "3";
 
-    // Parent Clients
-    internal BinanceRestApiClient _ { get; } = parent._;
-    internal BinanceSpotRestApiClient __ { get; } = parent;
-    internal ILogger? Logger { get; } = parent.Logger;
-    internal BinanceRestApiClientOptions ClientOptions { get; } = parent.Options;
+    // Parent Objects
+    private BinanceRestApiClient _ => __._;
+    private BinanceSpotRestApi __ { get; } = parent;
+    private BinanceRestApiClientOptions _options => _.ClientOptions;
+    private ILogger _logger => _.Logger;
 
     public Task<RestCallResult<BinanceSpotAccount>> GetAccountAsync(bool? omitZeroBalances = null, int? receiveWindow = null, CancellationToken ct = default)
     {

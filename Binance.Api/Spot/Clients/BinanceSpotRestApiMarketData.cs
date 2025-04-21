@@ -4,17 +4,18 @@
 /// Binance Spot REST API Market Data Client
 /// </summary>
 /// <param name="parent">Parent Client</param>
-public class BinanceSpotRestApiMarketDataClient(BinanceSpotRestApiClient parent)
+public class BinanceSpotRestApiMarketData(BinanceSpotRestApi parent)
 {
     // Api
     private const string api = "api";
     private const string v1 = "1";
     private const string v3 = "3";
 
-    // Parent Clients
-    internal BinanceRestApiClient _ { get; } = parent._;
-    internal BinanceSpotRestApiClient __ { get; } = parent;
-    internal ILogger? Logger { get; } = parent.Logger;
+    // Parent Objects
+    private BinanceRestApiClient _ => __._;
+    private BinanceSpotRestApi __ { get; } = parent;
+    private BinanceRestApiClientOptions _options => _.ClientOptions;
+    private ILogger _logger => _.Logger;
 
     /// <summary>
     /// Gets the order book for the provided symbol
