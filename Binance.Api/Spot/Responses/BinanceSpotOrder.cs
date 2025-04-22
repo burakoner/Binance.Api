@@ -29,7 +29,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
-    public string RawClientOrderId => ClientOrderId
+    public string RequestClientOrderId => ClientOrderId
         .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
         .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
 
@@ -42,7 +42,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// The original order id as assigned by the client without the prefix
     /// </summary>
-    public string RawOriginalClientOrderId => ClientOrderId
+    public string RequestOriginalClientOrderId => ClientOrderId
         .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
         .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
 

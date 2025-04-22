@@ -33,11 +33,14 @@ public record BinanceOrderOcoList
     /// <summary>
     /// The client id of the order list
     /// </summary>
-    [JsonProperty("listClientOrderId")]
-    [JsonConverterCtor(typeof(ReplaceConverter),
-        $"{BinanceExchange.ClientOrderIdPrefixSpot}->",
-        $"{BinanceExchange.ClientOrderIdPrefixFutures}->")]
     public string ListClientOrderId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The order id as assigned by the client without the prefix
+    /// </summary>
+    public string RequestListClientOrderId => ListClientOrderId
+        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
+        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
 
     /// <summary>
     /// The transaction time
@@ -79,11 +82,14 @@ public record BinanceOrderId
     /// <summary>
     /// The client order id
     /// </summary>
-    [JsonPropertyName("clientOrderId")]
-    [JsonConverterCtor(typeof(ReplaceConverter),
-        $"{BinanceExchange.ClientOrderIdPrefixSpot}->",
-        $"{BinanceExchange.ClientOrderIdPrefixFutures}->")]
     public string ClientOrderId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The order id as assigned by the client without the prefix
+    /// </summary>
+    public string RequestClientOrderId => ClientOrderId
+        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
+        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
 }
 
 /// <summary>
