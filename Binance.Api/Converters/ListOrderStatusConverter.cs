@@ -1,14 +1,14 @@
 ﻿namespace Binance.Api.Converters;
 
-internal class ListOrderStatusConverter : BaseConverter<ListOrderStatus>
+internal class ListOrderStatusConverter : BaseConverter<BinanceListOrderStatus>
 {
     public ListOrderStatusConverter() : this(true) { }
     public ListOrderStatusConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<ListOrderStatus, string>> Mapping => new List<KeyValuePair<ListOrderStatus, string>>
+    protected override List<KeyValuePair<BinanceListOrderStatus, string>> Mapping => new List<KeyValuePair<BinanceListOrderStatus, string>>
     {
-        new KeyValuePair<ListOrderStatus, string>(ListOrderStatus.Executing, "EXECUTING"),
-        new KeyValuePair<ListOrderStatus, string>(ListOrderStatus.Rejected, "REJECT"),
-        new KeyValuePair<ListOrderStatus, string>(ListOrderStatus.Done, "ALL_DONE"),
+        new KeyValuePair<BinanceListOrderStatus, string>(BinanceListOrderStatus.Executing, "EXECUTING"),
+        new KeyValuePair<BinanceListOrderStatus, string>(BinanceListOrderStatus.Rejected, "REJECT"),
+        new KeyValuePair<BinanceListOrderStatus, string>(BinanceListOrderStatus.Done, "ALL_DONE"),
     };
 }

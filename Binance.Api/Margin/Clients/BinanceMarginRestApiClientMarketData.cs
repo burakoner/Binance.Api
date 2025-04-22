@@ -1,7 +1,4 @@
-﻿using Binance.Api.Margin.Responses;
-using Binance.Net.Objects.Models.Spot.Margin;
-
-namespace Binance.Api.Margin;
+﻿namespace Binance.Api.Margin;
 
 internal partial class BinanceMarginRestApiClient
 {

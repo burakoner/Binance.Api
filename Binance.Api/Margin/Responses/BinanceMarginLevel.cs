@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Margin.Responses;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Personal margin level information

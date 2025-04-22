@@ -1,6 +1,4 @@
-﻿using Binance.Api.Margin.Responses;
-using Binance.Api.Wallet;
-using Binance.Net.Objects.Models.Spot.Margin;
+﻿using Binance.Api.Wallet;
 
 namespace Binance.Api.Margin;
 

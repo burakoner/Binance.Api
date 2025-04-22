@@ -1,4 +1,4 @@
-﻿namespace Binance.Net.Objects.Models.Spot.Margin;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Cross margin collateral info
@@ -8,7 +8,7 @@ public record BinanceCrossMarginCollateralRatio
     /// <summary>
     /// Collaterals
     /// </summary>
-    public IEnumerable<BinanceCrossMarginCollateral> Collaterals { get; set; } = Array.Empty<BinanceCrossMarginCollateral>();
+    public IEnumerable<BinanceCrossMarginCollateral> Collaterals { get; set; } = [];
 
     /// <summary>
     /// Asset names
@@ -25,10 +25,12 @@ public record BinanceCrossMarginCollateral
     /// Min usd value
     /// </summary>
     public decimal MinUsdValue { get; set; }
+
     /// <summary>
     /// Max usd value
     /// </summary>
     public decimal? MaxUsdValue { get; set; }
+
     /// <summary>
     /// Discount rate
     /// </summary>

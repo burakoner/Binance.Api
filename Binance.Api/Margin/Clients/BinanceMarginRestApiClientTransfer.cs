@@ -1,6 +1,4 @@
-﻿using Binance.Api.Margin.Responses;
-
-namespace Binance.Api.Margin;
+﻿namespace Binance.Api.Margin;
 
 internal partial class BinanceMarginRestApiClient
 {

@@ -1,10 +1,10 @@
 ﻿using Binance.Api.Spot;
 
-namespace Binance.Api.Margin.Responses;
+namespace Binance.Api.Margin;
 
 /// <summary>
 /// Information regarding a specific order
 /// </summary>
-public record BinanceOrder : BinanceOrderBase
+public record BinanceMarginOrder : BinanceOrderBase
 {
 }

@@ -20,13 +20,13 @@ public record BinanceStreamOrderList : BinanceSocketEvent
     /// </summary>
     [JsonConverter(typeof(ListStatusTypeConverter))]
     [JsonProperty("l")]
-    public ListStatusType ListStatusType { get; set; }
+    public BinanceListStatusType ListStatusType { get; set; }
     /// <summary>
     /// The order status
     /// </summary>
     [JsonConverter(typeof(ListOrderStatusConverter))]
     [JsonProperty("L")]
-    public ListOrderStatus ListOrderStatus { get; set; }
+    public BinanceListOrderStatus ListOrderStatus { get; set; }
     /// <summary>
     /// Rejection reason
     /// </summary>

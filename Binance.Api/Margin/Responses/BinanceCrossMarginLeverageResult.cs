@@ -1,13 +1,12 @@
-﻿namespace Binance.Net.Objects.Models.Spot.Margin
+﻿namespace Binance.Api.Margin;
+
+/// <summary>
+/// Result
+/// </summary>
+public record BinanceCrossMarginLeverageResult
 {
     /// <summary>
-    /// Result
+    /// Success
     /// </summary>
-    public record BinanceCrossMarginLeverageResult
-    {
-        /// <summary>
-        /// Success
-        /// </summary>
-        public bool Success { get; set; }
-    }
+    public bool Success { get; set; }
 }

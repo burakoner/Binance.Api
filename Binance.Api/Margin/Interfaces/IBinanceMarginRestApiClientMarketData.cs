@@ -1,7 +1,4 @@
-﻿using Binance.Api.Margin.Responses;
-using Binance.Net.Objects.Models.Spot.Margin;
-
-namespace Binance.Api.Margin;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Interface for the Binance Margin REST API Client Market Data Methods

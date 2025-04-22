@@ -1,13 +1,12 @@
-﻿namespace Binance.Net.Objects.Models.Spot
+﻿namespace Binance.Api.Margin;
+
+/// <summary>
+/// Rate limit info
+/// </summary>
+public record BinanceCurrentRateLimit: BinanceRateLimit
 {
     /// <summary>
-    /// Rate limit info
+    /// The current used amount
     /// </summary>
-    public record BinanceCurrentRateLimit: BinanceRateLimit
-    {
-        /// <summary>
-        /// The current used amount
-        /// </summary>
-        public int Count { get; set; }
-    }
+    public int Count { get; set; }
 }

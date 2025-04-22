@@ -1,18 +1,17 @@
-﻿
-namespace Binance.Net.Objects.Models.Spot.IsolatedMargin
+﻿namespace Binance.Api.Margin;
+
+/// <summary>
+/// Enabled account limit
+/// </summary>
+public record IsolatedMarginAccountLimit
 {
     /// <summary>
-    /// Enabled account limit
+    /// Current enabled accounts
     /// </summary>
-    public record IsolatedMarginAccountLimit
-    {
-        /// <summary>
-        /// Current enabled accounts
-        /// </summary>
-        public int EnabledAccount { get; set; }
-        /// <summary>
-        /// Max accounts
-        /// </summary>
-        public int MaxAccount { get; set; }
-    }
+    public int EnabledAccount { get; set; }
+
+    /// <summary>
+    /// Max accounts
+    /// </summary>
+    public int MaxAccount { get; set; }
 }

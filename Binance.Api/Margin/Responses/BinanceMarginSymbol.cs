@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Margin.Responses;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Margin pair info
@@ -41,4 +41,10 @@ public record BinanceMarginSymbol
     /// Symbol name
     /// </summary>
     public string Symbol { get; set; } = "";
+
+    /// <summary>
+    /// Time at which the symbol gets delisted
+    /// </summary>
+    [JsonProperty("delistTime"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? DelistTime { get; set; }
 }

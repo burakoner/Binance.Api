@@ -1,14 +1,14 @@
 ﻿namespace Binance.Api.Converters;
 
-internal class ListStatusTypeConverter : BaseConverter<ListStatusType>
+internal class ListStatusTypeConverter : BaseConverter<BinanceListStatusType>
 {
     public ListStatusTypeConverter() : this(true) { }
     public ListStatusTypeConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<ListStatusType, string>> Mapping => new List<KeyValuePair<ListStatusType, string>>
+    protected override List<KeyValuePair<BinanceListStatusType, string>> Mapping => new List<KeyValuePair<BinanceListStatusType, string>>
     {
-        new KeyValuePair<ListStatusType, string>(ListStatusType.Response, "RESPONSE"),
-        new KeyValuePair<ListStatusType, string>(ListStatusType.ExecutionStarted, "EXEC_STARTED"),
-        new KeyValuePair<ListStatusType, string>(ListStatusType.Done, "ALL_DONE"),
+        new KeyValuePair<BinanceListStatusType, string>(BinanceListStatusType.Response, "RESPONSE"),
+        new KeyValuePair<BinanceListStatusType, string>(BinanceListStatusType.ExecutionStarted, "EXEC_STARTED"),
+        new KeyValuePair<BinanceListStatusType, string>(BinanceListStatusType.Done, "ALL_DONE"),
     };
 }

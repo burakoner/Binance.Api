@@ -36,7 +36,7 @@ public record BinanceSubAccountMarginDetails
     /// Asset list
     /// </summary>
     [JsonProperty("marginUserAssetVoList")]
-    public IEnumerable<BinanceMarginBalance> MarginUserAssets { get; set; } = Array.Empty<BinanceMarginBalance>();
+    public IEnumerable<BinanceMarginAccountBalance> MarginUserAssets { get; set; } = Array.Empty<BinanceMarginAccountBalance>();
 }
 
 /// <summary>

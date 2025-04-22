@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Margin.Responses;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// The result quantity of getting maxBorrowable or maxTransferable 

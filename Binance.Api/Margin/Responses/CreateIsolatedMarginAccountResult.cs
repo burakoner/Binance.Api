@@ -1,18 +1,17 @@
-﻿namespace Binance.Net.Objects.Models.Spot.IsolatedMargin
+﻿namespace Binance.Api.Margin;
+
+/// <summary>
+/// Result of creating isolated margin account
+/// </summary>
+public record CreateIsolatedMarginAccountResult
 {
     /// <summary>
-    /// Result of creating isolated margin account
+    /// Success
     /// </summary>
-    public record CreateIsolatedMarginAccountResult
-    {
-        /// <summary>
-        /// Success
-        /// </summary>
-        public bool Success { get; set; }
+    public bool Success { get; set; }
 
-        /// <summary>
-        /// Symbol
-        /// </summary>
-        public string Symbol { get; set; } = string.Empty;
-    }
+    /// <summary>
+    /// Symbol
+    /// </summary>
+    public string Symbol { get; set; } = string.Empty;
 }

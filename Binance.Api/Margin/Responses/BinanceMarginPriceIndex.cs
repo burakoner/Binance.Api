@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Margin.Responses;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Price index for a symbol
@@ -9,10 +9,12 @@ public record BinanceMarginPriceIndex
     /// Symbol
     /// </summary>
     public string Symbol { get; set; } = "";
+
     /// <summary>
     /// Price
     /// </summary>
     public decimal Price { get; set; }
+
     /// <summary>
     /// Time of calculation
     /// </summary>

@@ -1,7 +1,4 @@
-﻿using Binance.Api.Margin.Responses;
-using Binance.Api.Wallet;
-using Binance.Net.Objects.Models.Spot.IsolatedMargin;
-using Binance.Net.Objects.Models.Spot.Margin;
+﻿using Binance.Api.Wallet;
 
 namespace Binance.Api.Margin;
 
@@ -98,7 +95,7 @@ internal partial class BinanceMarginRestApiClient
         return RequestAsync<BinanceIsolatedMarginAccount>(GetUrl(sapi, v1, "margin/isolated/account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceIsolatedMarginFeeData>>> GetIsolatedMarginFeeDataAsync(string? symbol = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceIsolatedMarginFee>>> GetIsolatedMarginFeeDataAsync(string? symbol = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
@@ -106,7 +103,7 @@ internal partial class BinanceMarginRestApiClient
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var weight = symbol == null ? 10 : 1;
-        return RequestAsync<IEnumerable<BinanceIsolatedMarginFeeData>>(GetUrl(sapi, v1, "margin/isolatedMarginData"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceIsolatedMarginFee>>(GetUrl(sapi, v1, "margin/isolatedMarginData"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
 

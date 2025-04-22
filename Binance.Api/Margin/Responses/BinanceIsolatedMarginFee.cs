@@ -1,9 +1,9 @@
-﻿namespace Binance.Net.Objects.Models.Spot.Margin;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Fee data
 /// </summary>
-public record BinanceIsolatedMarginFeeData
+public record BinanceIsolatedMarginFee
 {
     /// <summary>
     /// Vip level
@@ -23,13 +23,13 @@ public record BinanceIsolatedMarginFeeData
     /// <summary>
     /// Data
     /// </summary>
-    public IEnumerable<BinanceIsolatedMarginFeeInfo> Data { get; set; } = [];
+    public IEnumerable<BinanceIsolatedMarginFeeData> Data { get; set; } = [];
 }
 
 /// <summary>
 /// Fee info
 /// </summary>
-public record BinanceIsolatedMarginFeeInfo
+public record BinanceIsolatedMarginFeeData
 {
     /// <summary>
     /// Asset

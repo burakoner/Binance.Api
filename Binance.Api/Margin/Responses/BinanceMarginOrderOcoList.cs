@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Margin.Responses;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Oco info
@@ -10,10 +10,12 @@ public record BinanceMarginOrderOcoList : BinanceOrderOcoList
     /// </summary>
     [JsonProperty("marginBuyBorrowAmount")]
     public decimal? MarginBuyBorrowQuantity { get; set; }
+
     /// <summary>
     /// Margin buy borrow asset
     /// </summary>
     public string MarginBuyBorrowAsset { get; set; } = "";
+
     /// <summary>
     /// Is isolated margin
     /// </summary>
