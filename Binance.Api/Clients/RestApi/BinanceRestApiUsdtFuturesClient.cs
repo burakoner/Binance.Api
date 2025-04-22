@@ -937,12 +937,12 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
     #region New Order
     public async Task<RestCallResult<BinanceFuturesPlacedOrder>> PlaceOrderAsync(
         string symbol,
-        BinanceSpotOrderSide side,
+        BinanceOrderSide side,
         FuturesOrderType type,
         decimal? quantity,
         decimal? price = null,
         PositionSide? positionSide = null,
-        BinanceSpotTimeInForce? timeInForce = null,
+        BinanceTimeInForce? timeInForce = null,
         bool? reduceOnly = null,
         string newClientOrderId = null,
         decimal? stopPrice = null,
@@ -950,20 +950,20 @@ public class BinanceRestApiUsdtFuturesClient : RestApiClient
         decimal? callbackRate = null,
         WorkingType? workingType = null,
         bool? closePosition = null,
-        BinanceSpotOrderResponseType? orderResponseType = null,
+        BinanceOrderResponseType? orderResponseType = null,
         bool? priceProtect = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
         if (closePosition == true && positionSide != null)
         {
-            if (positionSide == PositionSide.Short && side == BinanceSpotOrderSide.Sell)
+            if (positionSide == PositionSide.Short && side == BinanceOrderSide.Sell)
                 throw new ArgumentException("Can't close short position with order side sell");
-            if (positionSide == PositionSide.Long && side == BinanceSpotOrderSide.Buy)
+            if (positionSide == PositionSide.Long && side == BinanceOrderSide.Buy)
                 throw new ArgumentException("Can't close long position with order side buy");
         }
 
-        if (orderResponseType == BinanceSpotOrderResponseType.Full)
+        if (orderResponseType == BinanceOrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
         var rulesCheck = await CheckTradeRules(symbol, quantity, null, price, stopPrice, type, ct).ConfigureAwait(false);

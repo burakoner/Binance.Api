@@ -1,11 +1,7 @@
 ﻿namespace Binance.Api.Spot;
 
-/// <summary>
-/// Binance Spot Rest API Client Market Data Methods
-/// </summary>
 internal partial class BinanceSpotRestApiClient
 {
-    #region Market Data Methods
     public async Task<RestCallResult<BinanceOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
@@ -327,5 +323,4 @@ internal partial class BinanceSpotRestApiClient
         else if (timeSpan.TotalHours < 24) return timeSpan.TotalHours + "h";
         return timeSpan.TotalDays + "d";
     }
-    #endregion
 }

@@ -76,7 +76,7 @@ public record BinanceFuturesCancelOrder
     /// The side of the order
     /// </summary>
     [JsonProperty("side"), JsonConverter(typeof(OrderSideConverter))]
-    public BinanceSpotOrderSide Side { get; set; }
+    public BinanceOrderSide Side { get; set; }
 
     /// <summary>
     /// The current status of the order
@@ -94,7 +94,7 @@ public record BinanceFuturesCancelOrder
     /// For what time the order lasts
     /// </summary>
     [JsonProperty("timeInForce"), JsonConverter(typeof(TimeInForceConverter))]
-    public BinanceSpotTimeInForce TimeInForce { get; set; }
+    public BinanceTimeInForce TimeInForce { get; set; }
 
     /// <summary>
     /// The type of the order

@@ -14,7 +14,7 @@ public record BinanceFuturesBatchOrder
     /// <summary>
     /// Side of the order
     /// </summary>
-    public BinanceSpotOrderSide Side { get; set; }
+    public BinanceOrderSide Side { get; set; }
     /// <summary>
     /// Default Both for One-way Mode ; Long or Short for Hedge Mode. It must be sent with Hedge Mode.
     /// </summary>
@@ -26,7 +26,7 @@ public record BinanceFuturesBatchOrder
     /// <summary>
     /// Time in force
     /// </summary>
-    public BinanceSpotTimeInForce? TimeInForce { get; set; }
+    public BinanceTimeInForce? TimeInForce { get; set; }
     /// <summary>
     /// Quantity
     /// </summary>

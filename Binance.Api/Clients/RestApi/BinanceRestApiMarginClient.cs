@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Margin;
+using Binance.Api.Margin.Responses;
 using Binance.Api.Spot;
 using Binance.Api.Wallet;
 
@@ -176,18 +177,18 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     internal async Task<RestCallResult<BinancePlacedOrder>> PlaceOrderInternal(Uri uri,
         string symbol,
-        BinanceSpotOrderSide side,
+        BinanceOrderSide side,
         BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string newClientOrderId = null,
         decimal? price = null,
-        BinanceSpotTimeInForce? timeInForce = null,
+        BinanceTimeInForce? timeInForce = null,
         decimal? stopPrice = null,
         decimal? icebergQty = null,
         BinanceSideEffectType? sideEffectType = null,
         bool? isIsolated = null,
-        BinanceSpotOrderResponseType? orderResponseType = null,
+        BinanceOrderResponseType? orderResponseType = null,
         int? trailingDelta = null,
         int? receiveWindow = null,
         int weight = 1,
@@ -578,7 +579,7 @@ public class BinanceRestApiMarginClient : RestApiClient
     #endregion
 
     #region Query Margin Pair
-    public async Task<RestCallResult<BinanceMarginPair>> GetMarginSymbolAsync(string symbol, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceMarginSymbol>> GetMarginSymbolAsync(string symbol, CancellationToken ct = default)
     {
         symbol.ValidateNotNull(nameof(symbol));
 
@@ -587,7 +588,7 @@ public class BinanceRestApiMarginClient : RestApiClient
                 {"symbol", symbol}
             };
 
-        return await SendRequestInternal<BinanceMarginPair>(GetUrl(marginPairEndpoint, sapi, v1), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        return await SendRequestInternal<BinanceMarginSymbol>(GetUrl(marginPairEndpoint, sapi, v1), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
     }
     #endregion
 
@@ -599,9 +600,9 @@ public class BinanceRestApiMarginClient : RestApiClient
     #endregion
 
     #region Get All Cross Margin Pairs
-    public async Task<RestCallResult<IEnumerable<BinanceMarginPair>>> GetMarginSymbolsAsync(CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceMarginSymbol>>> GetMarginSymbolsAsync(CancellationToken ct = default)
     {
-        return await SendRequestInternal<IEnumerable<BinanceMarginPair>>(GetUrl(marginPairsEndpoint, sapi, v1), HttpMethod.Get, ct).ConfigureAwait(false);
+        return await SendRequestInternal<IEnumerable<BinanceMarginSymbol>>(GetUrl(marginPairsEndpoint, sapi, v1), HttpMethod.Get, ct).ConfigureAwait(false);
     }
     #endregion
 
@@ -621,18 +622,18 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     #region Margin Account New Order
     public async Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol,
-        BinanceSpotOrderSide side,
+        BinanceOrderSide side,
         BinanceSpotOrderType type,
         decimal? quantity = null,
         decimal? quoteQuantity = null,
         string newClientOrderId = null,
         decimal? price = null,
-        BinanceSpotTimeInForce? timeInForce = null,
+        BinanceTimeInForce? timeInForce = null,
         decimal? stopPrice = null,
         decimal? icebergQuantity = null,
         BinanceSideEffectType? sideEffectType = null,
         bool? isIsolated = null,
-        BinanceSpotOrderResponseType? orderResponseType = null,
+        BinanceOrderResponseType? orderResponseType = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
@@ -886,12 +887,12 @@ public class BinanceRestApiMarginClient : RestApiClient
 
     #region Margin Account New OCO Order
     public async Task<RestCallResult<BinanceMarginOrderOcoList>> PlaceMarginOCOOrderAsync(string symbol,
-        BinanceSpotOrderSide side,
+        BinanceOrderSide side,
         decimal price,
         decimal stopPrice,
         decimal quantity,
         decimal? stopLimitPrice = null,
-        BinanceSpotTimeInForce? stopLimitTimeInForce = null,
+        BinanceTimeInForce? stopLimitTimeInForce = null,
         decimal? stopIcebergQuantity = null,
         decimal? limitIcebergQuantity = null,
         BinanceSideEffectType? sideEffectType = null,
@@ -899,7 +900,7 @@ public class BinanceRestApiMarginClient : RestApiClient
         string listClientOrderId = null,
         string limitClientOrderId = null,
         string stopClientOrderId = null,
-        BinanceSpotOrderResponseType? orderResponseType = null,
+        BinanceOrderResponseType? orderResponseType = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {

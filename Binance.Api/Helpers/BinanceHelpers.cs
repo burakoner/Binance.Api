@@ -117,14 +117,15 @@ public static class BinanceHelpers
 
         if (!string.IsNullOrEmpty(clientOrderId))
         {
-            if (allowValueAdjustment)
+            if (allowValueAdjustment && !clientOrderId!.StartsWith(brokerId + ClientOrderIdSeparator))
                 clientOrderId = brokerId + ClientOrderIdSeparator + clientOrderId;
 
             return clientOrderId!;
         }
         else
         {
-            clientOrderId = ExchangeHelpers.AppendRandomString(brokerId + ClientOrderIdSeparator, maxLength);
+            if (!clientOrderId!.StartsWith(brokerId + ClientOrderIdSeparator))
+                clientOrderId = ExchangeHelpers.AppendRandomString(brokerId + ClientOrderIdSeparator, maxLength);
         }
 
         return clientOrderId;

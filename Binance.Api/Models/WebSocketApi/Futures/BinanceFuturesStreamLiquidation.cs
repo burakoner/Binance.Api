@@ -29,7 +29,7 @@ public record BinanceFuturesStreamLiquidation : IBinanceFuturesLiquidation
     /// Liquidation Sided
     /// </summary>
     [JsonProperty("S"), JsonConverter(typeof(OrderSideConverter))]
-    public BinanceSpotOrderSide Side { get; set; }
+    public BinanceOrderSide Side { get; set; }
 
     /// <summary>
     /// Liquidation order type
@@ -41,7 +41,7 @@ public record BinanceFuturesStreamLiquidation : IBinanceFuturesLiquidation
     /// Liquidation Time in Force
     /// </summary>
     [JsonProperty("f"), JsonConverter(typeof(TimeInForceConverter))]
-    public BinanceSpotTimeInForce TimeInForce { get; set; }
+    public BinanceTimeInForce TimeInForce { get; set; }
 
     /// <summary>
     /// Liquidation Original Quantity

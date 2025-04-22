@@ -108,7 +108,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// How long the order is active
     /// </summary>
-    public BinanceSpotTimeInForce TimeInForce { get; set; }
+    public BinanceTimeInForce TimeInForce { get; set; }
 
     /// <summary>
     /// The type of the order
@@ -118,7 +118,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// The side of the order
     /// </summary>
-    public BinanceSpotOrderSide Side { get; set; }
+    public BinanceOrderSide Side { get; set; }
 
     /// <summary>
     /// Is Working

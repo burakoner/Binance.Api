@@ -1,11 +1,7 @@
 ﻿namespace Binance.Api.Spot;
 
-/// <summary>
-/// Binance Spot Rest API Client Account Methods
-/// </summary>
 internal partial class BinanceSpotRestApiClient
 {
-    #region Account Methods
     public Task<RestCallResult<BinanceSpotAccount>> GetAccountAsync(bool? omitZeroBalances = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
@@ -59,10 +55,4 @@ internal partial class BinanceSpotRestApiClient
         if (orderId.HasValue) weight = 20;
         return RequestAsync<IEnumerable<BinancePreventedTrade>>(GetUrl(api, v3, "myPreventedMatches"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
-
-    // TODO: Query Allocations (USER_DATA)
-    // TODO: Query Commission Rates (USER_DATA)
-    // TODO: Query Order Amendments (USER_DATA)
-
-    #endregion
 }

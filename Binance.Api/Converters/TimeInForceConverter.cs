@@ -2,17 +2,17 @@
 
 namespace Binance.Api.Converters;
 
-internal class TimeInForceConverter : BaseConverter<BinanceSpotTimeInForce>
+internal class TimeInForceConverter : BaseConverter<BinanceTimeInForce>
 {
     public TimeInForceConverter() : this(true) { }
     public TimeInForceConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<BinanceSpotTimeInForce, string>> Mapping => new List<KeyValuePair<BinanceSpotTimeInForce, string>>
+    protected override List<KeyValuePair<BinanceTimeInForce, string>> Mapping => new List<KeyValuePair<BinanceTimeInForce, string>>
     {
-        new KeyValuePair<BinanceSpotTimeInForce, string>(BinanceSpotTimeInForce.GoodTillCanceled, "GTC"),
-        new KeyValuePair<BinanceSpotTimeInForce, string>(BinanceSpotTimeInForce.ImmediateOrCancel, "IOC"),
-        new KeyValuePair<BinanceSpotTimeInForce, string>(BinanceSpotTimeInForce.FillOrKill, "FOK"),
-        new KeyValuePair<BinanceSpotTimeInForce, string>(BinanceSpotTimeInForce.GoodTillCrossing, "GTX"),
-        new KeyValuePair<BinanceSpotTimeInForce, string>(BinanceSpotTimeInForce.GoodTillExpiredOrCanceled, "GTE_GTC")
+        new KeyValuePair<BinanceTimeInForce, string>(BinanceTimeInForce.GoodTillCanceled, "GTC"),
+        new KeyValuePair<BinanceTimeInForce, string>(BinanceTimeInForce.ImmediateOrCancel, "IOC"),
+        new KeyValuePair<BinanceTimeInForce, string>(BinanceTimeInForce.FillOrKill, "FOK"),
+        new KeyValuePair<BinanceTimeInForce, string>(BinanceTimeInForce.GoodTillCrossing, "GTX"),
+        new KeyValuePair<BinanceTimeInForce, string>(BinanceTimeInForce.GoodTillExpiredOrCanceled, "GTE_GTC")
     };
 }

@@ -114,7 +114,7 @@ public record BinanceOrderBase
     /// How long the order is active
     /// </summary>
     [JsonProperty("timeInForce")]
-    public BinanceSpotTimeInForce TimeInForce { get; set; }
+    public BinanceTimeInForce TimeInForce { get; set; }
 
     /// <summary>
     /// The type of the order
@@ -126,7 +126,7 @@ public record BinanceOrderBase
     /// The side of the order
     /// </summary>
     [JsonProperty("side")]
-    public BinanceSpotOrderSide Side { get; set; }
+    public BinanceOrderSide Side { get; set; }
 
     /// <summary>
     /// The stop price

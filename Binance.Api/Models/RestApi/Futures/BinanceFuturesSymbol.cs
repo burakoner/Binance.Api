@@ -111,7 +111,7 @@ public record BinanceFuturesSymbol
     /// Allowed order time in force
     /// </summary>
     [JsonProperty(ItemConverterType = typeof(TimeInForceConverter))]
-    public IEnumerable<BinanceSpotTimeInForce> TimeInForce { get; set; } = [];
+    public IEnumerable<BinanceTimeInForce> TimeInForce { get; set; } = [];
     /// <summary>
     /// Filter for the max accuracy of the price for this symbol
     /// </summary>

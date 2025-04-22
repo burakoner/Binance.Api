@@ -50,14 +50,14 @@ namespace Binance.ApiConsole
             var spot_252 = await api.Spot.GetRollingWindowTickersAsync(["BTCUSDT", "ETHUSDT"], TimeSpan.FromHours(4));
 
             // Spot > Trading Methods (PRIVATE)
-            var spot_301 = await api.Spot.PlaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
-            var spot_302 = await api.Spot.PlaceTestOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
+            var spot_301 = await api.Spot.PlaceOrderAsync("BTCUSDT", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
+            var spot_302 = await api.Spot.PlaceTestOrderAsync("BTCUSDT", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
             var spot_303 = await api.Spot.GetOrderAsync("BTCUSDT", orderId: 100000001);
             var spot_304 = await api.Spot.GetOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
             var spot_305 = await api.Spot.CancelOrderAsync("BTCUSDT", orderId: 100000001);
             var spot_306 = await api.Spot.CancelOrderAsync("BTCUSDT", origClientOrderId: "---CLIENT-ORDER-ID---");
             var spot_307 = await api.Spot.CancelOrdersAsync("BTCUSDT");
-            var spot_308 = await api.Spot.ReplaceOrderAsync("BTCUSDT", BinanceSpotOrderSide.Buy, BinanceSpotOrderType.Market, BinanceSpotOrderCancelReplaceMode.StopOnFailure, cancelOrderId: 100000001, quantity: 0.1m);
+            var spot_308 = await api.Spot.ReplaceOrderAsync("BTCUSDT", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, BinanceSpotOrderCancelReplaceMode.StopOnFailure, cancelOrderId: 100000001, quantity: 0.1m);
             var spot_309 = await api.Spot.GetOpenOrdersAsync("BTCUSDT");
             var spot_310 = await api.Spot.GetOrdersAsync("BTCUSDT");
 
@@ -70,8 +70,10 @@ namespace Binance.ApiConsole
             var spot_406 = await api.Spot.KeepAliveUserStreamAsync("---LISTEN-KEY---");
             var spot_407 = await api.Spot.StopUserStreamAsync("---LISTEN-KEY---");
 
+            // Margin > General Market Data Methods (PUBLIC)
+
             // Wallet > Capital Methods (PRIVATE)
-            var wallet_101= await api.Wallet.GetUserAssetsAsync();
+            var wallet_101 = await api.Wallet.GetUserAssetsAsync();
             var btcBalance = wallet_101.Data.FirstOrDefault(x => x.Asset == "BTC");
             var usdtBalance = wallet_101.Data.FirstOrDefault(x => x.Asset == "USDT");
             var wallet_102 = await api.Wallet.WithdrawAsync("---ASSET---", "---ADDRESS---", 0.01m);

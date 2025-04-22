@@ -8,6 +8,4 @@ public interface IBinanceSpotRestApiClient :
     IBinanceSpotRestApiClientGeneral,
     IBinanceSpotRestApiClientMarketData,
     IBinanceSpotRestApiClientTrading,
-    IBinanceSpotRestApiClientUserDataStream
-{
-}
+    IBinanceSpotRestApiClientUserDataStream;

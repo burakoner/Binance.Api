@@ -1,12 +1,7 @@
 ﻿namespace Binance.Api.Spot;
 
-/// <summary>
-/// Binance Spot Rest API Client User Data Stream Methods
-/// </summary>
 internal partial class BinanceSpotRestApiClient
 {
-    #region User Data Stream
-    
     public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
     {
         var result = await RequestAsync<BinanceListenKey>(GetUrl(api, v3, "userDataStream"), HttpMethod.Post, ct, true, requestWeight: 2);
@@ -36,6 +31,4 @@ internal partial class BinanceSpotRestApiClient
         var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 2);
         return result.As(result.Success);
     }
-
-    #endregion
 }

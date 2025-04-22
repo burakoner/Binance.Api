@@ -1,4 +1,5 @@
-﻿using Binance.Api.Spot;
+﻿using Binance.Api.Margin;
+using Binance.Api.Spot;
 using Binance.Api.Wallet;
 
 namespace Binance.Api;
@@ -19,29 +20,27 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceSpotRestApiClient Spot { get; }
 
     /// <summary>
-    /// Binance Wallet Rest API Client
-    /// </summary>
-    public BinanceWalletRestApiClient Wallet { get; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /// <summary>
     /// Binance Margin Rest API Client
     /// </summary>
-    public BinanceRestApiMarginClient Margin { get; }
+    public IBinanceMarginRestApiClient Margin { get; }
+
+    /// <summary>
+    /// Binance Wallet Rest API Client
+    /// </summary>
+    public IBinanceWalletRestApiClient Wallet { get; }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /// <summary>
     /// Binance Coin Futures Rest API Client
@@ -116,8 +115,8 @@ public sealed class BinanceRestApiClient : RestApiClient
         ArraySerialization = ArraySerialization.MultipleValues;
 
         Spot = new BinanceSpotRestApiClient(this);
+        Margin = new BinanceMarginRestApiClient(this);
         Wallet = new BinanceWalletRestApiClient(this);
-        Margin = new BinanceRestApiMarginClient(this);
         General = new BinanceRestApiGeneralClient(this);
         CoinFutures = new BinanceRestApiCoinFuturesClient(this);
         UsdtFutures = new BinanceRestApiUsdtFuturesClient(this);

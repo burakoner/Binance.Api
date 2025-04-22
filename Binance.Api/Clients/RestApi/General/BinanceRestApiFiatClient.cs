@@ -44,11 +44,11 @@ public class BinanceRestApiFiatClient
     #endregion
 
     #region Get Fiat Payments History 
-    public async Task<RestCallResult<IEnumerable<BinanceFiatPayment>>> GetFiatPaymentHistoryAsync(BinanceSpotOrderSide side, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceFiatPayment>>> GetFiatPaymentHistoryAsync(BinanceOrderSide side, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>
             {
-                { "transactionType", side == BinanceSpotOrderSide.Buy ? "0": "1" }
+                { "transactionType", side == BinanceOrderSide.Buy ? "0": "1" }
             };
         parameters.AddOptionalParameter("beginTime", startTime.ConvertToMilliseconds());
         parameters.AddOptionalParameter("endTime", endTime.ConvertToMilliseconds());

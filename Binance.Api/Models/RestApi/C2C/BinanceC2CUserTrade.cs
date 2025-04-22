@@ -20,7 +20,7 @@ public record BinanceC2CUserTrade
     /// Trade type
     /// </summary>
     [JsonConverter(typeof(OrderSideConverter))]
-    public BinanceSpotOrderSide TradeType { get; set; }
+    public BinanceOrderSide TradeType { get; set; }
     /// <summary>
     /// Crypto asset traded
     /// </summary>

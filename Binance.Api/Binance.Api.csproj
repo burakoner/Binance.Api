@@ -55,7 +55,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Margin\Clients\" />
 	  <Folder Include="Margin\Converters\" />
 	  <Folder Include="Margin\Internal\" />
 	  <Folder Include="Margin\Requests\" />

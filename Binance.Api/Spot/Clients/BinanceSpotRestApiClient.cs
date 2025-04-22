@@ -1,9 +1,5 @@
 ﻿namespace Binance.Api.Spot;
 
-/// <summary>
-/// Binance Spot Rest API Client
-/// </summary>
-/// <param name="root">Parent</param>
 internal partial class BinanceSpotRestApiClient(BinanceRestApiClient root) : IBinanceSpotRestApiClient
 {
     // Api
@@ -21,7 +17,6 @@ internal partial class BinanceSpotRestApiClient(BinanceRestApiClient root) : IBi
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
     internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
 
-    #region Internal Methods
     internal Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
         Dictionary<string, object>? queryParameters = null,
@@ -55,6 +50,4 @@ internal partial class BinanceSpotRestApiClient(BinanceRestApiClient root) : IBi
 
         return BinanceHelpers.ValidateTradeRules(Logger, Options.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
-    #endregion
-
 }

@@ -36,7 +36,7 @@ public class BinanceRestApiFuturesAlgoClient
     #region Volume Participation(VP) New Order
     public async Task<RestCallResult<BinanceAlgoOrderResult>> PlaceVolumeParticipationOrderAsync(
         string symbol,
-        BinanceSpotOrderSide side,
+        BinanceOrderSide side,
         decimal quantity,
         OrderUrgency urgency,
         string clientOrderId = null,
@@ -67,7 +67,7 @@ public class BinanceRestApiFuturesAlgoClient
     #region Time-Weighted Average Price(Twap) New Order
     public async Task<RestCallResult<BinanceAlgoOrderResult>> PlaceTimeWeightedAveragePriceOrderAsync(
         string symbol,
-        BinanceSpotOrderSide side,
+        BinanceOrderSide side,
         decimal quantity,
         int duration,
         string clientOrderId = null,
@@ -121,7 +121,7 @@ public class BinanceRestApiFuturesAlgoClient
     #endregion
 
     #region Query Historical Algo Orders
-    public async Task<RestCallResult<BinanceAlgoOrders>> GetClosedAlgoOrdersAsync(string symbol = null, BinanceSpotOrderSide? side = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceAlgoOrders>> GetClosedAlgoOrdersAsync(string symbol = null, BinanceOrderSide? side = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("symbol", symbol);

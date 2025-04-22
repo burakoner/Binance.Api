@@ -28,7 +28,7 @@ public class BinanceRestApiC2cClient
     }
 
     #region Get C2C Trade History
-    public async Task<RestCallResult<IEnumerable<BinanceC2CUserTrade>>> GetC2CTradeHistoryAsync(BinanceSpotOrderSide side, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, long? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<IEnumerable<BinanceC2CUserTrade>>> GetC2CTradeHistoryAsync(BinanceOrderSide side, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddOptionalParameter("tradeType", JsonConvert.SerializeObject(side, new OrderSideConverter(false)));

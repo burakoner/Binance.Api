@@ -1,11 +1,7 @@
 ﻿namespace Binance.Api.Spot;
 
-/// <summary>
-/// Binance Spot Rest API Client General Methods
-/// </summary>
 internal partial class BinanceSpotRestApiClient
 {
-    #region General Methods
     public async Task<RestCallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
     {
         var sw = Stopwatch.StartNew();
@@ -86,5 +82,4 @@ internal partial class BinanceSpotRestApiClient
         Logger.Log(LogLevel.Information, "Trade rules updated");
         return exchangeInfoResult;
     }
-    #endregion
 }
