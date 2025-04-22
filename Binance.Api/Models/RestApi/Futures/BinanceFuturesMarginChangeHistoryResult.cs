@@ -33,5 +33,5 @@ public record BinanceFuturesMarginChangeHistoryResult
     /// Position side
     /// </summary>
     [JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 }

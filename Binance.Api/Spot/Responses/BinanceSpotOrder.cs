@@ -103,7 +103,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// The status of the order
     /// </summary>
-    public BinanceSpotOrderStatus Status { get; set; }
+    public BinanceOrderStatus Status { get; set; }
 
     /// <summary>
     /// How long the order is active

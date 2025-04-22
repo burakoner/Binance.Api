@@ -1,4 +1,5 @@
-﻿using Binance.Api.Spot;
+﻿
+using Binance.Api.Spot;
 
 namespace Binance.Api.Models.WebSocketApi.MarketData;
 
@@ -76,7 +77,7 @@ public record BinanceStreamOrderUpdate : BinanceSocketEvent
     /// The status of the order
     /// </summary>
     [JsonProperty("X"), JsonConverter(typeof(OrderStatusConverter))]
-    public OrderStatus Status { get; set; }
+    public BinanceOrderStatus Status { get; set; }
     /// <summary>
     /// The reason the order was rejected
     /// </summary>

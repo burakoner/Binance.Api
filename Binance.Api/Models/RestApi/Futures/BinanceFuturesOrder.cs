@@ -1,4 +1,5 @@
-﻿using Binance.Api.Spot;
+﻿
+using Binance.Api.Spot;
 
 namespace Binance.Api.Models.RestApi.Futures;
 
@@ -87,7 +88,7 @@ public record BinanceFuturesOrder
     /// The current status of the order
     /// </summary>
     [JsonProperty("status"), JsonConverter(typeof(OrderStatusConverter))]
-    public OrderStatus Status { get; set; }
+    public BinanceOrderStatus Status { get; set; }
 
     /// <summary>
     /// Stop price for the order
@@ -146,7 +147,7 @@ public record BinanceFuturesOrder
     /// The position side of the order
     /// </summary>
     [JsonProperty("positionSide"), JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 
     /// <summary>
     /// Price protect

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿
+
+namespace Binance.Api.Models.RestApi.Futures;
 
 /// <summary>
 /// Base position info
@@ -28,7 +30,7 @@ public record BinancePositionBase
     /// Position side
     /// </summary>
     [JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 }
 
 /// <summary>

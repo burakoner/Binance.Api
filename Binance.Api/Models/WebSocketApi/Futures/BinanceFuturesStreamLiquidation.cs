@@ -1,3 +1,4 @@
+
 using Binance.Api.Spot;
 
 namespace Binance.Api.Models.WebSocketApi.Futures;
@@ -65,7 +66,7 @@ public record BinanceFuturesStreamLiquidation : IBinanceFuturesLiquidation
     /// Liquidation Order Status
     /// </summary>
     [JsonProperty("X"), JsonConverter(typeof(OrderStatusConverter))]
-    public OrderStatus Status { get; set; }
+    public BinanceOrderStatus Status { get; set; }
 
     /// <summary>
     /// Liquidation Last Filled Quantity

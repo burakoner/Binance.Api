@@ -1,4 +1,5 @@
-﻿using Binance.Api.Spot;
+﻿
+using Binance.Api.Spot;
 
 namespace Binance.Api.Interfaces;
 
@@ -30,7 +31,7 @@ public interface IBinanceFuturesLiquidation
     /// <summary>
     /// Order status
     /// </summary>
-    OrderStatus Status { get; set; }
+    BinanceOrderStatus Status { get; set; }
     /// <summary>
     /// Time in force
     /// </summary>

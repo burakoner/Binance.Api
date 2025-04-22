@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Spot;
+﻿
+
+namespace Binance.Api.Spot;
 
 /// <summary>
 /// The result of placing a new order
@@ -108,7 +110,7 @@ public record BinanceOrderBase
     /// The status of the order
     /// </summary>
     [JsonProperty("status")]
-    public OrderStatus Status { get; set; }
+    public BinanceOrderStatus Status { get; set; }
 
     /// <summary>
     /// How long the order is active

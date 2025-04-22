@@ -1,4 +1,5 @@
-﻿using Binance.Api.Spot;
+﻿
+using Binance.Api.Spot;
 
 namespace Binance.Api.Models.RestApi.Futures;
 
@@ -18,7 +19,7 @@ public record BinanceFuturesBatchOrder
     /// <summary>
     /// Default Both for One-way Mode ; Long or Short for Hedge Mode. It must be sent with Hedge Mode.
     /// </summary>
-    public PositionSide? PositionSide { get; set; }
+    public BinancePositionSide? PositionSide { get; set; }
     /// <summary>
     /// Order type
     /// </summary>

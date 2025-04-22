@@ -58,7 +58,6 @@
 	  <Folder Include="Margin\Converters\" />
 	  <Folder Include="Margin\Internal\" />
 	  <Folder Include="Margin\Requests\" />
-	  <Folder Include="Models\RestApi\UserDataStream\" />
 	  <Folder Include="Spot\Requests\" />
 	  <Folder Include="Wallet\Converters\" />
 	  <Folder Include="Wallet\Requests\" />

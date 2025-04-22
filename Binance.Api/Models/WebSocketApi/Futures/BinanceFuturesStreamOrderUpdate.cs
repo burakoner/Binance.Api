@@ -1,3 +1,4 @@
+
 using Binance.Api.Spot;
 
 namespace Binance.Api.Models.WebSocketApi.Futures;
@@ -83,7 +84,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// The status of the order
     /// </summary>
     [JsonProperty("X"), JsonConverter(typeof(OrderStatusConverter))]
-    public OrderStatus Status { get; set; }
+    public BinanceOrderStatus Status { get; set; }
     /// <summary>
     /// The id of the order as assigned by Binance
     /// </summary>
@@ -158,7 +159,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// Position side
     /// </summary>
     [JsonProperty("ps"), JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
     /// <summary>
     /// If Close-All, only pushed with conditional order
     /// </summary>

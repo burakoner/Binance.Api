@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.SubAccount;
+﻿
+
+namespace Binance.Api.Models.RestApi.SubAccount;
 
 /// <summary>
 /// Sub account position risk
@@ -62,7 +64,7 @@ public record BinanceSubAccountFuturesPositionRiskCoin
     /// Position side
     /// </summary>
     [JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 
     /// <summary>
     /// Position amount

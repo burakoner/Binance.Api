@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi.Futures;
+﻿
+
+namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>
 /// Margin update
@@ -36,7 +38,7 @@ public record BinanceFuturesStreamMarginPosition
     /// Position Side
     /// </summary>
     [JsonProperty("ps"), JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 
     /// <summary>
     /// Position quantity

@@ -1,3 +1,5 @@
+
+
 namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>
@@ -120,5 +122,5 @@ public record BinanceFuturesStreamPosition
     /// Position Side
     /// </summary>
     [JsonProperty("ps"), JsonConverter(typeof(PositionSideConverter))]
-    public PositionSide PositionSide { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 }
