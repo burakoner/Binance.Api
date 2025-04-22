@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Margin.Enums;
+﻿namespace Binance.Api.Margin;
 
 /// <summary>
 /// Side effect for a margin order

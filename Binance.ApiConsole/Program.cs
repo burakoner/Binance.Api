@@ -1,4 +1,5 @@
 ﻿using Binance.Api;
+using Binance.Api.Margin;
 using Binance.Api.Shared;
 using Binance.Api.Spot;
 using Binance.Api.Wallet;
@@ -71,6 +72,69 @@ namespace Binance.ApiConsole
             var spot_407 = await api.Spot.StopUserStreamAsync("---LISTEN-KEY---");
 
             // Margin > General Market Data Methods (PUBLIC)
+            var margin_101 = await api.Margin.GetCrossMarginCollateralRatioAsync();
+            var margin_102 = await api.Margin.GetMarginSymbolsAsync();
+            var margin_103 = await api.Margin.GetIsolatedMarginSymbolsAsync();
+            var margin_104 = await api.Margin.GetMarginAssetsAsync();
+            var margin_105 = await api.Margin.GetMarginDelistScheduleAsync();
+            var margin_106 = await api.Margin.GetIsolatedMarginTierDataAsync("SYMBOL");
+            var margin_107 = await api.Margin.GetMarginPriceIndexAsync("SYMBOL");
+            var margin_108 = await api.Margin.GetMarginAvaliableInventoryAsync(BinanceMarginInventoryType.Margin);
+            var margin_109 = await api.Margin.GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync();
+
+            // Margin > General Borrow and Repay Methods (PRIVATE)
+            var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["ASSET"], true);
+            var margin_202 = await api.Margin.GetMarginInterestHistoryAsync();
+            var margin_203 = await api.Margin.MarginBorrowAsync("ASSET", 100.0m);
+            var margin_204 = await api.Margin.MarginRepayAsync("ASSET", 95.0m);
+            var margin_205 = await api.Margin.GetMarginLoansAsync("ASSET");
+            var margin_206 = await api.Margin.GetMarginInterestRateHistoryAsync("ASSET");
+            var margin_207 = await api.Margin.GetMarginMaxBorrowAmountAsync("ASSET");
+
+            // Margin > General Trade Methods (PRIVATE)
+            var margin_301 = await api.Margin.GetMarginForcedLiquidationHistoryAsync();
+            var margin_302 = await api.Margin.GetCrossMarginSmallLiabilityExchangeAssetsAsync();
+            var margin_303 = await api.Margin.GetCrossMarginSmallLiabilityExchangeHistoryAsync();
+            var margin_304 = await api.Margin.CancelAllMarginOrdersAsync("SYMBOL");
+            var margin_305 = await api.Margin.CancelMarginOcoOrderAsync("SYMBOL");
+            var margin_306 = await api.Margin.CancelMarginOrderAsync("SYMBOL");
+            var margin_307 = await api.Margin.PlaceMarginOCOOrderAsync("SYMBOL", BinanceOrderSide.Buy, 100.0m, 100.0m, 15.0m);
+            var margin_308 = await api.Margin.PlaceMarginOrderAsync("SYMBOL", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 100.0m);
+            var margin_309 = await api.Margin.GetMarginOrderRateLimitStatusAsync();
+            var margin_310 = await api.Margin.GetMarginOcoOrdersAsync();
+            var margin_311 = await api.Margin.GetMarginOrdersAsync("SYMBOL");
+            var margin_312 = await api.Margin.GetMarginOcoOrderAsync();
+            var margin_313 = await api.Margin.GetMarginOpenOcoOrdersAsync();
+            var margin_314 = await api.Margin.GetOpenMarginOrdersAsync();
+            var margin_315 = await api.Margin.GetMarginOrderAsync("SYMBOL");
+            var margin_316 = await api.Margin.GetMarginUserTradesAsync("SYMBOL");
+            var margin_317 = await api.Margin.CrossMarginSmallLiabilityExchangeAsync(["ASSET"]);
+
+            // Margin > General Transfer Methods (PRIVATE)
+            var margin_401 = await api.Margin.GetMarginTransferHistoryAsync(BinanceTransferDirection.RollIn);
+            var margin_402 = await api.Margin.GetMarginMaxTransferAmountAsync("ASSET");
+
+            // Margin > General Account Methods (PRIVATE)
+            var margin_501 = await api.Margin.CrossMarginAdjustMaxLeverageAsync(20);
+            var margin_502 = await api.Margin.DisableIsolatedMarginAccountAsync("SYMBOL");
+            var margin_503 = await api.Margin.EnableIsolatedMarginAccountAsync("SYMBOL");
+            var margin_504 = await api.Margin.GetBnbBurnStatusAsync();
+            var margin_505 = await api.Margin.GetMarginLevelInformationAsync();
+            var margin_506 = await api.Margin.GetMarginAccountInfoAsync();
+            var margin_507 = await api.Margin.GetInterestMarginDataAsync();
+            var margin_508 = await api.Margin.GetEnabledIsolatedMarginAccountLimitAsync();
+            var margin_509 = await api.Margin.GetIsolatedMarginAccountAsync();
+            var margin_510 = await api.Margin.GetIsolatedMarginFeeDataAsync();
+
+            // Margin > General Trade Data Stream Methods (PRIVATE)
+            var margin_601 = await api.Margin.StartMarginUserStreamAsync();
+            var margin_602 = await api.Margin.KeepAliveMarginUserStreamAsync("---LISTEN-KEY---");
+            var margin_603 = await api.Margin.StopMarginUserStreamAsync("---LISTEN-KEY---");
+            var margin_604 = await api.Margin.StartIsolatedMarginUserStreamAsync("SYMBOL");
+            var margin_605 = await api.Margin.KeepAliveIsolatedMarginUserStreamAsync("SYMBOL", "---LISTEN-KEY---");
+            var margin_606 = await api.Margin.CloseIsolatedMarginUserStreamAsync("SYMBOL", "---LISTEN-KEY---");
+
+            // TODO: Margin > General Risk Data Stream Methods (PRIVATE)
 
             // Wallet > Capital Methods (PRIVATE)
             var wallet_101 = await api.Wallet.GetUserAssetsAsync();
@@ -135,38 +199,6 @@ namespace Binance.ApiConsole
 
 
 
-
-
-            /*
-            var account_30 = await api.Wallet.ConvertTransferAsync("---CLIENT-ORDER-ID---", "USDT", 10.0m, "BNB");
-            var account_31 = await api.Wallet.GetConvertTransferHistoryAsync(new DateTime(2022, 7, 1), new DateTime(2022, 12, 31, 23, 59, 59));
-            */
-
-
-            /** /
-            // Market Data (Public)
-            var mdata_01 = await api.Spot.GetOrderBookAsync("BTCUSDT");
-            var mdata_02 = await api.Spot.GetRecentTradesAsync("BTCUSDT");
-            var mdata_03 = await api.Spot.GetTradeHistoryAsync("BTCUSDT");
-            var mdata_04 = await api.Spot.GetAggregatedTradeHistoryAsync("BTCUSDT");
-            var mdata_05 = await api.Spot.GetKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
-            var mdata_06 = await api.Spot.GetUiKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
-            var mdata_07 = await api.Spot.GetCurrentAvgPriceAsync("BTCUSDT");
-            var mdata_08 = await api.Spot.GetTickerAsync("BTCUSDT");
-            var mdata_09 = await api.Spot.GetTickersAsync();
-            var mdata_10 = await api.Spot.GetPriceAsync("BTCUSDT");
-            var mdata_11 = await api.Spot.GetPricesAsync();
-            var mdata_12 = await api.Spot.GetBookPriceAsync("BTCUSDT");
-            var mdata_13 = await api.Spot.GetBookPricesAsync();
-            var mdata_14 = await api.Spot.GetRollingWindowTickerAsync("BTCUSDT");
-            /**/
-
-            /*
-            // User Stream (Private)
-            var stream_01 = await api.Spot.UserStream.CreateSpotUserStreamListenKeyAsync();
-            var stream_02 = await api.Spot.UserStream.KeepAliveSpotUserStreamAsync(stream_01.Data);
-            var stream_03 = await api.Spot.UserStream.StopSpotUserStreamAsync(stream_01.Data);
-            */
 
             Console.WriteLine("Done!..");
 

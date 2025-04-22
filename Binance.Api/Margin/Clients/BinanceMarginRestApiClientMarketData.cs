@@ -67,7 +67,7 @@ internal partial class BinanceMarginRestApiClient
         return RequestAsync<BinanceMarginPriceIndex>(GetUrl(sapi, v1, "margin/priceIndex"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<BinanceMarginAvailableInventory>> GetMarginAvaliableInventoryAsync(MarginInventoryType type, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceMarginAvailableInventory>> GetMarginAvaliableInventoryAsync(BinanceMarginInventoryType type, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddEnum("type", type);
