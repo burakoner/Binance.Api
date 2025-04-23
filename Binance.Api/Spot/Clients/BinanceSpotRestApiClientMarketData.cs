@@ -41,7 +41,7 @@ internal partial class BinanceSpotRestApiClient
         return RequestAsync<IEnumerable<BinanceSpotTrade>>(GetUrl(api, v3, "historicalTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 25);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceAggregatedTrade>>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotAggregatedTrade>>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
@@ -52,7 +52,7 @@ internal partial class BinanceSpotRestApiClient
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<IEnumerable<BinanceAggregatedTrade>>(GetUrl(api, v3, "aggTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<IEnumerable<BinanceSpotAggregatedTrade>>(GetUrl(api, v3, "aggTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceSpotKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)

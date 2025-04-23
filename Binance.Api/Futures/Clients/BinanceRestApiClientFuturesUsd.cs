@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Futures;
+﻿using Binance.Api.Futures.Responses;
+
+namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd(BinanceRestApiClientFutures parent) : IBinanceRestApiClientFuturesUsd
 {
@@ -11,6 +13,12 @@ internal partial class BinanceRestApiClientFuturesUsd(BinanceRestApiClientFuture
 
     // Parent
     private BinanceRestApiClientFutures _ { get; } = parent;
+
+    // Internal
+    internal ILogger Logger => Logger;
+    internal BinanceRestApiClientOptions Options => Options;
+    internal DateTime? LastExchangeInfoUpdate { get; private set; }
+    internal BinanceFuturesUsdtExchangeInfo? ExchangeInfo { get; private set; }
 
     // Request
     private Task<RestCallResult<T>> RequestAsync<T>(

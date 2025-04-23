@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Futures;
 
 /// <summary>
 /// Compressed aggregated trade information. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
 /// </summary>
-public record BinanceAggregatedTrade
+public record BinanceFuturesAggregatedTrade
 {
     /// <summary>
     /// The id of this aggregation
@@ -46,10 +46,4 @@ public record BinanceAggregatedTrade
     /// </summary>
     [JsonProperty("m")]
     public bool BuyerIsMaker { get; set; }
-
-    /// <summary>
-    /// Whether the trade was matched at the best price
-    /// </summary>
-    [JsonProperty("M")]
-    public bool WasBestPriceMatch { get; set; }
 }
