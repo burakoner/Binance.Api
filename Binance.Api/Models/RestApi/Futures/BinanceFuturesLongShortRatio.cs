@@ -1,50 +1,53 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Long Short Ratio Info
-/// </summary>
-public record BinanceFuturesLongShortRatio
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// The symbol or pair the information is about
+    /// Long Short Ratio Info
     /// </summary>
-    [JsonProperty("symbol")]
-    public string SymbolPair { get; set; } = "";
-
-    /// <summary>
-    /// Pair
-    /// </summary>
-    public string Pair { get; set; } = "";
-
-    /// <summary>
-    /// long/short ratio
-    /// </summary>
-    public decimal LongShortRatio { get; set; }
-
-    /// <summary>
-    /// longs percentage (in decimal form)
-    /// </summary>
-    [JsonProperty("longAccount")]
-    public decimal LongAccount { get; set; }
-    [JsonProperty("longPosition")]
-    private decimal LongPosition
+    public record BinanceFuturesLongShortRatio
     {
-        set => LongAccount = value;
-    }
+        /// <summary>
+        /// The symbol or pair the information is about
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string SymbolPair { get; set; } = string.Empty;
 
-    /// <summary>
-    /// shorts percentage (in decimal form)
-    /// </summary>
-    [JsonProperty("shortAccount")]
-    public decimal ShortAccount { get; set; }
-    [JsonProperty("shortPosition")]
-    private decimal ShortPosition
-    {
-        set => ShortAccount = value;
+        /// <summary>
+        /// Pair
+        /// </summary>
+        [JsonProperty("pair")]
+        public string? Pair { get; set; } = string.Empty;
+
+        /// <summary>
+        /// long/short ratio
+        /// </summary>
+        [JsonProperty("longShortRatio")]
+        public decimal LongShortRatio { get; set; }
+
+        /// <summary>
+        /// longs percentage (in decimal form)
+        /// </summary>
+        [JsonProperty("longAccount")]
+        public decimal LongAccount { get; set; }
+        [JsonProperty("longPosition")]
+        private decimal LongPosition
+        {
+            set => LongAccount = value;
+        }
+
+        /// <summary>
+        /// shorts percentage (in decimal form)
+        /// </summary>
+        [JsonProperty("shortAccount")]
+        public decimal ShortAccount { get; set; }
+        [JsonProperty("shortPosition")]
+        private decimal ShortPosition
+        {
+            set => ShortAccount = value;
+        }
+        /// <summary>
+        /// Timestamp
+        /// </summary>
+        [JsonProperty("timestamp"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? Timestamp { get; set; }
     }
-    /// <summary>
-    /// Timestamp
-    /// </summary>
-    [JsonProperty("timestamp"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? Timestamp { get; set; }
 }

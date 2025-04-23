@@ -1,38 +1,52 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿using Binance.Net.Enums;
 
-/// <summary>
-/// Basis info
-/// </summary>
-public record BinanceFuturesBasis
+namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// The pair
+    /// Basis info
     /// </summary>
-    public string Pair { get; set; } = "";
-    /// <summary>
-    /// Contract type
-    /// </summary>
-    [JsonConverter(typeof(ContractTypeConverter))]
-    public ContractType ContractType { get; set; }
-    /// <summary>
-    /// Futures price
-    /// </summary>
-    public decimal FuturesPrice { get; set; }
-    /// <summary>
-    /// Index price
-    /// </summary>
-    public decimal IndexPrice { get; set; }
-    /// <summary>
-    /// Basis
-    /// </summary>
-    public decimal Basis { get; set; }
-    /// <summary>
-    /// Basis rate
-    /// </summary>
-    public decimal BasisRate { get; set; }
-    /// <summary>
-    /// Data timestamp
-    /// </summary>
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime Timestamp { get; set; }
+    public record BinanceFuturesBasis
+    {
+        /// <summary>
+        /// The pair
+        /// </summary>
+        [JsonProperty("pair")]
+        public string Pair { get; set; } = string.Empty;
+        /// <summary>
+        /// Contract type
+        /// </summary>
+        [JsonProperty("contractType")]
+        public ContractType ContractType { get; set; }
+        /// <summary>
+        /// Futures price
+        /// </summary>
+        [JsonProperty("futuresPrice")]
+        public decimal FuturesPrice { get; set; }
+        /// <summary>
+        /// Index price
+        /// </summary>
+        [JsonProperty("indexPrice")]
+        public decimal IndexPrice { get; set; }
+        /// <summary>
+        /// Basis
+        /// </summary>
+        [JsonProperty("basis")]
+        public decimal Basis { get; set; }
+        /// <summary>
+        /// Basis rate
+        /// </summary>
+        [JsonProperty("basisRate")]
+        public decimal BasisRate { get; set; }
+        /// <summary>
+        /// Annualized basis rate
+        /// </summary>
+        [JsonProperty("annualizedBasisRate")]
+        public decimal? AnnualizedBasisRate { get; set; }
+        /// <summary>
+        /// Data timestamp
+        /// </summary>
+        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("timestamp")]
+        public DateTime Timestamp { get; set; }
+    }
 }

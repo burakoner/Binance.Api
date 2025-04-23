@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Algo;
+using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Spot;
 using Binance.Api.Wallet;
@@ -21,6 +22,21 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceSpotRestApiClient Spot { get; }
 
     /// <summary>
+    /// Binance Futures Rest API Client
+    /// </summary>
+    internal IBinanceRestApiClientFutures Futures { get; }
+
+    /// <summary>
+    /// Binance Coin Futures Rest API Client
+    /// </summary>
+    public IBinanceRestApiClientFuturesCoin CoinFutures { get => Futures.Coin; }
+
+    /// <summary>
+    /// Binance USDⓈ Futures Rest API Client
+    /// </summary>
+    public IBinanceRestApiClientFuturesUsd UsdFutures { get => Futures.USD; }
+
+    /// <summary>
     /// Binance Margin Rest API Client
     /// </summary>
     public IBinanceMarginRestApiClient Margin { get; }
@@ -34,19 +50,6 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// Binance Wallet Rest API Client
     /// </summary>
     public IBinanceWalletRestApiClient Wallet { get; }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /// <summary>
     /// Default Constructor
@@ -76,13 +79,13 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     /// <param name="logger">Logger</param>
     /// <param name="options">Binance Rest API Client Options</param>
-    public BinanceRestApiClient(ILogger? logger, BinanceRestApiClientOptions options)
-        : base(logger ?? LoggerFactory.CreateLogger(typeof(BinanceRestApiClient)), options)
+    public BinanceRestApiClient(ILogger? logger, BinanceRestApiClientOptions options) : base(logger ?? LoggerFactory.CreateLogger(typeof(BinanceRestApiClient)), options)
     {
         RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
         Spot = new BinanceSpotRestApiClient(this);
+        Futures = new BinanceRestApiClientFutures(this);
         Margin = new BinanceMarginRestApiClient(this);
         Algo = new BinanceAlgoRestApiClient(this);
         Wallet = new BinanceWalletRestApiClient(this);

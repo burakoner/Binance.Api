@@ -1,30 +1,32 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Buy Sell Volume Ratio Info
-/// </summary>
-public record BinanceFuturesBuySellVolumeRatio
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// buy/sell ratio
+    /// Buy Sell Volume Ratio Info
     /// </summary>
-    public decimal BuySellRatio { get; set; }
+    public record BinanceFuturesBuySellVolumeRatio
+    {
+        /// <summary>
+        /// buy/sell ratio
+        /// </summary>
+        [JsonProperty("buySellRatio")]
+        public decimal BuySellRatio { get; set; }
 
-    /// <summary>
-    /// buy volume
-    /// </summary>
-    [JsonProperty("buyVol")]
-    public decimal BuyVolume { get; set; }
+        /// <summary>
+        /// buy volume
+        /// </summary>
+        [JsonProperty("buyVol")]
+        public decimal BuyVolume { get; set; }
 
-    /// <summary>
-    /// sell volume
-    /// </summary>
-    [JsonProperty("sellVol")]
-    public decimal SellVolume { get; set; }
+        /// <summary>
+        /// sell volume
+        /// </summary>
+        [JsonProperty("sellVol")]
+        public decimal SellVolume { get; set; }
 
-    /// <summary>
-    /// Timestamp
-    /// </summary>
-    [JsonProperty("timestamp"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? Timestamp { get; set; }
+        /// <summary>
+        /// Timestamp
+        /// </summary>
+        [JsonProperty("timestamp"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? Timestamp { get; set; }
+    }
 }

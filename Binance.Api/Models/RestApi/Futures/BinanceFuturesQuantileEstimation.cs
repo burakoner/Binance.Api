@@ -1,39 +1,46 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Quantile estimation
-/// </summary>
-public record BinanceFuturesQuantileEstimation
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// The symbol
+    /// Quantile estimation
     /// </summary>
-    public string Symbol { get; set; } = "";
-    /// <summary>
-    /// Quantile
-    /// </summary>
-    public BinanceFuturesAdlQuantile AdlQuantile { get; set; }
-}
+    public record BinanceFuturesQuantileEstimation
+    {
+        /// <summary>
+        /// The symbol
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; } = string.Empty;
+        /// <summary>
+        /// Quantile
+        /// </summary>
+        [JsonProperty("adlQuantile")]
+        public BinanceFuturesAdlQuantile? AdlQuantile { get; set; }
+    }
 
-/// <summary>
-/// Quantile info
-/// </summary>
-public record BinanceFuturesAdlQuantile
-{
     /// <summary>
-    /// Long position
+    /// Quantile info
     /// </summary>
-    public int Long { get; set; }
-    /// <summary>
-    /// Short position
-    /// </summary>
-    public int Short { get; set; }
-    /// <summary>
-    /// Hedge
-    /// </summary>
-    public int Hedge { get; set; }
-    /// <summary>
-    /// Hedge
-    /// </summary>
-    public int Both { get; set; }
+    public record BinanceFuturesAdlQuantile
+    {
+        /// <summary>
+        /// Long position
+        /// </summary>
+        [JsonProperty("LONG")]
+        public int Long { get; set; }
+        /// <summary>
+        /// Short position
+        /// </summary>
+        [JsonProperty("SHORT")]
+        public int Short { get; set; }
+        /// <summary>
+        /// Hedge
+        /// </summary>
+        [JsonProperty("HEDGE")]
+        public int Hedge { get; set; }
+        /// <summary>
+        /// Hedge
+        /// </summary>
+        [JsonProperty("BOTH")]
+        public int Both { get; set; }
+    }
 }

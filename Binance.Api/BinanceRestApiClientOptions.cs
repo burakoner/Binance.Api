@@ -20,7 +20,7 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     /// <summary>
     /// Whether or not to automatically sync the local time with the server time
     /// </summary>
-    public bool AutoTimestamp { get; set; }
+    public bool AutoTimestamp { get; set; } = true;
 
     /// <summary>
     /// How often the timestamp adjustment between client and server is recalculated. If you need a very small TimeSpan here you're probably better of syncing your server time more often
@@ -28,11 +28,11 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     public TimeSpan TimestampRecalculationInterval { get; set; } = TimeSpan.FromHours(1);
 
     // Platform Based Options
-    public BinanceRestApiSpotClientOptions SpotOptions { get; set; }
-    public BinanceRestApiUsdtFuturesClientOptions UsdtFuturesOptions { get; set; }
-    public BinanceRestApiCoinFuturesClientOptions CoinFuturesOptions { get; set; }
-    public BinanceRestApiEuropeanClientOptions EuropeanOptions { get; set; }
-    public BinanceRestApiBrokerClientOptions BrokerOptions { get; set; }
+    public BinanceRestApiSpotClientOptions SpotOptions { get; set; } = new();
+    public BinanceRestApiUsdtFuturesClientOptions UsdtFuturesOptions { get; set; } = new();
+    public BinanceRestApiCoinFuturesClientOptions CoinFuturesOptions { get; set; } = new();
+    public BinanceRestApiEuropeanClientOptions EuropeanOptions { get; set; } = new();
+    public BinanceRestApiBrokerClientOptions BrokerOptions { get; set; } = new();
 
     public BinanceRestApiClientOptions() : this("", "")
     {
@@ -47,27 +47,13 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
         // API Credentials
         ApiCredentials = credentials;
 
-        // Api Addresses
-        BaseAddress = BinanceAddress.Default.RestClientAddress;
-
         // Rate Limiters
-        RateLimiters = new List<IRateLimiter>
-        {
+        RateLimiters =
+        [
             new RateLimiter()
                 .AddPartialEndpointLimit("/api/", 1200, TimeSpan.FromMinutes(1))
                 .AddPartialEndpointLimit("/sapi/", 12000, TimeSpan.FromMinutes(1))
                 .AddEndpointLimit("/api/v3/order", 50, TimeSpan.FromSeconds(10), HttpMethod.Post, true)
-        };
-
-        // Auto Timestamp
-        AutoTimestamp = true;
-        TimestampRecalculationInterval = TimeSpan.FromHours(1);
-
-        // Platform Based Options
-        SpotOptions = new();
-        UsdtFuturesOptions = new();
-        CoinFuturesOptions = new();
-        EuropeanOptions = new();
-        BrokerOptions = new();
+        ];
     }
 }

@@ -28,7 +28,7 @@ internal partial class BinanceMarginRestApiClient(BinanceRestApiClient root): IB
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = Options.BaseAddress.AppendPath(api);
+        var url = BinanceAddress.Default.RestClientAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

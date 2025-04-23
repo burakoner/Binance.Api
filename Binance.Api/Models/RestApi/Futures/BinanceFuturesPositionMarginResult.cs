@@ -1,32 +1,39 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿using Binance.Net.Enums;
 
-/// <summary>
-/// Result of the requested margin amount change
-/// </summary>
-public record BinanceFuturesPositionMarginResult
+namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// New margin amount
+    /// Result of the requested margin amount change
     /// </summary>
-    public decimal Amount { get; set; }
-    /// <summary>
-    /// Request response code
-    /// </summary>
-    public int Code { get; set; }
-    /// <summary>
-    /// Message
-    /// </summary>
-    [JsonProperty("msg")]
-    public string? Message { get; set; }
+    public record BinanceFuturesPositionMarginResult
+    {
+        /// <summary>
+        /// New margin amount
+        /// </summary>
+        [JsonProperty("amount")]
+        public decimal Amount { get; set; }
+        /// <summary>
+        /// Request response code
+        /// </summary>
+        [JsonProperty("code")]
+        public int Code { get; set; }
+        /// <summary>
+        /// Message
+        /// </summary>
+        [JsonProperty("msg")]
+        public string Message { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Maximum margin value
-    /// NOTE: string type, because the value van be 'inf' (infinite)
-    /// </summary>
-    public string MaxNotionalValue { get; set; } = "";
-    /// <summary>
-    /// Direction of the requested margin change
-    /// </summary>
-    [JsonConverter(typeof(FuturesMarginChangeDirectionTypeConverter))]
-    public FuturesMarginChangeDirectionType Type { get; set; }
+        /// <summary>
+        /// Maximum margin value
+        /// NOTE: string type, because the value van be 'inf' (infinite)
+        /// </summary>
+        [JsonProperty("maxNotionalValue")]
+        public string MaxNotionalValue { get; set; } = string.Empty;
+        /// <summary>
+        /// Direction of the requested margin change
+        /// </summary>
+        [JsonProperty("type")]
+        public FuturesMarginChangeDirectionType Type { get; set; }
+    }
+
 }

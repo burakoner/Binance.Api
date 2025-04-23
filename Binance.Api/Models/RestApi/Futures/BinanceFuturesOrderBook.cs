@@ -1,30 +1,33 @@
-﻿using Binance.Api.Spot;
+﻿using Binance.Net.Objects.Models.Spot;
 
-namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// The order book for a asset
-/// </summary>
-public record BinanceFuturesOrderBook : BinanceOrderBook
+namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// Pair
+    /// The order book for a asset
     /// </summary>
-    public string Pair { get; set; } = "";
-    /// <summary>
-    /// The symbol of the order book 
-    /// </summary>
-    public new string Symbol { get; set; } = "";
+    public record BinanceFuturesOrderBook : BinanceOrderBook
+    {
+        /// <summary>
+        /// Pair
+        /// </summary>
+        [JsonProperty("pair")]
+        public string? Pair { get; set; } = string.Empty;
+        /// <summary>
+        /// The symbol of the order book 
+        /// </summary>
+        [JsonProperty("symbol")]
+        public new string Symbol { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The symbol of the order book 
-    /// </summary>
-    [JsonProperty("E"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime MessageTime { get; set; }
+        /// <summary>
+        /// The symbol of the order book 
+        /// </summary>
+        [JsonProperty("E"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime MessageTime { get; set; }
 
-    /// <summary>
-    /// The ID of the last update
-    /// </summary>
-    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime TransactionTime { get; set; }
+        /// <summary>
+        /// The ID of the last update
+        /// </summary>
+        [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime TransactionTime { get; set; }
+    }
 }

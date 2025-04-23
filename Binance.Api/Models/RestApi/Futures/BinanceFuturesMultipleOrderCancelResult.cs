@@ -1,12 +1,26 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Extension to be able to deserialize an error response as well
-/// </summary>
-internal record BinanceFuturesMultipleOrderCancelResult : BinanceFuturesCancelOrder
+﻿namespace Binance.Net.Objects.Models.Futures
 {
-    public int Code { get; set; }
+    /// <summary>
+    /// Extension to be able to deserialize an error response as well
+    /// </summary>
+    internal record BinanceFuturesMultipleOrderCancelResult : BinanceFuturesOrder
+    {
+        [JsonProperty("code")]
+        public int Code { get; set; }
 
-    [JsonProperty("msg")]
-    public string? Message { get; set; }
+        [JsonProperty("msg")]
+        public string Message { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// Extension to be able to deserialize an error response as well
+    /// </summary>
+    internal record BinanceUsdFuturesMultipleOrderCancelResult : BinanceUsdFuturesOrder
+    {
+        [JsonProperty("code")]
+        public int Code { get; set; }
+
+        [JsonProperty("msg")]
+        public string Message { get; set; } = string.Empty;
+    }
 }

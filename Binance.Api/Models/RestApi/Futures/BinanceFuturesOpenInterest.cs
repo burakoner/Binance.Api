@@ -1,39 +1,46 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿using Binance.Net.Enums;
 
-/// <summary>
-/// Open interest
-/// </summary>
-public record BinanceFuturesOpenInterest
+namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// The symbol the information is about
+    /// Open interest
     /// </summary>
-    public string Symbol { get; set; } = "";
+    public record BinanceFuturesOpenInterest
+    {
+        /// <summary>
+        /// The symbol the information is about
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Open Interest info
+        /// </summary>
+        [JsonProperty("openInterest")]
+        public decimal OpenInterest { get; set; }
+
+        /// <summary>
+        /// Timestamp
+        /// </summary>
+        [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? Timestamp { get; set; }
+    }
 
     /// <summary>
-    /// Open Interest info
+    /// Open interest
     /// </summary>
-    public decimal OpenInterest { get; set; }
+    public record BinanceFuturesCoinOpenInterest: BinanceFuturesOpenInterest
+    {
+        /// <summary>
+        /// The pair
+        /// </summary>
+        [JsonProperty("pair")]
+        public string Pair { get; set; } = string.Empty;
+        /// <summary>
+        /// The contract type
+        /// </summary>
+        [JsonProperty("contractType")]
+        public ContractType ContractType { get; set; }
+    }
 
-    /// <summary>
-    /// Timestamp
-    /// </summary>
-    [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? Timestamp { get; set; }
-}
-
-/// <summary>
-/// Open interest
-/// </summary>
-public record BinanceFuturesCoinOpenInterest : BinanceFuturesOpenInterest
-{
-    /// <summary>
-    /// The pair
-    /// </summary>
-    public string Pair { get; set; } = "";
-    /// <summary>
-    /// The contract type
-    /// </summary>
-    [JsonConverter(typeof(ContractTypeConverter))]
-    public ContractType ContractType { get; set; }
 }

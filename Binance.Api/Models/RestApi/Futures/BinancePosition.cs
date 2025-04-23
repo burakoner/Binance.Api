@@ -1,168 +1,213 @@
-﻿
+﻿using Binance.Net.Enums;
 
-namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Base position info
-/// </summary>
-public record BinancePositionBase
+namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// Symbol
+    /// Base position info
     /// </summary>
-    public string Symbol { get; set; } = "";
-    /// <summary>
-    /// Entry price
-    /// </summary>
-    public decimal EntryPrice { get; set; }
+    public record BinancePositionBase
+    {
+        /// <summary>
+        /// Symbol
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; } = string.Empty;
+        /// <summary>
+        /// Entry price
+        /// </summary>
+        [JsonProperty("entryPrice")]
+        public decimal EntryPrice { get; set; }
+
+        /// <summary>
+        /// Leverage
+        /// </summary>
+        [JsonProperty("leverage")]
+        public int Leverage { get; set; }
+        /// <summary>
+        /// Unrealized profit
+        /// </summary>
+        [JsonProperty("unrealizedProfit")]
+        public decimal UnrealizedPnl { get; set; }
+        [JsonInclude, JsonPropertyName("unRealizedProfit")]
+        internal decimal UnRealizedPnl { set => UnrealizedPnl = value; }
+
+        /// <summary>
+        /// Position side
+        /// </summary>
+        [JsonProperty("positionSide")]
+        public PositionSide PositionSide { get; set; }
+    }
 
     /// <summary>
-    /// Leverage
+    /// Position info
     /// </summary>
-    public int Leverage { get; set; }
-    /// <summary>
-    /// Unrealized profit
-    /// </summary>
-    [JsonProperty("unrealizedProfit")]
-    public decimal UnrealizedPnl { get; set; }
+    public record BinancePositionInfoBase: BinancePositionBase
+    {
+        /// <summary>
+        /// Initial margin
+        /// </summary>
+        [JsonProperty("initialMargin")]
+        public decimal InitialMargin { get; set; }
+
+        /// <summary>
+        /// Maintenance margin
+        /// </summary>
+        [JsonProperty("maintMargin")]
+        public decimal MaintMargin { get; set; }
+
+        /// <summary>
+        /// Position initial margin
+        /// </summary>
+        [JsonProperty("positionInitialMargin")]
+        public decimal PositionInitialMargin { get; set; }
+
+        /// <summary>
+        /// Open order initial margin
+        /// </summary>
+        [JsonProperty("openOrderInitialMargin")]
+        public decimal OpenOrderInitialMargin { get; set; }
+
+        /// <summary>
+        /// Isolated
+        /// </summary>
+        [JsonProperty("isolated")]
+        public bool Isolated { get; set; }
+
+        /// <summary>
+        /// Position quantity
+        /// </summary>
+        [JsonProperty("positionAmt")]
+        public decimal Quantity { get; set; }
+
+        /// <summary>
+        /// Last update time
+        /// </summary>
+        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("updateTime")]
+        public DateTime? UpdateTime { get; set; }
+    }
 
     /// <summary>
-    /// Position side
+    /// Usdt position info
     /// </summary>
-    [JsonConverter(typeof(PositionSideConverter))]
-    public BinancePositionSide PositionSide { get; set; }
-}
-
-/// <summary>
-/// Position info
-/// </summary>
-public record BinancePositionInfoBase : BinancePositionBase
-{
-    /// <summary>
-    /// Initial margin
-    /// </summary>
-    public decimal InitialMargin { get; set; }
+    public record BinancePositionInfoUsdt : BinancePositionInfoBase
+    {
+        /// <summary>
+        /// Max notional
+        /// </summary>
+        [JsonProperty("maxNotional")]
+        public decimal MaxNotional { get; set; }
+    }
 
     /// <summary>
-    /// Maint margin
+    /// Coin position info
     /// </summary>
-    public decimal MaintMargin { get; set; }
+    public record BinancePositionInfoCoin : BinancePositionInfoBase
+    {
+
+        /// <summary>
+        /// Break even price
+        /// </summary>
+        [JsonProperty("breakEvenPrice")]
+        public decimal BreakEvenPrice { get; set; }
+        /// <summary>
+        /// Max quantity
+        /// </summary>
+        [JsonProperty("maxQty")]
+        public decimal MaxQuantity { get; set; }
+    }
 
     /// <summary>
-    /// Position initial margin
+    /// Base position details
     /// </summary>
-    public decimal PositionInitialMargin { get; set; }
+    public record BinancePositionDetailsBase: BinancePositionBase
+    {
+        /// <summary>
+        /// Margin type
+        /// </summary>
+        [JsonProperty("marginType")]
+        public FuturesMarginType MarginType { get; set; }
+
+        /// <summary>
+        /// Is auto add margin
+        /// </summary>
+        [JsonProperty("isAutoAddMargin")]
+        public bool IsAutoAddMargin { get; set; }
+
+        /// <summary>
+        /// Isolated margin
+        /// </summary>
+        [JsonProperty("isolatedMargin")]
+        public decimal IsolatedMargin { get; set; }
+
+        /// <summary>
+        /// Liquidation price
+        /// </summary>
+        [JsonProperty("liquidationPrice")]
+        public decimal LiquidationPrice { get; set; }
+
+        /// <summary>
+        /// Mark price
+        /// </summary>
+        [JsonProperty("markPrice")]
+        public decimal MarkPrice { get; set; }
+
+        /// <summary>
+        /// Position quantity
+        /// </summary>
+        [JsonProperty("positionAmt")]
+        public decimal Quantity { get; set; }
+
+        /// <summary>
+        /// Break even price
+        /// </summary>
+        [JsonProperty("breakEvenPrice")]
+        public decimal BreakEvenPrice { get; set; }
+
+        /// <summary>
+        /// Last update time
+        /// </summary>
+        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("updateTime")]
+        public DateTime UpdateTime { get; set; }
+    }
 
     /// <summary>
-    /// Open order initial margin
+    /// Usdt position details
     /// </summary>
-    public decimal OpenOrderInitialMargin { get; set; }
+    public record BinancePositionDetailsUsdt : BinancePositionDetailsBase
+    {
+        /// <summary>
+        /// Max notional
+        /// </summary>
+        [JsonProperty("maxNotionalValue")]
+        public decimal MaxNotional { get; set; }
+        /// <summary>
+        /// Notional value
+        /// </summary>
+        [JsonProperty("notional")]
+        public decimal Notional { get; set; }
+        /// <summary>
+        /// Isolated wallet
+        /// </summary>
+        [JsonProperty("isolatedWallet")]
+        public decimal IsolatedWallet { get; set; }
+    }
 
     /// <summary>
-    /// Isolated
+    /// Coin position info
     /// </summary>
-    public bool Isolated { get; set; }
-
-    /// <summary>
-    /// Position quantity
-    /// </summary>
-    [JsonProperty("positionAmt")]
-    public decimal Quantity { get; set; }
-
-    /// <summary>
-    /// Last update time
-    /// </summary>
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? UpdateTime { get; set; }
-}
-
-/// <summary>
-/// Usdt position info
-/// </summary>
-public record BinancePositionInfoUsdt : BinancePositionInfoBase
-{
-    /// <summary>
-    /// Max notional
-    /// </summary>
-    public decimal MaxNotional { get; set; }
-}
-
-/// <summary>
-/// Coin position info
-/// </summary>
-public record BinancePositionInfoCoin : BinancePositionInfoBase
-{
-    /// <summary>
-    /// Max quantity
-    /// </summary>
-    [JsonProperty("maxQty")]
-    public decimal MaxQuantity { get; set; }
-}
-
-/// <summary>
-/// Base position details
-/// </summary>
-public record BinancePositionDetailsBase : BinancePositionBase
-{
-    /// <summary>
-    /// Margin type
-    /// </summary>
-    [JsonConverter(typeof(FuturesMarginTypeConverter))]
-    public FuturesMarginType MarginType { get; set; }
-
-    /// <summary>
-    /// Is auto add margin
-    /// </summary>
-    public bool IsAutoAddMargin { get; set; }
-
-    /// <summary>
-    /// Isolated margin
-    /// </summary>
-    public decimal IsolatedMargin { get; set; }
-
-    /// <summary>
-    /// Liquidation price
-    /// </summary>
-    public decimal LiquidationPrice { get; set; }
-
-    /// <summary>
-    /// Mark price
-    /// </summary>
-    public decimal MarkPrice { get; set; }
-
-    /// <summary>
-    /// Position quantity
-    /// </summary>
-    [JsonProperty("positionAmt")]
-    public decimal Quantity { get; set; }
-
-    /// <summary>
-    /// Last update time
-    /// </summary>
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime UpdateTime { get; set; }
-}
-
-/// <summary>
-/// Usdt position details
-/// </summary>
-public record BinancePositionDetailsUsdt : BinancePositionDetailsBase
-{
-    /// <summary>
-    /// Max notional
-    /// </summary>
-    [JsonProperty("maxNotionalValue")]
-    public decimal MaxNotional { get; set; }
-}
-
-/// <summary>
-/// Coin position info
-/// </summary>
-public record BinancePositionDetailsCoin : BinancePositionDetailsBase
-{
-    /// <summary>
-    /// Max quantity
-    /// </summary>
-    [JsonProperty("maxQty")]
-    public decimal MaxQuantity { get; set; }
+    public record BinancePositionDetailsCoin : BinancePositionDetailsBase
+    {
+        /// <summary>
+        /// Notional value
+        /// </summary>
+        [JsonProperty("notionalValue")]
+        public decimal NotionalValue { get; set; }
+        /// <summary>
+        /// Max quantity
+        /// </summary>
+        [JsonProperty("maxQty")]
+        public decimal MaxQuantity { get; set; }
+    }
 }

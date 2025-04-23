@@ -1,17 +1,19 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Result from a change margin type request
-/// </summary>
-public record BinanceFuturesChangeMarginTypeResult
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// Response code
+    /// Result from a change margin type request
     /// </summary>
-    public int Code { get; set; }
-    /// <summary>
-    /// Response message
-    /// </summary>
-    [JsonProperty("msg")]
-    public string Message { get; set; }
+    public record BinanceFuturesChangeMarginTypeResult
+    {
+        /// <summary>
+        /// Response code
+        /// </summary>
+        [JsonProperty("code")]
+        public int Code { get; set; }
+        /// <summary>
+        /// Response message
+        /// </summary>
+        [JsonProperty("msg")]
+        public string? Message { get; set; }
+    }
 }

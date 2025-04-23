@@ -1,20 +1,24 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// User commission rate
-/// </summary>
-public record BinanceFuturesAccountUserCommissionRate
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// Symbol
+    /// User commission rate
     /// </summary>
-    public string Symbol { get; set; } = "";
-    /// <summary>
-    /// Maker commission rate
-    /// </summary>
-    public decimal MakerCommissionRate { get; set; }
-    /// <summary>
-    /// Taker commission rate
-    /// </summary>
-    public decimal TakerCommissionRate { get; set; }
+    public record BinanceFuturesAccountUserCommissionRate
+    {
+        /// <summary>
+        /// Symbol
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; } = string.Empty;
+        /// <summary>
+        /// Maker commission rate
+        /// </summary>
+        [JsonProperty("makerCommissionRate")]
+        public decimal MakerCommissionRate { get; set; }
+        /// <summary>
+        /// Taker commission rate
+        /// </summary>
+        [JsonProperty("takerCommissionRate")]
+        public decimal TakerCommissionRate { get; set; }
+    }
 }

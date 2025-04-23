@@ -1,16 +1,19 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
-
-/// <summary>
-/// Result of setting a countdown timer
-/// </summary>
-public record BinanceFuturesCountDownResult
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
-    /// Symbol
+    /// Result of setting a countdown timer
     /// </summary>
-    public string Symbol { get; set; } = "";
-    /// <summary>
-    /// Count down time in milliseconds
-    /// </summary>
-    public int CountDownTime { get; set; }
+    public record BinanceFuturesCountDownResult
+    {
+        /// <summary>
+        /// Symbol
+        /// </summary>
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; } = string.Empty;
+        /// <summary>
+        /// Count down time in milliseconds
+        /// </summary>
+        [JsonProperty("countdownTime")]
+        public int CountDownTime { get; set; }
+    }
 }
