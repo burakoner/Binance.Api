@@ -40,7 +40,7 @@ namespace Binance.Net.Objects.Models.Futures
         [JsonConverter(typeof(DateTimeConverter))]
         [JsonProperty("time")]
         public DateTime Timestamp { get; set; }
-
+        /*
         /// <summary>
         /// Transaction id if relevant
         /// </summary>
@@ -53,6 +53,7 @@ namespace Binance.Net.Objects.Models.Futures
         [JsonProperty("tradeId")]
         [JsonConverter(typeof(NumberStringConverter))]
         public string? TradeId { get; set; }
+        */
     }
 
 }

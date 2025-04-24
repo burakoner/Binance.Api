@@ -17,6 +17,11 @@ public abstract record BinanceFuturesExchangeInfo
     public DateTime ServerTime { get; set; }
 
     /// <summary>
+    /// Futures type
+    /// </summary>
+    public string FuturesType { get; set; } = string.Empty;
+
+    /// <summary>
     /// The rate limits used
     /// </summary>
     public IEnumerable<BinanceRateLimit> RateLimits { get; set; } = [];

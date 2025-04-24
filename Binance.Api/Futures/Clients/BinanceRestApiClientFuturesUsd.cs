@@ -14,8 +14,8 @@ internal partial class BinanceRestApiClientFuturesUsd(BinanceRestApiClientFuture
     private BinanceRestApiClientFutures _ { get; } = parent;
 
     // Internal
-    internal ILogger Logger => Logger;
-    internal BinanceRestApiClientOptions Options => Options;
+    internal ILogger Logger => _.Logger;
+    internal BinanceRestApiClientOptions Options => _.Options;
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
     internal BinanceFuturesUsdtExchangeInfo? ExchangeInfo { get; private set; }
 
@@ -34,7 +34,7 @@ internal partial class BinanceRestApiClientFuturesUsd(BinanceRestApiClientFuture
     // GetUrl
     private Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.CoinFuturesRestClientAddress.AppendPath(api);
+        var url = BinanceAddress.Default.UsdFuturesRestClientAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

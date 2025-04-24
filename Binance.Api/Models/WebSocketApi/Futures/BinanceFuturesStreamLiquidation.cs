@@ -1,5 +1,4 @@
-
-using Binance.Api.Spot;
+using Binance.Api.Futures;
 
 namespace Binance.Api.Models.WebSocketApi.Futures;
 
@@ -36,7 +35,7 @@ public record BinanceFuturesStreamLiquidation : IBinanceFuturesLiquidation
     /// Liquidation order type
     /// </summary>
     [JsonProperty("o"), JsonConverter(typeof(FuturesOrderTypeConverter))]
-    public FuturesOrderType Type { get; set; }
+    public BinanceFuturesOrderType Type { get; set; }
 
     /// <summary>
     /// Liquidation Time in Force

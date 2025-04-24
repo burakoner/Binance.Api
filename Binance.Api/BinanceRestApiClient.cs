@@ -27,14 +27,14 @@ public sealed class BinanceRestApiClient : RestApiClient
     internal IBinanceRestApiClientFutures Futures { get; }
 
     /// <summary>
-    /// Binance Coin Futures Rest API Client
-    /// </summary>
-    public IBinanceRestApiClientFuturesCoin CoinFutures { get => Futures.Coin; }
-
-    /// <summary>
     /// Binance USDⓈ Futures Rest API Client
     /// </summary>
     public IBinanceRestApiClientFuturesUsd UsdFutures { get => Futures.USD; }
+
+    /// <summary>
+    /// Binance Coin Futures Rest API Client
+    /// </summary>
+    public IBinanceRestApiClientFuturesCoin CoinFutures { get => Futures.Coin; }
 
     /// <summary>
     /// Binance Margin Rest API Client

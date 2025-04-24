@@ -1,5 +1,7 @@
 ﻿namespace Binance.Api.Futures;
 
-public interface IBinanceRestApiClientFuturesUsd
-{
-}
+/// <summary>
+/// Interface for the Binance Futures USD Rest API client.
+/// </summary>
+public interface IBinanceRestApiClientFuturesUsd:
+    IBinanceRestApiClientFuturesUsdMarketData;

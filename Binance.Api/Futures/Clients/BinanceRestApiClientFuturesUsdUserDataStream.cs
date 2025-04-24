@@ -4,6 +4,7 @@ namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd
 {
+    /*
     #region Start User Data Stream
     /// <inheritdoc />
     public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
@@ -49,5 +50,5 @@ internal partial class BinanceRestApiClientFuturesUsd
     }
 
     #endregion
-
+    */
 }

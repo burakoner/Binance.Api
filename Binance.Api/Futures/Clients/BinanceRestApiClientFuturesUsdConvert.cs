@@ -1,11 +1,8 @@
-﻿using ApiSharp;
-using Binance.Net.Objects.Models.Futures;
-
-namespace Binance.Api.Futures;
+﻿namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd
 {
-
+    /*
     /// <inheritdoc />
     internal class BinanceRestClientUsdFuturesApiExchangeData : IBinanceRestClientUsdFuturesApiExchangeData
     {
@@ -77,5 +74,5 @@ internal partial class BinanceRestApiClientFuturesUsd
     }
 
     #endregion
-
+    */
 }

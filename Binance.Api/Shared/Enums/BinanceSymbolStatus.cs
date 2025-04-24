@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Status of a symbol

@@ -1,5 +1,4 @@
-
-using Binance.Api.Spot;
+using Binance.Api.Futures;
 
 namespace Binance.Api.Models.WebSocketApi.Futures;
 
@@ -49,7 +48,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// The type of the order
     /// </summary>
     [JsonProperty("o"), JsonConverter(typeof(FuturesOrderTypeConverter))]
-    public FuturesOrderType Type { get; set; }
+    public BinanceFuturesOrderType Type { get; set; }
     /// <summary>
     /// The timespan the order is active
     /// </summary>
@@ -154,7 +153,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// Original Order Type
     /// </summary>
     [JsonProperty("ot"), JsonConverter(typeof(FuturesOrderTypeConverter))]
-    public FuturesOrderType OriginalType { get; set; }
+    public BinanceFuturesOrderType OriginalType { get; set; }
     /// <summary>
     /// Position side
     /// </summary>

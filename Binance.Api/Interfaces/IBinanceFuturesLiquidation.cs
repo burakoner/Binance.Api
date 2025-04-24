@@ -1,5 +1,5 @@
 ﻿
-using Binance.Api.Spot;
+using Binance.Api.Futures;
 
 namespace Binance.Api.Interfaces;
 
@@ -43,7 +43,7 @@ public interface IBinanceFuturesLiquidation
     /// <summary>
     /// Side
     /// </summary>
-    FuturesOrderType Type { get; set; }
+    BinanceFuturesOrderType Type { get; set; }
     /// <summary>
     /// Forced time
     /// </summary>

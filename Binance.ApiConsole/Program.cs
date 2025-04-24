@@ -1,4 +1,5 @@
 ﻿using Binance.Api;
+using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Shared;
 using Binance.Api.Spot;
@@ -11,6 +12,22 @@ namespace Binance.ApiConsole;
 
 internal class Program
 {
+    static async Task Main2(string[] args)
+    {
+        var api = new BinanceRestApiClient();
+
+        // Spot > General Methods (PUBLIC)
+        //var spot_101 = await api.Spot.PingAsync();
+        //var spot_102 = await api.Spot.GetTimeAsync();
+        var spot_103 = await api.Spot.GetExchangeInfoAsync();
+
+        //var futures_101 = await api.UsdFutures.PingAsync();
+        //var futures_102 = await api.UsdFutures.GetTimeAsync();
+        var futures_103 = await api.UsdFutures.GetExchangeInfoAsync();
+
+        var a = 0;
+    }
+
     static async Task Main(string[] args)
     {
         var api = new BinanceRestApiClient();
@@ -201,7 +218,41 @@ internal class Program
         var algo_205 = await api.Algo.Spot.GetOpenAlgoOrdersAsync();
         var algo_206 = await api.Algo.Spot.GetClosedAlgoOrdersAsync();
 
-
+        // USDⓈ-M Futures -> Market Data Methods (PUBLIC)
+        var futures_101 = await api.UsdFutures.PingAsync();
+        var futures_102 = await api.UsdFutures.GetTimeAsync();
+        var futures_103 = await api.UsdFutures.GetExchangeInfoAsync();
+        var futures_104 = await api.UsdFutures.GetOrderBookAsync("SYMBOL");
+        var futures_105 = await api.UsdFutures.GetRecentTradesAsync("SYMBOL");
+        var futures_106 = await api.UsdFutures.GetTradeHistoryAsync("SYMBOL");
+        var futures_107 = await api.UsdFutures.GetAggregatedTradeHistoryAsync("SYMBOL");
+        var futures_108 = await api.UsdFutures.GetKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
+        var futures_109 = await api.UsdFutures.GetContinuousContractKlinesAsync("SYMBOL", BinanceContractType.Perpetual, BinanceKlineInterval.OneDay);
+        var futures_110 = await api.UsdFutures.GetIndexPriceKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
+        var futures_111 = await api.UsdFutures.GetMarkPriceKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
+        var futures_112 = await api.UsdFutures.GetPremiumIndexKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
+        var futures_113 = await api.UsdFutures.GetMarkPriceAsync("SYMBOL");
+        var futures_114 = await api.UsdFutures.GetMarkPricesAsync();
+        var futures_115 = await api.UsdFutures.GetFundingRatesAsync("SYMBOL");
+        var futures_116 = await api.UsdFutures.GetFundingInfoAsync();
+        var futures_117 = await api.UsdFutures.GetTickerAsync("SYMBOL");
+        var futures_118 = await api.UsdFutures.GetTickersAsync();
+        var futures_119 = await api.UsdFutures.GetPriceAsync("SYMBOL");
+        var futures_120 = await api.UsdFutures.GetPricesAsync();
+        var futures_121 = await api.UsdFutures.GetBookPriceAsync("SYMBOL");
+        var futures_122 = await api.UsdFutures.GetBookPricesAsync();
+        var futures_123 = await api.UsdFutures.GetOpenInterestAsync("SYMBOL");
+        var futures_124 = await api.UsdFutures.GetOpenInterestHistoryAsync("SYMBOL", BinancePeriodInterval.FourHour);
+        var futures_125 = await api.UsdFutures.GetTopLongShortPositionRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
+        var futures_126 = await api.UsdFutures.GetTopLongShortAccountRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
+        var futures_127 = await api.UsdFutures.GetGlobalLongShortAccountRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
+        var futures_128 = await api.UsdFutures.GetTakerBuySellVolumeRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
+        var futures_129 = await api.UsdFutures.GetBasisAsync("SYMBOL", BinanceContractType.Perpetual, BinancePeriodInterval.FourHour);
+        var futures_130 = await api.UsdFutures.GetCompositeIndexInfoAsync();
+        var futures_131 = await api.UsdFutures.GetAssetIndexAsync("SYMBOL");
+        var futures_132 = await api.UsdFutures.GetAssetIndexesAsync();
+        var futures_133 = await api.UsdFutures.PingAsync();
+        var futures_134 = await api.UsdFutures.PingAsync();
 
 
 

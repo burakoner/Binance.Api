@@ -29,6 +29,8 @@ namespace Binance.Net.Objects.Models.Futures
         /// </summary>
         [JsonProperty("orderId")]
         public long Id { get; set; }
+
+        /*
         /// <summary>
         /// The order id as assigned by the client
         /// </summary>
@@ -37,6 +39,7 @@ namespace Binance.Net.Objects.Models.Futures
             $"{BinanceExchange.ClientOrderIdPrefixSpot}->",
             $"{BinanceExchange.ClientOrderIdPrefixFutures}->")]
         public string? ClientOrderId { get; set; }
+        */
         /// <summary>
         /// Edit time
         /// </summary>
@@ -48,12 +51,14 @@ namespace Binance.Net.Objects.Models.Futures
         /// </summary>
         [JsonProperty("amendment")]
         public BinanceFuturesOrderChanges EditInfo { get; set; } = null!;
+
+        /*
         /// <summary>
         /// Price match
         /// </summary>
         [JsonProperty("priceMatch"), JsonConverter(typeof(EnumConverter))]
         public PriceMatch PriceMatch { get; set; }
-
+        */
     }
 
     /// <summary>

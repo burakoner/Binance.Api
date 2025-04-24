@@ -53,7 +53,7 @@ public record BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
     /// <summary>
     /// The amount of minutes the average price of trades is calculated over. 0 means the last price is used
     /// </summary>
-    public int AveragePriceMinutes { get; set; }
+    public int? AveragePriceMinutes { get; set; }
 }
 
 /// <summary>
@@ -178,7 +178,7 @@ public record BinanceSymbolNotionalFilter : BinanceSymbolFilter
     /// <summary>
     /// The amount of minutes the average price of trades is calculated over for market orders. 0 means the last price is used
     /// </summary>
-    public int AveragePriceMinutes { get; set; }
+    public int? AveragePriceMinutes { get; set; }
 }
 
 /// <summary>
@@ -189,7 +189,7 @@ public record BinanceSymbolMaxOrdersFilter : BinanceSymbolFilter
     /// <summary>
     /// The max number of orders for this symbol
     /// </summary>
-    public int MaxNumberOrders { get; set; }
+    public int MaxNumOrders { get; set; }
 }
 
 /// <summary>

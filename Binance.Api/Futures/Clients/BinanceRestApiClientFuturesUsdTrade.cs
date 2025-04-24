@@ -6,6 +6,7 @@ namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd
 {
+    /*
     #region New Order
 
     /// <inheritdoc />
@@ -708,7 +709,7 @@ internal partial class BinanceRestApiClientFuturesUsd
 
 
 
-
+    */
 
 
 

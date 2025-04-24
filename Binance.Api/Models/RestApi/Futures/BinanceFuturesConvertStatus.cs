@@ -15,8 +15,8 @@ namespace Binance.Net.Objects.Models.Futures
         /// <summary>
         /// Order status
         /// </summary>
-        [JsonProperty("orderStatus")]
-        public ConvertOrderStatus Status { get; set; }
+        //[JsonProperty("orderStatus")]
+        //public ConvertOrderStatus Status { get; set; }
         /// <summary>
         /// From asset
         /// </summary>

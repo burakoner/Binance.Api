@@ -4,6 +4,7 @@ namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd
 {
+    /*
 
     #region Future Account Balance
 
@@ -296,7 +297,7 @@ internal partial class BinanceRestApiClientFuturesUsd
 
 
 
-
+    */
 
 
 

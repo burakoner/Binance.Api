@@ -12,8 +12,8 @@ internal class BinanceRestApiClientFutures : IBinanceRestApiClientFutures
     internal BinanceRestApiClient _ { get; }
 
     // Internal
-    internal ILogger Logger => Logger;
-    internal BinanceRestApiClientOptions Options => Options;
+    internal ILogger Logger => _.Logger;
+    internal BinanceRestApiClientOptions Options => _.RestOptions;
 
     // Interface Properties
     public IBinanceRestApiClientFuturesCoin Coin { get; }
@@ -27,5 +27,5 @@ internal class BinanceRestApiClientFutures : IBinanceRestApiClientFutures
         USD = new BinanceRestApiClientFuturesUsd(this);
     }
 
-    Futures algo'ları hem usd ye hem de coin e ekle. alias olarak
+    //Futures algo'ları hem usd ye hem de coin e ekle. alias olarak
 }

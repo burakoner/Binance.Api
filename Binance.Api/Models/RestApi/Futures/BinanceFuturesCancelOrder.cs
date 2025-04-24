@@ -1,5 +1,5 @@
 ﻿
-using Binance.Api.Spot;
+using Binance.Api.Futures;
 
 namespace Binance.Api.Models.RestApi.Futures;
 
@@ -101,13 +101,13 @@ public record BinanceFuturesCancelOrder
     /// The type of the order
     /// </summary>
     [JsonProperty("origType"), JsonConverter(typeof(FuturesOrderTypeConverter))]
-    public FuturesOrderType OriginalType { get; set; }
+    public BinanceFuturesOrderType OriginalType { get; set; }
 
     /// <summary>
     /// The type of the order
     /// </summary>
     [JsonProperty("type"), JsonConverter(typeof(FuturesOrderTypeConverter))]
-    public FuturesOrderType Type { get; set; }
+    public BinanceFuturesOrderType Type { get; set; }
 
     /// <summary>
     /// Activation price, only return with TRAILING_STOP_MARKET order

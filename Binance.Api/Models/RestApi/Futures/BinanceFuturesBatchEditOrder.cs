@@ -22,7 +22,7 @@ namespace Binance.Net.Objects.Models.Futures
         /// <summary>
         /// Side of the order
         /// </summary>
-        public OrderSide Side { get; set; }
+        public BinanceOrderSide Side { get; set; }
         /// <summary>
         /// Quantity
         /// </summary>
@@ -34,6 +34,6 @@ namespace Binance.Net.Objects.Models.Futures
         /// <summary>
         /// PriceMatch
         /// </summary>
-        public PriceMatch? PriceMatch { get; set; }
+        //public PriceMatch? PriceMatch { get; set; }
     }
 }

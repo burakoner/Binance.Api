@@ -1,16 +1,13 @@
-﻿using Binance.Net.Objects.Models.Spot;
+﻿namespace Binance.Net.Objects.Models.Futures;
 
-namespace Binance.Net.Objects.Models.Futures
+/// <summary>
+/// Book price
+/// </summary>
+public record BinanceFuturesBookPrice//: BinanceBookPrice
 {
     /// <summary>
-    /// Book price
+    /// Pair
     /// </summary>
-    public record BinanceFuturesBookPrice: BinanceBookPrice
-    {
-        /// <summary>
-        /// Pair
-        /// </summary>
-        [JsonProperty("pair")]
-        public string Pair { get; set; } = string.Empty;
-    }
+    [JsonProperty("pair")]
+    public string Pair { get; set; } = string.Empty;
 }

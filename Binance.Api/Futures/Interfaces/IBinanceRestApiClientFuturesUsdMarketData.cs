@@ -247,7 +247,7 @@ public interface IBinanceRestApiClientFuturesUsdMarketData
     /// <param name="endTime">End time to get open interest history</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Open Interest History info</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesOpenInterestHistory>>> GetOpenInterestHistoryAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesOpenInterestHistory>>> GetOpenInterestHistoryAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
     /// <summary>
     /// Gets Top Trader Long/Short Ratio (Positions)
     /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio" /></para>
@@ -259,7 +259,7 @@ public interface IBinanceRestApiClientFuturesUsdMarketData
     /// <param name="endTime">End time to get top trader long/short ratio (positions)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Top Trader Long/Short Ratio (Positions) info</returns>    
-    Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortPositionRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortPositionRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets Top Trader Long/Short Ratio (Accounts)
@@ -272,7 +272,7 @@ public interface IBinanceRestApiClientFuturesUsdMarketData
     /// <param name="endTime">End time to get top trader long/short ratio (accounts)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Top Trader Long/Short Ratio (Accounts) info</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortAccountRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortAccountRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets Global Long/Short Ratio (Accounts)
@@ -285,7 +285,7 @@ public interface IBinanceRestApiClientFuturesUsdMarketData
     /// <param name="endTime">End time to get global long/short ratio (accounts)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Global Long/Short Ratio (Accounts) info</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetGlobalLongShortAccountRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetGlobalLongShortAccountRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets Taker Buy/Sell Volume Ratio
@@ -298,13 +298,13 @@ public interface IBinanceRestApiClientFuturesUsdMarketData
     /// <param name="endTime">End time to get taker buy/sell volume ratio</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Taker Buy/Sell Volume Ratio info</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesBuySellVolumeRatio>>> GetTakerBuySellVolumeRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesBuySellVolumeRatio>>> GetTakerBuySellVolumeRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
     
     /// <summary>
     /// Get basis data
     /// <para><a href="https://binance-docs.github.io/apidocs/futures/en/#basis" /></para>
     /// </summary>
-    /// <param name="symbol">The pair to get the data for, for example `ETHUSDT`</param>
+    /// <param name="pair">The pair to get the data for, for example `ETHUSDT`</param>
     /// <param name="contractType">The contract type</param>
     /// <param name="period">The period timespan</param>
     /// <param name="limit">Max number of results</param>
@@ -312,7 +312,7 @@ public interface IBinanceRestApiClientFuturesUsdMarketData
     /// <param name="endTime">End time</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesBasis>>> GetBasisAsync(string symbol, BinanceContractType contractType, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesBasis>>> GetBasisAsync(string pair, BinanceContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets composite index info

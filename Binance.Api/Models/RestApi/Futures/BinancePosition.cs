@@ -23,6 +23,7 @@ namespace Binance.Net.Objects.Models.Futures
         /// </summary>
         [JsonProperty("leverage")]
         public int Leverage { get; set; }
+        /*
         /// <summary>
         /// Unrealized profit
         /// </summary>
@@ -30,12 +31,13 @@ namespace Binance.Net.Objects.Models.Futures
         public decimal UnrealizedPnl { get; set; }
         [JsonInclude, JsonPropertyName("unRealizedProfit")]
         internal decimal UnRealizedPnl { set => UnrealizedPnl = value; }
+        */
 
         /// <summary>
         /// Position side
         /// </summary>
         [JsonProperty("positionSide")]
-        public PositionSide PositionSide { get; set; }
+        public BinancePositionSide PositionSide { get; set; }
     }
 
     /// <summary>

@@ -42,7 +42,7 @@ namespace Binance.Net.Objects.Models.Futures
         /// Position side
         /// </summary>
         [JsonProperty("positionSide")]
-        public PositionSide PositionSide { get; set; }
+        public BinancePositionSide PositionSide { get; set; }
     }
 
 }

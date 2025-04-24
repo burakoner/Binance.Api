@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Converters;
+﻿using Binance.Api.Futures;
+
+namespace Binance.Api.Converters;
 
 internal class FuturesOrderTypeConverter : JsonConverter
 {
@@ -14,21 +16,21 @@ internal class FuturesOrderTypeConverter : JsonConverter
         quotes = useQuotes;
     }
 
-    private readonly Dictionary<FuturesOrderType, string> values = new Dictionary<FuturesOrderType, string>
+    private readonly Dictionary<BinanceFuturesOrderType, string> values = new Dictionary<BinanceFuturesOrderType, string>
     {
-        { FuturesOrderType.Limit, "LIMIT" },
-        { FuturesOrderType.Market, "MARKET" },
-        { FuturesOrderType.TakeProfit, "TAKE_PROFIT" },
-        { FuturesOrderType.TakeProfitMarket, "TAKE_PROFIT_MARKET" },
-        { FuturesOrderType.Stop, "STOP" },
-        { FuturesOrderType.StopMarket, "STOP_MARKET" },
-        { FuturesOrderType.TrailingStopMarket, "TRAILING_STOP_MARKET" },
-        { FuturesOrderType.Liquidation, "LIQUIDATION" }
+        { BinanceFuturesOrderType.Limit, "LIMIT" },
+        { BinanceFuturesOrderType.Market, "MARKET" },
+        { BinanceFuturesOrderType.TakeProfit, "TAKE_PROFIT" },
+        { BinanceFuturesOrderType.TakeProfitMarket, "TAKE_PROFIT_MARKET" },
+        { BinanceFuturesOrderType.Stop, "STOP" },
+        { BinanceFuturesOrderType.StopMarket, "STOP_MARKET" },
+        { BinanceFuturesOrderType.TrailingStopMarket, "TRAILING_STOP_MARKET" },
+        { BinanceFuturesOrderType.Liquidation, "LIQUIDATION" }
     };
 
     public override bool CanConvert(Type objectType)
     {
-        return objectType == typeof(FuturesOrderType);
+        return objectType == typeof(BinanceFuturesOrderType);
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -39,8 +41,8 @@ internal class FuturesOrderTypeConverter : JsonConverter
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         if (quotes)
-            writer.WriteValue(values[(FuturesOrderType)value!]);
+            writer.WriteValue(values[(BinanceFuturesOrderType)value!]);
         else
-            writer.WriteRawValue(values[(FuturesOrderType)value!]);
+            writer.WriteRawValue(values[(BinanceFuturesOrderType)value!]);
     }
 }

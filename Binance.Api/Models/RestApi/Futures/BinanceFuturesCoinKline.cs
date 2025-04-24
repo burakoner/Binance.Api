@@ -1,6 +1,4 @@
-﻿using CryptoExchange.Net.Converters;
-
-namespace Binance.Net.Objects.Models.Futures
+﻿namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
     /// Candlestick information for symbol

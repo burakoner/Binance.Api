@@ -1,4 +1,4 @@
-﻿using Binance.Api.Futures.Enums;
+﻿using Binance.Api.Futures;
 using Binance.Api.Models.WebSocketApi.Futures;
 
 namespace Binance.Api.Clients.StreamApi.UsdtFutures;

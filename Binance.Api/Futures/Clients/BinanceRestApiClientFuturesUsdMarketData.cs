@@ -242,7 +242,7 @@ internal partial class BinanceRestApiClientFuturesUsd : IBinanceRestApiClientFut
         return RequestAsync<BinanceFuturesOpenInterest>(GetUrl(fapi, v1, "openInterest"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesOpenInterestHistory>>> GetOpenInterestHistoryAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesOpenInterestHistory>>> GetOpenInterestHistoryAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
@@ -258,7 +258,7 @@ internal partial class BinanceRestApiClientFuturesUsd : IBinanceRestApiClientFut
         return RequestAsync<IEnumerable<BinanceFuturesOpenInterestHistory>>(GetUrl(fapi, "", "futures/data/openInterestHist"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1000);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortPositionRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortPositionRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
@@ -274,7 +274,7 @@ internal partial class BinanceRestApiClientFuturesUsd : IBinanceRestApiClientFut
         return RequestAsync<IEnumerable<BinanceFuturesLongShortRatio>>(GetUrl(fapi, "", "futures/data/topLongShortPositionRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1000);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortAccountRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetTopLongShortAccountRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
@@ -290,7 +290,7 @@ internal partial class BinanceRestApiClientFuturesUsd : IBinanceRestApiClientFut
         return RequestAsync<IEnumerable<BinanceFuturesLongShortRatio>>(GetUrl(fapi, "", "futures/data/topLongShortAccountRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1000);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetGlobalLongShortAccountRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesLongShortRatio>>> GetGlobalLongShortAccountRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
@@ -306,7 +306,7 @@ internal partial class BinanceRestApiClientFuturesUsd : IBinanceRestApiClientFut
         return RequestAsync<IEnumerable<BinanceFuturesLongShortRatio>>(GetUrl(fapi, "", "futures/data/globalLongShortAccountRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 0);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesBuySellVolumeRatio>>> GetTakerBuySellVolumeRatioAsync(string symbol, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesBuySellVolumeRatio>>> GetTakerBuySellVolumeRatioAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
@@ -322,11 +322,11 @@ internal partial class BinanceRestApiClientFuturesUsd : IBinanceRestApiClientFut
         return RequestAsync<IEnumerable<BinanceFuturesBuySellVolumeRatio>>(GetUrl(fapi, "", "futures/data/takerlongshortRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 0);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesBasis>>> GetBasisAsync(string symbol, BinanceContractType contractType, PeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesBasis>>> GetBasisAsync(string pair, BinanceContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
-            { "pair", symbol }
+            { "pair", pair }
         };
         parameters.AddEnum("contractType", contractType);
         parameters.AddEnum("period", period);

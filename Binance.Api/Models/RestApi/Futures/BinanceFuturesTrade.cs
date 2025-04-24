@@ -63,12 +63,12 @@ namespace Binance.Net.Objects.Models.Futures
         /// Order side
         /// </summary>
         [JsonProperty("side")]
-        public OrderSide Side { get; set; }
+        public BinanceOrderSide Side { get; set; }
         /// <summary>
         /// Position side
         /// </summary>
         [JsonProperty("positionSide")]
-        public PositionSide PositionSide { get; set; }
+        public BinancePositionSide PositionSide { get; set; }
         /// <summary>
         /// Timestamp
         /// </summary>
