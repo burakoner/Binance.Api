@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Shared;
 
 internal class BinanceSymbolFilterConverter : JsonConverter
 {
@@ -33,7 +33,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.MinNotional:
                 result = new BinanceSymbolMinNotionalFilter
                 {
-                    MinNotional = obj["minNotional"] != null ? (decimal)obj["minNotional"] : (obj["notional"] != null ? (decimal)obj["notional"] : 0),
+                    MinNotional = obj["minNotional"] != null ? (decimal)obj["minNotional"] : obj["notional"] != null ? (decimal)obj["notional"] : 0,
                     ApplyToMarketOrders = obj["applyToMarket"] != null ? (bool?)obj["applyToMarket"] : null,
                     AveragePriceMinutes = obj["avgPriceMins"] != null ? (int?)obj["avgPriceMins"] : null
                 };
@@ -59,13 +59,13 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.MaxNumberAlgorithmicOrders:
                 result = new BinanceSymbolMaxAlgorithmicOrdersFilter
                 {
-                    MaxNumberAlgorithmicOrders = obj["maxNumAlgoOrders"] != null ? (int)obj["maxNumAlgoOrders"] : (obj["limit"] != null ? (int)obj["limit"] : 0),
+                    MaxNumberAlgorithmicOrders = obj["maxNumAlgoOrders"] != null ? (int)obj["maxNumAlgoOrders"] : obj["limit"] != null ? (int)obj["limit"] : 0,
                 };
                 break;
             case BinanceSymbolFilterType.MaxNumberOrders:
                 result = new BinanceSymbolMaxOrdersFilter
                 {
-                    MaxNumOrders = obj["maxNumOrders"] != null ? (int)obj["maxNumOrders"] : (obj["limit"] != null ? (int)obj["limit"] : 0),
+                    MaxNumOrders = obj["maxNumOrders"] != null ? (int)obj["maxNumOrders"] : obj["limit"] != null ? (int)obj["limit"] : 0,
                 };
                 break;
 

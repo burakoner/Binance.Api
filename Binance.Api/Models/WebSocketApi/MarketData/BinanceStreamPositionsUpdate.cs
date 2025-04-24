@@ -24,7 +24,7 @@ public record BinanceStreamPositionsUpdate : BinanceSocketEvent
 /// <summary>
 /// Information about an asset balance
 /// </summary>
-public record BinanceStreamBalance : IBinanceBalance
+public record BinanceStreamBalance
 {
     /// <summary>
     /// The asset this balance is for

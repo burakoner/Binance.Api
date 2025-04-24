@@ -1,6 +1,9 @@
-﻿namespace Binance.Api.Models.RestApi.Futures;
+﻿namespace Binance.Api.Futures;
 
-[JsonConverter(typeof(SymbolFuturesFilterConverter))]
+/// <summary>
+/// Symbol Filter Base
+/// </summary>
+[JsonConverter(typeof(BinanceSymbolFilterConverter))]
 public record BinanceFuturesSymbolFilter
 {
     /// <summary>

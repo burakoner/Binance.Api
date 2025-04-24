@@ -3,7 +3,7 @@
 /// <summary>
 /// Aggregated information about trades for a symbol
 /// </summary>
-public record BinanceStreamAggregatedTrade : BinanceSocketEvent, IBinanceAggregatedTrade
+public record BinanceStreamAggregatedTrade : BinanceSocketEvent
 {
     /// <summary>
     /// The symbol the trade was for

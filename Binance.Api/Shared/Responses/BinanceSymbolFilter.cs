@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot;
-
-namespace Binance.Api.Shared;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// A filter for order placed on a symbol.

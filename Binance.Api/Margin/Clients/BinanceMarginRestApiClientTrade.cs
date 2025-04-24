@@ -63,10 +63,10 @@ internal partial class BinanceMarginRestApiClient
             throw new ArgumentException("Either orderListId or listClientOrderId must be sent");
 
         if (listClientOrderId != null)
-            listClientOrderId = BinanceHelpers.ApplyBrokerId(listClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+            listClientOrderId = BinanceHelpers.ApplyBrokerId(listClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         if (newClientOrderId != null)
-            newClientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+            newClientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection
             {
@@ -87,10 +87,10 @@ internal partial class BinanceMarginRestApiClient
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
 
         if (origClientOrderId != null)
-            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         if (newClientOrderId != null)
-            newClientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+            newClientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection
         {
@@ -139,8 +139,8 @@ internal partial class BinanceMarginRestApiClient
         price = rulesCheck.Price!.Value;
         stopPrice = rulesCheck.StopPrice!.Value;
 
-        limitClientOrderId = BinanceHelpers.ApplyBrokerId(limitClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
-        stopClientOrderId = BinanceHelpers.ApplyBrokerId(stopClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId); ;
+        limitClientOrderId = BinanceHelpers.ApplyBrokerId(limitClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
+        stopClientOrderId = BinanceHelpers.ApplyBrokerId(stopClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId); ;
 
         var parameters = new ParameterCollection
         {
@@ -202,7 +202,7 @@ internal partial class BinanceMarginRestApiClient
         price = rulesCheck.Price;
         stopPrice = rulesCheck.StopPrice;
         quoteQuantity = rulesCheck.QuoteQuantity;
-        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection
         {
@@ -278,7 +278,7 @@ internal partial class BinanceMarginRestApiClient
             throw new ArgumentException("Either orderListId or origClientOrderId must be sent");
 
         if (origClientOrderId != null)
-            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
@@ -320,7 +320,7 @@ internal partial class BinanceMarginRestApiClient
             throw new ArgumentException("Either orderId or origClientOrderId should be provided");
 
         if (origClientOrderId != null)
-            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, Options.AllowAppendingClientOrderId);
+            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection
         {

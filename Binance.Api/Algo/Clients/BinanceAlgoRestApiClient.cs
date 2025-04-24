@@ -13,7 +13,7 @@ internal class BinanceAlgoRestApiClient: IBinanceAlgoRestApiClient
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions Options => _.RestOptions;
+    internal BinanceRestApiClientOptions RestApiOptions => _.RestApiOptions;
 
     // Interface Properties
     public IBinanceAlgoRestApiClientSpot Spot { get; }

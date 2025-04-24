@@ -14,7 +14,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     // Internal
     internal ILogger Logger => this._logger;
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
-    internal BinanceRestApiClientOptions RestOptions => (BinanceRestApiClientOptions)ClientOptions;
+    internal BinanceRestApiClientOptions RestApiOptions => (BinanceRestApiClientOptions)ClientOptions;
 
     /// <summary>
     /// Binance Spot Rest API Client
@@ -117,7 +117,7 @@ public sealed class BinanceRestApiClient : RestApiClient
 
     /// <inheritdoc/>
     protected override TimeSyncInfo GetTimeSyncInfo()
-        => new(Logger, RestOptions.AutoTimestamp, RestOptions.TimestampRecalculationInterval, TimeSyncState);
+        => new(Logger, RestApiOptions.AutoTimestamp, RestApiOptions.TimestampRecalculationInterval, TimeSyncState);
 
     /// <inheritdoc/>
     protected override TimeSpan GetTimeOffset()
@@ -127,7 +127,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     #region Internal Methods
     internal string GetSymbolName(string baseAsset, string quoteAsset) => (baseAsset + quoteAsset).ToUpper(CultureInfo.InvariantCulture);
 
-    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (RestOptions.ReceiveWindow != null ? System.Convert.ToInt32(RestOptions.ReceiveWindow?.TotalMilliseconds) : null);
+    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (RestApiOptions.ReceiveWindow != null ? System.Convert.ToInt32(RestApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
 
     internal async Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -135,7 +135,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         ArraySerialization? serialization = null, JsonSerializer? deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters ?? [], bodyParameters ?? [], headerParameters ?? [], serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
-        if (!result && result.Error!.Code == -1021 && RestOptions.AutoTimestamp)
+        if (!result && result.Error!.Code == -1021 && RestApiOptions.AutoTimestamp)
         {
             Logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;
