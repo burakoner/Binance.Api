@@ -15,7 +15,7 @@ public record BinanceFuturesSymbol
     /// Contract type
     /// </summary>
     [JsonProperty("contractType")]
-    public ContractType? ContractType { get; set; }
+    public BinanceContractType? ContractType { get; set; }
 
     /// <summary>
     /// The maintenance margin percent
@@ -113,7 +113,7 @@ public record BinanceFuturesSymbol
     /// Sub types
     /// </summary>
     [JsonProperty("underlyingSubType")]
-    public IEnumerable<string> UnderlyingSubType { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> UnderlyingSubType { get; set; } = [];
 
     /// <summary>
     /// Liquidation fee
@@ -130,7 +130,7 @@ public record BinanceFuturesSymbol
     /// Allowed order time in force
     /// </summary>
     [JsonProperty("timeInForce")]
-    public IEnumerable<TimeInForce> TimeInForce { get; set; } = Array.Empty<TimeInForce>();
+    public IEnumerable<BinanceTimeInForce> TimeInForce { get; set; } = [];
     /// <summary>
     /// Filter for the max accuracy of the price for this symbol
     /// </summary>

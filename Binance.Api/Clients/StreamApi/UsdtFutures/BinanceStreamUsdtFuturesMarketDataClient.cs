@@ -1,4 +1,5 @@
-﻿using Binance.Api.Models.WebSocketApi.Futures;
+﻿using Binance.Api.Futures.Enums;
+using Binance.Api.Models.WebSocketApi.Futures;
 
 namespace Binance.Api.Clients.StreamApi.UsdtFutures;
 
@@ -79,9 +80,9 @@ public class BinanceStreamUsdtFuturesMarketDataClient
     #endregion
 
     #region Continuous contract kline/Candlestick Streams
-    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(string pair, ContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamContinuousKlineData>> onMessage, CancellationToken ct = default) => await SubscribeToContinuousContractKlineUpdatesAsync(new[] { pair }, contractType, interval, onMessage, ct).ConfigureAwait(false);
+    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(string pair, BinanceContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamContinuousKlineData>> onMessage, CancellationToken ct = default) => await SubscribeToContinuousContractKlineUpdatesAsync(new[] { pair }, contractType, interval, onMessage, ct).ConfigureAwait(false);
 
-    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(IEnumerable<string> pairs, ContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamContinuousKlineData>> onMessage, CancellationToken ct = default)
+    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(IEnumerable<string> pairs, BinanceContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamContinuousKlineData>> onMessage, CancellationToken ct = default)
     {
         pairs.ValidateNotNull(nameof(pairs));
         var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<BinanceStreamContinuousKlineData>>>(data => onMessage(data.As(data.Data.Data, data.Data.Data.Symbol)));

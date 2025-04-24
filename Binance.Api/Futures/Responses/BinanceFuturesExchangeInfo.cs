@@ -1,6 +1,4 @@
-﻿using Binance.Api.Futures.Responses;
-
-namespace Binance.Api.Futures;
+﻿namespace Binance.Api.Futures;
 
 /// <summary>
 /// Exchange info

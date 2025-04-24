@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Futures.Responses;
+﻿namespace Binance.Api.Futures;
 
 /// <summary>
 /// Kline for mark or index price

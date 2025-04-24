@@ -1,4 +1,4 @@
-﻿using Binance.Net.Enums;
+﻿using Binance.Api.Futures.Enums;
 
 namespace Binance.Net.Objects.Models.Futures
 {
@@ -16,7 +16,7 @@ namespace Binance.Net.Objects.Models.Futures
         /// Contract type
         /// </summary>
         [JsonProperty("contractType")]
-        public ContractType ContractType { get; set; }
+        public BinanceContractType ContractType { get; set; }
         /// <summary>
         /// The taker buy volume
         /// </summary>

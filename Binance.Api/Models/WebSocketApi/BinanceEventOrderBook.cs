@@ -5,7 +5,7 @@ namespace Binance.Api.Models.WebSocketApi;
 /// <summary>
 /// Stream order book
 /// </summary>
-public record BinanceEventOrderBook : BinanceOrderBook, IBinanceEventOrderBook
+public record BinanceEventOrderBook : BinanceSpotOrderBook, IBinanceEventOrderBook
 {
     /// <summary>
     /// The id of this update, can be synced with BinanceClient.Spot.GetOrderBook to update the order book
@@ -35,11 +35,11 @@ public record BinanceEventOrderBook : BinanceOrderBook, IBinanceEventOrderBook
     /// Setter for bids (needed forJson.Net)
     /// </summary>
     [JsonProperty("b")]
-    internal IEnumerable<BinanceOrderBookEntry> BidsStream { set => Bids = value; }
+    internal IEnumerable<BinanceSpotOrderBookEntry> BidsStream { set => Bids = value; }
 
     /// <summary>
     /// Setter for asks (needed forJson.Net)
     /// </summary>
     [JsonProperty("a")]
-    internal IEnumerable<BinanceOrderBookEntry> AsksStream { set => Asks = value; }
+    internal IEnumerable<BinanceSpotOrderBookEntry> AsksStream { set => Asks = value; }
 }

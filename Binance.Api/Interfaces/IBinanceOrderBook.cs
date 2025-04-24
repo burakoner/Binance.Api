@@ -20,12 +20,12 @@ public interface IBinanceOrderBook
     /// <summary>
     /// The list of bids
     /// </summary>
-    IEnumerable<BinanceOrderBookEntry> Bids { get; set; }
+    IEnumerable<BinanceSpotOrderBookEntry> Bids { get; set; }
 
     /// <summary>
     /// The list of asks
     /// </summary>
-    IEnumerable<BinanceOrderBookEntry> Asks { get; set; }
+    IEnumerable<BinanceSpotOrderBookEntry> Asks { get; set; }
 }
 
 /// <summary>

@@ -1,6 +1,6 @@
-﻿namespace Binance.Api.Authentication;
+﻿namespace Binance.Api;
 
-internal class BinanceAuthenticationProvider(ApiCredentials credentials) : AuthenticationProvider(credentials)
+internal class BinanceAuthentication(ApiCredentials credentials) : AuthenticationProvider(credentials)
 {
     public override void AuthenticateRestApi(RestApiClient apiClient, Uri uri, HttpMethod method, bool signed, ArraySerialization serialization, SortedDictionary<string, object> query, SortedDictionary<string, object> body, string bodyContent, SortedDictionary<string, string> headers)
     {

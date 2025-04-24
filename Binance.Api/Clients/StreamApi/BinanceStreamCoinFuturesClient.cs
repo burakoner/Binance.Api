@@ -29,7 +29,7 @@ public class BinanceStreamCoinFuturesClient : WebSocketApiClient
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-        => new BinanceAuthenticationProvider(credentials);
+        => new BinanceAuthentication(credentials);
 
     internal CallResult<T> DeserializeInternal<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null)
         => Deserialize<T>(obj, serializer, requestId);

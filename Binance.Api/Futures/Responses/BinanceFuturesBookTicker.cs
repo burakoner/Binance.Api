@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Futures;
 
 /// <summary>
 /// Information about the best price/quantity available for a symbol
 /// </summary>
-public record BinanceBookTicker
+public record BinanceFuturesBookTicker
 {
     /// <summary>
     /// The symbol the information is about
@@ -33,4 +33,10 @@ public record BinanceBookTicker
     /// </summary>
     [JsonProperty("askQty")]
     public decimal BestAskQuantity { get; set; }
+
+    /// <summary>
+    /// Transaction time
+    /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime Time { get; set; }
 }

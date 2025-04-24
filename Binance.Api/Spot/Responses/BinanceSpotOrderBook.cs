@@ -3,7 +3,7 @@
 /// <summary>
 /// The order book for a asset
 /// </summary>
-public record BinanceOrderBook
+public record BinanceSpotOrderBook
 {
     /// <summary>
     /// The symbol of the order book 
@@ -20,19 +20,19 @@ public record BinanceOrderBook
     /// <summary>
     /// The list of bids
     /// </summary>
-    public IEnumerable<BinanceOrderBookEntry> Bids { get; set; } = [];
+    public IEnumerable<BinanceSpotOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of asks
     /// </summary>
-    public IEnumerable<BinanceOrderBookEntry> Asks { get; set; } = [];
+    public IEnumerable<BinanceSpotOrderBookEntry> Asks { get; set; } = [];
 }
 
 /// <summary>
 /// An entry in the order book
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public record BinanceOrderBookEntry
+public record BinanceSpotOrderBookEntry
 {
     /// <summary>
     /// The price of this order book entry

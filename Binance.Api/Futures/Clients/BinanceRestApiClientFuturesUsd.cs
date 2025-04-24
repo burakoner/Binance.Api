@@ -1,11 +1,10 @@
-﻿using Binance.Api.Futures.Responses;
-
-namespace Binance.Api.Futures;
+﻿namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd(BinanceRestApiClientFutures parent) : IBinanceRestApiClientFuturesUsd
 {
     // Api
     private const string v1 = "1";
+    private const string v2 = "2";
     private const string v3 = "3";
     private const string api = "api";
     private const string fapi = "fapi";

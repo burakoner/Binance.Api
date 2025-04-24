@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Models.WebSocketApi.Futures;
+﻿using Binance.Api.Futures.Enums;
+
+namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>
 /// Wrapper for continuous kline information for a symbol
@@ -15,7 +17,7 @@ public record BinanceStreamContinuousKlineData : BinanceSocketEvent, IBinanceStr
     /// The contract type
     /// </summary>
     [JsonProperty("ct")]
-    public ContractType ContractType { get; set; } = ContractType.Unknown;
+    public BinanceContractType ContractType { get; set; } = BinanceContractType.Unknown;
 
     /// <summary>
     /// The data

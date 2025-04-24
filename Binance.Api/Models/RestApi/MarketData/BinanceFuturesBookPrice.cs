@@ -5,7 +5,7 @@ namespace Binance.Api.Models.RestApi.MarketData;
 /// <summary>
 /// Book price
 /// </summary>
-public record BinanceFuturesBookPrice : BinanceBookTicker
+public record BinanceFuturesBookPrice : BinanceSpotBookTicker
 {
     /// <summary>
     /// Pair

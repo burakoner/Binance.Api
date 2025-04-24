@@ -29,7 +29,7 @@ public class BinanceStreamSpotClient : WebSocketApiClient
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-    => new BinanceAuthenticationProvider(credentials);
+    => new BinanceAuthentication(credentials);
 
     internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     {

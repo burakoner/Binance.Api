@@ -3,7 +3,7 @@
 /// <summary>
 /// The price of a symbol
 /// </summary>
-public record BinancePriceTicker
+public record BinanceSpotPriceTicker
 {
     /// <summary>
     /// The symbol the price is for

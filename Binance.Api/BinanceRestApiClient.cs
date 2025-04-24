@@ -94,7 +94,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     #region Overrided Methods
     /// <inheritdoc/>
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-        => new BinanceAuthenticationProvider(credentials);
+        => new BinanceAuthentication(credentials);
 
     /// <inheritdoc/>
     protected override Error ParseErrorResponse(JToken error)

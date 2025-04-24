@@ -178,13 +178,13 @@ public class BinanceStreamSpotMarketDataClient
 
     #region Partial Book Depth Streams
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(string symbol,
-        int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOrderBook>> onMessage, CancellationToken ct = default) =>
+        int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceSpotOrderBook>> onMessage, CancellationToken ct = default) =>
         await SubscribeToPartialOrderBookUpdatesAsync([symbol], levels, updateInterval, onMessage, ct)
             .ConfigureAwait(false);
 
     /// <inheritdoc />
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(
-        IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOrderBook>> onMessage, CancellationToken ct = default)
+        IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceSpotOrderBook>> onMessage, CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
         foreach (var symbol in symbols)
@@ -193,10 +193,10 @@ public class BinanceStreamSpotMarketDataClient
         levels.ValidateIntValues(nameof(levels), 5, 10, 20);
         updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 1000);
 
-        var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<BinanceOrderBook>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<BinanceSpotOrderBook>>>(data =>
         {
             data.Data.Data.Symbol = data.Data.Stream.Split('@')[0];
-            onMessage(data.As<BinanceOrderBook>(data.Data.Data, data.Data.Data.Symbol));
+            onMessage(data.As<BinanceSpotOrderBook>(data.Data.Data, data.Data.Data.Symbol));
         });
 
         symbols = symbols.Select(a =>
