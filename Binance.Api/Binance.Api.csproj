@@ -61,8 +61,8 @@
 	  <Folder Include="Margin\Internal\" />
 	  <Folder Include="Margin\Requests\" />
 	  <Folder Include="Shared\Clients\" />
-	  <Folder Include="Shared\Internal\" />
 	  <Folder Include="Shared\Requests\" />
+	  <Folder Include="Spot\Internal\" />
 	  <Folder Include="Spot\Requests\" />
 	  <Folder Include="Wallet\Converters\" />
 	  <Folder Include="Wallet\Requests\" />

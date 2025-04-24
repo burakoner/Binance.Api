@@ -1,4 +1,4 @@
-﻿namespace Binance.Net.Objects.Models.Futures
+﻿namespace Binance.Api.Shared
 {
     /// <summary>
     /// BNB burn for fee reduction status

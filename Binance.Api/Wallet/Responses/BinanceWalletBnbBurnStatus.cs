@@ -3,7 +3,7 @@
 /// <summary>
 /// Bnb burn status
 /// </summary>
-public record BinanceBnbBurnStatus
+public record BinanceWalletBnbBurnStatus
 {
     /// <summary>
     /// If spot trading BNB burn is enabled

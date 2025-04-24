@@ -1,8 +1,4 @@
-﻿using Binance.Api.Clients.StreamApi;
-using Binance.Api.Clients.StreamApi.CoinFutures;
-using Binance.Api.Clients.StreamApi.General;
-using Binance.Api.Clients.StreamApi.Spot;
-using Binance.Api.Clients.StreamApi.UsdtFutures;
+﻿using Binance.Api.Clients.StreamApi.UsdtFutures;
 
 namespace Binance.Api.Clients.StreamApi;
 
@@ -14,8 +10,8 @@ public class BinanceStreamUsdtFuturesClient : WebSocketApiClient
 
     // Internal
     internal ILogger Logger { get => this._logger; }
-    internal CallResult<T> Deserializer<T>(string data, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(data, serializer, requestId);
-    internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(obj, serializer, requestId);
+    internal CallResult<T> Deserializer<T>(string data, JsonSerializer? serializer = null, int? requestId = null) => this.Deserialize<T>(data, serializer, requestId);
+    internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => this.Deserialize<T>(obj, serializer, requestId);
 
     // Root Client
     internal BinanceWebSocketApiClient RootClient { get; }

@@ -5,4 +5,6 @@
 /// </summary>
 public interface IBinanceRestApiClientFuturesUsd:
     IBinanceRestApiClientFuturesUsdMarketData,
-    IBinanceRestApiClientFuturesUsdTrade;
+    IBinanceRestApiClientFuturesUsdTrade,
+    IBinanceRestApiClientFuturesUserDataStream,
+    IBinanceRestApiClientFuturesUsdAccount;

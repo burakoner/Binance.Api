@@ -57,7 +57,7 @@ internal partial class BinanceWalletRestApiClient
         return RequestAsync<BinanceQueryRecords<BinanceTransfer>>(GetUrl(sapi, v1, "asset/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceBnbBurnStatus>> SetBnbBurnStatusAsync(bool? spotTrading = null, bool? marginInterest = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletBnbBurnStatus>> SetBnbBurnStatusAsync(bool? spotTrading = null, bool? marginInterest = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (spotTrading == null && marginInterest == null)
             throw new ArgumentException("SpotTrading or MarginInterest should be provided");
@@ -67,7 +67,7 @@ internal partial class BinanceWalletRestApiClient
         parameters.AddOptional("interestBNBBurn", marginInterest);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceBnbBurnStatus>(GetUrl(sapi, v1, "bnbBurn"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceWalletBnbBurnStatus>(GetUrl(sapi, v1, "bnbBurn"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceEligibleDusts>> GetAssetsForDustTransferAsync(BinanceAccountType? accountType = null, int? receiveWindow = null, CancellationToken ct = default)

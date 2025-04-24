@@ -1,25 +1,14 @@
-﻿using ApiSharp;
-
-namespace Binance.Api.Futures;
+﻿namespace Binance.Api.Futures;
 
 internal partial class BinanceRestApiClientFuturesUsd
 {
-    /*
-    #region Start User Data Stream
-    /// <inheritdoc />
     public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
     {
-        var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v1/listenKey", BinanceExchange.RateLimiter.FuturesRest, 1);
-        var result = await _baseClient.SendAsync<Objects.Models.Spot.BinanceListenKey>(request, null, ct).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceListenKey>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Post, ct, true, requestWeight: 1);
         return result.As(result.Data?.ListenKey!);
     }
 
-    #endregion
-
-    #region Keepalive User Data Stream
-
-    /// <inheritdoc />
-    public async Task<WebCallResult> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default)
+    public async Task<RestCallResult<bool>> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
 
@@ -28,16 +17,11 @@ internal partial class BinanceRestApiClientFuturesUsd
             { "listenKey", listenKey }
         };
 
-        var request = _definitions.GetOrCreate(HttpMethod.Put, "fapi/v1/listenKey", BinanceExchange.RateLimiter.FuturesRest, 1);
-        return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
+        var result = await RequestAsync<object>(GetUrl(fapi, v3, "listenKey"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 2);
+        return result.As(result.Success);
     }
 
-    #endregion
-
-    #region Close User Data Stream
-
-    /// <inheritdoc />
-    public async Task<WebCallResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default)
+    public async Task<RestCallResult<bool>> StopUserStreamAsync(string listenKey, CancellationToken ct = default)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
         var parameters = new ParameterCollection
@@ -45,10 +29,7 @@ internal partial class BinanceRestApiClientFuturesUsd
             { "listenKey", listenKey }
         };
 
-        var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v1/listenKey", BinanceExchange.RateLimiter.FuturesRest, 1);
-        return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
+        var result = await RequestAsync<object>(GetUrl(fapi, v3, "listenKey"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 2);
+        return result.As(result.Success);
     }
-
-    #endregion
-    */
 }

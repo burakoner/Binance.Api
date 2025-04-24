@@ -1,6 +1,4 @@
-﻿using Binance.Net.Enums;
-
-namespace Binance.Net.Objects.Models.Futures
+﻿namespace Binance.Api.Futures
 {
     /// <summary>
     /// Futures income history result
@@ -24,22 +22,26 @@ namespace Binance.Net.Objects.Models.Futures
         /// </summary>
         [JsonProperty("income")]
         public decimal Income { get; set; }
+
         /// <summary>
         /// Base asset for the income
         /// </summary>
         [JsonProperty("asset")]
         public string? Asset { get; set; }
+
         /// <summary>
         /// Additional info
         /// </summary>
         [JsonProperty("info")]
         public string? Info { get; set; }
+
         /// <summary>
         /// Time of the income
         /// </summary>
         [JsonConverter(typeof(DateTimeConverter))]
         [JsonProperty("time")]
         public DateTime Timestamp { get; set; }
+
         /*
         /// <summary>
         /// Transaction id if relevant
