@@ -254,7 +254,31 @@ internal class Program
         var futures_133 = await api.UsdFutures.PingAsync();
         var futures_134 = await api.UsdFutures.PingAsync();
 
-
+        // USDⓈ-M Futures -> Trading Methods (PRIVATE)
+        var futures_201 = await api.UsdFutures.PlaceOrderAsync("SYMBOL", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
+        var futures_202 = await api.UsdFutures.PlaceMultipleOrdersAsync([]);
+        var futures_203 = await api.UsdFutures.EditOrderAsync("SYMBOL", BinanceOrderSide.Buy, 110.0m, orderId:1_000_000L);
+        var futures_204 = await api.UsdFutures.EditMultipleOrdersAsync([]);
+        var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("SYMBOL");
+        var futures_206 = await api.UsdFutures.CancelOrderAsync("SYMBOL", orderId: 1_000_000L);
+        var futures_207 = await api.UsdFutures.CancelMultipleOrdersAsync("SYMBOL", [1_000_000L]);
+        var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("SYMBOL");
+        var futures_209 = await api.UsdFutures.CancelAllOrdersAfterTimeoutAsync("SYMBOL", TimeSpan.FromSeconds(15));
+        var futures_210 = await api.UsdFutures.GetOrderAsync("SYMBOL", orderId: 1_000_000L);
+        var futures_211 = await api.UsdFutures.GetOrdersAsync();
+        var futures_212 = await api.UsdFutures.GetOpenOrdersAsync();
+        var futures_213 = await api.UsdFutures.GetOpenOrderAsync("SYMBOL");
+        var futures_214 = await api.UsdFutures.GetForcedOrdersAsync();
+        var futures_215 = await api.UsdFutures.GetUserTradesAsync("SYMBOL");
+        var futures_216 = await api.UsdFutures.ChangeMarginTypeAsync("SYMBOL", BinanceFuturesMarginType.Isolated);
+        var futures_217 = await api.UsdFutures.ModifyPositionModeAsync(true);
+        var futures_218 = await api.UsdFutures.ChangeInitialLeverageAsync("SYMBOL", 10);
+        var futures_219 = await api.UsdFutures.SetMultiAssetsModeAsync(true);
+        var futures_220 = await api.UsdFutures.ModifyPositionMarginAsync("SYMBOL", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
+        var futures_221 = await api.UsdFutures.GetPositionInformationAsync();
+        var futures_222 = await api.UsdFutures.GetPositionsAsync();
+        var futures_223 = await api.UsdFutures.GetPositionAdlQuantileEstimationAsync();
+        var futures_224 = await api.UsdFutures.GetMarginChangeHistoryAsync("SYMBOL");
 
 
 

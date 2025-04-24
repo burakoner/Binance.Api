@@ -4,4 +4,5 @@
 /// Interface for the Binance Futures USD Rest API client.
 /// </summary>
 public interface IBinanceRestApiClientFuturesUsd:
-    IBinanceRestApiClientFuturesUsdMarketData;
+    IBinanceRestApiClientFuturesUsdMarketData,
+    IBinanceRestApiClientFuturesUsdTrade;

@@ -10,11 +10,13 @@ public enum BinancePositionSide : byte
     /// </summary>
     [Map("SHORT")]
     Short = 1,
+
     /// <summary>
     /// Long
     /// </summary>
     [Map("LONG")]
     Long = 2,
+
     /// <summary>
     /// Both for One-way mode when placing an order
     /// </summary>

@@ -1,14 +1,16 @@
-﻿namespace Binance.Api.Converters;
+﻿using Binance.Api.Futures;
 
-internal class FuturesMarginTypeConverter : BaseConverter<FuturesMarginType>
+namespace Binance.Api.Converters;
+
+internal class FuturesMarginTypeConverter : BaseConverter<BinanceFuturesMarginType>
 {
     public FuturesMarginTypeConverter() : this(false) { }
     public FuturesMarginTypeConverter(bool quotes) : base(quotes) { }
 
-    protected override List<KeyValuePair<FuturesMarginType, string>> Mapping => new List<KeyValuePair<FuturesMarginType, string>>
+    protected override List<KeyValuePair<BinanceFuturesMarginType, string>> Mapping => new List<KeyValuePair<BinanceFuturesMarginType, string>>
     {
-        new KeyValuePair<FuturesMarginType, string>(FuturesMarginType.Isolated, "ISOLATED"),
-        new KeyValuePair<FuturesMarginType, string>(FuturesMarginType.Cross, "CROSSED"),
-        new KeyValuePair<FuturesMarginType, string>(FuturesMarginType.Cross, "cross") //return on BinanceFuturesStreamPosition
+        new KeyValuePair<BinanceFuturesMarginType, string>(BinanceFuturesMarginType.Isolated, "ISOLATED"),
+        new KeyValuePair<BinanceFuturesMarginType, string>(BinanceFuturesMarginType.Cross, "CROSSED"),
+        new KeyValuePair<BinanceFuturesMarginType, string>(BinanceFuturesMarginType.Cross, "cross") //return on BinanceFuturesStreamPosition
     };
 }

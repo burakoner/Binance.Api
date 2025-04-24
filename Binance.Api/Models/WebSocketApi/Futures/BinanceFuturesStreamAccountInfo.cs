@@ -1,5 +1,7 @@
 
 
+using Binance.Api.Futures;
+
 namespace Binance.Api.Models.WebSocketApi.Futures;
 
 /// <summary>
@@ -110,7 +112,7 @@ public record BinanceFuturesStreamPosition
     /// The margin type
     /// </summary>
     [JsonProperty("mt"), JsonConverter(typeof(FuturesMarginTypeConverter))]
-    public FuturesMarginType MarginType { get; set; }
+    public BinanceFuturesMarginType MarginType { get; set; }
 
     /// <summary>
     /// The isolated wallet (if isolated position)

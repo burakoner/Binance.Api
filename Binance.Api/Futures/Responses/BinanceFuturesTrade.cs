@@ -1,41 +1,61 @@
 ﻿namespace Binance.Api.Futures;
 
 /// <summary>
-/// Recent trade with quote quantity
+/// Trade info
 /// </summary>
-public record BinanceFuturesTrade
+public abstract record BinanceFuturesTrade
 {
     /// <summary>
-    /// The id of the trade
+    /// Trade id
     /// </summary>
     [JsonProperty("id")]
-    public long OrderId { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
-    /// The price of the trade
+    /// Price
     /// </summary>
+    [JsonProperty("price")]
     public decimal Price { get; set; }
 
     /// <summary>
-    /// The base quantity of the trade
+    /// Quantity
     /// </summary>
     [JsonProperty("qty")]
-    public decimal BaseQuantity { get; set; }
+    public decimal Quantity { get; set; }
 
     /// <summary>
-    /// The quote quantity of the trade
-    /// </summary>
-    [JsonProperty("quoteQty")]
-    public decimal QuoteQuantity { get; set; }
-
-    /// <summary>
-    /// The timestamp of the trade
+    /// Timestamp
     /// </summary>
     [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime TradeTime { get; set; }
+    public DateTime Timestamp { get; set; }
 
     /// <summary>
     /// Whether the buyer is maker
     /// </summary>
+    [JsonProperty("isBuyerMaker")]
     public bool IsBuyerMaker { get; set; }
+}
+
+/// <summary>
+/// Trade details
+/// </summary>
+public record BinanceFuturesUsdtTrade: BinanceFuturesTrade
+{
+    /// <summary>
+    /// Quote quantity
+    /// </summary>
+    [JsonProperty("quoteQty")]
+    public decimal QuoteQuantity { get; set; }
+}
+
+/// <summary>
+/// Trade details
+/// </summary>
+public record BinanceFuturesCoinTrade : BinanceFuturesTrade
+{
+    /// <summary>
+    /// Base quantity
+    /// </summary>
+    [JsonProperty("baseQty")]
+    public decimal BaseQuantity { get; set; }
 }

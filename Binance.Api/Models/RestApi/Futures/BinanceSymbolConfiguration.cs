@@ -1,4 +1,5 @@
-﻿using Binance.Net.Enums;
+﻿using Binance.Api.Futures;
+using Binance.Net.Enums;
 
 namespace Binance.Net.Objects.Models.Futures
 {
@@ -16,7 +17,7 @@ namespace Binance.Net.Objects.Models.Futures
         /// Margin type
         /// </summary>
         [JsonProperty("marginType")]
-        public FuturesMarginType? MarginType { get; set; }
+        public BinanceFuturesMarginType? MarginType { get; set; }
         /// <summary>
         /// Is auto add margin
         /// </summary>
