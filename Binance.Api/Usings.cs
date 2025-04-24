@@ -23,6 +23,7 @@ global using Binance.Api.Models.RestApi.Futures;
 global using Binance.Api.Models.RestApi.MarketData;
 global using Binance.Api.Models.RestApi.Server;
 global using Binance.Api.Models.WebSocketApi;
+global using Binance.Api;
 global using Binance.Api.Models.WebSocketApi.MarketData;
 global using Binance.Api.Options.RestApi;
 global using Binance.Api.Shared;

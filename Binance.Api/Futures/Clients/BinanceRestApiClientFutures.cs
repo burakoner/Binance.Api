@@ -26,6 +26,4 @@ internal class BinanceRestApiClientFutures : IBinanceRestApiClientFutures
         Coin = new BinanceRestApiClientFuturesCoin(this);
         USD = new BinanceRestApiClientFuturesUsd(this);
     }
-
-    //Futures algo'ları hem usd ye hem de coin e ekle. alias olarak
 }

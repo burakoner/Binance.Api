@@ -57,7 +57,6 @@
 	<ItemGroup>
 	  <Folder Include="Futures\Converters\" />
 	  <Folder Include="Futures\Internal\" />
-	  <Folder Include="Futures\Requests\" />
 	  <Folder Include="Margin\Converters\" />
 	  <Folder Include="Margin\Internal\" />
 	  <Folder Include="Margin\Requests\" />

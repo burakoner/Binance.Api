@@ -1,4 +1,6 @@
-﻿namespace Binance.Net.Objects.Models.Futures
+﻿using Binance.Api.Futures.Responses;
+
+namespace Binance.Net.Objects.Models.Futures
 {
     /// <summary>
     /// Extension to be able to deserialize an error response as well

@@ -1,7 +1,4 @@
-﻿using Binance.Api.Futures;
-using Binance.Api.Spot;
-
-namespace Binance.Net.Objects.Models.Futures;
+﻿namespace Binance.Api.Futures;
 
 /// <summary>
 /// The result of query order
@@ -26,53 +23,43 @@ public record BinanceFuturesOrder
     [JsonProperty("orderId")]
     public long Id { get; set; }
 
-    /*
     /// <summary>
     /// The order id as assigned by the client
     /// </summary>
     [JsonProperty("clientOrderId")]
-    [JsonConverterCtor(typeof(ReplaceConverter), 
-        $"{BinanceExchange.ClientOrderIdPrefixSpot}->",
-        $"{BinanceExchange.ClientOrderIdPrefixFutures}->")]
     public string ClientOrderId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Whether or not this order is a liquidation order
+    /// The order id as assigned by the client without the prefix
     /// </summary>
-    [JsonIgnore]
-    public bool IsLiquidationOrder => ClientOrderId?.StartsWith("autoclose-") == true;
-    /// <summary>
-    /// Whether or not this order is an ADL auto close order
-    /// </summary>
-    [JsonIgnore]
-    public bool IsAdlAutoCloseOrder => ClientOrderId?.StartsWith("adl_autoclose-") == true;
-    /// <summary>
-    /// Whether or not this order is a delisting/delivery settlement order
-    /// </summary>
-    [JsonIgnore]
-    public bool IsSettlementOrder => ClientOrderId?.StartsWith("delivery_autoclose-") == true;
-    */
+    public string RequestClientOrderId => ClientOrderId
+        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
+        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
 
     /// <summary>
     /// The price of the order
     /// </summary>
     [JsonProperty("price")]
     public decimal Price { get; set; }
+
     /// <summary>
     /// The average price of the order
     /// </summary>
     [JsonProperty("avgPrice")]
     public decimal AveragePrice { get; set; }
+
     /// <summary>
     /// Quantity that has been filled
     /// </summary>
     [JsonProperty("executedQty")]
     public decimal QuantityFilled { get; set; }
+
     /// <summary>
     /// Cumulative quantity
     /// </summary>
     [JsonProperty("cumQty")]
     public decimal? CumulativeQuantity { get; set; }
+
     /// <summary>
     /// Cumulative quantity in quote asset ( for USD futures )
     /// </summary>
@@ -84,11 +71,13 @@ public record BinanceFuturesOrder
     /// </summary>
     [JsonProperty("cumBase")]
     public decimal? BaseQuantityFilled { get; set; }
+
     /// <summary>
     /// The original quantity of the order
     /// </summary>
     [JsonProperty("origQty")]
     public decimal Quantity { get; set; }
+
     /// <summary>
     /// Reduce Only
     /// </summary>
@@ -182,8 +171,8 @@ public record BinanceFuturesOrder
     /// <summary>
     /// Price match type
     /// </summary>
-    //[JsonProperty("priceMatch"), JsonConverter(typeof(EnumConverter))]
-    //public PriceMatch PriceMatch { get; set; }
+    [JsonProperty("priceMatch")]
+    public BinanceFuturesPriceMatch PriceMatch { get; set; }
 
     /// <summary>
     /// Self trade prevention mode
@@ -197,7 +186,6 @@ public record BinanceFuturesOrder
 /// </summary>
 public record BinanceUsdFuturesOrder : BinanceFuturesOrder
 {
-
     /// <summary>
     /// Auto cancel at this date
     /// </summary>
