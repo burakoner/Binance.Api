@@ -102,16 +102,16 @@ internal class Program
         // Margin > General Borrow and Repay Methods (PRIVATE)
         var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["---ASSET---"], true);
         var margin_202 = await api.Margin.GetMarginInterestHistoryAsync();
-        var margin_203 = await api.Margin.MarginBorrowAsync("---ASSET---", 100.0m);
-        var margin_204 = await api.Margin.MarginRepayAsync("---ASSET---", 95.0m);
+        var margin_203 = await api.Margin.BorrowAsync("---ASSET---", 100.0m);
+        var margin_204 = await api.Margin.RepayAsync("---ASSET---", 95.0m);
         var margin_205 = await api.Margin.GetMarginLoansAsync("---ASSET---");
         var margin_206 = await api.Margin.GetMarginInterestRateHistoryAsync("---ASSET---");
         var margin_207 = await api.Margin.GetMarginMaxBorrowAmountAsync("---ASSET---");
 
         // Margin > General Trade Methods (PRIVATE)
         var margin_301 = await api.Margin.GetMarginForcedLiquidationHistoryAsync();
-        var margin_302 = await api.Margin.GetCrossMarginSmallLiabilityExchangeAssetsAsync();
-        var margin_303 = await api.Margin.GetCrossMarginSmallLiabilityExchangeHistoryAsync();
+        var margin_302 = await api.Margin.GetSmallLiabilityExchangeAssetsAsync();
+        var margin_303 = await api.Margin.GetSmallLiabilityExchangeHistoryAsync();
         var margin_304 = await api.Margin.CancelAllMarginOrdersAsync("---SYMBOL---");
         var margin_305 = await api.Margin.CancelMarginOcoOrderAsync("---SYMBOL---");
         var margin_306 = await api.Margin.CancelMarginOrderAsync("---SYMBOL---");
@@ -125,14 +125,14 @@ internal class Program
         var margin_314 = await api.Margin.GetOpenMarginOrdersAsync();
         var margin_315 = await api.Margin.GetMarginOrderAsync("---SYMBOL---");
         var margin_316 = await api.Margin.GetMarginUserTradesAsync("---SYMBOL---");
-        var margin_317 = await api.Margin.CrossMarginSmallLiabilityExchangeAsync(["---ASSET---"]);
+        var margin_317 = await api.Margin.SmallLiabilityExchangeAsync(["---ASSET---"]);
 
         // Margin > General Transfer Methods (PRIVATE)
         var margin_401 = await api.Margin.GetMarginTransferHistoryAsync(BinanceTransferDirection.RollIn);
         var margin_402 = await api.Margin.GetMarginMaxTransferAmountAsync("---ASSET---");
 
         // Margin > General Account Methods (PRIVATE)
-        var margin_501 = await api.Margin.CrossMarginAdjustMaxLeverageAsync(20);
+        var margin_501 = await api.Margin.AdjustMaximumLeverageAsync(20);
         var margin_502 = await api.Margin.DisableIsolatedMarginAccountAsync("---SYMBOL---");
         var margin_503 = await api.Margin.EnableIsolatedMarginAccountAsync("---SYMBOL---");
         var margin_504 = await api.Margin.GetBnbBurnStatusAsync();
@@ -268,11 +268,11 @@ internal class Program
         var futures_213 = await api.UsdFutures.GetOpenOrderAsync("---SYMBOL---");
         var futures_214 = await api.UsdFutures.GetForcedOrdersAsync();
         var futures_215 = await api.UsdFutures.GetUserTradesAsync("---SYMBOL---");
-        var futures_216 = await api.UsdFutures.ChangeMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
-        var futures_217 = await api.UsdFutures.ModifyPositionModeAsync(true);
-        var futures_218 = await api.UsdFutures.ChangeInitialLeverageAsync("---SYMBOL---", 10);
+        var futures_216 = await api.UsdFutures.SetMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
+        var futures_217 = await api.UsdFutures.SetPositionModeAsync(true);
+        var futures_218 = await api.UsdFutures.SetInitialLeverageAsync("---SYMBOL---", 10);
         var futures_219 = await api.UsdFutures.SetMultiAssetsModeAsync(true);
-        var futures_220 = await api.UsdFutures.ModifyPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
+        var futures_220 = await api.UsdFutures.SetPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
         var futures_221 = await api.UsdFutures.GetPositionInformationAsync();
         var futures_222 = await api.UsdFutures.GetPositionsAsync();
         var futures_223 = await api.UsdFutures.GetPositionAdlQuantileEstimationAsync();
@@ -351,11 +351,11 @@ internal class Program
         var futures_711 = await api.CoinFutures.GetForcedOrdersAsync();
         var futures_712 = await api.CoinFutures.GetUserTradesAsync("---SYMBOL---");
         var futures_713 = await api.CoinFutures.GetPositionInformationAsync();
-        var futures_714 = await api.CoinFutures.ModifyPositionModeAsync(true);
-        var futures_715 = await api.CoinFutures.ChangeMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
-        var futures_716 = await api.CoinFutures.ChangeInitialLeverageAsync("---SYMBOL---", 10);
+        var futures_714 = await api.CoinFutures.SetPositionModeAsync(true);
+        var futures_715 = await api.CoinFutures.SetMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
+        var futures_716 = await api.CoinFutures.SetInitialLeverageAsync("---SYMBOL---", 10);
         var futures_717 = await api.CoinFutures.GetPositionAdlQuantileEstimationAsync();
-        var futures_718 = await api.CoinFutures.ModifyPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
+        var futures_718 = await api.CoinFutures.SetPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
         var futures_719 = await api.CoinFutures.GetMarginChangeHistoryAsync("---SYMBOL---");
 
         // Coin-M Futures -> User Data Stream Methods (PRIVATE)

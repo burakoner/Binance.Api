@@ -39,7 +39,7 @@ public record BinanceFuturesStreamMarkPrice : BinanceSocketEvent, IBinanceFuture
 /// <summary>
 /// Mark price update
 /// </summary>
-public record BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
+public record BinanceFuturesUsdStreamMarkPrice : BinanceFuturesStreamMarkPrice
 {
     /// <summary>
     /// Mark Price

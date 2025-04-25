@@ -4,7 +4,7 @@ namespace Binance.Api.Margin;
 
 internal partial class BinanceMarginRestClient
 {
-    public Task<RestCallResult<BinanceCrossMarginLeverageResult>> CrossMarginAdjustMaxLeverageAsync(int maxLeverage, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceCrossMarginLeverageResult>> AdjustMaximumLeverageAsync(int maxLeverage, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {

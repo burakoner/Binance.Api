@@ -47,7 +47,7 @@ public record BinanceFuturesKline
 /// Candlestick information for symbol
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public record BinanceFuturesUsdtKline: BinanceFuturesKline
+public record BinanceFuturesUsdKline: BinanceFuturesKline
 {
     /// <summary>
     /// The volume traded during this candlestick

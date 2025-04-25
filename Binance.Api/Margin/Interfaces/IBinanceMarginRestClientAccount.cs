@@ -15,7 +15,7 @@ public interface IBinanceMarginRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceCrossMarginLeverageResult>> CrossMarginAdjustMaxLeverageAsync(int maxLeverage, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceCrossMarginLeverageResult>> AdjustMaximumLeverageAsync(int maxLeverage, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Disabled an isolated margin account info

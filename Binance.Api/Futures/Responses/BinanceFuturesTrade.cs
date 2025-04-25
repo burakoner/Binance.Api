@@ -39,7 +39,7 @@ public record BinanceFuturesTrade
 /// <summary>
 /// Trade details
 /// </summary>
-public record BinanceFuturesUsdtTrade: BinanceFuturesTrade
+public record BinanceFuturesUsdTrade: BinanceFuturesTrade
 {
     /// <summary>
     /// Quote quantity

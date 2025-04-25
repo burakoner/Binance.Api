@@ -15,7 +15,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
     internal ILogger Logger => _.Logger;
     internal BinanceRestApiClientOptions RestApiOptions => _.RestApiOptions;
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
-    internal BinanceFuturesUsdtExchangeInfo? ExchangeInfo { get; private set; }
+    internal BinanceFuturesUsdExchangeInfo? ExchangeInfo { get; private set; }
 
     // Request
     internal Task<RestCallResult<T>> RequestAsync<T>(

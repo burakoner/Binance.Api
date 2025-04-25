@@ -35,17 +35,17 @@ public abstract record BinanceFuturesExchangeInfo
 /// <summary>
 /// Exchange info
 /// </summary>
-public record BinanceFuturesUsdtExchangeInfo : BinanceFuturesExchangeInfo
+public record BinanceFuturesUsdExchangeInfo : BinanceFuturesExchangeInfo
 {
     /// <summary>
     /// All assets
     /// </summary>
-    public IEnumerable<BinanceFuturesUsdtAsset> Assets { get; set; } = [];
+    public IEnumerable<BinanceFuturesUsdAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// All symbols supported
     /// </summary>
-    public IEnumerable<BinanceFuturesUsdtSymbol> Symbols { get; set; } = [];
+    public IEnumerable<BinanceFuturesUsdSymbol> Symbols { get; set; } = [];
 }
 
 /// <summary>
@@ -63,7 +63,7 @@ public record BinanceFuturesCoinExchangeInfo : BinanceFuturesExchangeInfo
 /// <summary>
 /// Asset info
 /// </summary>
-public record BinanceFuturesUsdtAsset
+public record BinanceFuturesUsdAsset
 {
     /// <summary>
     /// Name of the asset

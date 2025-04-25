@@ -92,7 +92,7 @@ public record BinanceFuturesPositionInfoBase: BinanceFuturesPositionBase
 /// <summary>
 /// Usdt position info
 /// </summary>
-public record BinanceFuturesUsdtPositionInfo : BinanceFuturesPositionInfoBase
+public record BinanceFuturesUsdPositionInfo : BinanceFuturesPositionInfoBase
 {
     /// <summary>
     /// Max notional

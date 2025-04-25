@@ -27,7 +27,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Exchange info</returns>
-    Task<RestCallResult<BinanceFuturesUsdtExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
+    Task<RestCallResult<BinanceFuturesUsdExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Gets the order book for the provided symbol
@@ -47,7 +47,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// <param name="limit">Max amount of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesUsdtTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesUsdTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get trade history for a symbol
@@ -58,7 +58,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// <param name="fromId">Return trades after this trade id</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesUsdtTrade>>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesUsdTrade>>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
@@ -84,7 +84,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesUsdtKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesUsdKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get candlestick data for the provided pair
@@ -98,7 +98,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The candlestick data for the provided symbol</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesUsdtKline>>> GetContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesUsdKline>>> GetContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Kline/candlestick data for the index price of a pair.

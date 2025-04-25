@@ -22,9 +22,9 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
             : result.AsError<DateTime>(result.Error!);
     }
 
-    public async Task<RestCallResult<BinanceFuturesUsdtExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceFuturesUsdExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
     {
-        var result = await RequestAsync<BinanceFuturesUsdtExchangeInfo>(GetUrl(fapi, v1, "exchangeInfo"), HttpMethod.Get, ct, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceFuturesUsdExchangeInfo>(GetUrl(fapi, v1, "exchangeInfo"), HttpMethod.Get, ct, requestWeight: 1).ConfigureAwait(false);
         if (!result) return result;
 
         ExchangeInfo = result.Data;
@@ -47,24 +47,24 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         return result.As(result.Data);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdtTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
         var parameters = new ParameterCollection { { "symbol", symbol } };
         parameters.AddOptional("limit", limit);
 
-        return RequestAsync<IEnumerable<BinanceFuturesUsdtTrade>>(GetUrl(fapi, v1, "trades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<IEnumerable<BinanceFuturesUsdTrade>>(GetUrl(fapi, v1, "trades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdtTrade>>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdTrade>>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
         var parameters = new ParameterCollection { { "symbol", symbol } };
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("fromId", fromId);
 
-        return RequestAsync<IEnumerable<BinanceFuturesUsdtTrade>>(GetUrl(fapi, v1, "historicalTrades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<IEnumerable<BinanceFuturesUsdTrade>>(GetUrl(fapi, v1, "historicalTrades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 20);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceFuturesAggregatedTrade>>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
@@ -80,7 +80,7 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         return RequestAsync<IEnumerable<BinanceFuturesAggregatedTrade>>(GetUrl(fapi, v1, "aggTrades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 20);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdtKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection {
@@ -92,10 +92,10 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         parameters.AddOptional("limit", limit);
 
         var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        return RequestAsync<IEnumerable<BinanceFuturesUsdtKline>>(GetUrl(fapi, v1, "klines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: requestWeight);
+        return RequestAsync<IEnumerable<BinanceFuturesUsdKline>>(GetUrl(fapi, v1, "klines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: requestWeight);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdtKline>>> GetContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdKline>>> GetContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection {
@@ -108,7 +108,7 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         parameters.AddOptional("limit", limit);
 
         var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        return RequestAsync<IEnumerable<BinanceFuturesUsdtKline>>(GetUrl(fapi, v1, "continuousKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: requestWeight);
+        return RequestAsync<IEnumerable<BinanceFuturesUsdKline>>(GetUrl(fapi, v1, "continuousKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: requestWeight);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceFuturesKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)

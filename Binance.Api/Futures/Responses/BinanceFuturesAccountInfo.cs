@@ -57,7 +57,7 @@ public record BinanceFuturesAccountInfo
     /// Information about an account positions
     /// </summary>
     [JsonProperty("positions")]
-    public IEnumerable<BinanceFuturesUsdtPositionInfo> Positions { get; set; } = [];
+    public IEnumerable<BinanceFuturesUsdPositionInfo> Positions { get; set; } = [];
 
     /// <summary>
     /// Total initial margin

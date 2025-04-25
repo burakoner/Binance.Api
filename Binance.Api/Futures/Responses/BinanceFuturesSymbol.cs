@@ -188,7 +188,7 @@ public record BinanceFuturesSymbol
 /// <summary>
 /// Information about a futures symbol
 /// </summary>
-public record BinanceFuturesUsdtSymbol: BinanceFuturesSymbol
+public record BinanceFuturesUsdSymbol: BinanceFuturesSymbol
 {
     /// <summary>
     /// The status of the symbol

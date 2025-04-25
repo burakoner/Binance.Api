@@ -32,7 +32,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceQueryRecords<BinanceInterestHistory>>(GetUrl(sapi, v1, "margin/interestHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceTransaction>> MarginBorrowAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceTransaction>> BorrowAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset.ValidateNotNull(nameof(asset));
         if (isIsolated == true && symbol == null)
@@ -51,7 +51,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceTransaction>(GetUrl(sapi, v1, "margin/borrow-repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceTransaction>> MarginRepayAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceTransaction>> RepayAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset.ValidateNotNull(nameof(asset));
         var parameters = new ParameterCollection
