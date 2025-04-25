@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Spot;
+﻿using Binance.Api.Shared.Responses;
+
+namespace Binance.Api.Spot;
 
 internal partial class BinanceSpotRestClient
 {

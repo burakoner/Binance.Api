@@ -15,7 +15,6 @@ global using Binance.Api.Interfaces;
 global using Binance.Api.Models.RestApi;
 global using Binance.Api.Models.RestApi.Account;
 global using Binance.Api.Models.RestApi.MarketData;
-global using Binance.Api.Models.RestApi.Server;
 global using Binance.Api.Models.WebSocketApi;
 global using Binance.Api.Models.WebSocketApi.MarketData;
 global using Binance.Api.Shared;

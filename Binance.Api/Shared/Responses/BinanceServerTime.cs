@@ -1,6 +1,6 @@
-﻿namespace Binance.Api.Models.RestApi.Server;
+﻿namespace Binance.Api.Shared.Responses;
 
-public record BinanceServerTime
+internal record BinanceServerTime
 {
     [JsonProperty("serverTime"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime ServerTime { get; set; }

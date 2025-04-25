@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Futures;
+﻿using Binance.Api.Shared.Responses;
+
+namespace Binance.Api.Futures;
 
 internal partial class BinanceFuturesRestClientCoin
 {
