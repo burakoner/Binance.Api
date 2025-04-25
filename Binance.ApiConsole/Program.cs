@@ -94,47 +94,47 @@ internal class Program
         var margin_103 = await api.Margin.GetIsolatedMarginSymbolsAsync();
         var margin_104 = await api.Margin.GetMarginAssetsAsync();
         var margin_105 = await api.Margin.GetMarginDelistScheduleAsync();
-        var margin_106 = await api.Margin.GetIsolatedMarginTierDataAsync("SYMBOL");
-        var margin_107 = await api.Margin.GetMarginPriceIndexAsync("SYMBOL");
+        var margin_106 = await api.Margin.GetIsolatedMarginTierDataAsync("---SYMBOL---");
+        var margin_107 = await api.Margin.GetMarginPriceIndexAsync("---SYMBOL---");
         var margin_108 = await api.Margin.GetMarginAvaliableInventoryAsync(BinanceMarginInventoryType.Margin);
         var margin_109 = await api.Margin.GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync();
 
         // Margin > General Borrow and Repay Methods (PRIVATE)
-        var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["ASSET"], true);
+        var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["---ASSET---"], true);
         var margin_202 = await api.Margin.GetMarginInterestHistoryAsync();
-        var margin_203 = await api.Margin.MarginBorrowAsync("ASSET", 100.0m);
-        var margin_204 = await api.Margin.MarginRepayAsync("ASSET", 95.0m);
-        var margin_205 = await api.Margin.GetMarginLoansAsync("ASSET");
-        var margin_206 = await api.Margin.GetMarginInterestRateHistoryAsync("ASSET");
-        var margin_207 = await api.Margin.GetMarginMaxBorrowAmountAsync("ASSET");
+        var margin_203 = await api.Margin.MarginBorrowAsync("---ASSET---", 100.0m);
+        var margin_204 = await api.Margin.MarginRepayAsync("---ASSET---", 95.0m);
+        var margin_205 = await api.Margin.GetMarginLoansAsync("---ASSET---");
+        var margin_206 = await api.Margin.GetMarginInterestRateHistoryAsync("---ASSET---");
+        var margin_207 = await api.Margin.GetMarginMaxBorrowAmountAsync("---ASSET---");
 
         // Margin > General Trade Methods (PRIVATE)
         var margin_301 = await api.Margin.GetMarginForcedLiquidationHistoryAsync();
         var margin_302 = await api.Margin.GetCrossMarginSmallLiabilityExchangeAssetsAsync();
         var margin_303 = await api.Margin.GetCrossMarginSmallLiabilityExchangeHistoryAsync();
-        var margin_304 = await api.Margin.CancelAllMarginOrdersAsync("SYMBOL");
-        var margin_305 = await api.Margin.CancelMarginOcoOrderAsync("SYMBOL");
-        var margin_306 = await api.Margin.CancelMarginOrderAsync("SYMBOL");
-        var margin_307 = await api.Margin.PlaceMarginOCOOrderAsync("SYMBOL", BinanceOrderSide.Buy, 100.0m, 100.0m, 15.0m);
-        var margin_308 = await api.Margin.PlaceMarginOrderAsync("SYMBOL", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 100.0m);
+        var margin_304 = await api.Margin.CancelAllMarginOrdersAsync("---SYMBOL---");
+        var margin_305 = await api.Margin.CancelMarginOcoOrderAsync("---SYMBOL---");
+        var margin_306 = await api.Margin.CancelMarginOrderAsync("---SYMBOL---");
+        var margin_307 = await api.Margin.PlaceMarginOCOOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, 100.0m, 15.0m);
+        var margin_308 = await api.Margin.PlaceMarginOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 100.0m);
         var margin_309 = await api.Margin.GetMarginOrderRateLimitStatusAsync();
         var margin_310 = await api.Margin.GetMarginOcoOrdersAsync();
-        var margin_311 = await api.Margin.GetMarginOrdersAsync("SYMBOL");
+        var margin_311 = await api.Margin.GetMarginOrdersAsync("---SYMBOL---");
         var margin_312 = await api.Margin.GetMarginOcoOrderAsync();
         var margin_313 = await api.Margin.GetMarginOpenOcoOrdersAsync();
         var margin_314 = await api.Margin.GetOpenMarginOrdersAsync();
-        var margin_315 = await api.Margin.GetMarginOrderAsync("SYMBOL");
-        var margin_316 = await api.Margin.GetMarginUserTradesAsync("SYMBOL");
-        var margin_317 = await api.Margin.CrossMarginSmallLiabilityExchangeAsync(["ASSET"]);
+        var margin_315 = await api.Margin.GetMarginOrderAsync("---SYMBOL---");
+        var margin_316 = await api.Margin.GetMarginUserTradesAsync("---SYMBOL---");
+        var margin_317 = await api.Margin.CrossMarginSmallLiabilityExchangeAsync(["---ASSET---"]);
 
         // Margin > General Transfer Methods (PRIVATE)
         var margin_401 = await api.Margin.GetMarginTransferHistoryAsync(BinanceTransferDirection.RollIn);
-        var margin_402 = await api.Margin.GetMarginMaxTransferAmountAsync("ASSET");
+        var margin_402 = await api.Margin.GetMarginMaxTransferAmountAsync("---ASSET---");
 
         // Margin > General Account Methods (PRIVATE)
         var margin_501 = await api.Margin.CrossMarginAdjustMaxLeverageAsync(20);
-        var margin_502 = await api.Margin.DisableIsolatedMarginAccountAsync("SYMBOL");
-        var margin_503 = await api.Margin.EnableIsolatedMarginAccountAsync("SYMBOL");
+        var margin_502 = await api.Margin.DisableIsolatedMarginAccountAsync("---SYMBOL---");
+        var margin_503 = await api.Margin.EnableIsolatedMarginAccountAsync("---SYMBOL---");
         var margin_504 = await api.Margin.GetBnbBurnStatusAsync();
         var margin_505 = await api.Margin.GetMarginLevelInformationAsync();
         var margin_506 = await api.Margin.GetMarginAccountInfoAsync();
@@ -147,9 +147,9 @@ internal class Program
         var margin_601 = await api.Margin.StartMarginUserStreamAsync();
         var margin_602 = await api.Margin.KeepAliveMarginUserStreamAsync("---LISTEN-KEY---");
         var margin_603 = await api.Margin.StopMarginUserStreamAsync("---LISTEN-KEY---");
-        var margin_604 = await api.Margin.StartIsolatedMarginUserStreamAsync("SYMBOL");
-        var margin_605 = await api.Margin.KeepAliveIsolatedMarginUserStreamAsync("SYMBOL", "---LISTEN-KEY---");
-        var margin_606 = await api.Margin.CloseIsolatedMarginUserStreamAsync("SYMBOL", "---LISTEN-KEY---");
+        var margin_604 = await api.Margin.StartIsolatedMarginUserStreamAsync("---SYMBOL---");
+        var margin_605 = await api.Margin.KeepAliveIsolatedMarginUserStreamAsync("---SYMBOL---", "---LISTEN-KEY---");
+        var margin_606 = await api.Margin.CloseIsolatedMarginUserStreamAsync("---SYMBOL---", "---LISTEN-KEY---");
 
         // TODO: Margin > General Risk Data Stream Methods (PRIVATE)
 
@@ -204,15 +204,15 @@ internal class Program
         var wallet_501 = await api.Wallet.GetSystemStatusAsync();
 
         // Algo > Futures Methods (PRIVATE)
-        var algo_101 = await api.Algo.Futures.PlaceVolumeParticipationOrderAsync("SYMBOL", BinanceOrderSide.Buy, 100.0m, BinanceUrgency.High);
-        var algo_102 = await api.Algo.Futures.PlaceTimeWeightedAveragePriceOrderAsync("SYMBOL", BinanceOrderSide.Buy, 100.0m, 900);
+        var algo_101 = await api.Algo.Futures.PlaceVolumeParticipationOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, BinanceUrgency.High);
+        var algo_102 = await api.Algo.Futures.PlaceTimeWeightedAveragePriceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, 900);
         var algo_103 = await api.Algo.Futures.CancelAlgoOrderAsync(1_000_001L);
         var algo_104 = await api.Algo.Futures.GetAlgoSubOrdersAsync(1_000_001L);
         var algo_105 = await api.Algo.Futures.GetOpenAlgoOrdersAsync();
         var algo_106 = await api.Algo.Futures.GetClosedAlgoOrdersAsync();
 
         // Algo > Spot Methods (PRIVATE)
-        var algo_202 = await api.Algo.Spot.PlaceTimeWeightedAveragePriceOrderAsync("SYMBOL", BinanceOrderSide.Buy, 100.0m, 900);
+        var algo_202 = await api.Algo.Spot.PlaceTimeWeightedAveragePriceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, 900);
         var algo_203 = await api.Algo.Spot.CancelAlgoOrderAsync(1_000_001L);
         var algo_204 = await api.Algo.Spot.GetAlgoSubOrdersAsync(1_000_001L);
         var algo_205 = await api.Algo.Spot.GetOpenAlgoOrdersAsync();
@@ -222,68 +222,93 @@ internal class Program
         var futures_101 = await api.UsdFutures.PingAsync();
         var futures_102 = await api.UsdFutures.GetTimeAsync();
         var futures_103 = await api.UsdFutures.GetExchangeInfoAsync();
-        var futures_104 = await api.UsdFutures.GetOrderBookAsync("SYMBOL");
-        var futures_105 = await api.UsdFutures.GetRecentTradesAsync("SYMBOL");
-        var futures_106 = await api.UsdFutures.GetTradeHistoryAsync("SYMBOL");
-        var futures_107 = await api.UsdFutures.GetAggregatedTradeHistoryAsync("SYMBOL");
-        var futures_108 = await api.UsdFutures.GetKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
-        var futures_109 = await api.UsdFutures.GetContinuousContractKlinesAsync("SYMBOL", BinanceContractType.Perpetual, BinanceKlineInterval.OneDay);
-        var futures_110 = await api.UsdFutures.GetIndexPriceKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
-        var futures_111 = await api.UsdFutures.GetMarkPriceKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
-        var futures_112 = await api.UsdFutures.GetPremiumIndexKlinesAsync("SYMBOL", BinanceKlineInterval.OneDay);
-        var futures_113 = await api.UsdFutures.GetMarkPriceAsync("SYMBOL");
+        var futures_104 = await api.UsdFutures.GetOrderBookAsync("---SYMBOL---");
+        var futures_105 = await api.UsdFutures.GetRecentTradesAsync("---SYMBOL---");
+        var futures_106 = await api.UsdFutures.GetTradeHistoryAsync("---SYMBOL---");
+        var futures_107 = await api.UsdFutures.GetAggregatedTradeHistoryAsync("---SYMBOL---");
+        var futures_108 = await api.UsdFutures.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_109 = await api.UsdFutures.GetContinuousContractKlinesAsync("---SYMBOL---", BinanceContractType.Perpetual, BinanceKlineInterval.OneDay);
+        var futures_110 = await api.UsdFutures.GetIndexPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_111 = await api.UsdFutures.GetMarkPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_112 = await api.UsdFutures.GetPremiumIndexKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_113 = await api.UsdFutures.GetMarkPriceAsync("---SYMBOL---");
         var futures_114 = await api.UsdFutures.GetMarkPricesAsync();
-        var futures_115 = await api.UsdFutures.GetFundingRatesAsync("SYMBOL");
+        var futures_115 = await api.UsdFutures.GetFundingRatesAsync("---SYMBOL---");
         var futures_116 = await api.UsdFutures.GetFundingInfoAsync();
-        var futures_117 = await api.UsdFutures.GetTickerAsync("SYMBOL");
+        var futures_117 = await api.UsdFutures.GetTickerAsync("---SYMBOL---");
         var futures_118 = await api.UsdFutures.GetTickersAsync();
-        var futures_119 = await api.UsdFutures.GetPriceAsync("SYMBOL");
+        var futures_119 = await api.UsdFutures.GetPriceAsync("---SYMBOL---");
         var futures_120 = await api.UsdFutures.GetPricesAsync();
-        var futures_121 = await api.UsdFutures.GetBookPriceAsync("SYMBOL");
+        var futures_121 = await api.UsdFutures.GetBookPriceAsync("---SYMBOL---");
         var futures_122 = await api.UsdFutures.GetBookPricesAsync();
-        var futures_123 = await api.UsdFutures.GetOpenInterestAsync("SYMBOL");
-        var futures_124 = await api.UsdFutures.GetOpenInterestHistoryAsync("SYMBOL", BinancePeriodInterval.FourHour);
-        var futures_125 = await api.UsdFutures.GetTopLongShortPositionRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
-        var futures_126 = await api.UsdFutures.GetTopLongShortAccountRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
-        var futures_127 = await api.UsdFutures.GetGlobalLongShortAccountRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
-        var futures_128 = await api.UsdFutures.GetTakerBuySellVolumeRatioAsync("SYMBOL", BinancePeriodInterval.FourHour);
-        var futures_129 = await api.UsdFutures.GetBasisAsync("SYMBOL", BinanceContractType.Perpetual, BinancePeriodInterval.FourHour);
+        var futures_123 = await api.UsdFutures.GetOpenInterestAsync("---SYMBOL---");
+        var futures_124 = await api.UsdFutures.GetOpenInterestHistoryAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_125 = await api.UsdFutures.GetTopLongShortPositionRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_126 = await api.UsdFutures.GetTopLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_127 = await api.UsdFutures.GetGlobalLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_128 = await api.UsdFutures.GetTakerBuySellVolumeRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_129 = await api.UsdFutures.GetBasisAsync("---SYMBOL---", BinanceContractType.Perpetual, BinancePeriodInterval.FourHour);
         var futures_130 = await api.UsdFutures.GetCompositeIndexInfoAsync();
-        var futures_131 = await api.UsdFutures.GetAssetIndexAsync("SYMBOL");
+        var futures_131 = await api.UsdFutures.GetAssetIndexAsync("---SYMBOL---");
         var futures_132 = await api.UsdFutures.GetAssetIndexesAsync();
 
         // USDⓈ-M Futures -> Trading Methods (PRIVATE)
-        var futures_201 = await api.UsdFutures.PlaceOrderAsync("SYMBOL", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
+        var futures_201 = await api.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
         var futures_202 = await api.UsdFutures.PlaceMultipleOrdersAsync([]);
-        var futures_203 = await api.UsdFutures.EditOrderAsync("SYMBOL", BinanceOrderSide.Buy, 110.0m, orderId:1_000_000L);
+        var futures_203 = await api.UsdFutures.EditOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
         var futures_204 = await api.UsdFutures.EditMultipleOrdersAsync([]);
-        var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("SYMBOL");
-        var futures_206 = await api.UsdFutures.CancelOrderAsync("SYMBOL", orderId: 1_000_000L);
-        var futures_207 = await api.UsdFutures.CancelMultipleOrdersAsync("SYMBOL", [1_000_000L]);
-        var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("SYMBOL");
-        var futures_209 = await api.UsdFutures.CancelAllOrdersAfterTimeoutAsync("SYMBOL", TimeSpan.FromSeconds(15));
-        var futures_210 = await api.UsdFutures.GetOrderAsync("SYMBOL", orderId: 1_000_000L);
+        var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("---SYMBOL---");
+        var futures_206 = await api.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_207 = await api.UsdFutures.CancelMultipleOrdersAsync("---SYMBOL---", [1_000_000L]);
+        var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("---SYMBOL---");
+        var futures_209 = await api.UsdFutures.CancelAllOrdersAfterTimeoutAsync("---SYMBOL---", TimeSpan.FromSeconds(15));
+        var futures_210 = await api.UsdFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
         var futures_211 = await api.UsdFutures.GetOrdersAsync();
         var futures_212 = await api.UsdFutures.GetOpenOrdersAsync();
-        var futures_213 = await api.UsdFutures.GetOpenOrderAsync("SYMBOL");
+        var futures_213 = await api.UsdFutures.GetOpenOrderAsync("---SYMBOL---");
         var futures_214 = await api.UsdFutures.GetForcedOrdersAsync();
-        var futures_215 = await api.UsdFutures.GetUserTradesAsync("SYMBOL");
-        var futures_216 = await api.UsdFutures.ChangeMarginTypeAsync("SYMBOL", BinanceFuturesMarginType.Isolated);
+        var futures_215 = await api.UsdFutures.GetUserTradesAsync("---SYMBOL---");
+        var futures_216 = await api.UsdFutures.ChangeMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
         var futures_217 = await api.UsdFutures.ModifyPositionModeAsync(true);
-        var futures_218 = await api.UsdFutures.ChangeInitialLeverageAsync("SYMBOL", 10);
+        var futures_218 = await api.UsdFutures.ChangeInitialLeverageAsync("---SYMBOL---", 10);
         var futures_219 = await api.UsdFutures.SetMultiAssetsModeAsync(true);
-        var futures_220 = await api.UsdFutures.ModifyPositionMarginAsync("SYMBOL", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
+        var futures_220 = await api.UsdFutures.ModifyPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
         var futures_221 = await api.UsdFutures.GetPositionInformationAsync();
         var futures_222 = await api.UsdFutures.GetPositionsAsync();
         var futures_223 = await api.UsdFutures.GetPositionAdlQuantileEstimationAsync();
-        var futures_224 = await api.UsdFutures.GetMarginChangeHistoryAsync("SYMBOL");
+        var futures_224 = await api.UsdFutures.GetMarginChangeHistoryAsync("---SYMBOL---");
 
         // USDⓈ-M Futures -> User Data Stream Methods (PRIVATE)
         var futures_301 = await api.UsdFutures.StartUserStreamAsync();
         var futures_302 = await api.UsdFutures.KeepAliveUserStreamAsync("---LISTEN-KEY---");
         var futures_303 = await api.UsdFutures.StopUserStreamAsync("---LISTEN-KEY---");
 
+        // USDⓈ-M Futures -> Account Methods (PRIVATE)
+        var futures_401 = await api.UsdFutures.GetBalancesAsync();
+        var futures_402 = await api.UsdFutures.GetAccountInfoV2Async();
+        var futures_403 = await api.UsdFutures.GetUserCommissionRateAsync("---SYMBOL---");
+        var futures_404 = await api.UsdFutures.GetAccountConfigurationAsync();
+        var futures_405 = await api.UsdFutures.GetSymbolConfigurationAsync();
+        var futures_406 = await api.UsdFutures.GetOrderRateLimitAsync();
+        var futures_407 = await api.UsdFutures.GetBracketsAsync();
+        var futures_408 = await api.UsdFutures.GetMultiAssetsModeAsync();
+        var futures_409 = await api.UsdFutures.GetPositionModeAsync();
+        var futures_410 = await api.UsdFutures.GetIncomeHistoryAsync();
+        var futures_411 = await api.UsdFutures.GetTradingStatusAsync();
+        var futures_412 = await api.UsdFutures.GetDownloadIdForTransactionHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_413 = await api.UsdFutures.GetDownloadLinkForTransactionHistoryAsync("---DOWNLOAD-ID---");
+        var futures_414 = await api.UsdFutures.GetDownloadIdForOrderHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_415 = await api.UsdFutures.GetDownloadLinkForOrderHistoryAsync("---DOWNLOAD-ID---");
+        var futures_416 = await api.UsdFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_417 = await api.UsdFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
+        var futures_418 = await api.UsdFutures.SetBnbBurnStatusAsync(true);
+        var futures_419 = await api.UsdFutures.GetBnbBurnStatusAsync();
 
+        // USDⓈ-M Futures -> Account Methods (PRIVATE)
+        var futures_501 = await api.UsdFutures.GetConvertSymbolsAsync();
+        var futures_502 = await api.UsdFutures.ConvertQuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---", 100.0m);
+        var futures_503 = await api.UsdFutures.ConvertAcceptQuoteAsync("---QUOTE-ID---");
+        var futures_504 = await api.UsdFutures.GetConvertOrderStatusAsync();
 
 
 

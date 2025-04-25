@@ -93,7 +93,7 @@ public record BinanceFuturesSymbol
     /// Currently Empty
     /// </summary>
     [JsonProperty("underlyingType")]
-    public BinanceUnderlyingType UnderlyingType { get; set; }
+    public BinanceFuturesUnderlyingType UnderlyingType { get; set; }
 
     /// <summary>
     /// Sub types

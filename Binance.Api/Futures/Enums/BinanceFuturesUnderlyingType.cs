@@ -3,7 +3,7 @@
 /// <summary>
 /// Underlying Type
 /// </summary>
-public enum BinanceUnderlyingType : byte
+public enum BinanceFuturesUnderlyingType : byte
 {
     /// <summary>
     /// Coin
