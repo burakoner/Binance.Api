@@ -21,7 +21,7 @@ public record BinanceFuturesSymbol
     /// Contract type
     /// </summary>
     [JsonProperty("contractType")]
-    public BinanceContractType? ContractType { get; set; }
+    public BinanceFuturesContractType? ContractType { get; set; }
 
     /// <summary>
     /// Delivery Date

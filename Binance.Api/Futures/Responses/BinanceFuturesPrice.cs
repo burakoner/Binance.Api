@@ -3,7 +3,7 @@
 /// <summary>
 /// Price statistics of the last 24 hours
 /// </summary>
-public class BinanceFuturesPrice
+public record BinanceFuturesPrice
 {
     /// <summary>
     /// The symbol the price is for
@@ -20,4 +20,16 @@ public class BinanceFuturesPrice
     /// </summary>
     [JsonConverter(typeof(DateTimeConverter))]
     public DateTime Time { get; set; }
+}
+
+/// <summary>
+/// Futures-Coin price
+/// </summary>
+public record BinanceFuturesCoinPrice : BinanceFuturesPrice
+{
+    /// <summary>
+    /// Name of the pair
+    /// </summary>
+    [JsonProperty("ps")]
+    public string Pair { get; set; } = "";
 }

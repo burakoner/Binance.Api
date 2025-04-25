@@ -15,7 +15,7 @@ public record BinanceFuturesBasis
     /// Contract type
     /// </summary>
     [JsonProperty("contractType")]
-    public BinanceContractType ContractType { get; set; }
+    public BinanceFuturesContractType ContractType { get; set; }
 
     /// <summary>
     /// Basis rate

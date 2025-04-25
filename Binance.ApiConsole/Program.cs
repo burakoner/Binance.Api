@@ -227,7 +227,7 @@ internal class Program
         var futures_106 = await api.UsdFutures.GetTradeHistoryAsync("---SYMBOL---");
         var futures_107 = await api.UsdFutures.GetAggregatedTradeHistoryAsync("---SYMBOL---");
         var futures_108 = await api.UsdFutures.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
-        var futures_109 = await api.UsdFutures.GetContinuousContractKlinesAsync("---SYMBOL---", BinanceContractType.Perpetual, BinanceKlineInterval.OneDay);
+        var futures_109 = await api.UsdFutures.GetContinuousContractKlinesAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay);
         var futures_110 = await api.UsdFutures.GetIndexPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
         var futures_111 = await api.UsdFutures.GetMarkPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
         var futures_112 = await api.UsdFutures.GetPremiumIndexKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
@@ -247,7 +247,7 @@ internal class Program
         var futures_126 = await api.UsdFutures.GetTopLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
         var futures_127 = await api.UsdFutures.GetGlobalLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
         var futures_128 = await api.UsdFutures.GetTakerBuySellVolumeRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
-        var futures_129 = await api.UsdFutures.GetBasisAsync("---SYMBOL---", BinanceContractType.Perpetual, BinancePeriodInterval.FourHour);
+        var futures_129 = await api.UsdFutures.GetBasisAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinancePeriodInterval.FourHour);
         var futures_130 = await api.UsdFutures.GetCompositeIndexInfoAsync();
         var futures_131 = await api.UsdFutures.GetAssetIndexAsync("---SYMBOL---");
         var futures_132 = await api.UsdFutures.GetAssetIndexesAsync();
@@ -304,12 +304,77 @@ internal class Program
         var futures_418 = await api.UsdFutures.SetBnbBurnStatusAsync(true);
         var futures_419 = await api.UsdFutures.GetBnbBurnStatusAsync();
 
-        // USDⓈ-M Futures -> Account Methods (PRIVATE)
+        // USDⓈ-M Futures -> Convert Methods (PRIVATE)
         var futures_501 = await api.UsdFutures.GetConvertSymbolsAsync();
         var futures_502 = await api.UsdFutures.ConvertQuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---", 100.0m);
         var futures_503 = await api.UsdFutures.ConvertAcceptQuoteAsync("---QUOTE-ID---");
         var futures_504 = await api.UsdFutures.GetConvertOrderStatusAsync();
 
+        // Coin-M Futures -> Market Data Methods (PUBLIC)
+        var futures_601 = await api.CoinFutures.PingAsync();
+        var futures_602 = await api.CoinFutures.GetTimeAsync();
+        var futures_603 = await api.CoinFutures.GetExchangeInfoAsync();
+        var futures_604 = await api.CoinFutures.GetOrderBookAsync("---SYMBOL---");
+        var futures_605 = await api.CoinFutures.GetRecentTradesAsync("---SYMBOL---");
+        var futures_606 = await api.CoinFutures.GetTradeHistoryAsync("---SYMBOL---");
+        var futures_607 = await api.CoinFutures.GetAggregatedTradeHistoryAsync("---SYMBOL---");
+        var futures_608 = await api.CoinFutures.GetMarkPricesAsync();
+        var futures_609 = await api.CoinFutures.GetFundingRatesAsync("---SYMBOL---");
+        var futures_610 = await api.CoinFutures.GetFundingInfoAsync();
+        var futures_611 = await api.CoinFutures.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_612 = await api.CoinFutures.GetContinuousContractKlinesAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay);
+        var futures_613 = await api.CoinFutures.GetIndexPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_614 = await api.CoinFutures.GetMarkPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_615 = await api.CoinFutures.GetPremiumIndexKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_616 = await api.CoinFutures.GetTickersAsync();
+        var futures_617 = await api.CoinFutures.GetPricesAsync();
+        var futures_618 = await api.CoinFutures.GetBookPricesAsync();
+        var futures_619 = await api.CoinFutures.GetOpenInterestAsync("---SYMBOL---");
+        var futures_620 = await api.CoinFutures.GetOpenInterestHistoryAsync("---SYMBOL---", BinanceFuturesContractType.PerpetualDelivering, BinancePeriodInterval.FourHour);
+        var futures_621 = await api.CoinFutures.GetTopLongShortPositionRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_622 = await api.CoinFutures.GetTopLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_623 = await api.CoinFutures.GetGlobalLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_624 = await api.CoinFutures.GetTakerBuySellVolumeRatioAsync("---SYMBOL---", BinanceFuturesContractType.PerpetualDelivering, BinancePeriodInterval.FourHour);
+        var futures_625 = await api.CoinFutures.GetBasisAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinancePeriodInterval.FourHour);
+
+        // Coin-M Futures -> Trading Methods (PRIVATE)
+        var futures_701 = await api.CoinFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
+        var futures_702 = await api.CoinFutures.PlaceMultipleOrdersAsync([]);
+        var futures_703 = await api.CoinFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_704 = await api.CoinFutures.CancelMultipleOrdersAsync("---SYMBOL---", [1_000_000L]);
+        var futures_705 = await api.CoinFutures.CancelAllOrdersAsync("---SYMBOL---");
+        var futures_706 = await api.CoinFutures.CancelAllOrdersAfterTimeoutAsync("---SYMBOL---", TimeSpan.FromSeconds(15));
+        var futures_707 = await api.CoinFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_708 = await api.CoinFutures.GetOrdersAsync("---SYMBOL---");
+        var futures_709 = await api.CoinFutures.GetOpenOrdersAsync();
+        var futures_710 = await api.CoinFutures.GetOpenOrderAsync("---SYMBOL---");
+        var futures_711 = await api.CoinFutures.GetForcedOrdersAsync();
+        var futures_712 = await api.CoinFutures.GetUserTradesAsync("---SYMBOL---");
+        var futures_713 = await api.CoinFutures.GetPositionInformationAsync();
+        var futures_714 = await api.CoinFutures.ModifyPositionModeAsync(true);
+        var futures_715 = await api.CoinFutures.ChangeMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
+        var futures_716 = await api.CoinFutures.ChangeInitialLeverageAsync("---SYMBOL---", 10);
+        var futures_717 = await api.CoinFutures.GetPositionAdlQuantileEstimationAsync();
+        var futures_718 = await api.CoinFutures.ModifyPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
+        var futures_719 = await api.CoinFutures.GetMarginChangeHistoryAsync("---SYMBOL---");
+
+        // Coin-M Futures -> User Data Stream Methods (PRIVATE)
+        var futures_801 = await api.CoinFutures.StartUserStreamAsync();
+        var futures_802 = await api.CoinFutures.KeepAliveUserStreamAsync("---LISTEN-KEY---");
+        var futures_803 = await api.CoinFutures.StopUserStreamAsync("---LISTEN-KEY---");
+
+        // Coin-M Futures -> Account Methods (PRIVATE)
+        var futures_901 = await api.CoinFutures.GetBalancesAsync();
+        var futures_902 = await api.CoinFutures.GetUserCommissionRateAsync("---SYMBOL---");
+        var futures_903 = await api.CoinFutures.GetAccountInfoAsync();
+        var futures_904 = await api.CoinFutures.GetPositionModeAsync();
+        var futures_905 = await api.CoinFutures.GetIncomeHistoryAsync();
+        var futures_906 = await api.CoinFutures.GetDownloadIdForTransactionHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_907 = await api.CoinFutures.GetDownloadLinkForTransactionHistoryAsync("---DOWNLOAD-ID---");
+        var futures_908 = await api.CoinFutures.GetDownloadIdForOrderHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_909 = await api.CoinFutures.GetDownloadLinkForOrderHistoryAsync("---DOWNLOAD-ID---");
+        var futures_910 = await api.CoinFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_911 = await api.CoinFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
 
 
 

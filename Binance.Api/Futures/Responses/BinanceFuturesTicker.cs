@@ -3,7 +3,7 @@
 /// <summary>
 /// Price statistics of the last 24 hours
 /// </summary>
-public class BinanceFuturesTicker
+public abstract record BinanceFuturesTicker
 {
     /// <summary>
     /// The symbol the price is for
@@ -55,12 +55,12 @@ public class BinanceFuturesTicker
     /// <summary>
     /// The base volume traded in the last 24 hours
     /// </summary>
-    public decimal Volume { get; set; }
+    public abstract decimal Volume { get; set; }
 
     /// <summary>
     /// The quote asset volume traded in the last 24 hours
     /// </summary>
-    public decimal QuoteVolume { get; set; }
+    public abstract decimal QuoteVolume { get; set; }
 
     /// <summary>
     /// Time at which this 24 hours opened
@@ -91,4 +91,38 @@ public class BinanceFuturesTicker
     /// </summary>
     [JsonProperty("count")]
     public long TotalTrades { get; set; }
+}
+
+/// <summary>
+/// Price statistics of the last 24 hours for a coin futures symbol
+/// </summary>
+public record BinanceFuturesCoinTicker : BinanceFuturesTicker
+{
+    /// <summary>
+    /// The pair the price is for
+    /// </summary>
+    [JsonProperty("pair")]
+    public string Pair { get; set; } = string.Empty;
+
+    /// <inheritdoc />
+    [JsonProperty("baseVolume")]
+    public override decimal Volume { get; set; }
+
+    /// <inheritdoc />
+    [JsonProperty("volume")]
+    public override decimal QuoteVolume { get; set; }
+}
+
+/// <summary>
+/// Price statistics of the last 24 hours for a USDT futures symbol
+/// </summary>
+public record BinanceFuturesUsdTicker : BinanceFuturesTicker
+{
+    /// <inheritdoc />
+    [JsonProperty("volume")]
+    public override decimal Volume { get; set; }
+
+    /// <inheritdoc />
+    [JsonProperty("quoteVolume")]
+    public override decimal QuoteVolume { get; set; }
 }

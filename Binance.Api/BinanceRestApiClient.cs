@@ -19,37 +19,37 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// <summary>
     /// Binance Spot Rest API Client
     /// </summary>
-    public IBinanceSpotRestApiClient Spot { get; }
+    public IBinanceSpotRestClient Spot { get; }
 
     /// <summary>
     /// Binance Futures Rest API Client
     /// </summary>
-    internal IBinanceRestApiClientFutures Futures { get; }
+    internal IBinanceFuturesRestClient Futures { get; }
 
     /// <summary>
     /// Binance USDⓈ Futures Rest API Client
     /// </summary>
-    public IBinanceRestApiClientFuturesUsd UsdFutures { get => Futures.USD; }
+    public IBinanceFuturesRestClientUsd UsdFutures { get => Futures.USD; }
 
     /// <summary>
     /// Binance Coin Futures Rest API Client
     /// </summary>
-    public IBinanceRestApiClientFuturesCoin CoinFutures { get => Futures.Coin; }
+    public IBinanceFuturesRestClientCoin CoinFutures { get => Futures.Coin; }
 
     /// <summary>
     /// Binance Margin Rest API Client
     /// </summary>
-    public IBinanceMarginRestApiClient Margin { get; }
+    public IBinanceMarginRestClient Margin { get; }
 
     /// <summary>
     /// Binance Algo Rest API Client
     /// </summary>
-    public IBinanceAlgoRestApiClient Algo { get; }
+    public IBinanceAlgoRestClient Algo { get; }
 
     /// <summary>
     /// Binance Wallet Rest API Client
     /// </summary>
-    public IBinanceWalletRestApiClient Wallet { get; }
+    public IBinanceWalletRestClient Wallet { get; }
 
     /// <summary>
     /// Default Constructor
@@ -84,11 +84,11 @@ public sealed class BinanceRestApiClient : RestApiClient
         RequestBodyFormat = RestRequestBodyFormat.FormData;
         ArraySerialization = ArraySerialization.MultipleValues;
 
-        Spot = new BinanceSpotRestApiClient(this);
-        Futures = new BinanceRestApiClientFutures(this);
-        Margin = new BinanceMarginRestApiClient(this);
-        Algo = new BinanceAlgoRestApiClient(this);
-        Wallet = new BinanceWalletRestApiClient(this);
+        Spot = new BinanceSpotRestClient(this);
+        Futures = new BinanceFuturesRestClient(this);
+        Margin = new BinanceMarginRestClient(this);
+        Algo = new BinanceAlgoRestClient(this);
+        Wallet = new BinanceWalletRestClient(this);
     }
 
     #region Overrided Methods

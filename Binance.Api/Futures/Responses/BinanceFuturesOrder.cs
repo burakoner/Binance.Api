@@ -142,13 +142,13 @@ public record BinanceFuturesOrder
     /// The time the order was updated
     /// </summary>
     [JsonProperty("updateTime"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime UpdateTime { get; set; }
+    public DateTime? UpdateTime { get; set; }
 
     /// <summary>
     /// The time the order was created
     /// </summary>
     [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime CreateTime { get; set; }
+    public DateTime? CreateTime { get; set; }
 
     /// <summary>
     /// The working type
@@ -179,16 +179,19 @@ public record BinanceFuturesOrder
     /// </summary>
     [JsonProperty("selfTradePreventionMode")]
     public BinanceSelfTradePreventionMode? SelfTradePreventionMode { get; set; }
-}
 
-/// <summary>
-/// Usdt futures order
-/// </summary>
-public record BinanceUsdFuturesOrder : BinanceFuturesOrder
-{
     /// <summary>
     /// Auto cancel at this date
     /// </summary>
     [JsonProperty("goodTillDate"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime? GoodTillDate { get; set; }
+}
+
+internal record BinanceFuturesOrderResult : BinanceFuturesOrder
+{
+    [JsonProperty("code")]
+    public int Code { get; set; }
+
+    [JsonProperty("msg")]
+    public string Message { get; set; } = string.Empty;
 }

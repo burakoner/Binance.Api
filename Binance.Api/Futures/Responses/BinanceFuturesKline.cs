@@ -37,16 +37,23 @@ public record BinanceFuturesKline
     public decimal ClosePrice { get; set; }
 
     /// <summary>
-    /// The volume traded during this candlestick
-    /// </summary>
-    [ArrayProperty(5)]
-    public decimal Volume { get; set; }
-
-    /// <summary>
     /// The close time of this candlestick
     /// </summary>
     [ArrayProperty(6), JsonConverter(typeof(DateTimeConverter))]
     public DateTime CloseTime { get; set; }
+}
+
+/// <summary>
+/// Candlestick information for symbol
+/// </summary>
+[JsonConverter(typeof(ArrayConverter))]
+public record BinanceFuturesUsdtKline: BinanceFuturesKline
+{
+    /// <summary>
+    /// The volume traded during this candlestick
+    /// </summary>
+    [ArrayProperty(5)]
+    public decimal Volume { get; set; }
 
     /// <summary>
     /// The volume traded during this candlestick in the asset form
@@ -71,4 +78,41 @@ public record BinanceFuturesKline
     /// </summary>
     [ArrayProperty(10)]
     public decimal TakerBuyQuoteVolume { get; set; }
+}
+
+/// <summary>
+/// Candlestick information for symbol
+/// </summary>
+[JsonConverter(typeof(ArrayConverter))]
+public record BinanceFuturesCoinKline : BinanceFuturesKline
+{
+    /// <summary>
+    /// The volume traded during this candlestick
+    /// </summary>
+    [ArrayProperty(5)]
+    public decimal Volume { get; set; }
+
+    /// <summary>
+    /// Base asset volume
+    /// </summary>
+    [ArrayProperty(7)]
+    public decimal BaseVolume { get; set; }
+
+    /// <summary>
+    /// The amount of trades in this candlestick
+    /// </summary>
+    [ArrayProperty(8)]
+    public int TradeCount { get; set; }
+
+    /// <summary>
+    /// Taker buy quote asset volume
+    /// </summary>
+    [ArrayProperty(9)]
+    public  decimal TakerBuyQuoteVolume { get; set; }
+
+    /// <summary>
+    /// Taker buy base asset volume
+    /// </summary>
+    [ArrayProperty(10)]
+    public  decimal TakerBuyBaseVolume { get; set; }
 }

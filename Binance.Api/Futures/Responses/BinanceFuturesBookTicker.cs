@@ -40,3 +40,19 @@ public record BinanceFuturesBookTicker
     [JsonConverter(typeof(DateTimeConverter))]
     public DateTime Time { get; set; }
 }
+
+/// <summary>
+/// Information about the best price/quantity available for a Coin-M Futures symbol
+/// </summary>
+public record BinanceFuturesCoinBookTicker: BinanceFuturesBookTicker
+{
+    /// <summary>
+    /// Last update id
+    /// </summary>
+    public long LastUpdateId { get; set; }
+
+    /// <summary>
+    /// Name of the pair
+    /// </summary>
+    public string Pair { get; set; } = "";
+}

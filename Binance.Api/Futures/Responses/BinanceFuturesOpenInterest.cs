@@ -34,9 +34,10 @@ public record BinanceFuturesCoinOpenInterest: BinanceFuturesOpenInterest
     /// </summary>
     [JsonProperty("pair")]
     public string Pair { get; set; } = string.Empty;
+
     /// <summary>
     /// The contract type
     /// </summary>
     [JsonProperty("contractType")]
-    public BinanceContractType ContractType { get; set; }
+    public BinanceFuturesContractType ContractType { get; set; }
 }

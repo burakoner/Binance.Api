@@ -22,6 +22,7 @@ public record BinanceFuturesPositionBase
     /// </summary>
     [JsonProperty("leverage")]
     public int Leverage { get; set; }
+
     /*
     /// <summary>
     /// Unrealized profit

@@ -17,7 +17,7 @@ public record BinanceStreamContinuousKlineData : BinanceSocketEvent, IBinanceStr
     /// The contract type
     /// </summary>
     [JsonProperty("ct")]
-    public BinanceContractType ContractType { get; set; } = BinanceContractType.Unknown;
+    public BinanceFuturesContractType ContractType { get; set; } = BinanceFuturesContractType.Unknown;
 
     /// <summary>
     /// The data

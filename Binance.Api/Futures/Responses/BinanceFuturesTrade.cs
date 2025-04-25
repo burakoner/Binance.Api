@@ -3,7 +3,7 @@
 /// <summary>
 /// Trade info
 /// </summary>
-public abstract record BinanceFuturesTrade
+public record BinanceFuturesTrade
 {
     /// <summary>
     /// Trade id

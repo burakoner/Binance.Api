@@ -34,6 +34,7 @@ public record BinanceFuturesLongShortRatio
     /// </summary>
     [JsonProperty("shortAccount")]
     public decimal ShortAccount { get; set; }
+
     /// <summary>
     /// Timestamp
     /// </summary>
