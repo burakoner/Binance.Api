@@ -4,9 +4,10 @@ internal partial class BinanceRestApiClientFuturesCoin(BinanceRestApiClientFutur
 {
     // Api
     private const string v1 = "1";
+    private const string v2 = "2";
     private const string v3 = "3";
     private const string api = "api";
-    private const string sapi = "sapi";
+    private const string dapi = "dapi";
 
     // Parent
     private BinanceRestApiClientFutures _ { get; } = parent;
@@ -26,7 +27,7 @@ internal partial class BinanceRestApiClientFuturesCoin(BinanceRestApiClientFutur
     // GetUrl
     private Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.UsdFuturesRestClientAddress.AppendPath(api);
+        var url = BinanceAddress.Default.CoinFuturesRestClientAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

@@ -6,9 +6,7 @@ internal partial class BinanceRestApiClientFuturesUsd(BinanceRestApiClientFuture
     private const string v1 = "1";
     private const string v2 = "2";
     private const string v3 = "3";
-    private const string api = "api";
     private const string fapi = "fapi";
-    private const string sapi = "sapi";
 
     // Parent
     private BinanceRestApiClientFutures _ { get; } = parent;
