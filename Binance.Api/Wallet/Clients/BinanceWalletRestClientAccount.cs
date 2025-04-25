@@ -2,28 +2,28 @@
 
 internal partial class BinanceWalletRestClient
 {
-    public Task<RestCallResult<BinanceVipLevelAndStatus>> GetAccountVipLevelAndStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletVipLevelAndStatus>> GetAccountVipLevelAndStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceVipLevelAndStatus>(GetUrl(sapi, v1, "account/info"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceWalletVipLevelAndStatus>(GetUrl(sapi, v1, "account/info"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(
+    public Task<RestCallResult<IEnumerable<BinanceWalletSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
         CancellationToken ct = default)
-        => GetDailyAccountSnapshot<IEnumerable<BinanceSpotAccountSnapshot>>(BinanceAccountType.Spot, startTime, endTime, limit, receiveWindow, ct);
+        => GetDailyAccountSnapshot<IEnumerable<BinanceWalletSpotAccountSnapshot>>(BinanceAccountType.Spot, startTime, endTime, limit, receiveWindow, ct);
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(
+    public Task<RestCallResult<IEnumerable<BinanceWalletMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
         CancellationToken ct = default)
-        => GetDailyAccountSnapshot<IEnumerable<BinanceMarginAccountSnapshot>>(BinanceAccountType.Margin, startTime, endTime, limit, receiveWindow, ct);
+        => GetDailyAccountSnapshot<IEnumerable<BinanceWalletMarginAccountSnapshot>>(BinanceAccountType.Margin, startTime, endTime, limit, receiveWindow, ct);
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(
+    public Task<RestCallResult<IEnumerable<BinanceWalletFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
         CancellationToken ct = default)
-        => GetDailyAccountSnapshot<IEnumerable<BinanceFuturesAccountSnapshot>>(BinanceAccountType.Futures, startTime, endTime, limit, receiveWindow, ct);
+        => GetDailyAccountSnapshot<IEnumerable<BinanceWalletFuturesAccountSnapshot>>(BinanceAccountType.Futures, startTime, endTime, limit, receiveWindow, ct);
 
     private async Task<RestCallResult<T>> GetDailyAccountSnapshot<T>(BinanceAccountType accountType,
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
@@ -38,7 +38,7 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceSnapshotWrapper<T>>(GetUrl(sapi, v1, "accountSnapshot"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2400).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceWalletSnapshotWrapper<T>>(GetUrl(sapi, v1, "accountSnapshot"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 2400).ConfigureAwait(false);
         if (!result.Success) return result.As<T>(default!);
         if (result.Data.Code != 200) return result.AsError<T>(new ServerError(result.Data.Code, result.Data.Message!));
 
@@ -63,12 +63,12 @@ internal partial class BinanceWalletRestClient
         return result.As(result.Success);
     }
 
-    public Task<RestCallResult<BinanceAccountStatus>> GetAccountStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletAccountStatus>> GetAccountStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceAccountStatus>(GetUrl(sapi, v1, "account/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceWalletAccountStatus>(GetUrl(sapi, v1, "account/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public async Task<RestCallResult<BinanceTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
@@ -81,11 +81,11 @@ internal partial class BinanceWalletRestClient
         return !string.IsNullOrEmpty(result.Data.Message) ? result.AsError<BinanceTradingStatus>(new ServerError(result.Data.Message!)) : result.As(result.Data.Data);
     }
 
-    public Task<RestCallResult<BinanceAPIKeyPermissions>> GetAPIKeyPermissionsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletApiKeyPermissions>> GetAPIKeyPermissionsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceAPIKeyPermissions>(GetUrl(sapi, v1, "account/apiRestrictions"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceWalletApiKeyPermissions>(GetUrl(sapi, v1, "account/apiRestrictions"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 }

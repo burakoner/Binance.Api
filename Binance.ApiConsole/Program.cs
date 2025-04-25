@@ -128,7 +128,7 @@ internal class Program
         var margin_317 = await api.Margin.SmallLiabilityExchangeAsync(["---ASSET---"]);
 
         // Margin > General Transfer Methods (PRIVATE)
-        var margin_401 = await api.Margin.GetMarginTransferHistoryAsync(BinanceTransferDirection.RollIn);
+        var margin_401 = await api.Margin.GetMarginTransferHistoryAsync(BinanceMarginTransferDirection.RollIn);
         var margin_402 = await api.Margin.GetMarginMaxTransferAmountAsync("---ASSET---");
 
         // Margin > General Account Methods (PRIVATE)
@@ -173,8 +173,8 @@ internal class Program
         var wallet_203 = await api.Wallet.GetWalletBalancesAsync("BTC");
         var wallet_204 = await api.Wallet.GetBalancesAsync();
         var wallet_205 = await api.Wallet.GetBalancesAsync("USDT");
-        var wallet_206 = await api.Wallet.TransferAsync(BinanceUniversalTransferType.FundingToUsdFutures, "USDT", 10.0m);
-        var wallet_207 = await api.Wallet.GetTransfersAsync(BinanceUniversalTransferType.FundingToUsdFutures);
+        var wallet_206 = await api.Wallet.TransferAsync(BinanceWalletUniversalTransferType.FundingToUsdFutures, "USDT", 10.0m);
+        var wallet_207 = await api.Wallet.GetTransfersAsync(BinanceWalletUniversalTransferType.FundingToUsdFutures);
         var wallet_208 = await api.Wallet.SetBnbBurnStatusAsync(true, true);
         var wallet_209 = await api.Wallet.GetAssetsForDustTransferAsync();
         var wallet_210 = await api.Wallet.DustTransferAsync(["ASSET01", "ASSET02", "ASSET03"]);

@@ -37,7 +37,7 @@ public record BinanceTransferHistory
     /// Direction of the transfer
     /// </summary>
     [JsonProperty("type")]
-    public BinanceTransferDirection Direction { get; set; }
+    public BinanceMarginTransferDirection Direction { get; set; }
 
     /// <summary>
     /// Transfer from

@@ -50,5 +50,5 @@ public record BinanceSubAccountDeposit
     /// <summary>
     /// The status of the deposit
     /// </summary>
-    public BinanceDepositStatus Status { get; set; }
+    public BinanceWalletDepositStatus Status { get; set; }
 }

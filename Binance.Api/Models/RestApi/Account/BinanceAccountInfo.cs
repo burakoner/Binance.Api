@@ -61,5 +61,5 @@ public record BinanceAccountInfo
     /// <summary>
     /// List of assets with their current balances
     /// </summary>
-    public IEnumerable<BinanceBalance> Balances { get; set; } = [];
+    public IEnumerable<BinanceWalletSpotAccountBalance> Balances { get; set; } = [];
 }

@@ -2,12 +2,12 @@
 
 internal partial class BinanceWalletRestClient
 {
-    public Task<RestCallResult<Dictionary<string, BinanceAssetDetails>>> GetAssetDetailsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<Dictionary<string, BinanceWalletAssetDetails>>> GetAssetDetailsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<Dictionary<string, BinanceAssetDetails>>(GetUrl(sapi, v1, "asset/assetDetail"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<Dictionary<string, BinanceWalletAssetDetails>>(GetUrl(sapi, v1, "asset/assetDetail"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<IEnumerable<BinanceWalletBalance>>> GetWalletBalancesAsync(string quoteAsset = "BTC", int? receiveWindow = null, CancellationToken ct = default)
@@ -19,17 +19,17 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<IEnumerable<BinanceWalletBalance>>(GetUrl(sapi, v1, "asset/wallet/balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 60);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceUserBalance>>> GetBalancesAsync(string? asset = null, bool? needBtcValuation = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceWalletUserBalance>>> GetBalancesAsync(string? asset = null, bool? needBtcValuation = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
         parameters.AddOptional("asset", asset);
         parameters.AddOptional("needBtcValuation", needBtcValuation);
 
-        return RequestAsync<IEnumerable<BinanceUserBalance>>(GetUrl(sapi, v1, "asset/getUserAsset"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<IEnumerable<BinanceWalletUserBalance>>(GetUrl(sapi, v1, "asset/getUserAsset"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<BinanceTransaction>> TransferAsync(BinanceUniversalTransferType type, string asset, decimal quantity, string? fromSymbol = null, string? toSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletTransaction>> TransferAsync(BinanceWalletUniversalTransferType type, string asset, decimal quantity, string? fromSymbol = null, string? toSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -41,10 +41,10 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptional("toSymbol", toSymbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceTransaction>(GetUrl(sapi, v1, "asset/transfer"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 900);
+        return RequestAsync<BinanceWalletTransaction>(GetUrl(sapi, v1, "asset/transfer"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 900);
     }
 
-    public Task<RestCallResult<BinanceQueryRecords<BinanceTransfer>>> GetTransfersAsync(BinanceUniversalTransferType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceQueryRecords<BinanceWalletTransfer>>> GetTransfersAsync(BinanceWalletUniversalTransferType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddEnum("type", type);
@@ -54,7 +54,7 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptional("size", pageSize?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceTransfer>>(GetUrl(sapi, v1, "asset/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceQueryRecords<BinanceWalletTransfer>>(GetUrl(sapi, v1, "asset/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceWalletBnbBurnStatus>> SetBnbBurnStatusAsync(bool? spotTrading = null, bool? marginInterest = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -79,7 +79,7 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<BinanceEligibleDusts>(GetUrl(sapi, v1, "asset/dust-btc"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceDustTransferResult>> DustTransferAsync(IEnumerable<string> assets, BinanceAccountType? accountType = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletDustTransferResult>> DustTransferAsync(IEnumerable<string> assets, BinanceAccountType? accountType = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var assetsArray = assets.ToArray();
 
@@ -93,7 +93,7 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptionalEnum("accountType", accountType);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceDustTransferResult>(GetUrl(sapi, v1, "asset/dust"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<BinanceWalletDustTransferResult>(GetUrl(sapi, v1, "asset/dust"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
     public Task<RestCallResult<BinanceDustLogList>> GetDustLogAsync(DateTime? startTime = null, DateTime? endTime = null, BinanceAccountType? accountType = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -119,26 +119,26 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<BinanceQueryRecords<BinanceDividendRecord>>(GetUrl(sapi, v1, "asset/assetDividend"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceTradeFee>>> GetTradeFeeAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceWalletTradeFee>>> GetTradeFeeAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceTradeFee>>(GetUrl(sapi, v1, "asset/tradeFee"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<IEnumerable<BinanceWalletTradeFee>>(GetUrl(sapi, v1, "asset/tradeFee"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFundingAsset>>> GetFundingWalletAsync(string? asset = null, bool? needBtcValuation = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceWalletFundingAsset>>> GetFundingWalletAsync(string? asset = null, bool? needBtcValuation = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("asset", asset);
         parameters.AddOptional("needBtcValuation", needBtcValuation?.ToString());
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFundingAsset>>(GetUrl(sapi, v1, "asset/get-funding-asset"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<IEnumerable<BinanceWalletFundingAsset>>(GetUrl(sapi, v1, "asset/get-funding-asset"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceQueryRecords<BinanceCloudMiningHistory>>> GetCloudMiningHistoryAsync(DateTime startTime, DateTime endTime, long? transferId = null, string? clientTransferId = null, string? asset = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceQueryRecords<BinanceWalletCloudMiningHistory>>> GetCloudMiningHistoryAsync(DateTime startTime, DateTime endTime, long? transferId = null, string? clientTransferId = null, string? asset = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalMilliseconds("startTime", startTime);
@@ -150,14 +150,14 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceCloudMiningHistory>>(GetUrl(sapi, v1, "asset/ledger-transfer/cloud-mining/queryByPage"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 600);
+        return RequestAsync<BinanceQueryRecords<BinanceWalletCloudMiningHistory>>(GetUrl(sapi, v1, "asset/ledger-transfer/cloud-mining/queryByPage"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 600);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceDelistSchedule>>> GetDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceWalletDelistSchedule>>> GetDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceDelistSchedule>>(GetUrl(sapi, v1, "spot/delist-schedule"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+        return RequestAsync<IEnumerable<BinanceWalletDelistSchedule>>(GetUrl(sapi, v1, "spot/delist-schedule"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 }

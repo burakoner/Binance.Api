@@ -11,7 +11,7 @@ public interface IBinanceWalletRestClientOthers
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The system status</returns>
-    Task<RestCallResult<BinanceSystemStatus>> GetSystemStatusAsync(CancellationToken ct = default);
+    Task<RestCallResult<BinanceWalletSystemStatus>> GetSystemStatusAsync(CancellationToken ct = default);
 
     // TODO: Get symbols delist schedule for spot (MARKET_DATA)
 }

@@ -18,7 +18,6 @@ global using Binance.Api.Models.RestApi.MarketData;
 global using Binance.Api.Models.RestApi.Server;
 global using Binance.Api.Models.WebSocketApi;
 global using Binance.Api.Models.WebSocketApi.MarketData;
-global using Binance.Api.Options.RestApi;
 global using Binance.Api.Shared;
 global using Binance.Net.Enums;
 global using Microsoft.Extensions.Logging;

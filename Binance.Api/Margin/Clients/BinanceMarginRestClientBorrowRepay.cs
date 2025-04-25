@@ -32,7 +32,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceQueryRecords<BinanceInterestHistory>>(GetUrl(sapi, v1, "margin/interestHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceTransaction>> BorrowAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletTransaction>> BorrowAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset.ValidateNotNull(nameof(asset));
         if (isIsolated == true && symbol == null)
@@ -48,10 +48,10 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceTransaction>(GetUrl(sapi, v1, "margin/borrow-repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceWalletTransaction>(GetUrl(sapi, v1, "margin/borrow-repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceTransaction>> RepayAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceWalletTransaction>> RepayAsync(string asset, decimal quantity, bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset.ValidateNotNull(nameof(asset));
         var parameters = new ParameterCollection
@@ -64,7 +64,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceTransaction>(GetUrl(sapi, v1, "margin/borrow-repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceWalletTransaction>(GetUrl(sapi, v1, "margin/borrow-repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
     }
 
     public Task<RestCallResult<BinanceQueryRecords<BinanceLoan>>> GetMarginLoansAsync(string asset, long? transactionId = null, DateTime? startTime = null, DateTime? endTime = null, int? current = 1, int? limit = 10, string? isolatedSymbol = null, bool? archived = null, int? receiveWindow = null, CancellationToken ct = default)
