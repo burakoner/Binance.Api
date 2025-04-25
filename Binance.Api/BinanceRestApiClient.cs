@@ -36,6 +36,10 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceFuturesRestClientCoin CoinFutures { get => Futures.Coin; }
 
+    // TODO: European Options
+    // TODO: Portfolio Margin
+    // TODO: Portfolio Margin Pro
+
     /// <summary>
     /// Binance Margin Rest API Client
     /// </summary>
@@ -50,6 +54,15 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// Binance Wallet Rest API Client
     /// </summary>
     public IBinanceWalletRestClient Wallet { get; }
+
+    // TODO: Copy Trading
+    // TODO: Convert
+
+    // TODO: SubAccount
+    // TODO: Link
+
+    // TODO: Investment & Service
+    // TODO: Web3 Wallet
 
     /// <summary>
     /// Default Constructor

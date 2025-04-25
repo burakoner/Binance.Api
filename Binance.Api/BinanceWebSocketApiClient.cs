@@ -1,8 +1,5 @@
 ﻿using Binance.Api.Clients.StreamApi;
-using Binance.Api.Clients.StreamApi.CoinFutures;
 using Binance.Api.Clients.StreamApi.General;
-using Binance.Api.Clients.StreamApi.Spot;
-using Binance.Api.Clients.StreamApi.UsdtFutures;
 
 namespace Binance.Api;
 

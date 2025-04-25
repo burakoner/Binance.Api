@@ -14,4 +14,6 @@ public interface IBinanceFuturesRestClient
     /// Interface for the Binance USDⓈ-M Futures  Rest API client.
     /// </summary>
     IBinanceFuturesRestClientUsd USD { get; }
+
+    // TODO: Futures Data
 }
