@@ -21,7 +21,7 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdSpot, 36, _.ApiOptions.AllowAppendingClientOrderId);
+        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdSpot, 36, _.RestOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection()
         {

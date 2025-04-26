@@ -8,12 +8,12 @@ public class BinanceAddress
     /// <summary>
     /// The address used by the BinanceClient for the Spot API
     /// </summary>
-    public string RestClientAddress { get; set; } = "";
+    public string SpotRestClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceSocketClient for the Spot API
     /// </summary>
-    public string SocketClientAddress { get; set; } = "";
+    public string SpotSocketClientAddress { get; set; } = "";
 
     /// <summary>
     /// The address used by the BinanceSocketClient for connecting to the BLVT streams
@@ -45,8 +45,8 @@ public class BinanceAddress
     /// </summary>
     public static BinanceAddress Default = new()
     {
-        RestClientAddress = "https://api.binance.com",
-        SocketClientAddress = "wss://stream.binance.com:9443/",
+        SpotRestClientAddress = "https://api.binance.com",
+        SpotSocketClientAddress = "wss://stream.binance.com:9443/",
         BlvtSocketClientAddress = "wss://nbstream.binance.com/lvt-p",
         UsdFuturesRestClientAddress = "https://fapi.binance.com",
         UsdFuturesSocketClientAddress = "wss://fstream.binance.com/",
@@ -59,8 +59,8 @@ public class BinanceAddress
     /// </summary>
     public static BinanceAddress TestNet = new()
     {
-        RestClientAddress = "https://testnet.binance.vision",
-        SocketClientAddress = "wss://testnet.binance.vision",
+        SpotRestClientAddress = "https://testnet.binance.vision",
+        SpotSocketClientAddress = "wss://testnet.binance.vision",
         BlvtSocketClientAddress = "wss://fstream.binancefuture.com",
         UsdFuturesRestClientAddress = "https://testnet.binancefuture.com",
         UsdFuturesSocketClientAddress = "wss://fstream.binancefuture.com",
@@ -73,7 +73,7 @@ public class BinanceAddress
     /// </summary>
     public static BinanceAddress Us = new()
     {
-        RestClientAddress = "https://api.binance.us",
-        SocketClientAddress = "wss://stream.binance.us:9443",
+        SpotRestClientAddress = "https://api.binance.us",
+        SpotSocketClientAddress = "wss://stream.binance.us:9443",
     };
 }

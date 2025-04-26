@@ -13,7 +13,7 @@ internal partial class BinanceWalletRestClient(BinanceRestApiClient root) : IBin
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions Options => _.ApiOptions;
+    internal BinanceRestApiClientOptions Options => _.RestOptions;
 
     internal Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -28,7 +28,7 @@ internal partial class BinanceWalletRestClient(BinanceRestApiClient root) : IBin
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.RestClientAddress.AppendPath(api);
+        var url = BinanceAddress.Default.SpotRestClientAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

@@ -1,10 +1,10 @@
 ﻿namespace Binance.Api.Spot;
 
-public class BinanceSpotSocketClient : WebSocketApiClient
+public partial class BinanceSpotSocketClient : WebSocketApiClient
 {
     // Clients
-    public BinanceStreamSpotMarketDataClient MarketData { get; }
-    public BinanceStreamSpotUserStreamClient UserStream { get; }
+    //public BinanceStreamSpotMarketDataClient MarketData { get; }
+    //public BinanceStreamSpotUserStreamClient UserStream { get; }
 
     // Internal
     internal ILogger Logger { get => _logger; }
@@ -14,34 +14,29 @@ public class BinanceSpotSocketClient : WebSocketApiClient
     // Root Client
     internal BinanceSocketApiClient RootClient { get; }
 
-    // Options
-    public new BinanceSocketApiClientOptions ClientOptions { get { return (BinanceSocketApiClientOptions)base.ClientOptions; } }
+    // Parent
+    internal BinanceSocketApiClient _ { get; }
 
-    internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ClientOptions)
+    // Internal
+    internal BinanceSocketApiClientOptions SocketOptions => _.SocketOptions;
+    internal DateTime? LastExchangeInfoUpdate { get; private set; }
+    internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
+
+
+    internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.SocketOptions)
     {
-        RootClient = root;
+        _ = root;
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
 
-        MarketData = new BinanceStreamSpotMarketDataClient(this);
-        UserStream = new BinanceStreamSpotUserStreamClient(this);
+        //MarketData = new BinanceStreamSpotMarketDataClient(this);
+        //UserStream = new BinanceStreamSpotUserStreamClient(this);
     }
 
+    #region Overrided Methods
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-    => new BinanceAuthentication(credentials);
-
-    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
-    {
-        var request = new BinanceSocketRequest
-        {
-            Method = "SUBSCRIBE",
-            Params = topics.ToArray(),
-            Id = NextId()
-        };
-
-        return SubscribeAsync(url.AppendPath("stream"), request, null, false, onData, ct);
-    }
+        => new BinanceAuthentication(credentials);
 
     protected override bool HandleQueryResponse<T>(WebSocketConnection connection, object request, JToken data, out CallResult<T> callResult)
     {
@@ -135,6 +130,19 @@ public class BinanceSpotSocketClient : WebSocketApiClient
             return true;
         }).ConfigureAwait(false);
         return result;
+    }
+    #endregion
+
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, string identifier, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+    {
+        var request = new BinanceSocketRequest
+        {
+            Method = "SUBSCRIBE",
+            Params = [.. topics],
+            Id = NextId()
+        };
+
+        return SubscribeAsync(BinanceAddress.Default.SpotSocketClientAddress.AppendPath("stream"), request, identifier, authenticated, onData, ct);
     }
 
 }

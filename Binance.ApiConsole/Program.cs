@@ -16,7 +16,8 @@ internal class Program
     {
         /**/
         var ws = new BinanceSocketApiClient();
-        await ws.Spot.MarketData.SubscribeToAllMiniTickerUpdatesAsync((data) =>
+        var time = await ws.Spot.GetServerTimeAsync();
+        await ws.Spot.SubscribeToAllMiniTickerUpdatesAsync((data) =>
         {
             foreach (var d in data.Data.OrderBy(x=>x.Symbol))
             {

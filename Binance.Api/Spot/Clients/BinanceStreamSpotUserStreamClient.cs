@@ -12,17 +12,9 @@ public class BinanceStreamSpotUserStreamClient
     internal BinanceSpotSocketClient MainClient { get; }
     internal ILogger Logger { get => MainClient.Logger; }
     internal string BaseAddress { get => Options.BaseAddress; }
-    internal BinanceSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
-    internal CallResult<T> Deserialize<T>(string data, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(data, serializer, requestId);
-    internal CallResult<T> Deserialize<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(obj, serializer, requestId);
-    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
-    => MainClient.SubscribeAsync(url, topics, onData, ct);
-
-    internal BinanceStreamSpotUserStreamClient(BinanceSpotSocketClient main)
-    {
-        MainClient = main;
-    }
-
+    internal BinanceSocketApiClientOptions Options { get => MainClient.RootClient.SocketOptions; }
+    
+    /*
     #region User Data Stream
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUserDataUpdatesAsync(
         string listenKey,
@@ -108,5 +100,6 @@ public class BinanceStreamSpotUserStreamClient
         return await SubscribeAsync(BaseAddress, new[] { listenKey }, handler, ct).ConfigureAwait(false);
     }
     #endregion
+    */
 
 }

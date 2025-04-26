@@ -44,7 +44,7 @@ internal partial class BinanceSpotRestClient
         price = rulesCheck.Price;
         stopPrice = rulesCheck.StopPrice;
         quoteQuantity = rulesCheck.QuoteQuantity;
-        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, ApiOptions.AllowAppendingClientOrderId);
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection
         {

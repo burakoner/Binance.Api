@@ -13,7 +13,7 @@ internal class BinanceAlgoRestClient: IBinanceAlgoRestClient
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions ApiOptions => _.ApiOptions;
+    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
 
     // Interface Properties
     public IBinanceAlgoRestClientSpot Spot { get; }
@@ -40,7 +40,7 @@ internal class BinanceAlgoRestClient: IBinanceAlgoRestClient
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.RestClientAddress.AppendPath(api);
+        var url = BinanceAddress.Default.SpotRestClientAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

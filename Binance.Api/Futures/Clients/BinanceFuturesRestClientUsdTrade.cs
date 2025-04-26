@@ -53,7 +53,7 @@ internal partial class BinanceFuturesRestClientUsd
         price = rulesCheck.Price;
         stopPrice = rulesCheck.StopPrice;
 
-        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, ApiOptions.AllowAppendingClientOrderId);
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection()
         {
@@ -87,7 +87,7 @@ internal partial class BinanceFuturesRestClientUsd
 
     public async Task<RestCallResult<IEnumerable<CallResult<BinanceFuturesOrder>>>> PlaceMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
-        if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
+        if (RestOptions.UsdtFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
         {
             foreach (var order in orders)
             {
@@ -109,7 +109,7 @@ internal partial class BinanceFuturesRestClientUsd
         int i = 0;
         foreach (var order in orders)
         {
-            var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, ApiOptions.AllowAppendingClientOrderId);
+            var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
             var orderParameters = new ParameterCollection()
             {

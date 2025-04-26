@@ -1,5 +1,4 @@
 ﻿using Binance.Api.Clients.StreamApi;
-using Binance.Api.Clients.StreamApi.General;
 using Binance.Api.Spot;
 
 namespace Binance.Api;
@@ -12,35 +11,46 @@ public class BinanceSocketApiClient
     // Internal
     internal ILogger Logger { get; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
+    internal BinanceSocketApiClientOptions SocketOptions { get; }
 
-    // Options
-    public BinanceSocketApiClientOptions ClientOptions { get; }
-
-    // Master Clients
+    /// <summary>
+    /// Spot WebSocket API Client
+    /// </summary>
     public BinanceSpotSocketClient Spot { get; }
-    private BinanceStreamGeneralClient General { get; }
-    public BinanceStreamCoinFuturesClient CoinFutures { get; }
-    public BinanceStreamUsdtFuturesClient UsdtFutures { get; }
 
-    // Other Clients
-    public BinanceStreamBlvtClient BLVT { get => General.BLVT; }
+    //public BinanceStreamCoinFuturesClient CoinFutures { get; }
+    //public BinanceStreamUsdtFuturesClient UsdtFutures { get; }
+    //private BinanceStreamGeneralClient General { get; }
+    //public BinanceStreamBlvtClient BLVT { get => General.BLVT; }
 
+    /// <summary>
+    /// Binance WebSocket API Client Constructor
+    /// </summary>
     public BinanceSocketApiClient() : this(null, new BinanceSocketApiClientOptions())
     {
     }
 
+    /// <summary>
+    /// Binance WebSocket API Client Constructor
+    /// </summary>
+    /// <param name="options"></param>
     public BinanceSocketApiClient(BinanceSocketApiClientOptions options) : this(null, options)
     {
     }
 
-    public BinanceSocketApiClient(ILogger logger, BinanceSocketApiClientOptions options)
+    /// <summary>
+    /// Binance WebSocket API Client Constructor
+    /// </summary>
+    /// <param name="logger">Logger</param>
+    /// <param name="options">Web Socket API Options</param>
+    public BinanceSocketApiClient(ILogger? logger, BinanceSocketApiClientOptions options)
     {
-        Logger = logger;
-        ClientOptions = options;
+        Logger = logger ?? BaseClient.LoggerFactory.CreateLogger(typeof(BinanceSocketApiClient));
+        SocketOptions = options;
 
         Spot = new BinanceSpotSocketClient(this);
-        General = new BinanceStreamGeneralClient(this);
-        CoinFutures = new BinanceStreamCoinFuturesClient(this);
-        UsdtFutures = new BinanceStreamUsdtFuturesClient(this);
+        //General = new BinanceStreamGeneralClient(this);
+        //CoinFutures = new BinanceStreamCoinFuturesClient(this);
+        //UsdtFutures = new BinanceStreamUsdtFuturesClient(this);
     }
 }

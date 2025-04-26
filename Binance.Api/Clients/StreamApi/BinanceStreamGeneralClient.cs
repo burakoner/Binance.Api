@@ -18,7 +18,7 @@ public class BinanceStreamGeneralClient : WebSocketApiClient
     // Options
     public new BinanceSocketApiClientOptions ClientOptions { get { return (BinanceSocketApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceStreamGeneralClient(BinanceSocketApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceStreamGeneralClient(BinanceSocketApiClient root) : base(root.Logger, root.SocketOptions)
     {
         RootClient = root;
 

@@ -13,7 +13,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions ApiOptions => _.ApiOptions;
+    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
     internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
 
@@ -30,7 +30,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.RestClientAddress.AppendPath(api);
+        var url = BinanceAddress.Default.SpotRestClientAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 
@@ -39,16 +39,16 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
 
     internal async Task<BinanceTradeRuleResult> CheckTradeRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
     {
-        if (ApiOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
+        if (RestOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
             return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
 
-        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ApiOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
+        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > RestOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
             await GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        return ValidateTradeRules(Logger, ApiOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
+        return ValidateTradeRules(Logger, RestOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
 
     internal static BinanceTradeRuleResult ValidateTradeRules(ILogger? logger, BinanceTradeRulesBehavior tradeRulesBehavior, BinanceExchangeInfo exchangeInfo, string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type)

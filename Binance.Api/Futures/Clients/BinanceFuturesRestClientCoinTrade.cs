@@ -52,7 +52,7 @@ internal partial class BinanceFuturesRestClientCoin
         price = rulesCheck.Price;
         stopPrice = rulesCheck.StopPrice;
 
-        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, ApiOptions.AllowAppendingClientOrderId);
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection()
         {
@@ -88,7 +88,7 @@ internal partial class BinanceFuturesRestClientCoin
         if (orders.Count() <= 0 || orders.Count() > 5)
             throw new ArgumentException("Order list should be at least 1 and max 5 orders");
 
-        if (ApiOptions.CoinFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
+        if (RestOptions.CoinFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
         {
             foreach (var order in orders)
             {
@@ -119,7 +119,7 @@ internal partial class BinanceFuturesRestClientCoin
 
             orderParameters.AddEnum("side", order.Side);
             orderParameters.AddEnum("type", order.Type);
-            var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, ApiOptions.AllowAppendingClientOrderId);
+            var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
             orderParameters.AddOptional("quantity", order.Quantity?.ToString(CultureInfo.InvariantCulture));
             orderParameters.AddOptional("newClientOrderId", clientOrderId);
             orderParameters.AddOptional("price", order.Price?.ToString(CultureInfo.InvariantCulture));
