@@ -1,11 +1,11 @@
 ﻿namespace Binance.Api;
 
-public class BinanceWebSocketApiClientOptions : WebSocketApiClientOptions
+public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
 {
     // BLVT
     public string BlvtStreamAddress { get; set; }
 
-    public BinanceWebSocketApiClientOptions()
+    public BinanceSocketApiClientOptions()
     {
         this.BaseAddress = "wss://stream.binance.com:9443/";
         this.BlvtStreamAddress = BinanceAddress.Default.BlvtSocketClientAddress;

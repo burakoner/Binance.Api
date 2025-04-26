@@ -13,7 +13,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestApiOptions => _.RestApiOptions;
+    internal BinanceRestApiClientOptions ApiOptions => _.ApiOptions;
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
     internal BinanceFuturesUsdExchangeInfo? ExchangeInfo { get; private set; }
 
@@ -47,10 +47,10 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
         var outputPrice = price;
         var outputStopPrice = stopPrice;
 
-        if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior ==  BinanceTradeRulesBehavior.None)
+        if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior ==  BinanceTradeRulesBehavior.None)
             return BinanceTradeRuleResult.CreatePassed(outputQuantity, quoteQuantity, outputPrice, outputStopPrice);
 
-        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > RestApiOptions.UsdtFuturesOptions.TradeRulesUpdateInterval.TotalMinutes)
+        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > ApiOptions.UsdtFuturesOptions.TradeRulesUpdateInterval.TotalMinutes)
             await GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
@@ -83,7 +83,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
                 outputQuantity = BinanceHelpers.ClampQuantity(minQty.Value, maxQty!.Value, stepSize!.Value, quantity.Value);
                 if (outputQuantity != quantity.Value)
                 {
-                    if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
+                    if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                     {
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: LotSize filter failed. Original quantity: {quantity}, Closest allowed: {outputQuantity}");
                     }
@@ -97,7 +97,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
         {
             if (quoteQuantity < symbolData.MinNotionalFilter.MinNotional)
             {
-                if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
+                if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                     return BinanceTradeRuleResult.CreateFailed(
                         $"Trade rules check failed: MinNotional filter failed. Order value: {quoteQuantity}, minimal order value: {symbolData.MinNotionalFilter.MinNotional}");
 
@@ -116,7 +116,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
                 outputPrice = BinanceHelpers.ClampPrice(symbolData.PriceFilter.MinPrice, symbolData.PriceFilter.MaxPrice, price.Value);
                 if (outputPrice != price)
                 {
-                    if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
+                    if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter max/min failed. Original price: {price}, Closest allowed: {outputPrice}");
 
                     Logger.Log(LogLevel.Information, $"price clamped from {price} to {outputPrice}");
@@ -128,7 +128,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
                         symbolData.PriceFilter.MaxPrice, stopPrice.Value);
                     if (outputStopPrice != stopPrice)
                     {
-                        if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
+                        if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                             return BinanceTradeRuleResult.CreateFailed(
                                 $"Trade rules check failed: Stop price filter max/min failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
 
@@ -144,7 +144,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
                 outputPrice = BinanceHelpers.FloorPrice(symbolData.PriceFilter.TickSize, price.Value);
                 if (outputPrice != beforePrice)
                 {
-                    if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
+                    if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                         return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Price filter tick failed. Original price: {price}, Closest allowed: {outputPrice}");
 
                     Logger.Log(LogLevel.Information, $"price rounded from {beforePrice} to {outputPrice}");
@@ -156,7 +156,7 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
                     outputStopPrice = BinanceHelpers.FloorPrice(symbolData.PriceFilter.TickSize, stopPrice.Value);
                     if (outputStopPrice != beforeStopPrice)
                     {
-                        if (RestApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
+                        if (ApiOptions.UsdtFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
                             return BinanceTradeRuleResult.CreateFailed(
                                 $"Trade rules check failed: Stop price filter tick failed. Original stop price: {stopPrice}, Closest allowed: {outputStopPrice}");
 

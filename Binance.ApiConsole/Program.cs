@@ -12,23 +12,44 @@ namespace Binance.ApiConsole;
 
 internal class Program
 {
-    static async Task Main2(string[] args)
+    static async Task Main(string[] args)
     {
-        var api = new BinanceRestApiClient();
+        /**/
+        var ws = new BinanceSocketApiClient();
+        await ws.Spot.MarketData.SubscribeToAllMiniTickerUpdatesAsync((data) =>
+        {
+            foreach (var d in data.Data.OrderBy(x=>x.Symbol))
+            {
+                Console.WriteLine($"{d.Symbol} O:{d.OpenPrice} H:{d.HighPrice} L:{d.LowPrice} C:{d.LastPrice} V:{d.Volume}");
+            }
+            Console.WriteLine($"Got {data.Data.Count()} rows");
+        }, default);
+        /**/
 
-        // Spot > General Methods (PUBLIC)
-        //var spot_101 = await api.Spot.PingAsync();
-        //var spot_102 = await api.Spot.GetTimeAsync();
-        var spot_103 = await api.Spot.GetExchangeInfoAsync();
+        //Console.ReadLine();
+        //await ws.UnsubscribeAllAsync();
 
-        //var futures_101 = await api.UsdFutures.PingAsync();
-        //var futures_102 = await api.UsdFutures.GetTimeAsync();
-        var futures_103 = await api.UsdFutures.GetExchangeInfoAsync();
+        /*
+        var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
+        {
+            OutputOriginalData= true,
+        });
+        await api.Spot.Server.GetServerTimeAsync();
+        var i = 0;
+        var sw01 = Stopwatch.StartNew();
+        while (true)
+        {
+            i++;
+            var date = await api.Spot.Server.GetServerTimeAsync();
+            Console.WriteLine($"{i} Response:{date.Data}  -  Duration:{date.ResponseTime.Value.TotalMilliseconds}ms  -  Avg:{sw01.ElapsedMilliseconds / i}ms");
+        }
+        */
 
-        var a = 0;
+        Console.WriteLine("Done!..");
+        Console.ReadLine();
     }
 
-    static async Task Main(string[] args)
+    static async Task Main2(string[] args)
     {
         var api = new BinanceRestApiClient();
 

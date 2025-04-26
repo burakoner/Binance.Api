@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot;
-
-namespace Binance.Api.Clients.StreamApi.Spot;
+﻿namespace Binance.Api.Spot;
 
 public class BinanceStreamSpotMarketDataClient
 {
@@ -18,16 +16,16 @@ public class BinanceStreamSpotMarketDataClient
     private const string allSymbolMiniTickerStreamEndpoint = "!miniTicker@arr";
 
     // Internal References
-    internal BinanceStreamSpotClient MainClient { get; }
+    internal BinanceSpotSocketClient MainClient { get; }
     internal ILogger Logger { get => MainClient.Logger; }
     internal string BaseAddress { get => Options.BaseAddress; }
-    internal BinanceWebSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
+    internal BinanceSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
     internal CallResult<T> Deserialize<T>(string data, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(data, serializer, requestId);
     internal CallResult<T> Deserialize<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(obj, serializer, requestId);
     internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
-    => MainClient.SubscribeAsync<T>(url, topics, onData, ct);
+    => MainClient.SubscribeAsync(url, topics, onData, ct);
 
-    internal BinanceStreamSpotMarketDataClient(BinanceStreamSpotClient main)
+    internal BinanceStreamSpotMarketDataClient(BinanceSpotSocketClient main)
     {
         MainClient = main;
     }
@@ -196,7 +194,7 @@ public class BinanceStreamSpotMarketDataClient
         var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<BinanceSpotOrderBook>>>(data =>
         {
             data.Data.Data.Symbol = data.Data.Stream.Split('@')[0];
-            onMessage(data.As<BinanceSpotOrderBook>(data.Data.Data, data.Data.Data.Symbol));
+            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
         symbols = symbols.Select(a =>

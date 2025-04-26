@@ -1,33 +1,31 @@
-﻿using Binance.Api.Clients.StreamApi.Spot;
+﻿namespace Binance.Api.Spot;
 
-namespace Binance.Api.Clients.StreamApi;
-
-public class BinanceStreamSpotClient : WebSocketApiClient
+public class BinanceSpotSocketClient : WebSocketApiClient
 {
     // Clients
     public BinanceStreamSpotMarketDataClient MarketData { get; }
     public BinanceStreamSpotUserStreamClient UserStream { get; }
 
     // Internal
-    internal ILogger Logger { get => this._logger; }
-    internal CallResult<T> Deserializer<T>(string data, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(data, serializer, requestId);
-    internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(obj, serializer, requestId);
+    internal ILogger Logger { get => _logger; }
+    internal CallResult<T> Deserializer<T>(string data, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(data, serializer, requestId);
+    internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(obj, serializer, requestId);
 
     // Root Client
-    internal BinanceWebSocketApiClient RootClient { get; }
+    internal BinanceSocketApiClient RootClient { get; }
 
     // Options
-    public new BinanceWebSocketApiClientOptions ClientOptions { get { return (BinanceWebSocketApiClientOptions)base.ClientOptions; } }
+    public new BinanceSocketApiClientOptions ClientOptions { get { return (BinanceSocketApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceStreamSpotClient(BinanceWebSocketApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ClientOptions)
     {
         RootClient = root;
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
 
-        this.MarketData = new BinanceStreamSpotMarketDataClient(this);
-        this.UserStream = new BinanceStreamSpotUserStreamClient(this);
+        MarketData = new BinanceStreamSpotMarketDataClient(this);
+        UserStream = new BinanceStreamSpotUserStreamClient(this);
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)

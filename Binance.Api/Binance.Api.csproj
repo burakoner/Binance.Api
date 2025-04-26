@@ -51,7 +51,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ApiSharp" Version="3.4.1" />
+		<PackageReference Include="ApiSharp" Version="3.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

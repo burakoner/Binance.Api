@@ -14,12 +14,12 @@ public class BinanceStreamUsdtFuturesClient : WebSocketApiClient
     internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => this.Deserialize<T>(obj, serializer, requestId);
 
     // Root Client
-    internal BinanceWebSocketApiClient RootClient { get; }
+    internal BinanceSocketApiClient RootClient { get; }
 
     // Options
-    public new BinanceWebSocketApiClientOptions ClientOptions { get { return (BinanceWebSocketApiClientOptions)base.ClientOptions; } }
+    public new BinanceSocketApiClientOptions ClientOptions { get { return (BinanceSocketApiClientOptions)base.ClientOptions; } }
 
-    internal BinanceStreamUsdtFuturesClient(BinanceWebSocketApiClient root) : base(root.Logger, root.ClientOptions)
+    internal BinanceStreamUsdtFuturesClient(BinanceSocketApiClient root) : base(root.Logger, root.ClientOptions)
     {
         RootClient = root;
 

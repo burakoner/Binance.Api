@@ -1,18 +1,23 @@
 ﻿using Binance.Api.Clients.StreamApi;
 using Binance.Api.Clients.StreamApi.General;
+using Binance.Api.Spot;
 
 namespace Binance.Api;
 
-public class BinanceWebSocketApiClient
+/// <summary>
+/// Binance WebSocket API Client
+/// </summary>
+public class BinanceSocketApiClient
 {
-    // Logger
+    // Internal
     internal ILogger Logger { get; }
+    internal TimeSyncState TimeSyncState { get; } = new("Binance");
 
     // Options
-    public BinanceWebSocketApiClientOptions ClientOptions { get; }
+    public BinanceSocketApiClientOptions ClientOptions { get; }
 
     // Master Clients
-    public BinanceStreamSpotClient Spot { get; }
+    public BinanceSpotSocketClient Spot { get; }
     private BinanceStreamGeneralClient General { get; }
     public BinanceStreamCoinFuturesClient CoinFutures { get; }
     public BinanceStreamUsdtFuturesClient UsdtFutures { get; }
@@ -20,20 +25,20 @@ public class BinanceWebSocketApiClient
     // Other Clients
     public BinanceStreamBlvtClient BLVT { get => General.BLVT; }
 
-    public BinanceWebSocketApiClient() : this(null, new BinanceWebSocketApiClientOptions())
+    public BinanceSocketApiClient() : this(null, new BinanceSocketApiClientOptions())
     {
     }
 
-    public BinanceWebSocketApiClient(BinanceWebSocketApiClientOptions options) : this(null, options)
+    public BinanceSocketApiClient(BinanceSocketApiClientOptions options) : this(null, options)
     {
     }
 
-    public BinanceWebSocketApiClient(ILogger logger, BinanceWebSocketApiClientOptions options)
+    public BinanceSocketApiClient(ILogger logger, BinanceSocketApiClientOptions options)
     {
         Logger = logger;
         ClientOptions = options;
 
-        Spot = new BinanceStreamSpotClient(this);
+        Spot = new BinanceSpotSocketClient(this);
         General = new BinanceStreamGeneralClient(this);
         CoinFutures = new BinanceStreamCoinFuturesClient(this);
         UsdtFutures = new BinanceStreamUsdtFuturesClient(this);

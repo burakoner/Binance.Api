@@ -13,18 +13,14 @@ public sealed class BinanceRestApiClient : RestApiClient
 {
     // Internal
     internal ILogger Logger => this._logger;
+    internal IBinanceFuturesRestClient Futures { get; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
-    internal BinanceRestApiClientOptions RestApiOptions => (BinanceRestApiClientOptions)ClientOptions;
+    internal BinanceRestApiClientOptions ApiOptions => (BinanceRestApiClientOptions)ClientOptions;
 
     /// <summary>
     /// Binance Spot Rest API Client
     /// </summary>
     public IBinanceSpotRestClient Spot { get; }
-
-    /// <summary>
-    /// Binance Futures Rest API Client
-    /// </summary>
-    internal IBinanceFuturesRestClient Futures { get; }
 
     /// <summary>
     /// Binance USDⓈ Futures Rest API Client
@@ -130,7 +126,7 @@ public sealed class BinanceRestApiClient : RestApiClient
 
     /// <inheritdoc/>
     protected override TimeSyncInfo GetTimeSyncInfo()
-        => new(Logger, RestApiOptions.AutoTimestamp, RestApiOptions.TimestampRecalculationInterval, TimeSyncState);
+        => new(Logger, ApiOptions.AutoTimestamp, ApiOptions.TimestampRecalculationInterval, TimeSyncState);
 
     /// <inheritdoc/>
     protected override TimeSpan GetTimeOffset()
@@ -140,7 +136,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     #region Internal Methods
     internal string GetSymbolName(string baseAsset, string quoteAsset) => (baseAsset + quoteAsset).ToUpper(CultureInfo.InvariantCulture);
 
-    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (RestApiOptions.ReceiveWindow != null ? System.Convert.ToInt32(RestApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
+    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (ApiOptions.ReceiveWindow != null ? System.Convert.ToInt32(ApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
 
     internal async Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -148,7 +144,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         ArraySerialization? serialization = null, JsonSerializer? deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters ?? [], bodyParameters ?? [], headerParameters ?? [], serialization, deserializer, ignoreRatelimit, requestWeight).ConfigureAwait(false);
-        if (!result && result.Error!.Code == -1021 && RestApiOptions.AutoTimestamp)
+        if (!result && result.Error!.Code == -1021 && ApiOptions.AutoTimestamp)
         {
             Logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;

@@ -23,7 +23,7 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdFutures, 36, _.RestApiOptions.AllowAppendingClientOrderId);
+        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdFutures, 36, _.ApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection()
         {
@@ -53,7 +53,7 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdFutures, 36, _.RestApiOptions.AllowAppendingClientOrderId);
+        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdFutures, 36, _.ApiOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection()
         {

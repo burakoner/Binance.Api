@@ -13,7 +13,7 @@ internal partial class BinanceWalletRestClient(BinanceRestApiClient root) : IBin
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions Options => _.RestApiOptions;
+    internal BinanceRestApiClientOptions Options => _.ApiOptions;
 
     internal Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,

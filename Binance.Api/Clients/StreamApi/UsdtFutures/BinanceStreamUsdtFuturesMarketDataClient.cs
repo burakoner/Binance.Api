@@ -27,7 +27,7 @@ public class BinanceStreamUsdtFuturesMarketDataClient
     internal BinanceStreamUsdtFuturesClient MainClient { get; }
     internal ILogger Logger { get => MainClient.Logger; }
     internal string BaseAddress { get => Options.BaseAddress; }
-    internal BinanceWebSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
+    internal BinanceSocketApiClientOptions Options { get => MainClient.RootClient.ClientOptions; }
     internal CallResult<T> Deserialize<T>(string data, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(data, serializer, requestId);
     internal CallResult<T> Deserialize<T>(JToken obj, JsonSerializer serializer = null, int? requestId = null) => MainClient.Deserializer<T>(obj, serializer, requestId);
     internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
