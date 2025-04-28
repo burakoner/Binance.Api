@@ -10,7 +10,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
     {
 #pragma warning disable 8604, 8602
         var obj = JObject.Load(reader);
-        var type = new SymbolFilterTypeConverter(false).ReadString(obj["filterType"].ToString());
+        var type = new BinanceSymbolFilterTypeConverter(false).ReadString(obj["filterType"].ToString());
         BinanceSymbolFilter result;
         switch (type)
         {
@@ -130,7 +130,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
         writer.WriteStartObject();
 
         writer.WritePropertyName("filterType");
-        writer.WriteValue(JsonConvert.SerializeObject(filter.FilterType, new SymbolFilterTypeConverter(false)));
+        writer.WriteValue(JsonConvert.SerializeObject(filter.FilterType, new BinanceSymbolFilterTypeConverter(false)));
 
         switch (filter.FilterType)
         {

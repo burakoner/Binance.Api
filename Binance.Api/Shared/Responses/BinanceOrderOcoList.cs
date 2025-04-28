@@ -21,13 +21,13 @@ public record BinanceOrderOcoList
     /// <summary>
     /// The order list status
     /// </summary>
-    [JsonConverter(typeof(ListStatusTypeConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public BinanceListStatusType ListStatusType { get; set; }
 
     /// <summary>
     /// The order status
     /// </summary>
-    [JsonConverter(typeof(ListOrderStatusConverter))]
+    [JsonConverter(typeof(MapConverter))]
     public BinanceListOrderStatus ListOrderStatus { get; set; }
 
     /// <summary>
@@ -95,6 +95,6 @@ public record BinanceOrderId
 /// <summary>
 /// The result of placing a new order
 /// </summary>
-public record BinancePlacedOcoOrder : BinanceOrderBase
+public record BinancePlacedOcoOrder : BinanceSpotOrderBase
 {
 }

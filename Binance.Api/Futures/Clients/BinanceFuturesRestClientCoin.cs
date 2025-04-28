@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Futures;
+﻿using Binance.Api.Shared.Enums;
+
+namespace Binance.Api.Futures;
 
 internal partial class BinanceFuturesRestClientCoin(BinanceFuturesRestClient parent) : IBinanceFuturesRestClientCoin
 {

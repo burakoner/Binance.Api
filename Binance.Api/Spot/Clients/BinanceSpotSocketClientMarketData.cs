@@ -39,11 +39,11 @@ public partial class BinanceSpotSocketClient
         return result.As(result.Data.ServerTime);
     }
 
-    public async Task<CallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
+    public async Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalParameter("symbols", symbols);
-        var result = await BinanceQueryAsync<BinanceExchangeInfo>("ws-api/v3", $"exchangeInfo", parameters, weight: 20, ct: ct).ConfigureAwait(false);
+        var result = await BinanceQueryAsync<BinanceSpotExchangeInfo>("ws-api/v3", $"exchangeInfo", parameters, weight: 20, ct: ct).ConfigureAwait(false);
         if (!result) return result;
 
         ExchangeInfo = result.Data;
@@ -113,11 +113,11 @@ public partial class BinanceSpotSocketClient
         return await BinanceQueryAsync<IEnumerable<BinanceSpotKline>>("ws-api/v3", $"uiKlines", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
     }
 
-    public async Task<CallResult<BinanceAveragePrice>> GetAveragePriceAsync(string symbol, CancellationToken ct = default)
+    public async Task<CallResult<BinanceSpotAveragePrice>> GetAveragePriceAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new Dictionary<string, object>();
         parameters.AddParameter("symbol", symbol);
-        return await BinanceQueryAsync<BinanceAveragePrice>("ws-api/v3", $"avgPrice", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+        return await BinanceQueryAsync<BinanceSpotAveragePrice>("ws-api/v3", $"avgPrice", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
     }
 
     public async Task<CallResult<BinanceSpotTicker>> GetTickerAsync(string symbol, CancellationToken ct = default)

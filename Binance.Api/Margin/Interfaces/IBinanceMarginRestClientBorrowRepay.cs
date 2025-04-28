@@ -32,7 +32,7 @@ public interface IBinanceMarginRestClientBorrowRepay
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of interest events</returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceInterestHistory>>> GetMarginInterestHistoryAsync(string? asset = null, int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, bool? archived = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceQueryRecords<BinanceMarginInterestHistory>>> GetMarginInterestHistoryAsync(string? asset = null, int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, bool? archived = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Borrow. Apply for a loan. 
@@ -89,7 +89,7 @@ public interface IBinanceMarginRestClientBorrowRepay
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of interest rate</returns>
-    Task<RestCallResult<IEnumerable<BinanceInterestRateHistory>>> GetMarginInterestRateHistoryAsync(string asset, string? vipLevel = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceMarginInterestRateHistory>>> GetMarginInterestRateHistoryAsync(string asset, string? vipLevel = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query max borrow quantity

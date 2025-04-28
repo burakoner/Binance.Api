@@ -30,7 +30,7 @@ public interface IBinanceMarginRestClientTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of forced liquidations</returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceForcedLiquidation>>> GetMarginForcedLiquidationHistoryAsync(int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceQueryRecords<BinanceMarginForcedLiquidation>>> GetMarginForcedLiquidationHistoryAsync(int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query the coins which can be small liability exchange
@@ -39,7 +39,7 @@ public interface IBinanceMarginRestClientTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceSmallLiabilityAsset>>> GetSmallLiabilityExchangeAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceMarginSmallLiabilityAsset>>> GetSmallLiabilityExchangeAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Small liability Exchange History
@@ -52,7 +52,7 @@ public interface IBinanceMarginRestClientTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceQueryRecords<BinanceMarginSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all active orders for a symbol
@@ -63,7 +63,7 @@ public interface IBinanceMarginRestClientTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for canceled order</returns>
-    Task<RestCallResult<IEnumerable<BinanceOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceSpotOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending margin oco order
@@ -91,7 +91,7 @@ public interface IBinanceMarginRestClientTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for canceled order</returns>
-    Task<RestCallResult<BinanceOrderBase>> CancelMarginOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotOrderBase>> CancelMarginOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Places a new margin OCO(One cancels other) order

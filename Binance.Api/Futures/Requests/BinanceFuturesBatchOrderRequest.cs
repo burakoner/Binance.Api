@@ -72,7 +72,7 @@ public record BinanceFuturesBatchOrderRequest
     /// <summary>
     /// Stop price triggered by: Mark or Contract. Default Contract
     /// </summary>
-    public WorkingType? WorkingType { get; set; }
+    public BinanceFuturesWorkingType? WorkingType { get; set; }
 
     /// <summary>
     /// Used with Stop/StopMarket or TakeProfit/TakeProfitMarket orders.

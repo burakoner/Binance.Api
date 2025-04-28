@@ -33,8 +33,8 @@ public record BinanceIsolatedMarginAccountSymbol
     /// <summary>
     /// Margin level status
     /// </summary>
-    [JsonConverter(typeof(MarginLevelStatusConverter))]
-    public MarginLevelStatus MarginLevelStatus { get; set; }
+    [JsonConverter(typeof(MapConverter))]
+    public BinanceMarginLevelStatus MarginLevelStatus { get; set; }
 
     /// <summary>
     /// Margin ratio

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api;
+﻿using Binance.Api.Shared.Enums;
+
+namespace Binance.Api;
 
 public class BinanceRestApiClientOptions : RestApiClientOptions
 {

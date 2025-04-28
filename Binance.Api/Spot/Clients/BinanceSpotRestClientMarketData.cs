@@ -83,12 +83,12 @@ internal partial class BinanceSpotRestClient
         return RequestAsync<IEnumerable<BinanceSpotKline>>(GetUrl(api, v3, "uiKlines"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2);
     }
 
-    public async Task<RestCallResult<BinanceAveragePrice>> GetAveragePriceAsync(string symbol, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceSpotAveragePrice>> GetAveragePriceAsync(string symbol, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         var parameters = new ParameterCollection { { "symbol", symbol } };
 
-        return await RequestAsync<BinanceAveragePrice>(GetUrl(api, v3, "avgPrice"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
+        return await RequestAsync<BinanceSpotAveragePrice>(GetUrl(api, v3, "avgPrice"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 2).ConfigureAwait(false);
     }
 
     public Task<RestCallResult<BinanceSpotTicker>> GetTickerAsync(string symbol, CancellationToken ct = default)
@@ -167,7 +167,7 @@ internal partial class BinanceSpotRestClient
         return RequestAsync<IEnumerable<BinanceSpotMiniTicker>>(GetUrl(api, v3, "ticker/24hr"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
     }
 
-    public Task<RestCallResult<BinanceTradingDayTicker>> GetTradingDayTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotTradingDayTicker>> GetTradingDayTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
 
@@ -178,10 +178,10 @@ internal partial class BinanceSpotRestClient
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return RequestAsync<BinanceTradingDayTicker>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<BinanceSpotTradingDayTicker>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 4);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default)
     {
         if (symbols.Count() > 100) throw new ArgumentException("The maximum number of symbols is 100", nameof(symbols));
         foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
@@ -195,10 +195,10 @@ internal partial class BinanceSpotRestClient
 
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 4, 200);
-        return RequestAsync<IEnumerable<BinanceTradingDayTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceSpotTradingDayTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -206,7 +206,7 @@ internal partial class BinanceSpotRestClient
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return RequestAsync<IEnumerable<BinanceTradingDayTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
+        return RequestAsync<IEnumerable<BinanceSpotTradingDayTicker>>(GetUrl(api, v3, "ticker/tradingDay"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 80);
     }
 
     public Task<RestCallResult<BinanceTradingDayMiniTicker>> GetTradingDayMiniTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default)

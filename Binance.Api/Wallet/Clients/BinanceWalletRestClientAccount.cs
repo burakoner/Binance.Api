@@ -71,14 +71,14 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<BinanceWalletAccountStatus>(GetUrl(sapi, v1, "account/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<BinanceTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceWalletTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceResult<BinanceTradingStatus>>(GetUrl(sapi, v1, "account/apiTradingStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
-        if (!result) return result.As<BinanceTradingStatus>(default!);
-        return !string.IsNullOrEmpty(result.Data.Message) ? result.AsError<BinanceTradingStatus>(new ServerError(result.Data.Message!)) : result.As(result.Data.Data);
+        var result = await RequestAsync<BinanceResult<BinanceWalletTradingStatus>>(GetUrl(sapi, v1, "account/apiTradingStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        if (!result) return result.As<BinanceWalletTradingStatus>(default!);
+        return !string.IsNullOrEmpty(result.Data.Message) ? result.AsError<BinanceWalletTradingStatus>(new ServerError(result.Data.Message!)) : result.As(result.Data.Data);
     }
 
     public Task<RestCallResult<BinanceWalletApiKeyPermissions>> GetAPIKeyPermissionsAsync(int? receiveWindow = null, CancellationToken ct = default)

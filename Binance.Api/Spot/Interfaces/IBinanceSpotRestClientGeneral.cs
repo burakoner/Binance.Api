@@ -27,7 +27,7 @@ public interface IBinanceSpotRestClientGeneral
     /// </summary>
     /// <param name="ct">Cancellation Token</param>
     /// <returns>Exchange Info</returns>
-    Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
@@ -36,7 +36,7 @@ public interface IBinanceSpotRestClientGeneral
     /// <param name="symbol">Symbol to get data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns>Exchange Info</returns>
-    Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
@@ -45,7 +45,7 @@ public interface IBinanceSpotRestClientGeneral
     /// <param name="status">Filter by symbol status, Trading, Halt or Break</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns>Exchange Info</returns>
-    Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
@@ -54,7 +54,7 @@ public interface IBinanceSpotRestClientGeneral
     /// <param name="permission">Permission Type</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns>Exchange Info</returns>
-    Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
@@ -66,5 +66,5 @@ public interface IBinanceSpotRestClientGeneral
     /// <param name="showPermissionSets">Whether or not permission sets should be returned</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns>Exchange Info</returns>
-    Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSymbolStatus? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSymbolStatus? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);
 }

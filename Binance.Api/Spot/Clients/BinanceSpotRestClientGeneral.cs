@@ -22,19 +22,19 @@ internal partial class BinanceSpotRestClient
             : result.AsError<DateTime>(result.Error!);
     }
 
-    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], ct: ct);
 
-    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [symbol], ct: ct);
 
-    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: status, ct: ct);
 
-    public Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: null, permissions: [permission], ct: ct);
 
-    public async Task<RestCallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(
+    public async Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(
         IEnumerable<string> symbols,
         BinanceSymbolStatus? status = null,
         IEnumerable<BinancePermissionType>? permissions = null,
@@ -73,7 +73,7 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("showPermissionSets", showPermissionSets?.ToString().ToLowerInvariant());
         parameters.AddOptionalEnum("symbolStatus", status);
 
-        var exchangeInfoResult = await RequestAsync<BinanceExchangeInfo>(GetUrl(api, v3, "exchangeInfo"), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 20).ConfigureAwait(false);
+        var exchangeInfoResult = await RequestAsync<BinanceSpotExchangeInfo>(GetUrl(api, v3, "exchangeInfo"), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 20).ConfigureAwait(false);
         if (!exchangeInfoResult)
             return exchangeInfoResult;
 

@@ -31,15 +31,15 @@ internal partial class BinanceSpotRestClient
         return RequestAsync<IEnumerable<BinanceSpotUserTrade>>(GetUrl(api, v3, "myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceOrderRateLimit>>> GetOrderRateLimitStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotOrderRateLimit>>> GetOrderRateLimitStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceOrderRateLimit>>(GetUrl(api, v3, "rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<IEnumerable<BinanceSpotOrderRateLimit>>(GetUrl(api, v3, "rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
-    public Task<RestCallResult<IEnumerable<BinancePreventedTrade>>> GetPreventedTradesAsync(string symbol, long? orderId = null, long? preventedMatchId = null, long? fromPreventedMatchId = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? orderId = null, long? preventedMatchId = null, long? fromPreventedMatchId = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
@@ -53,6 +53,6 @@ internal partial class BinanceSpotRestClient
 
         var weight = preventedMatchId.HasValue ? 2 : 20;
         if (orderId.HasValue) weight = 20;
-        return RequestAsync<IEnumerable<BinancePreventedTrade>>(GetUrl(api, v3, "myPreventedMatches"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<IEnumerable<BinanceSpotPreventedTrade>>(GetUrl(api, v3, "myPreventedMatches"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 }

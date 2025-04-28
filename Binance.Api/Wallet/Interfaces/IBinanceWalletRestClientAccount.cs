@@ -89,7 +89,7 @@ public interface IBinanceWalletRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The trading status of the account</returns>
-    Task<RestCallResult<BinanceTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceWalletTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get permission info for the current API key

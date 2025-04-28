@@ -154,7 +154,7 @@ public record BinanceFuturesOrder
     /// The working type
     /// </summary>
     [JsonProperty("workingType")]
-    public WorkingType WorkingType { get; set; }
+    public BinanceFuturesWorkingType WorkingType { get; set; }
 
     /// <summary>
     /// The position side of the order

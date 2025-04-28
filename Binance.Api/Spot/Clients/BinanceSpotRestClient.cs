@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Spot;
+﻿using Binance.Api.Shared.Enums;
+
+namespace Binance.Api.Spot;
 
 internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinanceSpotRestClient
 {
@@ -15,7 +17,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
     internal ILogger Logger => _.Logger;
     internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
-    internal BinanceExchangeInfo? ExchangeInfo { get; private set; }
+    internal BinanceSpotExchangeInfo? ExchangeInfo { get; private set; }
 
     internal Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -51,7 +53,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
         return ValidateTradeRules(Logger, RestOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
 
-    internal static BinanceTradeRuleResult ValidateTradeRules(ILogger? logger, BinanceTradeRulesBehavior tradeRulesBehavior, BinanceExchangeInfo exchangeInfo, string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type)
+    internal static BinanceTradeRuleResult ValidateTradeRules(ILogger? logger, BinanceTradeRulesBehavior tradeRulesBehavior, BinanceSpotExchangeInfo exchangeInfo, string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type)
     {
         var outputQuantity = quantity;
         var outputQuoteQuantity = quoteQuantity;

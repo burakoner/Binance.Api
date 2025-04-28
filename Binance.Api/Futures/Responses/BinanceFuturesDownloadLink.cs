@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Futures;
+﻿using Binance.Api.Shared.Enums;
+
+namespace Binance.Api.Futures;
 
 /// <summary>
 /// Transaction download info

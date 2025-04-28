@@ -21,7 +21,7 @@ internal partial class BinanceFuturesRestClientUsd
         BinanceOrderResponseType? orderResponseType = null,
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         BinanceFuturesPriceMatch? priceMatch = null,
-        WorkingType? workingType = null,
+        BinanceFuturesWorkingType? workingType = null,
         bool? reduceOnly = null,
         bool? closePosition = null,
         bool? priceProtect = null,
@@ -375,7 +375,7 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesOrder>(GetUrl(fapi, v1, "openOrder"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, AutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));

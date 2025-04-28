@@ -25,7 +25,7 @@ public interface IBinanceMarginRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<CreateIsolatedMarginAccountResult>> DisableIsolatedMarginAccountAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceIsolatedMarginCreateAccountResult>> DisableIsolatedMarginAccountAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Enable an isolated margin account
@@ -35,7 +35,7 @@ public interface IBinanceMarginRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<CreateIsolatedMarginAccountResult>> EnableIsolatedMarginAccountAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceIsolatedMarginCreateAccountResult>> EnableIsolatedMarginAccountAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the status of the BNB burn switch for spot trading and margin interest
@@ -73,7 +73,7 @@ public interface IBinanceMarginRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceInterestMarginData>>> GetInterestMarginDataAsync(string? asset = null, string? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceMarginInterestData>>> GetInterestMarginDataAsync(string? asset = null, string? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get max number of enabled isolated margin accounts
@@ -82,7 +82,7 @@ public interface IBinanceMarginRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IsolatedMarginAccountLimit>> GetEnabledIsolatedMarginAccountLimitAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceIsolatedMarginAccountLimit>> GetEnabledIsolatedMarginAccountLimitAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Isolated margin account info

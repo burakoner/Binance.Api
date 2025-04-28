@@ -5,6 +5,6 @@ namespace Binance.Api.Margin;
 /// <summary>
 /// Information regarding a specific order
 /// </summary>
-public record BinanceMarginOrder : BinanceOrderBase
+public record BinanceMarginOrder : BinanceSpotOrderBase
 {
 }

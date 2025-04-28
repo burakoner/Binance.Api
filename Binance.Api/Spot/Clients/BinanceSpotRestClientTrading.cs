@@ -188,7 +188,7 @@ internal partial class BinanceSpotRestClient
         return result;
     }
 
-    public async Task<RestCallResult<BinanceReplaceOrderResult>> ReplaceOrderAsync(
+    public async Task<RestCallResult<BinanceSpotReplaceOrderResult>> ReplaceOrderAsync(
         string symbol,
         BinanceOrderSide side,
         BinanceSpotOrderType type,
@@ -225,7 +225,7 @@ internal partial class BinanceSpotRestClient
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinanceReplaceOrderResult>(new ArgumentError(rulesCheck.ErrorMessage!));
+            return new RestCallResult<BinanceSpotReplaceOrderResult>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
         quantity = rulesCheck.Quantity;
@@ -258,7 +258,7 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("strategyType", strategyType);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceReplaceOrderResult>(GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceSpotReplaceOrderResult>(GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result && result.Raw != null)
         {
             // Attempt to parse the error
@@ -271,11 +271,11 @@ internal partial class BinanceSpotRestClient
 
                 var error = dataNode?["cancelResult"]?.ToString() == "FAILURE" ? dataNode!["cancelResponse"] : jsonData["data"]!["newOrderResponse"];
                 if (error != null && error.HasValues)
-                    return result.AsError<BinanceReplaceOrderResult>(new ServerError(error!.Value<int>("code"), error.Value<string>("msg")!));
+                    return result.AsError<BinanceSpotReplaceOrderResult>(new ServerError(error!.Value<int>("code"), error.Value<string>("msg")!));
             }
         }
 
-        if (result && result.Data.NewOrderResult == OrderOperationResult.Success)
+        if (result && result.Data.NewOrderResult == BinanceSpotOrderOperationResult.Success)
             InvokeOrderPlaced(result.Data.NewOrderResponse!.Id);
 
         return result;

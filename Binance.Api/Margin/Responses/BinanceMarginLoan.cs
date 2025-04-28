@@ -46,6 +46,6 @@ public record BinanceLoan
     /// <summary>
     /// The status of the loan
     /// </summary>
-    [JsonConverter(typeof(MarginStatusConverter))]
-    public MarginStatus Status { get; set; }
+    [JsonConverter(typeof(MapConverter))]
+    public BinanceMarginStatus Status { get; set; }
 }
