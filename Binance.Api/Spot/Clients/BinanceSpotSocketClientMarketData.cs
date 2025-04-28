@@ -1,6 +1,4 @@
-﻿using Binance.Api.Shared.Responses;
-
-namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Spot;
 
 public partial class BinanceSpotSocketClient
 {
@@ -18,18 +16,48 @@ public partial class BinanceSpotSocketClient
     private const string allSymbolMiniTickerStreamEndpoint = "!miniTicker@arr";
     private const string SocketClientApiAddress = "wss://ws-api.binance.com:443/";
 
+    internal async Task<CallResult<T>> BinanceQueryAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
+    {
+        if (authenticated)
+        {
+            if (AuthenticationProvider == null)
+                throw new InvalidOperationException("No credentials provided for authenticated endpoint");
 
-    public async Task<CallResult<BinanceResponse<DateTime>>> GetServerTimeAsync(CancellationToken ct = default)
+            var authProvider = (BinanceAuthentication)AuthenticationProvider;
+            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters);
+            else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
+        }
+
+        var request = new BinanceSocketQuery
+        {
+            Method = method,
+            Params = parameters,
+            Id = ExchangeHelpers.NextId()
+        };
+
+        var result = await base.QueryAsync<BinanceResponse<T>>(url, request, sign).ConfigureAwait(false);
+        if (!result.Success && result.Error is BinanceRateLimitError rle)
+        {
+            /*
+            if (rle.RetryAfter != null && RateLimiter != null && ClientOptions.RateLimiterEnabled)
+            {
+                _logger.LogWarning("Ratelimit error from server, pausing requests until {Until}", rle.RetryAfter.Value);
+                await RateLimiter.SetRetryAfterGuardAsync(rle.RetryAfter.Value).ConfigureAwait(false);
+            }
+            */
+        }
+
+        return result.As(result.Data.Result);
+    }
+
+    public async Task<CallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default)
     {
         // var result = await QueryAsync<BinanceServerTime>(BinanceAddress.Default.SpotSocketClientAddress.AppendPath("ws-api/v3"), new Dictionary<string, object>(), false).ConfigureAwait(false);
-        var result = await QueryAsync<BinanceServerTime>(SocketClientApiAddress.AppendPath("ws-api/v3"), new Dictionary<string, object>(), false).ConfigureAwait(false);
-        if (!result) return result.AsError<BinanceResponse<DateTime>>(result.Error!);
+        // var result = await QueryAsync<BinanceServerTime>(SocketClientApiAddress.AppendPath("ws-api/v3"), new Dictionary<string, object>(), false).ConfigureAwait(false);
+        var result = await BinanceQueryAsync<BinanceServerTime>(SocketClientApiAddress.AppendPath("ws-api/v3"), $"time", [], false).ConfigureAwait(false);
+        if (!result) return result.AsError<DateTime>(result.Error!);
 
-        return result.As(new BinanceResponse<DateTime>
-        {
-            //Ratelimits = result.Data!.Ratelimits!,
-            //Result = result.Data!.Result!.ServerTime!
-        });
+        return result.As(result.Data.ServerTime);
     }
 
 

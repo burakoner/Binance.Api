@@ -32,4 +32,29 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
             query.Add("signature", signature);
         }
     }
+
+    public Dictionary<string, object> AuthenticateSocketParameters(Dictionary<string, object> providedParameters)
+    {
+        var sortedParameters = new SortedDictionary<string, object>(providedParameters)
+        {
+            { "apiKey", Credentials.Key.GetString() },
+            { "timestamp", DateTime.UtcNow.ConvertToMilliseconds() }
+        };
+        var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + Convert.ToString(p.Value, CultureInfo.InvariantCulture)));
+
+        if (Credentials.Type == ApiCredentialsType.HMAC)
+        {
+            var sign = SignHMACSHA256(paramString);
+            var result = sortedParameters.ToDictionary(p => p.Key, p => p.Value);
+            result.Add("signature", sign);
+            return result;
+        }
+        else
+        {
+            var sign = SignRSASHA256(Encoding.ASCII.GetBytes(paramString), SignatureOutputType.Base64);
+            var result = sortedParameters.ToDictionary(p => p.Key, p => p.Value);
+            result.Add("signature", sign);
+            return result;
+        }
+    }
 }

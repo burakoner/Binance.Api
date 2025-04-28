@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Shared.Responses;
+﻿namespace Binance.Api.Shared;
 
 internal record BinanceServerTime
 {

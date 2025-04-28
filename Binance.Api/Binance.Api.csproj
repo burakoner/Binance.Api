@@ -51,10 +51,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ApiSharp" Version="3.5.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Folder Include="Futures\Converters\" />
 	  <Folder Include="Futures\Internal\" />
 	  <Folder Include="Margin\Converters\" />
@@ -67,6 +63,10 @@
 	  <Folder Include="Spot\Requests\" />
 	  <Folder Include="Wallet\Converters\" />
 	  <Folder Include="Wallet\Requests\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ApiSharp\ApiSharp\ApiSharp.csproj" />
 	</ItemGroup>
 
 </Project>

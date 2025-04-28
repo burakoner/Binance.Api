@@ -1,6 +1,4 @@
-﻿using Binance.Api.Shared.Responses;
-
-namespace Binance.Api.Futures;
+﻿namespace Binance.Api.Futures;
 
 internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUsd
 {
