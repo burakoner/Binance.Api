@@ -73,7 +73,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The candlestick data for the provided symbol</returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotKline>>> GetUiKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceSpotKline>>> GetUIKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets current average price for a symbol
@@ -91,7 +91,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
-    Task<RestCallResult<BinanceSpotTicker>> GetFullTickerAsync(string symbol, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotTicker>> GetTickerAsync(string symbol, CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
@@ -100,7 +100,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="symbols">The symbols to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotTicker>>> GetFullTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
@@ -108,7 +108,7 @@ public interface IBinanceSpotRestClientMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotTicker>>> GetFullTickersAsync(CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
@@ -144,7 +144,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceTradingDayTicker>> GetTradingDayFullTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceTradingDayTicker>> GetTradingDayTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get price change stats for a trading day
@@ -154,7 +154,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceTradingDayTicker>>> GetTradingDayFullTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get price change stats for a trading day
@@ -163,7 +163,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceTradingDayTicker>>> GetTradingDayFullTickersAsync(string? timeZone = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get price change stats for a trading day

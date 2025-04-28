@@ -16,49 +16,240 @@ public partial class BinanceSpotSocketClient
     private const string allSymbolMiniTickerStreamEndpoint = "!miniTicker@arr";
     private const string SocketClientApiAddress = "wss://ws-api.binance.com:443/";
 
-    internal async Task<CallResult<T>> BinanceQueryAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
+
+    #region Queries
+
+    public async Task<CallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
     {
-        if (authenticated)
-        {
-            if (AuthenticationProvider == null)
-                throw new InvalidOperationException("No credentials provided for authenticated endpoint");
 
-            var authProvider = (BinanceAuthentication)AuthenticationProvider;
-            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters);
-            else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
-        }
+        var sw = Stopwatch.StartNew();
+        var result = await BinanceQueryAsync<object>("ws-api/v3", $"ping", [], ct: ct).ConfigureAwait(false);
+        sw.Stop();
 
-        var request = new BinanceSocketQuery
-        {
-            Method = method,
-            Params = parameters,
-            Id = ExchangeHelpers.NextId()
-        };
-
-        var result = await base.QueryAsync<BinanceResponse<T>>(url, request, sign).ConfigureAwait(false);
-        if (!result.Success && result.Error is BinanceRateLimitError rle)
-        {
-            /*
-            if (rle.RetryAfter != null && RateLimiter != null && ClientOptions.RateLimiterEnabled)
-            {
-                _logger.LogWarning("Ratelimit error from server, pausing requests until {Until}", rle.RetryAfter.Value);
-                await RateLimiter.SetRetryAfterGuardAsync(rle.RetryAfter.Value).ConfigureAwait(false);
-            }
-            */
-        }
-
-        return result.As(result.Data.Result);
+        return result.Success
+            ? result.As(sw.Elapsed)
+            : result.AsError<TimeSpan>(result.Error!);
     }
 
-    public async Task<CallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default)
+    public async Task<CallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
     {
-        // var result = await QueryAsync<BinanceServerTime>(BinanceAddress.Default.SpotSocketClientAddress.AppendPath("ws-api/v3"), new Dictionary<string, object>(), false).ConfigureAwait(false);
-        // var result = await QueryAsync<BinanceServerTime>(SocketClientApiAddress.AppendPath("ws-api/v3"), new Dictionary<string, object>(), false).ConfigureAwait(false);
-        var result = await BinanceQueryAsync<BinanceServerTime>(SocketClientApiAddress.AppendPath("ws-api/v3"), $"time", [], false).ConfigureAwait(false);
+        var result = await BinanceQueryAsync<BinanceServerTime>("ws-api/v3", $"time", [], false, ct: ct).ConfigureAwait(false);
         if (!result) return result.AsError<DateTime>(result.Error!);
 
         return result.As(result.Data.ServerTime);
     }
+
+    public async Task<CallResult<BinanceExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptionalParameter("symbols", symbols);
+        var result = await BinanceQueryAsync<BinanceExchangeInfo>("ws-api/v3", $"exchangeInfo", parameters, weight: 20, ct: ct).ConfigureAwait(false);
+        if (!result) return result;
+
+        ExchangeInfo = result.Data;
+        LastExchangeInfoUpdate = DateTime.UtcNow;
+        _logger.Log(LogLevel.Information, "Trade rules updated");
+        return result;
+    }
+
+    public async Task<CallResult<BinanceSpotOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddOptionalParameter("limit", limit);
+        int weight = limit <= 100 ? 5 : limit <= 500 ? 25 : limit <= 1000 ? 50 : 250;
+        var result = await BinanceQueryAsync<BinanceSpotOrderBook>("ws-api/v3", $"depth", parameters, weight: weight, ct: ct).ConfigureAwait(false);
+        if (result) result.Data.Symbol = symbol;
+        return result;
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddOptionalParameter("limit", limit);
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotTrade>>("ws-api/v3", $"trades.recent", parameters, weight: 25, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotTrade>>> GetTradeHistoryAsync(string symbol, long? fromId = null, int? limit = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptionalParameter("fromId", fromId);
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotTrade>>("ws-api/v3", $"trades.historical", parameters, false, weight: 25, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceStreamAggregatedTrade>>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptionalParameter("fromId", fromId);
+        return await BinanceQueryAsync<IEnumerable<BinanceStreamAggregatedTrade>>("ws-api/v3", $"trades.aggregate", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddEnum("interval", interval);
+        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotKline>>("ws-api/v3", $"klines", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotKline>>> GetUIKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddEnum("interval", interval);
+        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotKline>>("ws-api/v3", $"uiKlines", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<BinanceAveragePrice>> GetAveragePriceAsync(string symbol, CancellationToken ct = default)
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.AddParameter("symbol", symbol);
+        return await BinanceQueryAsync<BinanceAveragePrice>("ws-api/v3", $"avgPrice", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<BinanceSpotTicker>> GetTickerAsync(string symbol, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+            { "type", "FULL" }
+        };
+        return await BinanceQueryAsync<BinanceSpotTicker>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" },
+            { "type", "FULL" }
+        };
+        var symbolCount = symbols?.Count();
+        int weight = symbolCount == null || symbolCount > 100 ? 80 : symbolCount <= 20 ? 2 : 40;
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: weight, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "type", "FULL" }
+        };
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 80, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<BinanceSpotMiniTicker>> GetMiniTickerAsync(string symbol, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+            { "type", "MINI" }
+        };
+        return await BinanceQueryAsync<BinanceSpotMiniTicker>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotMiniTicker>>> GetMiniTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" },
+            { "type", "MINI" }
+        };
+        var symbolCount = symbols?.Count();
+        int weight = symbolCount == null || symbolCount > 100 ? 80 : symbolCount <= 20 ? 2 : 40;
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotMiniTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: weight, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotMiniTicker>>> GetMiniTickersAsync(CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "type", "MINI" }
+        };
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotMiniTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 80, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<BinanceSpotTicker>> GetRollingWindowTickerAsync(string symbol,  TimeSpan? windowSize = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+        };
+        parameters.AddOptional("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
+        return await BinanceQueryAsync<BinanceSpotTicker>("ws-api/v3", $"ticker", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetRollingWindowTickersAsync(IEnumerable<string> symbols,  TimeSpan? windowSize = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" },
+        };
+        parameters.AddOptional("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
+        var symbolCount = symbols?.Count();
+        int weight = symbolCount == null || symbolCount > 100 ? 80 : symbolCount <= 20 ? 2 : 40;
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotTicker>>("ws-api/v3", $"ticker", parameters, false, weight: weight, ct: ct).ConfigureAwait(false);
+    }
+
+
+
+    public async Task<CallResult<BinanceSpotBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+        };
+        return await BinanceQueryAsync<BinanceSpotBookTicker>("ws-api/v3", $"ticker.book", parameters, false, weight: 2, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotBookTicker>>> GetBookTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" },
+        };
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotBookTicker>>("ws-api/v3", $"ticker.book", parameters, false, weight: 4, ct: ct).ConfigureAwait(false);
+    }
+
+    public async Task<CallResult<IEnumerable<BinanceSpotBookTicker>>> GetBookTickersAsync(CancellationToken ct = default)
+    {
+        return await BinanceQueryAsync<IEnumerable<BinanceSpotBookTicker>>("ws-api/v3", $"ticker.book", [], false, weight: 4, ct: ct).ConfigureAwait(false);
+    }
+
+
+    private string GetWindowSize(TimeSpan timeSpan)
+    {
+        if (timeSpan.TotalHours < 1) return timeSpan.TotalMinutes + "m";
+        else if (timeSpan.TotalHours < 24) return timeSpan.TotalHours + "h";
+        return timeSpan.TotalDays + "d";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     #region Diff. Depth Stream
@@ -277,6 +468,8 @@ public partial class BinanceSpotSocketClient
         var handler = new Action<WebSocketDataEvent<BinanceCombinedStream<IEnumerable<BinanceStreamTick>>>>(data => onMessage(data.As<IEnumerable<IBinanceTick>>(data.Data.Data, data.Data.Stream)));
         return await SubscribeAsync([allSymbolTickerStreamEndpoint], "", false, handler, ct).ConfigureAwait(false);
     }
+    #endregion
+
     #endregion
 
 }

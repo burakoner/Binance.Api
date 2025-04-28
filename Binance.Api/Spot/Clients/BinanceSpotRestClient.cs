@@ -30,7 +30,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.SpotRestClientAddress.AppendPath(api);
+        var url = BinanceAddress.Default.SpotRestApiAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

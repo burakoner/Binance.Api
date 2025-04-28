@@ -46,10 +46,10 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
             return false;
 
         if (data["id"] == null) return false;
-        var id = data["id"].Value<int>();
+        var id = data["id"]!.Value<int>();
 
         if (data["status"] == null) return false;
-        var status = data["status"].Value<int>();
+        var status = data["status"]!.Value<int>();
 
         if (request is BinanceSocketQuery query)
         {
@@ -66,10 +66,10 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
                     return new CallResult<T>(new BinanceRateLimitError(errorCode, errorMessage, null)
                     {
                         // RetryAfter = data["error"]?["data"].Data.Error.Data!.RetryAfter
-                    }, data.ToString());
+                    }, SocketOptions.RawResponse ? data.ToString() : null);
                 }
 
-                return new CallResult<T>(new ServerError(errorCode, errorMessage), data.ToString());
+                return new CallResult<T>(new ServerError(errorCode, errorMessage), SocketOptions.RawResponse ? data.ToString() : null);
             }
 
             var error = data["error"];
@@ -86,7 +86,7 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
                 return false;
             }
 
-            callResult = new CallResult<T>(desResult.Data);
+            callResult = new CallResult<T>(desResult.Data, SocketOptions.RawResponse ? data.ToString() : null);
             return true;
         }
 
@@ -192,7 +192,46 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.SpotSocketClientAddress.AppendPath("stream"), request, identifier, authenticated, onData, ct);
+        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, identifier, authenticated, onData, ct);
+    }
+
+    internal async Task<CallResult<T>> BinanceQueryAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
+    {
+        if (authenticated)
+        {
+            if (AuthenticationProvider == null)
+                throw new InvalidOperationException("No credentials provided for authenticated endpoint");
+
+            var authProvider = (BinanceAuthentication)AuthenticationProvider;
+            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters);
+            else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
+        }
+
+        var request = new BinanceSocketQuery
+        {
+            Method = method,
+            Params = parameters,
+            Id = ExchangeHelpers.NextId()
+        };
+
+        var result = await base.QueryAsync<BinanceResponse<T>>(SocketClientApiAddress.AppendPath(url), request, sign).ConfigureAwait(false);
+        if (!result.Success)
+        {
+            if (result.Error is BinanceRateLimitError rle)
+            {
+                /*
+                if (rle.RetryAfter != null && RateLimiter != null && ClientOptions.RateLimiterEnabled)
+                {
+                    _logger.LogWarning("Ratelimit error from server, pausing requests until {Until}", rle.RetryAfter.Value);
+                    await RateLimiter.SetRetryAfterGuardAsync(rle.RetryAfter.Value).ConfigureAwait(false);
+                }
+                */
+            }
+
+            else return result.AsError<T>(result.Error!);
+        }
+
+        return result.As(result.Data.Result);
     }
 
 }
