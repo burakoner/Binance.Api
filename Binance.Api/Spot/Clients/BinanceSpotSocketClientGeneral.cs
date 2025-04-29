@@ -1,11 +1,14 @@
-﻿namespace Binance.Api.Spot;
+﻿using System.Security;
 
-internal partial class BinanceSpotRestClient
+namespace Binance.Api.Spot;
+
+public partial class BinanceSpotSocketClient
 {
-    public async Task<RestCallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
+    public async Task<CallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
     {
+
         var sw = Stopwatch.StartNew();
-        var result = await RequestAsync<object>(GetUrl(api, v3, "ping"), HttpMethod.Get, ct).ConfigureAwait(false);
+        var result = await RequestAsync<object>("ws-api/v3", $"ping", [], ct: ct).ConfigureAwait(false);
         sw.Stop();
 
         return result.Success
@@ -13,28 +16,27 @@ internal partial class BinanceSpotRestClient
             : result.AsError<TimeSpan>(result.Error!);
     }
 
-    public async Task<RestCallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
+    public async Task<CallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
     {
-        var result = await RequestAsync<BinanceServerTime>(GetUrl(api, v3, "time"), HttpMethod.Get, ct, ignoreRatelimit: true).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceServerTime>("ws-api/v3", $"time", [], false, ct: ct).ConfigureAwait(false);
+        if (!result) return result.AsError<DateTime>(result.Error!);
 
-        return result.Success
-            ? result.As(result.Data?.ServerTime ?? default)
-            : result.AsError<DateTime>(result.Error!);
+        return result.As(result.Data.ServerTime);
     }
 
-    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], ct: ct);
 
-    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [symbol], ct: ct);
 
-    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: status, ct: ct);
 
-    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: null, permissions: [permission], ct: ct);
 
-    public async Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(
+    public async Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(
         IEnumerable<string> symbols,
         BinanceSymbolStatus? status = null,
         IEnumerable<BinancePermissionType>? permissions = null,
@@ -73,13 +75,12 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("showPermissionSets", showPermissionSets?.ToString().ToLowerInvariant());
         parameters.AddOptionalEnum("symbolStatus", status);
 
-        var result = await RequestAsync<BinanceSpotExchangeInfo>(GetUrl(api, v3, "exchangeInfo"), HttpMethod.Get, ct, queryParameters: parameters, serialization: ArraySerialization.Array, requestWeight: 20).ConfigureAwait(false);
-        if (!result)
-            return result;
+        var result = await RequestAsync<BinanceSpotExchangeInfo>("ws-api/v3", $"exchangeInfo", parameters, weight: 20, ct: ct).ConfigureAwait(false);
+        if (!result) return result;
 
         ExchangeInfo = result.Data;
         LastExchangeInfoUpdate = DateTime.UtcNow;
-        Logger.Log(LogLevel.Information, "Trade rules updated");
+        _logger.Log(LogLevel.Information, "Trade rules updated");
         return result;
     }
 }

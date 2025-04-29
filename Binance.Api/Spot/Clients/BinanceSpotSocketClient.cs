@@ -22,7 +22,6 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
     internal BinanceSpotExchangeInfo? ExchangeInfo { get; private set; }
 
-
     internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.SocketOptions)
     {
         _ = root;
@@ -32,6 +31,20 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
 
         //MarketData = new BinanceStreamSpotMarketDataClient(this);
         //UserStream = new BinanceStreamSpotUserStreamClient(this);
+    }
+
+    internal async Task<BinanceTradeRuleResult> CheckTradeRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
+    {
+        if (SocketOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
+            return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
+
+        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > SocketOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
+            await GetExchangeInfoAsync(ct).ConfigureAwait(false);
+
+        if (ExchangeInfo == null)
+            return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
+
+        return BinanceSpotRestClient.ValidateTradeRules(Logger, SocketOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
 
     #region Overrided Methods
@@ -195,7 +208,7 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
         return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, identifier, authenticated, onData, ct);
     }
 
-    internal async Task<CallResult<T>> BinanceQueryAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
+    internal async Task<CallResult<T>> RequestAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
     {
         if (authenticated)
         {
@@ -214,7 +227,7 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
             Id = ExchangeHelpers.NextId()
         };
 
-        var result = await base.QueryAsync<BinanceResponse<T>>(SocketClientApiAddress.AppendPath(url), request, sign).ConfigureAwait(false);
+        var result = await base.QueryAsync<BinanceResponse<T>>(BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url), request, sign).ConfigureAwait(false);
         if (!result.Success)
         {
             if (result.Error is BinanceRateLimitError rle)

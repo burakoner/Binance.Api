@@ -1,6 +1,4 @@
-﻿using Binance.Api.Shared.Enums;
-
-namespace Binance.Api;
+﻿namespace Binance.Api;
 
 public class BinanceRestApiClientOptions : RestApiClientOptions
 {
@@ -30,11 +28,11 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     public TimeSpan TimestampRecalculationInterval { get; set; } = TimeSpan.FromHours(1);
 
     // Platform Based Options
-    public BinanceRestApiSpotClientOptions SpotOptions { get; set; } = new();
-    public BinanceRestApiUsdtFuturesClientOptions UsdtFuturesOptions { get; set; } = new();
-    public BinanceRestApiCoinFuturesClientOptions CoinFuturesOptions { get; set; } = new();
-    public BinanceRestApiEuropeanClientOptions EuropeanOptions { get; set; } = new();
-    public BinanceRestApiBrokerClientOptions BrokerOptions { get; set; } = new();
+    public BinanceRestApiClientSpotOptions SpotOptions { get; set; } = new();
+    public BinanceRestApiClientUsdtFuturesOptions UsdtFuturesOptions { get; set; } = new();
+    public BinanceRestApiClientCoinFuturesOptions CoinFuturesOptions { get; set; } = new();
+    public BinanceRestApiClientEuropeanOptions EuropeanOptions { get; set; } = new();
+    public BinanceRestApiClientBrokerOptions BrokerOptions { get; set; } = new();
 
     public BinanceRestApiClientOptions() : this("", "")
     {
@@ -61,86 +59,31 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
 }
 
 
-public class BinanceRestApiSpotClientOptions
+public class BinanceRestApiClientSpotOptions
 {
-    // Base Address
-    public string BaseAddress { get; set; }
-
     // Trade Rules
-    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; }
-    public TimeSpan TradeRulesUpdateInterval { get; set; }
-
-    public BinanceRestApiSpotClientOptions()
-    {
-        // Base Address
-        BaseAddress = "https://api.binance.com";
-
-        // Trade Rules Behaviour
-        TradeRulesBehavior = BinanceTradeRulesBehavior.None;
-        TradeRulesUpdateInterval = TimeSpan.FromMinutes(60);
-    }
+    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+    public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
-public class BinanceRestApiUsdtFuturesClientOptions
+public class BinanceRestApiClientUsdtFuturesOptions
 {
-    // Base Address
-    public string BaseAddress { get; set; }
-
     // Trade Rules
-    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; }
-    public TimeSpan TradeRulesUpdateInterval { get; set; }
-
-    public BinanceRestApiUsdtFuturesClientOptions()
-    {
-        // Base Address
-        BaseAddress = "https://fapi.binance.com";
-
-        // Trade Rules Behaviour
-        TradeRulesBehavior = BinanceTradeRulesBehavior.None;
-        TradeRulesUpdateInterval = TimeSpan.FromMinutes(60);
-    }
+    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+    public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
-public class BinanceRestApiCoinFuturesClientOptions
+public class BinanceRestApiClientCoinFuturesOptions
 {
-    // Base Address
-    public string BaseAddress { get; set; }
-
     // Trade Rules
-    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; }
-    public TimeSpan TradeRulesUpdateInterval { get; set; }
-
-    public BinanceRestApiCoinFuturesClientOptions()
-    {
-        // Base Address
-        BaseAddress = "https://dapi.binance.com";
-
-        // Trade Rules Behaviour
-        TradeRulesBehavior = BinanceTradeRulesBehavior.None;
-        TradeRulesUpdateInterval = TimeSpan.FromMinutes(60);
-    }
+    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+    public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
-public class BinanceRestApiEuropeanClientOptions
+public class BinanceRestApiClientEuropeanOptions
 {
-    // Base Address
-    public string BaseAddress { get; set; }
-
-    public BinanceRestApiEuropeanClientOptions()
-    {
-        // Base Address
-        BaseAddress = "https://eapi.binance.com";
-    }
 }
 
-public class BinanceRestApiBrokerClientOptions
+public class BinanceRestApiClientBrokerOptions
 {
-    // Base Address
-    public string BaseAddress { get; set; }
-
-    public BinanceRestApiBrokerClientOptions()
-    {
-        // Base Address
-        BaseAddress = "https://api.binance.com";
-    }
 }

@@ -1,6 +1,4 @@
-﻿using Binance.Api.Shared.Enums;
-
-namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Spot;
 
 internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinanceSpotRestClient
 {
@@ -50,7 +48,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        return ValidateTradeRules(Logger, RestOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
+        return BinanceSpotRestClient.ValidateTradeRules(Logger, RestOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
 
     internal static BinanceTradeRuleResult ValidateTradeRules(ILogger? logger, BinanceTradeRulesBehavior tradeRulesBehavior, BinanceSpotExchangeInfo exchangeInfo, string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type)

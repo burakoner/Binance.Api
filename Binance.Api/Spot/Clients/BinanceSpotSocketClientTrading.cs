@@ -1,14 +1,8 @@
 ﻿namespace Binance.Api.Spot;
 
-internal partial class BinanceSpotRestClient
+public partial class BinanceSpotSocketClient
 {
-    public event Action<long>? OnOrderPlaced;
-    public event Action<long>? OnOrderCanceled;
-
-    internal void InvokeOrderPlaced(long id) => OnOrderPlaced?.Invoke(id);
-    internal void InvokeOrderCanceled(long id) => OnOrderCanceled?.Invoke(id);
-
-    public async Task<RestCallResult<BinanceSpotOrder>> PlaceOrderAsync(
+    public async Task<CallResult<BinanceSpotOrder>> PlaceOrderAsync(
         string symbol,
         BinanceOrderSide side,
         BinanceSpotOrderType type,
@@ -24,7 +18,6 @@ internal partial class BinanceSpotRestClient
         long? trailingDelta = null,
         long? strategyId = null,
         int? strategyType = null,
-        int? receiveWindow = null,
         CancellationToken ct = default)
     {
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
@@ -33,18 +26,15 @@ internal partial class BinanceSpotRestClient
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
             throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
 
+        // Check trade rules
         var rulesCheck = await CheckTradeRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
-            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinanceSpotOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
+            _logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            return new CallResult<BinanceSpotOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
-        quantity = rulesCheck.Quantity;
-        price = rulesCheck.Price;
-        stopPrice = rulesCheck.StopPrice;
-        quoteQuantity = rulesCheck.QuoteQuantity;
-        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, SocketOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -62,15 +52,11 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
-        if (result) InvokeOrderPlaced(result.Data.Id);
-
-        return result;
+        return await RequestAsync<BinanceSpotOrder>("ws-api/v3", $"order.place", parameters, true, true, ct: ct).ConfigureAwait(false);
     }
 
-    public async Task<RestCallResult<BinanceSpotOrderTest>> PlaceTestOrderAsync(
+    public async Task<CallResult<BinanceSpotOrderTest>> PlaceTestOrderAsync(
         string symbol,
         BinanceOrderSide side,
         BinanceSpotOrderType type,
@@ -86,7 +72,6 @@ internal partial class BinanceSpotRestClient
         long? trailingDelta = null,
         long? strategyId = null,
         int? strategyType = null,
-        int? receiveWindow = null,
         bool? computeFeeRates = null,
         CancellationToken ct = default)
     {
@@ -100,7 +85,7 @@ internal partial class BinanceSpotRestClient
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinanceSpotOrderTest>(new ArgumentError(rulesCheck.ErrorMessage!));
+            return new CallResult<BinanceSpotOrderTest>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
         quantity = rulesCheck.Quantity;
@@ -125,13 +110,11 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("strategyType", strategyType);
         parameters.AddOptional("computeCommissionRates", computeFeeRates?.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var weight = computeFeeRates == true ? 20 : 1;
-        return await RequestAsync<BinanceSpotOrderTest>(GetUrl(api, v3, "order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
+        return await RequestAsync<BinanceSpotOrderTest>("ws-api/v3", $"order.test", parameters, true, true, ct: ct).ConfigureAwait(false);
     }
 
-    public Task<RestCallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         if (orderId == null && origClientOrderId == null)
@@ -141,12 +124,11 @@ internal partial class BinanceSpotRestClient
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 4);
+        return RequestAsync<BinanceSpotOrder>("ws-api/v3", $"order.status", parameters, true, true, weight: 4, ct: ct);
     }
 
-    public async Task<RestCallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
@@ -157,30 +139,11 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("newClientOrderId", newClientOrderId);
-        parameters.AddOptionalEnum("cancelRestrictions", cancelRestriction);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
-        if (result) InvokeOrderCanceled(result.Data.Id);
-        return result;
-    }
-    
-    public async Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-
-        var parameters = new ParameterCollection
-        {
-            { "symbol", symbol }
-        };
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
-
-        var result = await RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
-        if (result) foreach (var order in result.Data) InvokeOrderCanceled(order.Id);
-        return result;
+        return RequestAsync<BinanceSpotOrder>("ws-api/v3", $"order.cancel", parameters, true, true, ct: ct);
     }
 
-    public async Task<RestCallResult<BinanceSpotReplaceOrderResult>> ReplaceOrderAsync(
+    public async Task<CallResult<BinanceSpotReplaceOrderResult>> ReplaceOrderAsync(
         string symbol,
         BinanceOrderSide side,
         BinanceSpotOrderType type,
@@ -201,7 +164,6 @@ internal partial class BinanceSpotRestClient
         long? trailingDelta = null,
         long? strategyId = null,
         int? strategyType = null,
-        int? receiveWindow = null,
         CancellationToken ct = default)
     {
         if (cancelOrderId == null && cancelClientOrderId == null || cancelOrderId != null && cancelClientOrderId != null)
@@ -246,53 +208,27 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceSpotReplaceOrderResult>(GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
-        if (!result && result.Raw != null)
-        {
-            // Attempt to parse the error
-            var jsonData = result.Raw.ToJToken(Logger);
-            if (jsonData != null)
-            {
-                var dataNode = jsonData["data"];
-                if (dataNode == null)
-                    return result;
-
-                var error = dataNode?["cancelResult"]?.ToString() == "FAILURE" ? dataNode!["cancelResponse"] : jsonData["data"]!["newOrderResponse"];
-                if (error != null && error.HasValues)
-                    return result.AsError<BinanceSpotReplaceOrderResult>(new ServerError(error!.Value<int>("code"), error.Value<string>("msg")!));
-            }
-        }
-
-        if (result && result.Data.NewOrderResult == BinanceSpotOrderOperationResult.Success)
-            InvokeOrderPlaced(result.Data.NewOrderResponse!.Id);
-
-        return result;
+        return await RequestAsync<BinanceSpotReplaceOrderResult>("ws-api/v3", $"order.cancelReplace", parameters, true, true, ct: ct).ConfigureAwait(false);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    // TODO: Order Amend Keep Priority (TRADE)
+
+    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return await RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
+        return RequestAsync<IEnumerable<BinanceSpotOrder>>("ws-api/v3", $"openOrders.status", parameters, true, true, weight: symbol == null ? 80 : 6, ct: ct);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> CancelAllOrdersAsync(string symbol, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
-        parameters.AddOptional("orderId", orderId);
-        parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
-        parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
-        parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<IEnumerable<BinanceSpotOrder>>("ws-api/v3", $"openOrders.cancelAll", parameters, true, true, ct: ct);
     }
 
+    // TODO: Place new order using SOR (TRADE)
 }
