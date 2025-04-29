@@ -80,7 +80,7 @@ internal class Program
         var spot_405 = await ws.Spot.GetUserTradesAsync("BTCUSDT");
         var spot_406 = await ws.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
 
-
+        IBinanceSpotSocketClientStreamMarketData içim örnekler. ayrıca methodların yeniden isimlendirilmesi lazım
 
 
 

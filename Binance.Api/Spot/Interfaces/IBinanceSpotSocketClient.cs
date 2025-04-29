@@ -9,4 +9,6 @@ public interface IBinanceSpotSocketClient:
     IBinanceSpotSocketClientQueryGeneral,
     IBinanceSpotSocketClientQueryMarketData,
     IBinanceSpotSocketClientQueryTrading,
-    IBinanceSpotSocketClientQueryUserDataStream;
+    IBinanceSpotSocketClientQueryUserDataStream,
+    IBinanceSpotSocketClientStreamMarketData;
+
