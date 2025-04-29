@@ -21,7 +21,6 @@ public class BinanceSocketApiClient
     //public BinanceStreamCoinFuturesClient CoinFutures { get; }
     //public BinanceStreamUsdtFuturesClient UsdtFutures { get; }
     //private BinanceStreamGeneralClient General { get; }
-    //public BinanceStreamBlvtClient BLVT { get => General.BLVT; }
 
     /// <summary>
     /// Binance WebSocket API Client Constructor

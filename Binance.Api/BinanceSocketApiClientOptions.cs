@@ -18,15 +18,6 @@ public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
     public BinanceSocketApiClientCoinFuturesOptions CoinFuturesOptions { get; set; } = new();
     public BinanceSocketApiClientEuropeanOptions EuropeanOptions { get; set; } = new();
     public BinanceSocketApiClientBrokerOptions BrokerOptions { get; set; } = new();
-
-    // BLVT
-    public string BlvtStreamAddress { get; set; }
-
-    public BinanceSocketApiClientOptions()
-    {
-        this.BaseAddress = "wss://stream.binance.com:9443/";
-        this.BlvtStreamAddress = BinanceAddress.Default.BlvtSocketClientAddress;
-    }
 }
 
 public class BinanceSocketApiClientSpotOptions

@@ -2,6 +2,7 @@
 
 public partial class BinanceSpotSocketClient
 {
+    /*
     #region Get Account Info
 
     /// <inheritdoc />
@@ -74,5 +75,5 @@ public partial class BinanceSpotSocketClient
     // TODO: Account allocations (USER_DATA)
     // TODO: Account Commission Rates (USER_DATA
     // TODO: Query Order Amendments (USER_DATA)
-
+    */
 }

@@ -1,12 +1,7 @@
-﻿using Binance.Api.Clients.StreamApi.General;
-
-namespace Binance.Api.Clients.StreamApi;
+﻿namespace Binance.Api.Clients.StreamApi;
 
 public class BinanceStreamGeneralClient : WebSocketApiClient
 {
-    // Clients
-    public BinanceStreamBlvtClient BLVT { get; }
-
     // Internal
     internal ILogger Logger { get => this._logger; }
     internal CallResult<T> Deserializer<T>(string data, JsonSerializer serializer = null, int? requestId = null) => this.Deserialize<T>(data, serializer, requestId);
@@ -24,8 +19,6 @@ public class BinanceStreamGeneralClient : WebSocketApiClient
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
-
-        this.BLVT = new BinanceStreamBlvtClient(this);
     }
 
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)

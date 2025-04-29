@@ -21,11 +21,6 @@ public class BinanceAddress
     public string SpotSocketApiStreamAddress { get; set; } = "";
 
     /// <summary>
-    /// The address used by the BinanceSocketClient for connecting to the BLVT streams
-    /// </summary>
-    public string BlvtSocketClientAddress { get; set; } = "";
-
-    /// <summary>
     /// The address used by the BinanceClient for the USD futures API
     /// </summary>
     public string UsdFuturesRestClientAddress { get; set; } = "";
@@ -54,7 +49,6 @@ public class BinanceAddress
         SpotSocketApiQueryAddress = "wss://ws-api.binance.com:443/",
         SpotSocketApiStreamAddress = "wss://stream.binance.com:9443/",
 
-        BlvtSocketClientAddress = "wss://nbstream.binance.com/lvt-p",
         UsdFuturesRestClientAddress = "https://fapi.binance.com",
         UsdFuturesSocketClientAddress = "wss://fstream.binance.com/",
         CoinFuturesRestClientAddress = "https://dapi.binance.com",
@@ -70,7 +64,6 @@ public class BinanceAddress
         SpotSocketApiQueryAddress = "wss://ws-api.testnet.binance.vision/",
         SpotSocketApiStreamAddress = "wss://testnet.binance.vision",
 
-        BlvtSocketClientAddress = "wss://fstream.binancefuture.com",
         UsdFuturesRestClientAddress = "https://testnet.binancefuture.com",
         UsdFuturesSocketClientAddress = "wss://fstream.binancefuture.com",
         CoinFuturesRestClientAddress = "https://testnet.binancefuture.com",
