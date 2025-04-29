@@ -33,7 +33,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         //UserStream = new BinanceStreamSpotUserStreamClient(this);
     }
 
-    internal async Task<BinanceTradeRuleResult> CheckTradeRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
+    internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
     {
         if (SocketOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
             return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
@@ -44,7 +44,10 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        return BinanceHelpers.ValidateSpotTradingRules(Logger, SocketOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
+        var symbolInfo = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase));
+        if (symbolInfo == null) return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Symbol {symbol} not found");
+
+        return BinanceHelpers.ValidateSpotTradingRules(Logger, SocketOptions.SpotOptions.TradeRulesBehavior, symbolInfo, type, quantity, quoteQuantity, price, stopPrice);
     }
 
     #region Overrided Methods

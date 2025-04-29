@@ -41,7 +41,7 @@ internal partial class BinanceFuturesRestClientCoin
         if (orderResponseType == BinanceOrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
-        var rulesCheck = await CheckTradeRulesAsync(symbol, quantity, null, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -92,7 +92,7 @@ internal partial class BinanceFuturesRestClientCoin
         {
             foreach (var order in orders)
             {
-                var rulesCheck = await CheckTradeRulesAsync(order.Symbol, order.Quantity, null, order.Price, order.StopPrice, order.Type, ct).ConfigureAwait(false);
+                var rulesCheck = await CheckTradingRulesAsync(order.Symbol, order.Type, order.Quantity, null, order.Price, order.StopPrice, ct).ConfigureAwait(false);
                 if (!rulesCheck.Passed)
                 {
                     Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);

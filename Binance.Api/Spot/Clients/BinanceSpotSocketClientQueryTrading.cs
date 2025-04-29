@@ -27,7 +27,7 @@ internal partial class BinanceSpotSocketClient
             throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
 
         // Check trade rules
-        var rulesCheck = await CheckTradeRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             _logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -81,7 +81,7 @@ internal partial class BinanceSpotSocketClient
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
             throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
 
-        var rulesCheck = await CheckTradeRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -175,7 +175,7 @@ internal partial class BinanceSpotSocketClient
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
             throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
 
-        var rulesCheck = await CheckTradeRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);

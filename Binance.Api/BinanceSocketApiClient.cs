@@ -1,5 +1,4 @@
-﻿using Binance.Api.Clients.StreamApi;
-using Binance.Api.Spot;
+﻿using Binance.Api.Spot;
 
 namespace Binance.Api;
 

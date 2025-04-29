@@ -1,6 +1,4 @@
-﻿using Binance.Api.Shared.Enums;
-
-namespace Binance.Api.Futures;
+﻿namespace Binance.Api.Futures;
 
 /// <summary>
 /// Transaction download info
@@ -17,7 +15,7 @@ public record BinanceFuturesDownloadLink
     /// Is ready to download
     /// </summary>
     [JsonProperty("status")]
-    public DownloadStatus Status { get; set; }
+    public BinanceDownloadStatus Status { get; set; }
 
     /// <summary>
     /// Download url

@@ -128,7 +128,7 @@ internal partial class BinanceMarginRestClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        var rulesCheck = await ((BinanceSpotRestClient)_.Spot).CheckTradeRulesAsync(symbol, quantity, null, price, stopPrice, null, ct).ConfigureAwait(false);
+        var rulesCheck = await ((BinanceSpotRestClient)_.Spot).CheckTradingRulesAsync(symbol, null, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             _.Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -191,7 +191,7 @@ internal partial class BinanceMarginRestClient
         if (quantity == null && quoteQuantity == null || quantity != null && quoteQuantity != null)
             throw new ArgumentException("1 of either should be specified, quantity or quoteOrderQuantity");
 
-        var rulesCheck = await ((BinanceSpotRestClient)_.Spot).CheckTradeRulesAsync(symbol, quantity, quoteQuantity, price, stopPrice, type, ct).ConfigureAwait(false);
+        var rulesCheck = await ((BinanceSpotRestClient)_.Spot).CheckTradingRulesAsync(symbol, type, quantity, quoteQuantity, price, stopPrice, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);

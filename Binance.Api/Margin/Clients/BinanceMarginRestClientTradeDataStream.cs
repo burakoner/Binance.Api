@@ -1,6 +1,4 @@
-﻿using Binance.Api.Spot;
-
-namespace Binance.Api.Margin;
+﻿namespace Binance.Api.Margin;
 
 internal partial class BinanceMarginRestClient
 {
