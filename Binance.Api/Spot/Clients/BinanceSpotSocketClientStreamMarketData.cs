@@ -1,6 +1,6 @@
 ﻿namespace Binance.Api.Spot;
 
-public partial class BinanceSpotSocketClient
+internal partial class BinanceSpotSocketClient
 {
     // Endpoints
     private const string depthStreamEndpoint = "@depth";

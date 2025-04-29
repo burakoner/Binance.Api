@@ -1,6 +1,6 @@
 ﻿namespace Binance.Api.Spot;
 
-public partial class BinanceSpotSocketClient
+internal partial class BinanceSpotSocketClient
 {
     public async Task<CallResult<BinanceSpotOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {

@@ -9,7 +9,6 @@ global using ApiSharp.Models;
 global using ApiSharp.Throttling;
 global using ApiSharp.WebSocket;
 global using Binance.Api.Interfaces;
-global using Binance.Api.Models.RestApi;
 global using Binance.Api.Models.RestApi.MarketData;
 global using Binance.Api.Models.WebSocketApi;
 global using Binance.Api.Models.WebSocketApi.MarketData;

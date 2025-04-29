@@ -1,6 +1,6 @@
 ﻿namespace Binance.Api.Spot;
 
-public partial class BinanceSpotSocketClient : WebSocketApiClient
+internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpotSocketClient
 {
     // Clients
     //public BinanceStreamSpotMarketDataClient MarketData { get; }
@@ -44,7 +44,7 @@ public partial class BinanceSpotSocketClient : WebSocketApiClient
         if (ExchangeInfo == null)
             return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
 
-        return BinanceSpotRestClient.ValidateTradeRules(Logger, SocketOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
+        return BinanceHelpers.ValidateSpotTradingRules(Logger, SocketOptions.SpotOptions.TradeRulesBehavior, ExchangeInfo, symbol, quantity, quoteQuantity, price, stopPrice, type);
     }
 
     #region Overrided Methods

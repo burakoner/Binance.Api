@@ -1,8 +1,6 @@
-﻿using System.Security;
+﻿namespace Binance.Api.Spot;
 
-namespace Binance.Api.Spot;
-
-public partial class BinanceSpotSocketClient
+internal partial class BinanceSpotSocketClient
 {
     public async Task<CallResult<TimeSpan>> PingAsync(CancellationToken ct = default)
     {

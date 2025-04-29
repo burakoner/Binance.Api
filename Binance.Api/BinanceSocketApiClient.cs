@@ -16,7 +16,7 @@ public class BinanceSocketApiClient
     /// <summary>
     /// Spot WebSocket API Client
     /// </summary>
-    public BinanceSpotSocketClient Spot { get; }
+    public IBinanceSpotSocketClient Spot { get; }
 
     //public BinanceStreamCoinFuturesClient CoinFutures { get; }
     //public BinanceStreamUsdtFuturesClient UsdtFutures { get; }
