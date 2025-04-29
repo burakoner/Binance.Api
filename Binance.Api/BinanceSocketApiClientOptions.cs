@@ -3,6 +3,16 @@
 public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
 {
     /// <summary>
+    /// Whether or not to automatically sync the local time with the server time
+    /// </summary>
+    public bool AutoTimestamp { get; set; } = true;
+
+    /// <summary>
+    /// How often the timestamp adjustment between client and server is recalculated. If you need a very small TimeSpan here you're probably better of syncing your server time more often
+    /// </summary>
+    public TimeSpan TimestampRecalculationInterval { get; set; } = TimeSpan.FromHours(1);
+
+    /// <summary>
     /// Whether to allow the client to adjust the clientOrderId parameter send by the user when placing orders to include a client reference. This reference is used by the exchange to allocate a small percentage of the paid trading fees to developer of this library. Defaults to false.<br />
     /// Note that:<br />
     /// * It does not impact the amount of fees a user pays in any way<br />

@@ -8,8 +8,20 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
     // Internal
     internal ILogger Logger { get => _logger; }
+    internal TimeSyncState TimeSyncState { get; } = new("Binance Spot WS");
     internal CallResult<T> Deserializer<T>(string data, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(data, serializer, requestId);
     internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(obj, serializer, requestId);
+
+
+
+    protected Task<CallResult<DateTime>> GetServerTimestampAsync() => GetTimeAsync();
+    protected TimeSyncInfo GetTimeSyncInfo() => new(Logger, SocketOptions.AutoTimestamp, SocketOptions.TimestampRecalculationInterval, TimeSyncState);
+    protected TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
+
+
+
+
+
 
     // Root Client
     internal BinanceSocketApiClient RootClient { get; }
@@ -71,7 +83,6 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         {
             if (query.Id != id) return false;
 
-
             if (status != 200)
             {
                 var errorCode = data["error"]?["code"]?.Value<int>() ?? status;
@@ -85,7 +96,8 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
                     }, SocketOptions.RawResponse ? data.ToString() : null);
                 }
 
-                return new CallResult<T>(new ServerError(errorCode, errorMessage), SocketOptions.RawResponse ? data.ToString() : null);
+                callResult = new CallResult<T>(new ServerError(errorCode, errorMessage), SocketOptions.RawResponse ? data.ToString() : null);
+                return true;
             }
 
             var error = data["error"];
@@ -160,8 +172,10 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         return true;
     }
 
-    protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+    protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
     {
+        await Task.CompletedTask;
+        return new CallResult<bool>(true);
         throw new NotImplementedException();
     }
 
@@ -211,6 +225,36 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, identifier, authenticated, onData, ct);
     }
 
+    protected internal virtual async Task<CallResult<bool>> SyncTimeAsync()
+    {
+        var timeSyncParams = GetTimeSyncInfo();
+        if (await timeSyncParams.TimeSyncState.Semaphore.WaitAsync(0).ConfigureAwait(false))
+        {
+            if (!timeSyncParams.SyncTime || (DateTime.UtcNow - timeSyncParams.TimeSyncState.LastSyncTime < timeSyncParams.RecalculationInterval))
+            {
+                timeSyncParams.TimeSyncState.Semaphore.Release();
+                return new CallResult<bool>(true);
+            }
+
+            var sw = Stopwatch.StartNew();
+            var localTime = DateTime.UtcNow;
+            var result = await GetTimeAsync().ConfigureAwait(false);
+            sw.Stop();
+            if (!result)
+            {
+                timeSyncParams.TimeSyncState.Semaphore.Release();
+                return result.As(false);
+            }
+
+            // Calculate time offset between local and server
+            var offset = result.Data - (localTime.AddMilliseconds(sw.ElapsedMilliseconds / 2));
+            timeSyncParams.UpdateTimeOffset(offset);
+            timeSyncParams.TimeSyncState.Semaphore.Release();
+        }
+
+        return new CallResult<bool>(true);
+    }
+
     internal async Task<CallResult<T>> RequestAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
     {
         if (authenticated)
@@ -218,8 +262,22 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             if (AuthenticationProvider == null)
                 throw new InvalidOperationException("No credentials provided for authenticated endpoint");
 
+            var syncTask = SyncTimeAsync();
+            var timeSyncInfo = GetTimeSyncInfo();
+            if (timeSyncInfo.TimeSyncState.LastSyncTime == default)
+            {
+                // Initially with first request we'll need to wait for the time syncing, if it's not the first request we can just continue
+                var syncTimeResult = await syncTask.ConfigureAwait(false);
+                if (!syncTimeResult)
+                {
+                    //_logger.Log(LogLevel.Debug, $"[{requestId}] Failed to sync time, aborting request: " + syncTimeResult.Error);
+                    //return syncTimeResult.As<IRequest>(default);
+                }
+            }
+
             var authProvider = (BinanceAuthentication)AuthenticationProvider;
-            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters);
+            var timestamp = DateTime.UtcNow.Add(GetTimeOffset()).ConvertToMilliseconds();
+            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters, timestamp);
             else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
         }
 

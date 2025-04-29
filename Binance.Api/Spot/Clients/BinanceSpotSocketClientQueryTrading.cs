@@ -222,7 +222,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<IEnumerable<BinanceSpotOrder>>("ws-api/v3", $"openOrders.status", parameters, true, true, weight: symbol == null ? 80 : 6, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> CancelAllOrdersAsync(string symbol, CancellationToken ct = default)
+    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);

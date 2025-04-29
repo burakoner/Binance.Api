@@ -33,12 +33,13 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
         }
     }
 
-    public Dictionary<string, object> AuthenticateSocketParameters(Dictionary<string, object> providedParameters)
+    public Dictionary<string, object> AuthenticateSocketParameters(Dictionary<string, object> providedParameters, long timestamp)
     {
         var sortedParameters = new SortedDictionary<string, object>(providedParameters)
         {
             { "apiKey", Credentials.Key.GetString() },
-            { "timestamp", DateTime.UtcNow.ConvertToMilliseconds() }
+            // { "timestamp", DateTime.UtcNow.ConvertToMilliseconds() },
+            { "timestamp", timestamp },
         };
         var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + Convert.ToString(p.Value, CultureInfo.InvariantCulture)));
 

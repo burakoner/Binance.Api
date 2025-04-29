@@ -3,7 +3,10 @@
 /// <summary>
 /// Interface for the Binance Spot Web Socket API Client
 /// </summary>
-public interface IBinanceSpotSocketClient
-{
-
-}
+public interface IBinanceSpotSocketClient:
+    IBinanceSpotSocketClientQueryAccount,
+    IBinanceSpotSocketClientQueryAuthentication,
+    IBinanceSpotSocketClientQueryGeneral,
+    IBinanceSpotSocketClientQueryMarketData,
+    IBinanceSpotSocketClientQueryTrading,
+    IBinanceSpotSocketClientQueryUserDataStream;

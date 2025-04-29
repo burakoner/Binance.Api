@@ -2,7 +2,7 @@
 
 internal partial class BinanceSpotSocketClient
 {
-    public Task<CallResult<BinanceSpotAccount>> GetAccountInfoAsync(bool? omitZeroBalances = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotAccount>> GetAccountAsync(bool? omitZeroBalances = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalParameter("omitZeroBalances", omitZeroBalances?.ToString().ToLowerInvariant());

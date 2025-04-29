@@ -9,7 +9,6 @@ public class BinanceSocketApiClient
 {
     // Internal
     internal ILogger Logger { get; }
-    internal TimeSyncState TimeSyncState { get; } = new("Binance");
     internal BinanceSocketApiClientOptions SocketOptions { get; }
 
     /// <summary>
