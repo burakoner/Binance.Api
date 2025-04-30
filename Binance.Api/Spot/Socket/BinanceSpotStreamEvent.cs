@@ -16,10 +16,4 @@ public record BinanceSpotStreamEvent
     /// </summary>
     [JsonProperty("E"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime EventTime { get; set; }
-
-    /// <summary>
-    /// The listen key the update was for
-    /// </summary>
-    [JsonIgnore]
-    public string ListenKey { get; set; } = string.Empty;
 }

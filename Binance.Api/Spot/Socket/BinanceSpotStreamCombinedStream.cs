@@ -1,4 +1,4 @@
-﻿namespace Binance.Api.Models.WebSocketApi;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Represents the binance result for combined data on a single socket connection
@@ -6,7 +6,7 @@
 /// Combined streams
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public record BinanceCombinedStream<T>
+public record BinanceSpotStreamCombinedStream<T>
 {
     /// <summary>
     /// The stream combined

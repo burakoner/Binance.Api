@@ -9,7 +9,7 @@ public interface IBinanceSpotSocketClientStreamUserDataStream
         Action<WebSocketDataEvent<BinanceSpotStreamPositionsUpdate>>? onAccountPositionMessage = null,
         Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onAccountBalanceUpdate = null,
         Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceLockUpdate = null,
-        Action<WebSocketDataEvent<BinanceSpotStreamEvent>>? onUserDataStreamTerminated = null,
-        Action<WebSocketDataEvent<BinanceSpotStreamEvent>>? onListenKeyExpired = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onUserDataStreamTerminated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onListenKeyExpired = null,
         CancellationToken ct = default);
 }

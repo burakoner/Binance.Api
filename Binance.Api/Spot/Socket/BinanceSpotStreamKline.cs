@@ -1,11 +1,9 @@
-﻿using Binance.Api.Spot;
-
-namespace Binance.Api.Models.WebSocketApi.Futures;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Wrapper for kline information for a symbol
 /// </summary>
-public record BinanceFuturesStreamCoinKlineData : BinanceSocketEvent, IBinanceStreamKlineData
+public record BinanceSpotStreamKlineData : BinanceSpotStreamEvent
 {
     /// <summary>
     /// The symbol the data is for
@@ -17,87 +15,103 @@ public record BinanceFuturesStreamCoinKlineData : BinanceSocketEvent, IBinanceSt
     /// The data
     /// </summary>
     [JsonProperty("k")]
-    [JsonConverter(typeof(BinanceInterfaceConverter<BinanceFuturesStreamCoinKline>))]
-    public IBinanceStreamKline Data { get; set; } = default!;
+    public BinanceSpotStreamKline Data { get; set; } = default!;
 }
 
 /// <summary>
 /// The kline data
 /// </summary>
-public record BinanceFuturesStreamCoinKline : BinanceKlineBase, IBinanceStreamKline
+public record BinanceSpotStreamKline
 {
     /// <summary>
     /// The open time of this candlestick
     /// </summary>
     [JsonProperty("t"), JsonConverter(typeof(DateTimeConverter))]
-    public new DateTime OpenTime { get; set; }
+    public  DateTime OpenTime { get; set; }
 
-    /// <inheritdoc />
-    [JsonProperty("q")]
-    public override decimal Volume { get; set; }
+    /// <summary>
+    /// The volume traded during this candlestick
+    /// </summary>
+    [JsonProperty("v")]
+    public  decimal Volume { get; set; }
 
     /// <summary>
     /// The close time of this candlestick
     /// </summary>
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
-    public new DateTime CloseTime { get; set; }
+    public  DateTime CloseTime { get; set; }
 
-    /// <inheritdoc />
-    [JsonProperty("v")]
-    public override decimal QuoteVolume { get; set; }
+    /// <summary>
+    /// The volume traded during this candlestick in the asset form
+    /// </summary>
+    [JsonProperty("q")]
+    public  decimal QuoteVolume { get; set; }
 
     /// <summary>
     /// The symbol this candlestick is for
     /// </summary>
     [JsonProperty("s")]
     public string Symbol { get; set; } = "";
+
     /// <summary>
     /// The interval of this candlestick
     /// </summary>
     [JsonProperty("i")]
     public BinanceKlineInterval Interval { get; set; }
+
     /// <summary>
     /// The first trade id in this candlestick
     /// </summary>
     [JsonProperty("f")]
     public long FirstTrade { get; set; }
+
     /// <summary>
     /// The last trade id in this candlestick
     /// </summary>
     [JsonProperty("L")]
     public long LastTrade { get; set; }
+
     /// <summary>
     /// The open price of this candlestick
     /// </summary>
     [JsonProperty("o")]
-    public new decimal OpenPrice { get; set; }
+    public  decimal OpenPrice { get; set; }
+
     /// <summary>
     /// The close price of this candlestick
     /// </summary>
     [JsonProperty("c")]
-    public new decimal ClosePrice { get; set; }
+    public  decimal ClosePrice { get; set; }
+
     /// <summary>
     /// The highest price of this candlestick
     /// </summary>
     [JsonProperty("h")]
-    public new decimal HighPrice { get; set; }
+    public  decimal HighPrice { get; set; }
+
     /// <summary>
     /// The lowest price of this candlestick
     /// </summary>
     [JsonProperty("l")]
-    public new decimal LowPrice { get; set; }
+    public  decimal LowPrice { get; set; }
+
     /// <summary>
     /// The amount of trades in this candlestick
     /// </summary>
     [JsonProperty("n")]
-    public new int TradeCount { get; set; }
+    public  int TradeCount { get; set; }
 
-    /// <inheritdoc />
-    [JsonProperty("Q")]
-    public override decimal TakerBuyBaseVolume { get; set; }
-    /// <inheritdoc />
+    /// <summary>
+    /// Taker buy base asset volume
+    /// </summary>
     [JsonProperty("V")]
-    public override decimal TakerBuyQuoteVolume { get; set; }
+    public  decimal TakerBuyBaseVolume { get; set; }
+
+    /// <summary>
+    /// Taker buy quote asset volume
+    /// </summary>
+    [JsonProperty("Q")]
+    public  decimal TakerBuyQuoteVolume { get; set; }
 
     /// <summary>
     /// Boolean indicating whether this candlestick is closed

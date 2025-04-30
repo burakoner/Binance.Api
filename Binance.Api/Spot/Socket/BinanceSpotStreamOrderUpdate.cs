@@ -23,8 +23,6 @@ public record BinanceSpotStreamOrderUpdate: BinanceSpotStreamEvent
     [JsonProperty("c")]
     public string ClientOrderId { get; set; } = string.Empty;
 
-    //public string RawClientOrderId { get; set; } = string.Empty; -----;
-
     /// <summary>
     /// The side of the order
     /// </summary>
@@ -83,13 +81,12 @@ public record BinanceSpotStreamOrderUpdate: BinanceSpotStreamEvent
     /// </summary>
     [JsonProperty("C")]
     public string? OriginalClientOrderId { get; set; } = string.Empty;
-    //public string RawOriginalClientOrderId { get; set; } = string.Empty; -----;
 
     /// <summary>
     /// The execution type
     /// </summary>
-    //[JsonProperty("x")]
-    //public ExecutionType ExecutionType { get; set; }-----------
+    [JsonProperty("x")]
+    public BinanceSpotOrderExecutionType ExecutionType { get; set; }
 
     /// <summary>
     /// The status of the order
@@ -100,8 +97,8 @@ public record BinanceSpotStreamOrderUpdate: BinanceSpotStreamEvent
     /// <summary>
     /// The reason the order was rejected
     /// </summary>
-    //[JsonProperty("r")]
-    //public OrderRejectReason RejectReason { get; set; }-------------
+    [JsonProperty("r")]
+    public BinanceSpotOrderRejectReason RejectReason { get; set; }
 
     /// <summary>
     /// The quantity of the last filled trade of this order
@@ -242,4 +239,10 @@ public record BinanceSpotStreamOrderUpdate: BinanceSpotStreamEvent
     /// </summary>
     [JsonProperty("W"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime? WorkingTime { get; set; }
+
+    /// <summary>
+    /// The listen key the update was for
+    /// </summary>
+    [JsonIgnore]
+    public string ListenKey { get; set; } = string.Empty;
 }

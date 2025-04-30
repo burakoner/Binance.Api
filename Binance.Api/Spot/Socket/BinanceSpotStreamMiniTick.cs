@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Models.WebSocketApi.MarketData;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// MiniTick info
 /// </summary>
-public abstract record BinanceStreamMiniTickBase : BinanceSocketEvent
+public abstract record BinanceSpotStreamMiniTickBase : BinanceSpotStreamEvent
 {
     /// <summary>
     /// The symbol this data is for
@@ -49,25 +49,13 @@ public abstract record BinanceStreamMiniTickBase : BinanceSocketEvent
 /// <summary>
 /// Stream mini tick
 /// </summary>
-public record BinanceStreamMiniTick : BinanceStreamMiniTickBase
+public record BinanceSpotStreamMiniTick : BinanceSpotStreamMiniTickBase
 {
     /// <inheritdoc/>
     [JsonProperty("v")]
     public override decimal Volume { get; set; }
-    /// <inheritdoc/>
-    [JsonProperty("q")]
-    public override decimal QuoteVolume { get; set; }
-}
 
-/// <summary>
-/// Stream mini tick
-/// </summary>
-public record BinanceStreamCoinMiniTick : BinanceStreamMiniTickBase
-{
     /// <inheritdoc/>
     [JsonProperty("q")]
-    public override decimal Volume { get; set; }
-    /// <inheritdoc/>
-    [JsonProperty("v")]
     public override decimal QuoteVolume { get; set; }
 }

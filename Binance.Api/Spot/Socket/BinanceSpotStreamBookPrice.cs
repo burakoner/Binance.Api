@@ -1,35 +1,40 @@
-﻿namespace Binance.Api.Models.WebSocketApi.MarketData;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Book tick
 /// </summary>
-public record BinanceStreamBookPrice
+public record BinanceSpotStreamBookPrice
 {
     /// <summary>
     /// Update id
     /// </summary>
     [JsonProperty("u")]
     public long UpdateId { get; set; }
+
     /// <summary>
     /// The symbol
     /// </summary>
     [JsonProperty("s")]
     public string Symbol { get; set; } = "";
+
     /// <summary>
     /// Price of the best bid
     /// </summary>
     [JsonProperty("b")]
     public decimal BestBidPrice { get; set; }
+
     /// <summary>
     /// Quantity of the best bid
     /// </summary>
     [JsonProperty("B")]
     public decimal BestBidQuantity { get; set; }
+
     /// <summary>
     /// Price of the best ask
     /// </summary>
     [JsonProperty("a")]
     public decimal BestAskPrice { get; set; }
+
     /// <summary>
     /// Quantity of the best ask
     /// </summary>

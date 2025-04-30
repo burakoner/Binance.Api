@@ -9,8 +9,8 @@ internal partial class BinanceSpotSocketClient
         Action<WebSocketDataEvent<BinanceSpotStreamPositionsUpdate>>? onAccountUpdated = null,
         Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceUpdated = null,
         Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceLockUpdated = null,
-        Action<WebSocketDataEvent<BinanceSpotStreamEvent>>? onUserDataStreamTerminated = null,
-        Action<WebSocketDataEvent<BinanceSpotStreamEvent>>? onListenKeyExpired = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onUserDataStreamTerminated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onListenKeyExpired = null,
         CancellationToken ct = default)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
@@ -94,7 +94,7 @@ internal partial class BinanceSpotSocketClient
                 // Listen Key Expired
                 case "listenKeyExpired":
                     {
-                        var result = Deserialize<BinanceSpotStreamEvent>(token);
+                        var result = Deserialize<BinanceSpotStreamUpdate>(token);
                         if (result)
                         {
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
@@ -107,7 +107,7 @@ internal partial class BinanceSpotSocketClient
                 // Event Stream Terminated
                 case "eventStreamTerminated":
                     {
-                        var result = Deserialize<BinanceSpotStreamEvent>(token);
+                        var result = Deserialize<BinanceSpotStreamUpdate>(token);
                         if (result)
                         {
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;

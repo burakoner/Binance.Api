@@ -1,11 +1,9 @@
-﻿using Binance.Api.Spot;
-
-namespace Binance.Api.Models.WebSocketApi;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Stream order book
 /// </summary>
-public record BinanceEventOrderBook : BinanceSpotOrderBook, IBinanceEventOrderBook
+public record BinanceSpotStreamOrderBook : BinanceSpotOrderBook
 {
     /// <summary>
     /// The id of this update, can be synced with BinanceClient.Spot.GetOrderBook to update the order book

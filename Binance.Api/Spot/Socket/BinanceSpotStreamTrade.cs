@@ -1,45 +1,52 @@
-﻿namespace Binance.Api.Models.WebSocketApi.MarketData;
+﻿namespace Binance.Api.Spot;
 
 /// <summary>
 /// Aggregated information about trades for a symbol
 /// </summary>
-public record BinanceStreamAggregatedTrade : BinanceSocketEvent
+public record BinanceSpotStreamTrade : BinanceSpotStreamEvent
 {
     /// <summary>
     /// The symbol the trade was for
     /// </summary>
     [JsonProperty("s")]
     public string Symbol { get; set; } = "";
+
     /// <summary>
-    /// The id of this aggregated trade
+    /// The id of this trade
     /// </summary>
-    [JsonProperty("a")]
+    [JsonProperty("t")]
     public long Id { get; set; }
+
     /// <summary>
     /// The price of the trades
     /// </summary>
     [JsonProperty("p")]
     public decimal Price { get; set; }
+
     /// <summary>
-    /// The combined quantity of the trades
+    /// The quantity of the trade
     /// </summary>
     [JsonProperty("q")]
     public decimal Quantity { get; set; }
+
     /// <summary>
-    /// The first trade id in this aggregation
+    /// The buyer order id
     /// </summary>
-    [JsonProperty("f")]
-    public long FirstTradeId { get; set; }
+    [JsonProperty("b")]
+    public long BuyerOrderId { get; set; }
+
     /// <summary>
-    /// The last trade id in this aggregation
+    /// The sell order id
     /// </summary>
-    [JsonProperty("l")]
-    public long LastTradeId { get; set; }
+    [JsonProperty("a")]
+    public long SellerOrderId { get; set; }
+
     /// <summary>
-    /// The time of the trades
+    /// The time of the trade
     /// </summary>
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime TradeTime { get; set; }
+
     /// <summary>
     /// Whether the buyer was the maker
     /// </summary>
@@ -50,5 +57,5 @@ public record BinanceStreamAggregatedTrade : BinanceSocketEvent
     /// Unused
     /// </summary>
     [JsonProperty("M")]
-    public bool Ignore { get; set; }
+    public bool IsBestMatch { get; set; }
 }

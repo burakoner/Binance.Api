@@ -40,7 +40,6 @@ public record BinanceSpotStreamOrderListUpdate: BinanceSpotStreamEvent
     /// </summary>
     [JsonProperty("C")]
     public string ListClientOrderId { get; set; } = string.Empty;
-    //public string RequestListClientOrderId { get; set; } = string.Empty;-------;
 
     /// <summary>
     /// The transaction time
@@ -60,4 +59,10 @@ public record BinanceSpotStreamOrderListUpdate: BinanceSpotStreamEvent
     /// </summary>
     [JsonProperty("O")]
     public IEnumerable<BinanceSpotStreamOrderId> Orders { get; set; } = [];
+
+    /// <summary>
+    /// The listen key the update was for
+    /// </summary>
+    [JsonIgnore]
+    public string ListenKey { get; set; } = string.Empty;
 }
