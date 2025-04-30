@@ -4,7 +4,7 @@ internal partial class BinanceSpotRestClient
 {
     public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
     {
-        var result = await RequestAsync<BinanceListenKey>(GetUrl(api, v3, "userDataStream"), HttpMethod.Post, ct, true, requestWeight: 2);
+        var result = await RequestAsync<BinanceListenKey>(GetUrl(api, v3, "userDataStream"), HttpMethod.Post, ct, false, requestWeight: 2);
         return result.As(result.Data?.ListenKey!);
     }
 

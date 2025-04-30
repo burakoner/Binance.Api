@@ -5,6 +5,16 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
     public override void AuthenticateRestApi(RestApiClient apiClient, Uri uri, HttpMethod method, bool signed, ArraySerialization serialization, SortedDictionary<string, object> query, SortedDictionary<string, object> body, string bodyContent, SortedDictionary<string, string> headers)
     {
         // Check Point
+        if (Credentials == null || Credentials.Key == null) return;
+
+        // Api Key
+        var apikey = Credentials.Key.GetString();
+        if (string.IsNullOrEmpty(apikey)) return;
+
+        // Key
+        headers.Add("X-MBX-APIKEY", apikey);
+
+        // Check Point
         if (!signed) return;
 
         // Timestamp
@@ -14,9 +24,6 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
 
         // Set Uri Parameters
         uri = uri.SetParameters(query, serialization);
-
-        // Key
-        headers.Add("X-MBX-APIKEY", Credentials.Key.GetString());
 
         // Signature
         if (Credentials.Type == ApiCredentialsType.HMAC)
@@ -38,7 +45,6 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
         var sortedParameters = new SortedDictionary<string, object>(providedParameters)
         {
             { "apiKey", Credentials.Key.GetString() },
-            // { "timestamp", DateTime.UtcNow.ConvertToMilliseconds() },
             { "timestamp", timestamp },
         };
         var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + Convert.ToString(p.Value, CultureInfo.InvariantCulture)));

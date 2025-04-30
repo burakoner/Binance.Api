@@ -1,0 +1,19 @@
+﻿namespace Binance.Api.Spot;
+
+/// <summary>
+/// Positions update
+/// </summary>
+public record BinanceSpotStreamPositionsUpdate : BinanceSpotStreamEvent
+{
+    /// <summary>
+    /// Time of last account update
+    /// </summary>
+    [JsonProperty("u"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime Timestamp { get; set; }
+
+    /// <summary>
+    /// Balances
+    /// </summary>
+    [JsonProperty("B")]
+    public IEnumerable<BinanceSpotStreamBalance> Balances { get; set; } = [];
+}

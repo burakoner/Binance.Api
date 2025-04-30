@@ -10,7 +10,8 @@ public interface IBinanceSpotSocketClient :
     IBinanceSpotSocketClientQueryMarketData,
     IBinanceSpotSocketClientQueryTrading,
     IBinanceSpotSocketClientQueryUserDataStream,
-    IBinanceSpotSocketClientStreamMarketData
+    IBinanceSpotSocketClientStreamMarketData,
+    IBinanceSpotSocketClientStreamUserDataStream
 {
     Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default);
     Task UnsubscribeAsync(int subscriptionId, CancellationToken ct = default);

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Binance.Net" Version="11.0.0-beta3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Binance.Api\Binance.Api.csproj" />
   </ItemGroup>
 

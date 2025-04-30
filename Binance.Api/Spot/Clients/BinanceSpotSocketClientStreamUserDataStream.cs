@@ -2,19 +2,15 @@
 
 internal partial class BinanceSpotSocketClient
 {
-    // User Stream
-    private const string executionUpdateEvent = "executionReport";
-    private const string ocoOrderUpdateEvent = "listStatus";
-    private const string accountPositionUpdateEvent = "outboundAccountPosition";
-    private const string balanceUpdateEvent = "balanceUpdate";
-
-    /*
-    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUserDataUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUserDataStreamAsync(
         string listenKey,
-        Action<WebSocketDataEvent<BinanceStreamOrderUpdate>> onOrderUpdateMessage,
-        Action<WebSocketDataEvent<BinanceStreamOrderList>> onOcoOrderUpdateMessage,
-        Action<WebSocketDataEvent<BinanceStreamPositionsUpdate>> onAccountPositionMessage,
-        Action<WebSocketDataEvent<BinanceStreamBalanceUpdate>> onAccountBalanceUpdate,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderUpdate>>? onOrderUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderListUpdate>>? onOrderListUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamPositionsUpdate>>? onAccountUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceLockUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamEvent>>? onUserDataStreamTerminated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamEvent>>? onListenKeyExpired = null,
         CancellationToken ct = default)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
@@ -23,74 +19,111 @@ internal partial class BinanceSpotSocketClient
         {
             var combinedToken = JToken.Parse(data.Data);
             var token = combinedToken["data"];
-            if (token == null)
-                return;
+            if (token == null) return;
 
             var evnt = token["e"]?.ToString();
-            if (evnt == null)
-                return;
+            if (evnt == null) return;
 
             switch (evnt)
             {
-                case executionUpdateEvent:
+                // Account Update
+                case "outboundAccountPosition":
                     {
-                        var result = Deserialize<BinanceStreamOrderUpdate>(token);
+                        var result = Deserialize<BinanceSpotStreamPositionsUpdate>(token);
                         if (result)
                         {
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
-                            onOrderUpdateMessage?.Invoke(data.As(result.Data, result.Data.Id.ToString()));
+                            onAccountUpdated?.Invoke(data.As(result.Data));
                         }
-                        else
-                            MainClient.Logger.Log(LogLevel.Warning,
-                                "Couldn't deserialize data received from order stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: " + result.Error);
                         break;
                     }
-                case ocoOrderUpdateEvent:
+
+                // Balance Update
+                case "balanceUpdate":
                     {
-                        var result = Deserialize<BinanceStreamOrderList>(token);
+                        var result = Deserialize<BinanceSpotStreamBalanceUpdate>(token);
                         if (result)
                         {
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
-                            onOcoOrderUpdateMessage?.Invoke(data.As(result.Data, result.Data.Id.ToString()));
+                            onBalanceUpdated?.Invoke(data.As(result.Data, result.Data.Asset));
                         }
-                        else
-                            MainClient.Logger.Log(LogLevel.Warning,
-                                "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: " + result.Error);
                         break;
                     }
-                case accountPositionUpdateEvent:
+
+                // Balance Lock Update
+                case "externalLockUpdate":
                     {
-                        var result = Deserialize<BinanceStreamPositionsUpdate>(token);
+                        var result = Deserialize<BinanceSpotStreamBalanceUpdate>(token);
                         if (result)
                         {
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
-                            onAccountPositionMessage?.Invoke(data.As(result.Data));
+                            onBalanceLockUpdated?.Invoke(data.As(result.Data, result.Data.Asset));
                         }
-                        else
-                            MainClient.Logger.Log(LogLevel.Warning,
-                                "Couldn't deserialize data received from account position stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: " + result.Error);
                         break;
                     }
-                case balanceUpdateEvent:
+
+                // Order Update
+                case "executionReport":
                     {
-                        var result = Deserialize<BinanceStreamBalanceUpdate>(token);
+                        var result = Deserialize<BinanceSpotStreamOrderUpdate>(token);
                         if (result)
                         {
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
-                            onAccountBalanceUpdate?.Invoke(data.As(result.Data, result.Data.Asset));
+                            onOrderUpdated?.Invoke(data.As(result.Data, result.Data.Id.ToString()));
                         }
-                        else
-                            MainClient.Logger.Log(LogLevel.Warning,
-                                "Couldn't deserialize data received from account position stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from order stream: " + result.Error);
                         break;
                     }
+
+                // Order List Update
+                case "listStatus":
+                    {
+                        var result = Deserialize<BinanceSpotStreamOrderListUpdate>(token);
+                        if (result)
+                        {
+                            result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
+                            onOrderListUpdated?.Invoke(data.As(result.Data, result.Data.Id.ToString()));
+                        }
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        break;
+                    }
+
+                // Listen Key Expired
+                case "listenKeyExpired":
+                    {
+                        var result = Deserialize<BinanceSpotStreamEvent>(token);
+                        if (result)
+                        {
+                            result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
+                            onListenKeyExpired?.Invoke(data.As(result.Data));
+                        }
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        break;
+                    }
+
+                // Event Stream Terminated
+                case "eventStreamTerminated":
+                    {
+                        var result = Deserialize<BinanceSpotStreamEvent>(token);
+                        if (result)
+                        {
+                            result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
+                            onUserDataStreamTerminated?.Invoke(data.As(result.Data));
+                        }
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        break;
+                    }
+
+                // Default
                 default:
-                    MainClient.Logger.Log(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data);
+                    Logger.Log(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data);
                     break;
             }
         });
 
-        return await SubscribeAsync(BaseAddress, new[] { listenKey }, handler, ct).ConfigureAwait(false);
+        return SubscribeAsync([listenKey], false, handler, ct);
     }
-    */
 }

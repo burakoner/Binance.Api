@@ -4,14 +4,15 @@
 /// Interface for the Binance Spot Web Socket API Client Market Data Stream Methods
 /// </summary>
 public interface IBinanceSpotSocketClientStreamMarketData
-{/// <summary>
- /// Subscribes to the aggregated trades update stream for the provided symbols
- /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#aggregate-trade-streams" /></para>
- /// </summary>
- /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
- /// <param name="onMessage">The event handler for the received data</param>
- /// <param name="ct">Cancellation token for closing this subscription</param>
- /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+{
+    /// <summary>
+    /// Subscribes to the aggregated trades update stream for the provided symbols
+    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#aggregate-trade-streams" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
+    /// <param name="onMessage">The event handler for the received data</param>
+    /// <param name="ct">Cancellation token for closing this subscription</param>
+    /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(string symbol, Action<WebSocketDataEvent<BinanceStreamAggregatedTrade>> onMessage, CancellationToken ct = default);
 
     /// <summary>

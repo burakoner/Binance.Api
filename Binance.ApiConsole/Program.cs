@@ -14,16 +14,45 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
+        var apikey = "";
+        var secret = "";
+
+        var cli = new Binance.Net.Clients.BinanceRestClient(x =>
+        {
+            x.OutputOriginalData = true;
+            x.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials(apikey, secret);
+        });
+        var listenKeyNet = await cli.SpotApi.Account.StartUserStreamAsync();
+
+        var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
+        {
+            RawResponse = true,
+            ApiCredentials = new ApiSharp.Authentication.ApiCredentials(apikey, secret)
+        });
+        var listenKey = await api.Spot.StartUserStreamAsync();
+
+        var ws = new BinanceSocketApiClient(new BinanceSocketApiClientOptions
+        {
+            RawResponse = true,
+            ApiCredentials = new ApiSharp.Authentication.ApiCredentials(apikey, secret)
+        });
+
+        var sub = await ws.Spot.SubscribeToUserDataStreamAsync(listenKey.Data);
+
+        Console.WriteLine("Press any key to unsubscribe...");
+        Console.ReadKey();
+        Console.WriteLine("Unsubscribed");
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
+    }
+
+    static async Task Main2(string[] args)
+    {
         var ws = new BinanceSocketApiClient(new BinanceSocketApiClientOptions
         {
             RawResponse = true,
         });
         /**/
-
-
-
-
-
 
 
 
@@ -162,7 +191,7 @@ internal class Program
         Console.ReadLine();
     }
 
-    static async Task Main2(string[] args)
+    static async Task Main3(string[] args)
     {
         var api = new BinanceRestApiClient();
 
