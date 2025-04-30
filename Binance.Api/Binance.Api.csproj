@@ -14,11 +14,9 @@
 		<PackageVersion>3.5.500</PackageVersion>
 		<AssemblyVersion>3.5.500</AssemblyVersion>
 		<Description>Up-to-date, most-complete, well-organized, well-documented, easy-to-use, multi-task and multi-thread compatible Binance Cryptocurrency Exchange Rest and Websocket Api Wrapper</Description>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageTags>Binance;BNB;BTC;Api;Client;Rest;Web;Websocket;Socket;Wrapper;Crypto;Currency;Cryptocurrency;Exchange;Trade;Trading;Bitcoin;Spot;Margin;Futures;Derivates;Stock;Options;Swap;</PackageTags>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<NeutralLanguage>en</NeutralLanguage>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>
 			Version 3.5.501 - 01 May 2025
 		</PackageReleaseNotes>
@@ -28,6 +26,8 @@
 		<RepositoryUrl>https://github.com/burakoner/Binance.Api</RepositoryUrl>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
@@ -48,21 +48,6 @@
 
 	<ItemGroup>
 		<None Include="Binance.png" Pack="true" PackagePath="" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Futures\Converters\" />
-	  <Folder Include="Futures\Internal\" />
-	  <Folder Include="Margin\Converters\" />
-	  <Folder Include="Margin\Internal\" />
-	  <Folder Include="Margin\Requests\" />
-	  <Folder Include="Shared\Clients\" />
-	  <Folder Include="Shared\Requests\" />
-	  <Folder Include="Spot\Converters\" />
-	  <Folder Include="Spot\Internal\" />
-	  <Folder Include="Spot\Requests\" />
-	  <Folder Include="Wallet\Converters\" />
-	  <Folder Include="Wallet\Requests\" />
 	</ItemGroup>
 
 	<ItemGroup>
