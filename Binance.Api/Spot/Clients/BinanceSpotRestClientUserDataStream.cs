@@ -16,7 +16,7 @@ internal partial class BinanceSpotRestClient
             { "listenKey", listenKey }
         };
 
-        var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 2);
+        var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Put, ct, false, bodyParameters: parameters, requestWeight: 2);
         return result.As(result.Success);
     }
 
@@ -28,7 +28,7 @@ internal partial class BinanceSpotRestClient
             { "listenKey", listenKey }
         };
 
-        var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 2);
+        var result = await RequestAsync<object>(GetUrl(api, v3, "userDataStream"), HttpMethod.Delete, ct, false, bodyParameters: parameters, requestWeight: 2);
         return result.As(result.Success);
     }
 }
