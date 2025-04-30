@@ -16,8 +16,6 @@ internal partial class BinanceSpotSocketClient
 
     public async Task<CallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
     {
-        Console.WriteLine("GetTimeAsync");
-
         var result = await RequestAsync<BinanceServerTime>("ws-api/v3", $"time", [], false, ct: ct).ConfigureAwait(false);
         if (!result) return result.AsError<DateTime>(result.Error!);
 

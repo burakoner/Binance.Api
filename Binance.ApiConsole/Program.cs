@@ -18,8 +18,19 @@ internal class Program
         {
             RawResponse = true,
         });
+        /**/
+
+
+
+
+
+
+
+
+
+
+
         /** /
-        var time = await ws.Spot.GetTimeAsync();
         await ws.Spot.SubscribeToAllMiniTickerUpdatesAsync((data) =>
         {
             foreach (var d in data.Data.OrderBy(x=>x.Symbol))
@@ -30,6 +41,7 @@ internal class Program
         }, default);
         /**/
 
+        /**/
         // Spot Web Socket API > General Methods (PUBLIC)
         var spot_101 = await ws.Spot.PingAsync();
         var spot_102 = await ws.Spot.GetTimeAsync();
@@ -39,7 +51,7 @@ internal class Program
         var spot_201 = await ws.Spot.GetOrderBookAsync("BTCUSDT");
         var spot_202 = await ws.Spot.GetRecentTradesAsync("BTCUSDT");
         var spot_203 = await ws.Spot.GetTradeHistoryAsync("BTCUSDT");
-        var spot_204 = await ws.Spot.GetAggregatedTradeHistoryAsync("BTCUSDT");
+        var spot_204 = await ws.Spot.GetAggregatedTradesAsync("BTCUSDT");
         var spot_205 = await ws.Spot.GetKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
         var spot_206 = await ws.Spot.GetUIKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
         var spot_207 = await ws.Spot.GetAveragePriceAsync("BTCUSDT");
@@ -79,8 +91,51 @@ internal class Program
         var spot_404 = await ws.Spot.GetOcoOrdersAsync();
         var spot_405 = await ws.Spot.GetUserTradesAsync("BTCUSDT");
         var spot_406 = await ws.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
+        /**/
 
-        IBinanceSpotSocketClientStreamMarketData içim örnekler. ayrıca methodların yeniden isimlendirilmesi lazım
+
+        // Subscription Samples
+        var sub01 = await ws.Spot.SubscribeToAggregatedTradesAsync("BTCUSDT", (data) =>
+        {
+            Console.WriteLine($"{data.Data.Symbol} {data.Data.Price} {data.Data.Quantity} {data.Data.TradeTime}");
+        });
+
+        var sub02 = await ws.Spot.SubscribeToAggregatedTradesAsync(["ETHUSDT", "XRPUSDT"], (data) =>
+        {
+            Console.WriteLine($"{data.Data.Symbol} {data.Data.Price} {data.Data.Quantity} {data.Data.TradeTime}");
+        });
+
+        // Unsubscription Methods
+        await ws.Spot.UnsubscribeAsync(sub01.Data);
+        await ws.Spot.UnsubscribeAsync(sub02.Data.Id);
+        await ws.Spot.UnsubscribeAllAsync();
+
+        // Spot Web Socket Stream > Market Data Methods (PUBLIC)
+        await ws.Spot.SubscribeToAggregatedTradesAsync("BTCUSDT", (data) => { });
+        await ws.Spot.SubscribeToAggregatedTradesAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToTradesAsync("BTCUSDT", (data) => { });
+        await ws.Spot.SubscribeToTradesAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay, (data) => { });
+        await ws.Spot.SubscribeToKlinesAsync(["ETHUSDT", "XRPUSDT"], BinanceKlineInterval.OneDay, (data) => { });
+        await ws.Spot.SubscribeToKlinesAsync("BTCUSDT", [BinanceKlineInterval.OneDay, BinanceKlineInterval.FourHours,], (data) => { });
+        await ws.Spot.SubscribeToKlinesAsync(["ETHUSDT", "XRPUSDT"], [BinanceKlineInterval.OneDay, BinanceKlineInterval.FourHours,], (data) => { });
+        await ws.Spot.SubscribeToMiniTickersAsync("BTCUSDT", (data) => { });
+        await ws.Spot.SubscribeToMiniTickersAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToMiniTickersAsync((data) => { });
+        await ws.Spot.SubscribeToTickersAsync("BTCUSDT", (data) => { });
+        await ws.Spot.SubscribeToTickersAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToTickersAsync((data) => { });
+        await ws.Spot.SubscribeToRollingWindowTickersAsync("BTCUSDT", TimeSpan.FromMinutes(60), (data) => { });
+        await ws.Spot.SubscribeToRollingWindowTickersAsync(TimeSpan.FromMinutes(60), (data) => { });
+        await ws.Spot.SubscribeToBookTickersAsync("BTCUSDT", (data) => { });
+        await ws.Spot.SubscribeToBookTickersAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToPartialOrderBooksAsync("BTCUSDT", 20, null, (data) => { });
+        await ws.Spot.SubscribeToPartialOrderBooksAsync("BTCUSDT", 20, 100, (data) => { });
+        await ws.Spot.SubscribeToPartialOrderBooksAsync("BTCUSDT", 20, 1000, (data) => { });
+        await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", null, (data) => { });
+        await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 100, (data) => { });
+        await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 1000, (data) => { });
+
 
 
 
@@ -121,7 +176,7 @@ internal class Program
         var spot_201 = await api.Spot.GetOrderBookAsync("BTCUSDT");
         var spot_202 = await api.Spot.GetRecentTradesAsync("BTCUSDT");
         var spot_203 = await api.Spot.GetTradeHistoryAsync("BTCUSDT");
-        var spot_204 = await api.Spot.GetAggregatedTradeHistoryAsync("BTCUSDT");
+        var spot_204 = await api.Spot.GetAggregatedTradesAsync("BTCUSDT");
         var spot_205 = await api.Spot.GetKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
         var spot_206 = await api.Spot.GetUIKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay);
         var spot_207 = await api.Spot.GetAveragePriceAsync("BTCUSDT");
@@ -304,7 +359,7 @@ internal class Program
         var futures_104 = await api.UsdFutures.GetOrderBookAsync("---SYMBOL---");
         var futures_105 = await api.UsdFutures.GetRecentTradesAsync("---SYMBOL---");
         var futures_106 = await api.UsdFutures.GetTradeHistoryAsync("---SYMBOL---");
-        var futures_107 = await api.UsdFutures.GetAggregatedTradeHistoryAsync("---SYMBOL---");
+        var futures_107 = await api.UsdFutures.GetAggregatedTradesAsync("---SYMBOL---");
         var futures_108 = await api.UsdFutures.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
         var futures_109 = await api.UsdFutures.GetContinuousContractKlinesAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay);
         var futures_110 = await api.UsdFutures.GetIndexPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
@@ -396,7 +451,7 @@ internal class Program
         var futures_604 = await api.CoinFutures.GetOrderBookAsync("---SYMBOL---");
         var futures_605 = await api.CoinFutures.GetRecentTradesAsync("---SYMBOL---");
         var futures_606 = await api.CoinFutures.GetTradeHistoryAsync("---SYMBOL---");
-        var futures_607 = await api.CoinFutures.GetAggregatedTradeHistoryAsync("---SYMBOL---");
+        var futures_607 = await api.CoinFutures.GetAggregatedTradesAsync("---SYMBOL---");
         var futures_608 = await api.CoinFutures.GetMarkPricesAsync();
         var futures_609 = await api.CoinFutures.GetFundingRatesAsync("---SYMBOL---");
         var futures_610 = await api.CoinFutures.GetFundingInfoAsync();

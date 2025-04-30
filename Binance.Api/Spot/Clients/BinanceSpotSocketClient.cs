@@ -2,29 +2,15 @@
 
 internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpotSocketClient
 {
-    // Clients
-    //public BinanceStreamSpotMarketDataClient MarketData { get; }
-    //public BinanceStreamSpotUserStreamClient UserStream { get; }
-
     // Internal
     internal ILogger Logger { get => _logger; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance Spot WS");
     internal CallResult<T> Deserializer<T>(string data, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(data, serializer, requestId);
     internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(obj, serializer, requestId);
 
-
-
     protected Task<CallResult<DateTime>> GetServerTimestampAsync() => GetTimeAsync();
     protected TimeSyncInfo GetTimeSyncInfo() => new(Logger, SocketOptions.AutoTimestamp, SocketOptions.TimestampRecalculationInterval, TimeSyncState);
     protected TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
-
-
-
-
-
-
-    // Root Client
-    internal BinanceSocketApiClient RootClient { get; }
 
     // Parent
     internal BinanceSocketApiClient _ { get; }
@@ -40,9 +26,6 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
-
-        //MarketData = new BinanceStreamSpotMarketDataClient(this);
-        //UserStream = new BinanceStreamSpotUserStreamClient(this);
     }
 
     internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
@@ -213,7 +196,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     }
     #endregion
 
-    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, string identifier, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     {
         var request = new BinanceSocketRequest
         {
@@ -222,10 +205,10 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, identifier, authenticated, onData, ct);
+        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
     }
 
-    protected internal virtual async Task<CallResult<bool>> SyncTimeAsync()
+    internal async Task<CallResult<bool>> SyncTimeAsync()
     {
         var timeSyncParams = GetTimeSyncInfo();
         if (await timeSyncParams.TimeSyncState.Semaphore.WaitAsync(0).ConfigureAwait(false))
@@ -288,7 +271,8 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             Id = ExchangeHelpers.NextId()
         };
 
-        var result = await base.QueryAsync<BinanceResponse<T>>(BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url), request, sign).ConfigureAwait(false);
+        var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url);
+        var result = await base.QueryAsync<BinanceResponse<T>>(address, request, sign).ConfigureAwait(false);
         if (!result.Success)
         {
             if (result.Error is BinanceRateLimitError rle)
@@ -308,4 +292,27 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         return result.As(result.Data.Result);
     }
 
+    public async Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default)
+    {
+        // Soft Unsubscribe
+        var wsc = subscription.GetConnection();
+        var wss = subscription.GetSubscription();
+        await this.UnsubscribeAsync(wsc, wss).ConfigureAwait(false);
+
+        // Force Unsubscribe
+        if (force)
+        {
+            await base.UnsubscribeAsync(subscription).ConfigureAwait(false);
+        }
+    }
+
+    public Task UnsubscribeAsync(int subscriptionId, CancellationToken ct = default)
+    {
+        return base.UnsubscribeAsync(subscriptionId);
+    }
+
+    public Task UnsubscribeAllAsync(CancellationToken ct = default)
+    {
+        return base.UnsubscribeAllAsync();
+    }
 }

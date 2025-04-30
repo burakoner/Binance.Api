@@ -47,7 +47,7 @@ public interface IBinanceSpotRestClientMarketData
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The aggregated trades list for the symbol</returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotAggregatedTrade>>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceSpotAggregatedTrade>>> GetAggregatedTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get candlestick data for the provided symbol
