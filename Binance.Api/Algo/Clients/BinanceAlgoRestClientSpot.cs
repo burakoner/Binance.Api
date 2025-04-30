@@ -26,7 +26,7 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         var parameters = new ParameterCollection()
         {
             { "symbol", symbol },
-            { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
+            { "quantity", quantity.ToString(BinanceConstants.CI) },
             { "duration", duration },
         };
         parameters.AddEnum("side", side);

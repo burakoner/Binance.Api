@@ -33,7 +33,7 @@ internal partial class BinanceWalletRestClient
 
         var parameters = new ParameterCollection();
         parameters.AddEnum("type", accountType);
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));

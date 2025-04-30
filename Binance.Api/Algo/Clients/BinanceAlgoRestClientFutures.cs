@@ -28,7 +28,7 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         var parameters = new ParameterCollection()
         {
             { "symbol", symbol },
-            { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
+            { "quantity", quantity.ToString(BinanceConstants.CI) },
         };
         parameters.AddEnum("side", side);
         parameters.AddEnum("urgency", urgency);
@@ -58,7 +58,7 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         var parameters = new ParameterCollection()
         {
             { "symbol", symbol },
-            { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
+            { "quantity", quantity.ToString(BinanceConstants.CI) },
             { "duration", duration },
         };
         parameters.AddEnum("side", side);

@@ -19,7 +19,7 @@ internal partial class BinanceWalletRestClient
         {
             { "coin", asset },
             { "address", address },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddOptional("name", name);
         parameters.AddOptional("withdrawOrderId", withdrawOrderId);
@@ -60,8 +60,8 @@ internal partial class BinanceWalletRestClient
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("coin", asset);
-        parameters.AddOptional("offset", offset?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("offset", offset?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("status", status);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);

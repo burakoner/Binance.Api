@@ -61,14 +61,14 @@ internal partial class BinanceFuturesRestClientUsd
         };
         parameters.AddEnum("side", side);
         parameters.AddEnum("type", type);
-        parameters.AddOptional("quantity", quantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
         parameters.AddOptional("newClientOrderId", clientOrderId);
-        parameters.AddOptional("price", price?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("timeInForce", timeInForce);
         parameters.AddOptionalEnum("positionSide", positionSide);
-        parameters.AddOptional("stopPrice", stopPrice?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("activationPrice", activationPrice?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("callbackRate", callbackRate?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("stopPrice", stopPrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("activationPrice", activationPrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("callbackRate", callbackRate?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("workingType", workingType);
         parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLower());
         parameters.AddOptional("closePosition", closePosition?.ToString().ToLower());
@@ -118,14 +118,14 @@ internal partial class BinanceFuturesRestClientUsd
             };
             orderParameters.AddEnum("side", order.Side);
             orderParameters.AddEnum("type", order.Type);
-            orderParameters.AddOptional("quantity", order.Quantity?.ToString(CultureInfo.InvariantCulture));
+            orderParameters.AddOptional("quantity", order.Quantity?.ToString(BinanceConstants.CI));
             orderParameters.AddOptional("newClientOrderId", clientOrderId);
             orderParameters.AddOptionalEnum("timeInForce", order.TimeInForce);
             orderParameters.AddOptionalEnum("positionSide", order.PositionSide);
-            orderParameters.AddOptional("price", order.Price?.ToString(CultureInfo.InvariantCulture));
-            orderParameters.AddOptional("stopPrice", order.StopPrice?.ToString(CultureInfo.InvariantCulture));
-            orderParameters.AddOptional("activationPrice", order.ActivationPrice?.ToString(CultureInfo.InvariantCulture));
-            orderParameters.AddOptional("callbackRate", order.CallbackRate?.ToString(CultureInfo.InvariantCulture));
+            orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
+            orderParameters.AddOptional("stopPrice", order.StopPrice?.ToString(BinanceConstants.CI));
+            orderParameters.AddOptional("activationPrice", order.ActivationPrice?.ToString(BinanceConstants.CI));
+            orderParameters.AddOptional("callbackRate", order.CallbackRate?.ToString(BinanceConstants.CI));
             orderParameters.AddOptionalEnum("workingType", order.WorkingType);
             orderParameters.AddOptional("reduceOnly", order.ReduceOnly?.ToString().ToLower());
             orderParameters.AddOptional("priceProtect", order.PriceProtect?.ToString().ToUpper());
@@ -167,11 +167,11 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "symbol", symbol },
             { "side", MapConverter.GetString(side) },
-            { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
+            { "quantity", quantity.ToString(BinanceConstants.CI) },
         };
-        parameters.AddOptional("price", price?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("priceMatch", priceMatch);
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
@@ -188,12 +188,12 @@ internal partial class BinanceFuturesRestClientUsd
             var orderParameters = new ParameterCollection()
             {
                 { "symbol", order.Symbol },
-                { "quantity", order.Quantity.ToString(CultureInfo.InvariantCulture) },
+                { "quantity", order.Quantity.ToString(BinanceConstants.CI) },
             };
             orderParameters.AddEnum("side", order.Side);
-            orderParameters.AddOptional("price", order.Price?.ToString(CultureInfo.InvariantCulture));
+            orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
             orderParameters.AddOptionalEnum("priceMatch", order.PriceMatch);
-            orderParameters.AddOptional("orderId", order.OrderId?.ToString(CultureInfo.InvariantCulture));
+            orderParameters.AddOptional("orderId", order.OrderId?.ToString(BinanceConstants.CI));
             orderParameters.AddOptional("origClientOrderId", order.ClientOrderId);
             parameterOrders.Add(orderParameters);
             i++;
@@ -222,12 +222,12 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("origClientOrderId", clientOrderId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("origClientOrderId", clientOrderId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
         return RequestAsync<IEnumerable<BinanceFuturesOrderEditHistory>>(GetUrl(fapi, v1, "orderAmendment"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
@@ -241,7 +241,7 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
@@ -327,7 +327,7 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
@@ -340,11 +340,11 @@ internal partial class BinanceFuturesRestClientUsd
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
         return RequestAsync<IEnumerable<BinanceFuturesOrder>>(GetUrl(fapi, v1, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -368,7 +368,7 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
@@ -396,9 +396,9 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("fromId", fromId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
@@ -458,7 +458,7 @@ internal partial class BinanceFuturesRestClientUsd
         var parameters = new ParameterCollection
         {
             { "symbol", symbol },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) },
+            { "amount", quantity.ToString(BinanceConstants.CI) },
         };
         parameters.AddEnum("type", type);
         parameters.AddOptionalEnum("positionSide", positionSide);
@@ -511,7 +511,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
         return RequestAsync<IEnumerable<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(fapi, v3, "positionMargin/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }

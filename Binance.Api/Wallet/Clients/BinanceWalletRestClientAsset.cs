@@ -34,7 +34,7 @@ internal partial class BinanceWalletRestClient
         var parameters = new ParameterCollection
         {
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddEnum("type", type);
         parameters.AddOptional("fromSymbol", fromSymbol);
@@ -50,8 +50,8 @@ internal partial class BinanceWalletRestClient
         parameters.AddEnum("type", type);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("current", page?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("size", pageSize?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("current", page?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("size", pageSize?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceQueryRecords<BinanceWalletTransfer>>(GetUrl(sapi, v1, "asset/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);

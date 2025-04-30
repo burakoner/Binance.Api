@@ -20,9 +20,9 @@ internal partial class BinanceSpotRestClient
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("orderId", orderId?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("fromId", fromId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));

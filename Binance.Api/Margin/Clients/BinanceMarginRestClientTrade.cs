@@ -145,20 +145,20 @@ internal partial class BinanceMarginRestClient
         var parameters = new ParameterCollection
         {
             { "symbol", symbol },
-            { "quantity", quantity.ToString(CultureInfo.InvariantCulture) },
-            { "price", price.ToString(CultureInfo.InvariantCulture) },
-            { "stopPrice", stopPrice.ToString(CultureInfo.InvariantCulture) }
+            { "quantity", quantity.ToString(BinanceConstants.CI) },
+            { "price", price.ToString(BinanceConstants.CI) },
+            { "stopPrice", stopPrice.ToString(BinanceConstants.CI) }
         };
         parameters.AddEnum("side", side);
-        parameters.AddOptional("stopLimitPrice", stopLimitPrice?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("stopLimitPrice", stopLimitPrice?.ToString(BinanceConstants.CI));
         parameters.AddOptional("isIsolated", isIsolated?.ToString());
         parameters.AddOptionalEnum("sideEffectType", sideEffectType);
         parameters.AddOptional("listClientOrderId", listClientOrderId);
         parameters.AddOptional("limitClientOrderId", limitClientOrderId);
         parameters.AddOptional("stopClientOrderId", stopClientOrderId);
-        parameters.AddOptional("limitIcebergQty", limitIcebergQuantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limitIcebergQty", limitIcebergQuantity?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
-        parameters.AddOptional("stopIcebergQty", stopIcebergQuantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("stopIcebergQty", stopIcebergQuantity?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("stopLimitTimeInForce", stopLimitTimeInForce);
         parameters.AddOptional("autoRepayAtCancel", autoRepayAtCancel);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
@@ -210,11 +210,11 @@ internal partial class BinanceMarginRestClient
         };
         parameters.AddEnum("side", side);
         parameters.AddEnum("type", type);
-        parameters.AddOptional("quantity", quantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("quoteOrderQty", quoteQuantity?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("price", price?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("stopPrice", stopPrice?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("icebergQty", icebergQuantity?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("quoteOrderQty", quoteQuantity?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("stopPrice", stopPrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("icebergQty", icebergQuantity?.ToString(BinanceConstants.CI));
         parameters.AddOptional("newClientOrderId", clientOrderId);
         parameters.AddOptionalEnum("timeInForce", timeInForce);
         parameters.AddOptionalEnum("newOrderRespType", orderResponseType);

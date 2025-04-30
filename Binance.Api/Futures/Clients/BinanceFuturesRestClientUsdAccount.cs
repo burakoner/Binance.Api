@@ -92,7 +92,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("page", page);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
         return RequestAsync<IEnumerable<BinanceFuturesIncomeHistory>>(GetUrl(fapi, v1, "income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
     }

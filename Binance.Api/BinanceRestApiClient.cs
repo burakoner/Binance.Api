@@ -134,7 +134,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     #endregion
 
     #region Internal Methods
-    internal string GetSymbolName(string baseAsset, string quoteAsset) => (baseAsset + quoteAsset).ToUpper(CultureInfo.InvariantCulture);
+    internal string GetSymbolName(string baseAsset, string quoteAsset) => (baseAsset + quoteAsset).ToUpper(BinanceConstants.CI);
 
     internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (RestOptions.ReceiveWindow != null ? System.Convert.ToInt32(RestOptions.ReceiveWindow?.TotalMilliseconds) : null);
 

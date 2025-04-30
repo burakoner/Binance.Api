@@ -15,7 +15,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@aggTrade").ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@aggTrade").ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -32,7 +32,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@trade").ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@trade").ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -56,7 +56,7 @@ internal partial class BinanceSpotSocketClient
         }
         );
 
-        var topics = symbols.SelectMany(a => intervals.Select(i => a.ToLower(CultureInfo.InvariantCulture) + "@kline" + "_" + MapConverter.GetString(i))).ToArray();
+        var topics = symbols.SelectMany(a => intervals.Select(i => a.ToLower(BinanceConstants.CI) + "@kline" + "_" + MapConverter.GetString(i))).ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -75,7 +75,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@miniTicker").ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI  ) + "@miniTicker").ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -102,7 +102,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As<BinanceSpotStreamTick>(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@ticker").ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker").ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -151,7 +151,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@bookTicker").ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@bookTicker").ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -172,7 +172,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
         return await SubscribeAsync(topics, false, handler, ct).ConfigureAwait(false);
     }
 
@@ -190,7 +190,7 @@ internal partial class BinanceSpotSocketClient
             onMessage(data.As<BinanceSpotStreamOrderBook>(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
+        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
         return await SubscribeAsync(topics, false, handler, ct);
     }
 }

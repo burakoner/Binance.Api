@@ -42,7 +42,7 @@ internal partial class BinanceMarginRestClient
         {
             { "asset", asset },
             { "type", "BORROW" },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddOptional("isIsolated", isIsolated?.ToString().ToLower());
         parameters.AddOptional("symbol", symbol);
@@ -58,7 +58,7 @@ internal partial class BinanceMarginRestClient
             {
                 { "asset", asset },
                 { "type", "REPAY" },
-                { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+                { "amount", quantity.ToString(BinanceConstants.CI) }
             };
         parameters.AddOptional("isIsolated", isIsolated?.ToString().ToLower());
         parameters.AddOptional("symbol", symbol);
