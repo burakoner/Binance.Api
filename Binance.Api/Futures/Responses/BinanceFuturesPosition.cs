@@ -29,7 +29,7 @@ public record BinanceFuturesPositionBase
     /// </summary>
     [JsonProperty("unrealizedProfit")]
     public decimal UnrealizedPnl { get; set; }
-    [JsonInclude, JsonPropertyName("unRealizedProfit")]
+    [JsonInclude, JsonProperty("unRealizedProfit")]
     internal decimal UnRealizedPnl { set => UnrealizedPnl = value; }
     */
 

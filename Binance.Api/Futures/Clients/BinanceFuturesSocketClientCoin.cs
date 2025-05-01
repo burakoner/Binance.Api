@@ -188,7 +188,7 @@ internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBin
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
+        return SubscribeAsync(BinanceAddress.Default.CoinFuturesSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
     }
 
     internal async Task<CallResult<bool>> SyncTimeAsync()
