@@ -4,7 +4,7 @@ internal partial class BinanceFuturesRestClientUsd
 {
     public async Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
     {
-        var result = await RequestAsync<BinanceListenKey>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Post, ct, true, requestWeight: 1);
+        var result = await RequestAsync<BinanceListenKey>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Post, ct, false, requestWeight: 1);
         return result.As(result.Data?.ListenKey!);
     }
 
@@ -17,7 +17,7 @@ internal partial class BinanceFuturesRestClientUsd
             { "listenKey", listenKey }
         };
 
-        var result = await RequestAsync<object>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 2);
+        var result = await RequestAsync<object>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Put, ct, false, bodyParameters: parameters, requestWeight: 2);
         return result.As(result.Success);
     }
 
@@ -29,7 +29,7 @@ internal partial class BinanceFuturesRestClientUsd
             { "listenKey", listenKey }
         };
 
-        var result = await RequestAsync<object>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 2);
+        var result = await RequestAsync<object>(GetUrl(fapi, v1, "listenKey"), HttpMethod.Delete, ct, false, bodyParameters: parameters, requestWeight: 2);
         return result.As(result.Success);
     }
 }

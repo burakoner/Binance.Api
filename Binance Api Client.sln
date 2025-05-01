@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Binance.ApiConsole", "Binan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Binance.Api", "Binance.Api\Binance.Api.csproj", "{89B9B4E4-0822-477F-8C07-08350597A342}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiSharp", "..\ApiSharp\ApiSharp\ApiSharp.csproj", "{3435DEC0-0A4C-1CD6-C02D-D25EDF4BFEB8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{89B9B4E4-0822-477F-8C07-08350597A342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89B9B4E4-0822-477F-8C07-08350597A342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89B9B4E4-0822-477F-8C07-08350597A342}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3435DEC0-0A4C-1CD6-C02D-D25EDF4BFEB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3435DEC0-0A4C-1CD6-C02D-D25EDF4BFEB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3435DEC0-0A4C-1CD6-C02D-D25EDF4BFEB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3435DEC0-0A4C-1CD6-C02D-D25EDF4BFEB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

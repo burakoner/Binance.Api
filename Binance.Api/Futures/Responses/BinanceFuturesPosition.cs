@@ -106,7 +106,6 @@ public record BinanceFuturesUsdPositionInfo : BinanceFuturesPositionInfoBase
 /// </summary>
 public record BinanceFuturesCoinPositionInfo : BinanceFuturesPositionInfoBase
 {
-
     /// <summary>
     /// Break even price
     /// </summary>
@@ -178,7 +177,7 @@ public record BinanceFuturesPositionDetailsBase: BinanceFuturesPositionBase
 /// <summary>
 /// Usdt position details
 /// </summary>
-public record BinanceFuturesUsdtPositionDetails : BinanceFuturesPositionDetailsBase
+public record BinanceFuturesUsdtPosition : BinanceFuturesPositionDetailsBase
 {
     /// <summary>
     /// Max notional
@@ -202,7 +201,7 @@ public record BinanceFuturesUsdtPositionDetails : BinanceFuturesPositionDetailsB
 /// <summary>
 /// Coin position info
 /// </summary>
-public record BinanceFuturesCoinPositionDetails : BinanceFuturesPositionDetailsBase
+public record BinanceFuturesCoinPosition : BinanceFuturesPositionDetailsBase
 {
     /// <summary>
     /// Notional value

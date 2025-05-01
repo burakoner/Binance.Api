@@ -67,7 +67,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceFuturesOrder>> EditOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal? price = null, BinanceFuturesPriceMatch? priceMatch = null, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal? price = null, BinanceFuturesPriceMatch? priceMatch = null, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Edit multiple existing orders
@@ -77,7 +77,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<CallResult<BinanceFuturesOrder>>>> EditMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchEditOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<CallResult<BinanceFuturesOrder>>>> EditMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get order edit history
@@ -279,7 +279,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of Positions</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesUsdtPositionDetails>>> GetPositionInformationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesUsdtPosition>>> GetPositionInformationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get position information

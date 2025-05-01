@@ -3,7 +3,7 @@
 /// <summary>
 /// Parameters for editing an order
 /// </summary>
-public record BinanceFuturesBatchEditOrderRequest
+public record BinanceFuturesBatchOrderModifyRequest
 {
     /// <summary>
     /// Id of the order to edit. This or ClientOrderId should be provided

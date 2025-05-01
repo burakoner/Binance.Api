@@ -54,11 +54,8 @@ internal partial class BinanceFuturesRestClientCoin
 
         var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
-        var parameters = new ParameterCollection()
-        {
-            { "symbol", symbol },
-        };
-
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
         parameters.AddEnum("side", side);
         parameters.AddEnum("type", type);
         parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
@@ -341,7 +338,7 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<IEnumerable<BinanceFuturesCoinUserTrade>>(GetUrl(dapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesCoinPositionDetails>>> GetPositionInformationAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
 
@@ -349,7 +346,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("pair", pair);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesCoinPositionDetails>>(GetUrl(dapi, v1, "positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<IEnumerable<BinanceFuturesCoinPosition>>(GetUrl(dapi, v1, "positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceResult>> SetPositionModeAsync(bool dualPositionSide, int? receiveWindow = null, CancellationToken ct = default)

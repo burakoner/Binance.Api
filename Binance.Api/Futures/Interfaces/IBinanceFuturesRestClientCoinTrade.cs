@@ -208,7 +208,7 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of Positions</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesCoinPositionDetails>>> GetPositionInformationAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol

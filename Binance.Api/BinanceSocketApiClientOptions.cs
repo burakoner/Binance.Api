@@ -3,6 +3,11 @@
 public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
 {
     /// <summary>
+    /// Receive Window
+    /// </summary>
+    public TimeSpan? ReceiveWindow { get; set; }
+
+    /// <summary>
     /// Whether or not to automatically sync the local time with the server time
     /// </summary>
     public bool AutoTimestamp { get; set; } = true;

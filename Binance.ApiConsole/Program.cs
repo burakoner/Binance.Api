@@ -418,7 +418,7 @@ internal class Program
         // USDⓈ-M Futures -> Trading Methods (PRIVATE)
         var futures_201 = await api.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
         var futures_202 = await api.UsdFutures.PlaceMultipleOrdersAsync([]);
-        var futures_203 = await api.UsdFutures.EditOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
+        var futures_203 = await api.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
         var futures_204 = await api.UsdFutures.EditMultipleOrdersAsync([]);
         var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("---SYMBOL---");
         var futures_206 = await api.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
@@ -513,7 +513,7 @@ internal class Program
         var futures_710 = await api.CoinFutures.GetOpenOrderAsync("---SYMBOL---");
         var futures_711 = await api.CoinFutures.GetForcedOrdersAsync();
         var futures_712 = await api.CoinFutures.GetUserTradesAsync("---SYMBOL---");
-        var futures_713 = await api.CoinFutures.GetPositionInformationAsync();
+        var futures_713 = await api.CoinFutures.GetPositionsAsync();
         var futures_714 = await api.CoinFutures.SetPositionModeAsync(true);
         var futures_715 = await api.CoinFutures.SetMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
         var futures_716 = await api.CoinFutures.SetInitialLeverageAsync("---SYMBOL---", 10);

@@ -5,40 +5,56 @@
 /// </summary>
 public class BinanceAddress
 {
+    #region Spot
     /// <summary>
-    /// The address used by the BinanceClient for the Spot API
+    /// Binance Spot Rest API Address
     /// </summary>
     public string SpotRestApiAddress { get; set; } = "";
 
     /// <summary>
-    /// Binance WebSocket API Query Address
+    /// Binance Spot WebSocket API Query Address
     /// </summary>
     public string SpotSocketApiQueryAddress { get; set; } = "";
 
     /// <summary>
-    /// Binance WebSocket API Stream Address
+    /// Binance Spot WebSocket API Stream Address
     /// </summary>
     public string SpotSocketApiStreamAddress { get; set; } = "";
+    #endregion
+
+    #region Coin-M Futures
+    /// <summary>
+    /// Binance Coin-M Futures Rest API Address
+    /// </summary>
+    public string CoinFuturesRestApiAddress { get; set; } = "";
 
     /// <summary>
-    /// The address used by the BinanceClient for the USD futures API
+    /// Binance Coin-M Futures WebSocket API Query Address
     /// </summary>
-    public string UsdFuturesRestClientAddress { get; set; } = "";
+    public string CoinFuturesSocketApiQueryAddress { get; set; } = "";
 
     /// <summary>
-    /// The address used by the BinanceSocketClient for the USD futures API
+    /// Binance Coin-M Futures WebSocket API Stream Address
     /// </summary>
-    public string UsdFuturesSocketClientAddress { get; set; } = "";
+    public string CoinFuturesSocketApiStreamAddress { get; set; } = "";
+    #endregion
+
+    #region USDⓈ-M Futures
+    /// <summary>
+    /// Binance USDⓈ-M Futures Rest API Address
+    /// </summary>
+    public string UsdFuturesRestApiAddress { get; set; } = "";
 
     /// <summary>
-    /// The address used by the BinanceClient for the COIN futures API
+    /// Binance USDⓈ-M Futures WebSocket API Query Address
     /// </summary>
-    public string CoinFuturesRestClientAddress { get; set; } = "";
+    public string UsdFuturesSocketApiQueryAddress { get; set; } = "";
 
     /// <summary>
-    /// The address used by the BinanceSocketClient for the Coin futures API
+    /// Binance USDⓈ-M Futures WebSocket API Stream Address
     /// </summary>
-    public string CoinFuturesSocketClientAddress { get; set; } = "";
+    public string UsdFuturesSocketApiStreamAddress { get; set; } = "";
+    #endregion
 
     /// <summary>
     /// The default addresses to connect to the binance.com API
@@ -49,10 +65,13 @@ public class BinanceAddress
         SpotSocketApiQueryAddress = "wss://ws-api.binance.com:443/",
         SpotSocketApiStreamAddress = "wss://stream.binance.com:9443/",
 
-        UsdFuturesRestClientAddress = "https://fapi.binance.com",
-        UsdFuturesSocketClientAddress = "wss://fstream.binance.com/",
-        CoinFuturesRestClientAddress = "https://dapi.binance.com",
-        CoinFuturesSocketClientAddress = "wss://dstream.binance.com/",
+        CoinFuturesRestApiAddress = "https://dapi.binance.com",
+        CoinFuturesSocketApiQueryAddress = "wss://ws-dapi.binance.com/",
+        CoinFuturesSocketApiStreamAddress = "wss://dstream.binance.com/",
+
+        UsdFuturesRestApiAddress = "https://fapi.binance.com",
+        UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com/",
+        UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com/",
     };
 
     /// <summary>
@@ -64,10 +83,13 @@ public class BinanceAddress
         SpotSocketApiQueryAddress = "wss://ws-api.testnet.binance.vision/",
         SpotSocketApiStreamAddress = "wss://testnet.binance.vision",
 
-        UsdFuturesRestClientAddress = "https://testnet.binancefuture.com",
-        UsdFuturesSocketClientAddress = "wss://fstream.binancefuture.com",
-        CoinFuturesRestClientAddress = "https://testnet.binancefuture.com",
-        CoinFuturesSocketClientAddress = "wss://dstream.binancefuture.com",
+        CoinFuturesRestApiAddress = "https://testnet.binancefuture.com",
+        CoinFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
+        CoinFuturesSocketApiStreamAddress = "wss://dstream.binancefuture.com",
+
+        UsdFuturesRestApiAddress = "https://testnet.binancefuture.com",
+        UsdFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
+        UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
     };
 
     /// <summary>
