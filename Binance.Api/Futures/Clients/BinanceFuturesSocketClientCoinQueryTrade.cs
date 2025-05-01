@@ -94,12 +94,12 @@ internal partial class BinanceFuturesSocketClientCoin
         parameters.AddOptionalEnum("priceMatch", priceMatch);
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", receiveWindow?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.modify", parameters, true, true, weight: 1, ct: ct);
     }
 
-    public Task<CallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
@@ -108,12 +108,12 @@ internal partial class BinanceFuturesSocketClientCoin
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", receiveWindow?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.cancel", parameters, true, true, weight: 1, ct: ct);
     }
 
-    public Task<CallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orderId == null && origClientOrderId == null)
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
@@ -124,16 +124,16 @@ internal partial class BinanceFuturesSocketClientCoin
         };
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", receiveWindow?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.status", parameters, true, true, weight: 1, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<IEnumerable<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", receiveWindow?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         return RequestAsync<IEnumerable<BinanceFuturesCoinPosition>>("ws-dapi/v1", $"account.position", parameters, true, true, weight: 5, ct: ct);
     }

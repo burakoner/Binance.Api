@@ -2,12 +2,12 @@
 
 internal partial class BinanceFuturesRestClientUsd
 {
-    public Task<RestCallResult<IEnumerable<BinanceUsdFuturesAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceUsdFuturesAccountBalance>>(GetUrl(fapi, v3, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<IEnumerable<BinanceFuturesUsdAccountBalance>>(GetUrl(fapi, v3, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     // TODO: Account Information V3(USER_DATA)

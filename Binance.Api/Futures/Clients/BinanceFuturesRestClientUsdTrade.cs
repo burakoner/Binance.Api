@@ -55,10 +55,8 @@ internal partial class BinanceFuturesRestClientUsd
 
         var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
-        var parameters = new ParameterCollection()
-        {
-            { "symbol", symbol }
-        };
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
         parameters.AddEnum("side", side);
         parameters.AddEnum("type", type);
         parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));

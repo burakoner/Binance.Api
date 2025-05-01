@@ -52,7 +52,7 @@ public record BinanceFuturesAccountBalance
 /// <summary>
 /// Usd futures account balance
 /// </summary>
-public record BinanceUsdFuturesAccountBalance : BinanceFuturesAccountBalance
+public record BinanceFuturesUsdAccountBalance : BinanceFuturesAccountBalance
 {
     /// <summary>
     /// Maximum quantity for transfer out
@@ -70,7 +70,7 @@ public record BinanceUsdFuturesAccountBalance : BinanceFuturesAccountBalance
 /// <summary>
 /// Coin futures account balance
 /// </summary>
-public record BinanceCoinFuturesAccountBalance : BinanceFuturesAccountBalance
+public record BinanceFuturesCoinAccountBalance : BinanceFuturesAccountBalance
 {
     /// <summary>
     /// Available for withdraw

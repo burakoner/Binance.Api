@@ -13,6 +13,7 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     protected TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
 
     // Parent
+    internal BinanceSocketApiClient __ { get; }
     internal BinanceFuturesSocketClient _ { get; }
 
     // Internal
@@ -21,6 +22,7 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     internal BinanceFuturesSocketClientUsd(BinanceFuturesSocketClient root) : base(root.Logger, root.SocketOptions)
     {
         _ = root;
+        __ = root._;
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);

@@ -2,12 +2,12 @@
 
 internal partial class BinanceFuturesRestClientCoin
 {
-    public Task<RestCallResult<IEnumerable<BinanceCoinFuturesAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceCoinFuturesAccountBalance>>(GetUrl(dapi, v1, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<IEnumerable<BinanceFuturesCoinAccountBalance>>(GetUrl(dapi, v1, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceFuturesAccountUserCommissionRate>> GetUserCommissionRateAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
