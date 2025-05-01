@@ -34,6 +34,56 @@ internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBin
 
     protected override bool HandleQueryResponse<T>(WebSocketConnection connection, object request, JToken data, out CallResult<T>? callResult)
     {
+        callResult = null;
+
+        if (data.Type != JTokenType.Object)
+            return false;
+
+        if (data["id"] == null) return false;
+        var id = data["id"]!.Value<int>();
+
+        if (data["status"] == null) return false;
+        var status = data["status"]!.Value<int>();
+
+        if (request is BinanceSocketQuery query)
+        {
+            if (query.Id != id) return false;
+
+            if (status != 200)
+            {
+                var errorCode = data["error"]?["code"]?.Value<int>() ?? status;
+                var errorMessage = data["error"]?["msg"]?.Value<string>() ?? "Undefined Error";
+                if (status == 418 || status == 429)
+                {
+                    // Rate limit error 
+                    return new CallResult<T>(new BinanceRateLimitError(errorCode, errorMessage, null)
+                    {
+                        // RetryAfter = data["error"]?["data"].Data.Error.Data!.RetryAfter
+                    }, SocketOptions.RawResponse ? data.ToString() : null);
+                }
+
+                callResult = new CallResult<T>(new ServerError(errorCode, errorMessage), SocketOptions.RawResponse ? data.ToString() : null);
+                return true;
+            }
+
+            var error = data["error"];
+            if (error != null && error["code"] != null && error["msg"] != null)
+            {
+                callResult = new CallResult<T>(new ServerError(error["code"]!.Value<int>(), error["msg"]!.ToString()));
+                return true;
+            }
+
+            var desResult = Deserialize<T>(data);
+            if (!desResult)
+            {
+                Logger.Log(LogLevel.Warning, $"Failed to deserialize data: {desResult.Error}. Data: {data}");
+                return false;
+            }
+
+            callResult = new CallResult<T>(desResult.Data, SocketOptions.RawResponse ? data.ToString() : null);
+            return true;
+        }
+
         throw new NotImplementedException();
     }
 
