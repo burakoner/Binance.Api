@@ -147,21 +147,3 @@ public record BinanceSpotStreamTick : BinanceStreamTickBase
     [JsonProperty("q")]
     public override decimal QuoteVolume { get; set; }
 }
-
-/// <summary>
-/// Stream tick
-/// </summary>
-public record BinanceStreamCoinTick : BinanceStreamTickBase
-{
-    /// <summary>
-    /// Total traded volume in the base asset
-    /// </summary>
-    [JsonProperty("q")]
-    public override decimal Volume { get; set; }
-
-    /// <summary>
-    /// Total traded volume in the quote asset
-    /// </summary>
-    [JsonProperty("v")]
-    public override decimal QuoteVolume { get; set; }
-}

@@ -3,7 +3,7 @@
 /// <summary>
 /// Wrapper for kline information for a symbol
 /// </summary>
-public record BinanceStreamKlineData: BinanceFuturesStreamEvent
+public record BinanceFuturesStreamKlineData: BinanceFuturesStreamEvent
 {
     /// <summary>
     /// The symbol the data is for
@@ -15,13 +15,13 @@ public record BinanceStreamKlineData: BinanceFuturesStreamEvent
     /// The data
     /// </summary>
     [JsonProperty("k")]
-    public BinanceStreamKline Data { get; set; } = default!;
+    public BinanceFuturesStreamKline Data { get; set; } = default!;
 }
 
 /// <summary>
 /// The kline data
 /// </summary>
-public record BinanceStreamKline
+public record BinanceFuturesStreamKline
 {
     /// <summary>
     /// The open time of this candlestick
