@@ -37,7 +37,7 @@ public interface IBinanceSpotRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotOrderRateLimit>>> GetOrderRateLimitStatusAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<IEnumerable<BinanceSpotOrderRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get prevented matches because of self trade prevention

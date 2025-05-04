@@ -10,7 +10,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotAccount>("ws-api/v3", $"account.status", parameters, true, true, weight: 20, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceCurrentRateLimit>>> GetOrderRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
+    public Task<CallResult<IEnumerable<BinanceCurrentRateLimit>>> GetRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalParameter("symbols", symbols);

@@ -48,7 +48,7 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<IEnumerable<BinanceFuturesSymbolConfiguration>>(GetUrl(fapi, v1, "symbolConfig"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceRateLimit>>> GetOrderRateLimitAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));

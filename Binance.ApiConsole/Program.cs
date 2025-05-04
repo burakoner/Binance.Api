@@ -76,7 +76,7 @@ internal class Program
         var spot_102 = await ws.Spot.GetTimeAsync();
         var spot_103 = await ws.Spot.GetExchangeInfoAsync();
 
-        // Spot Web Socket API > Market Data Methods (PUBLIC)
+        // Spot Web Socket API > Market Data Query Methods (PUBLIC)
         var spot_201 = await ws.Spot.GetOrderBookAsync("BTCUSDT");
         var spot_202 = await ws.Spot.GetRecentTradesAsync("BTCUSDT");
         var spot_203 = await ws.Spot.GetTradeHistoryAsync("BTCUSDT");
@@ -102,7 +102,7 @@ internal class Program
         var spot_242 = await ws.Spot.GetBookTickersAsync(["BTCUSDT", "ETHUSDT"]);
         var spot_243 = await ws.Spot.GetBookTickersAsync();
 
-        // Spot Web Socket API > Trading Methods (PRIVATE)
+        // Spot Web Socket API > Trading Query Methods (PRIVATE)
         var spot_301 = await ws.Spot.PlaceOrderAsync("BTCUSDT", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
         var spot_302 = await ws.Spot.PlaceTestOrderAsync("BTCUSDT", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 0.01m);
         var spot_303 = await ws.Spot.GetOrderAsync("BTCUSDT", orderId: 100000001);
@@ -113,9 +113,9 @@ internal class Program
         var spot_308 = await ws.Spot.GetOpenOrdersAsync("BTCUSDT");
         var spot_309 = await ws.Spot.CancelOrdersAsync("BTCUSDT");
 
-        // Spot Web Socket API > Account Methods (PRIVATE)
+        // Spot Web Socket API > Account Query Methods (PRIVATE)
         var spot_401 = await ws.Spot.GetAccountAsync();
-        var spot_402 = await ws.Spot.GetOrderRateLimitsAsync();
+        var spot_402 = await ws.Spot.GetRateLimitsAsync();
         var spot_403 = await ws.Spot.GetOrdersAsync("BTCUSDT");
         var spot_404 = await ws.Spot.GetOcoOrdersAsync();
         var spot_405 = await ws.Spot.GetUserTradesAsync("BTCUSDT");
@@ -139,7 +139,7 @@ internal class Program
         await ws.Spot.UnsubscribeAsync(sub02.Data.Id);
         await ws.Spot.UnsubscribeAllAsync();
 
-        // Spot Web Socket Stream > Market Data Methods (PUBLIC)
+        // Spot Web Socket Stream > Market Data Subscriptions (PUBLIC)
         await ws.Spot.SubscribeToAggregatedTradesAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToAggregatedTradesAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
         await ws.Spot.SubscribeToTradesAsync("BTCUSDT", (data) => { });
@@ -164,6 +164,154 @@ internal class Program
         await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", null, (data) => { });
         await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 100, (data) => { });
         await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 1000, (data) => { });
+
+        // Spot Web Socket Stream > User Data Subscriptions (PRIVATE)
+        await ws.Spot.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----", 
+            onOrderUpdateMessage: (data) => { },
+            onOcoOrderUpdateMessage: (data) => { },
+            onAccountPositionMessage: (data) => { },
+            onAccountBalanceUpdate: (data) => { },
+            onBalanceLockUpdate: (data) => { },
+            onUserDataStreamTerminated: (data) => { },
+            onListenKeyExpired: (data) => { });
+
+        // USDⓈ-M Futures Web Socket API -> General Methods (PUBLIC)
+        var futures_101 = await ws.UsdFutures.PingAsync();
+        var futures_102 = await ws.UsdFutures.GetTimeAsync();
+        var futures_103 = await ws.UsdFutures.GetOrderBookAsync("---SYMBOL---");
+
+        // USDⓈ-M Futures Web Socket API -> Market Data Methods (PUBLIC)
+        var futures_201 = await ws.UsdFutures.GetPriceAsync("---SYMBOL---");
+        var futures_202 = await ws.UsdFutures.GetPricesAsync();
+        var futures_203 = await ws.UsdFutures.GetBookPriceAsync("---SYMBOL---");
+        var futures_204 = await ws.UsdFutures.GetBookPricesAsync();
+
+        // USDⓈ-M Futures Web Socket API -> Account Methods (PRIVATE)
+        var futures_301 = await ws.UsdFutures.GetBalancesAsync();
+        var futures_302 = await ws.UsdFutures.GetAccountAsync();
+
+        // USDⓈ-M Futures -> Trading Methods (PRIVATE)
+        var futures_401 = await ws.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
+        var futures_402 = await ws.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
+        var futures_403 = await ws.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_404 = await ws.UsdFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_405 = await ws.UsdFutures.GetPositionsAsync();
+
+        // USDⓈ-M Futures Web Socket Stream -> Market Data Methods (PUBLIC)
+        var futures_501 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync("---SYMBOL---", (data) => { });
+        var futures_502 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync(["---SYMBOL---"], (data) => { });
+        var futures_503 = await ws.UsdFutures.SubscribeToMarkPricesAsync("---SYMBOL---", 1000, (data) => { });
+        var futures_504 = await ws.UsdFutures.SubscribeToMarkPricesAsync(["---SYMBOL---"],3000, (data) => { });
+        var futures_505 = await ws.UsdFutures.SubscribeToMarkPricesAsync(null, (data) => { });
+        var futures_506 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", BinanceKlineInterval.FourHours, (data) => { });
+        var futures_507 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
+        var futures_508 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], BinanceKlineInterval.FourHours, (data) => { });
+        var futures_509 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
+        var futures_510 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync("---PAIR---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
+        var futures_511 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync(["---PAIR---"], BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
+        var futures_512 = await ws.UsdFutures.SubscribeToMiniTickersAsync("---SYMBOL---", (data) => { });
+        var futures_513 = await ws.UsdFutures.SubscribeToMiniTickersAsync(["---SYMBOL---"], (data) => { });
+        var futures_517 = await ws.UsdFutures.SubscribeToMiniTickersAsync((data) => { });
+        var futures_514 = await ws.UsdFutures.SubscribeToTickersAsync((data) => { });
+        var futures_515 = await ws.UsdFutures.SubscribeToTickersAsync("---SYMBOL---", (data) => { });
+        var futures_516 = await ws.UsdFutures.SubscribeToTickersAsync(["---SYMBOL---"], (data) => { });
+        var futures_518 = await ws.UsdFutures.SubscribeToBookTickersAsync("---SYMBOL---", (data) => { });
+        var futures_519 = await ws.UsdFutures.SubscribeToBookTickersAsync(["---SYMBOL---"], (data) => { });
+        var futures_520 = await ws.UsdFutures.SubscribeToBookTickersAsync((data) => { });
+        var futures_521 = await ws.UsdFutures.SubscribeToLiquidationsAsync("---SYMBOL---", (data) => { });
+        var futures_522 = await ws.UsdFutures.SubscribeToLiquidationsAsync(["---SYMBOL---"], (data) => { });
+        var futures_523 = await ws.UsdFutures.SubscribeToLiquidationsAsync((data) => { });
+        var futures_524 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync("---SYMBOL---", 20, 100, (data) => { });
+        var futures_525 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync(["---SYMBOL---"], 20, 250, (data) => { });
+        var futures_526 = await ws.UsdFutures.SubscribeToOrderBooksAsync("---SYMBOL---", 500, (data) => { });
+        var futures_527 = await ws.UsdFutures.SubscribeToOrderBooksAsync(["---SYMBOL---"], null, (data) => { });
+        var futures_528 = await ws.UsdFutures.SubscribeToCompositeIndexesAsync("---SYMBOL---", (data) => { });
+        var futures_529 = await ws.UsdFutures.SubscribeToSymbolsAsync((data) => { });
+        var futures_530 = await ws.UsdFutures.SubscribeToAssetIndexesAsync("---SYMBOL---", (data) => { });
+        var futures_531 = await ws.UsdFutures.SubscribeToAssetIndexesAsync((data) => { });
+        var futures_532 = await ws.UsdFutures.SubscribeToTradesAsync("---SYMBOL---", (data) => { });
+        var futures_533 = await ws.UsdFutures.SubscribeToTradesAsync(["---SYMBOL---"], (data) => { });
+
+        // USDⓈ-M Futures Web Socket Stream -> User Data Methods (PRIVATE)
+        var futures_534 = await ws.UsdFutures.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
+            onAccountUpdated: (data) => { },
+            onLeverageUpdated: (data) => { },
+            onMarginUpdated: (data) => { },
+            onOrderUpdated: (data) => { },
+            onTradeUpdated: (data) => { },
+            onStrategyUpdated: (data) => { },
+            onGridUpdated: (data) => { },
+            onListenKeyExpired: (data) => { },
+            onConditionalOrderTriggerRejectUpdate: (data) => { }
+            );
+
+        /*
+        // Coin-M Futures -> Market Data Methods (PUBLIC)
+        var futures_601 = await ws.CoinFutures.PingAsync();
+        var futures_602 = await ws.CoinFutures.GetTimeAsync();
+        var futures_603 = await ws.CoinFutures.GetExchangeInfoAsync();
+        var futures_604 = await ws.CoinFutures.GetOrderBookAsync("---SYMBOL---");
+        var futures_605 = await ws.CoinFutures.GetRecentTradesAsync("---SYMBOL---");
+        var futures_606 = await ws.CoinFutures.GetTradeHistoryAsync("---SYMBOL---");
+        var futures_607 = await ws.CoinFutures.GetAggregatedTradesAsync("---SYMBOL---");
+        var futures_608 = await ws.CoinFutures.GetMarkPricesAsync();
+        var futures_609 = await ws.CoinFutures.GetFundingRatesAsync("---SYMBOL---");
+        var futures_610 = await ws.CoinFutures.GetFundingInfoAsync();
+        var futures_611 = await ws.CoinFutures.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_612 = await ws.CoinFutures.GetContinuousContractKlinesAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay);
+        var futures_613 = await ws.CoinFutures.GetIndexPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_614 = await ws.CoinFutures.GetMarkPriceKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_615 = await ws.CoinFutures.GetPremiumIndexKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+        var futures_616 = await ws.CoinFutures.GetTickersAsync();
+        var futures_617 = await ws.CoinFutures.GetPricesAsync();
+        var futures_618 = await ws.CoinFutures.GetBookPricesAsync();
+        var futures_619 = await ws.CoinFutures.GetOpenInterestAsync("---SYMBOL---");
+        var futures_620 = await ws.CoinFutures.GetOpenInterestHistoryAsync("---SYMBOL---", BinanceFuturesContractType.PerpetualDelivering, BinancePeriodInterval.FourHour);
+        var futures_621 = await ws.CoinFutures.GetTopLongShortPositionRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_622 = await ws.CoinFutures.GetTopLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_623 = await ws.CoinFutures.GetGlobalLongShortAccountRatioAsync("---SYMBOL---", BinancePeriodInterval.FourHour);
+        var futures_624 = await ws.CoinFutures.GetTakerBuySellVolumeRatioAsync("---SYMBOL---", BinanceFuturesContractType.PerpetualDelivering, BinancePeriodInterval.FourHour);
+        var futures_625 = await ws.CoinFutures.GetBasisAsync("---SYMBOL---", BinanceFuturesContractType.Perpetual, BinancePeriodInterval.FourHour);
+
+        // Coin-M Futures -> Trading Methods (PRIVATE)
+        var futures_701 = await ws.CoinFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
+        var futures_702 = await ws.CoinFutures.PlaceMultipleOrdersAsync([]);
+        var futures_703 = await ws.CoinFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_704 = await ws.CoinFutures.CancelMultipleOrdersAsync("---SYMBOL---", [1_000_000L]);
+        var futures_705 = await ws.CoinFutures.CancelAllOrdersAsync("---SYMBOL---");
+        var futures_706 = await ws.CoinFutures.CancelAllOrdersAfterTimeoutAsync("---SYMBOL---", TimeSpan.FromSeconds(15));
+        var futures_707 = await ws.CoinFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
+        var futures_708 = await ws.CoinFutures.GetOrdersAsync("---SYMBOL---");
+        var futures_709 = await ws.CoinFutures.GetOpenOrdersAsync();
+        var futures_710 = await ws.CoinFutures.GetOpenOrderAsync("---SYMBOL---");
+        var futures_711 = await ws.CoinFutures.GetForcedOrdersAsync();
+        var futures_712 = await ws.CoinFutures.GetUserTradesAsync("---SYMBOL---");
+        var futures_713 = await ws.CoinFutures.GetPositionsAsync();
+        var futures_714 = await ws.CoinFutures.SetPositionModeAsync(true);
+        var futures_715 = await ws.CoinFutures.SetMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
+        var futures_716 = await ws.CoinFutures.SetInitialLeverageAsync("---SYMBOL---", 10);
+        var futures_717 = await ws.CoinFutures.GetPositionAdlQuantileEstimationAsync();
+        var futures_718 = await ws.CoinFutures.SetPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
+        var futures_719 = await ws.CoinFutures.GetMarginChangeHistoryAsync("---SYMBOL---");
+
+        // Coin-M Futures -> User Data Stream Methods (PRIVATE)
+        var futures_801 = await ws.CoinFutures.StartUserStreamAsync();
+        var futures_802 = await ws.CoinFutures.KeepAliveUserStreamAsync("---LISTEN-KEY---");
+        var futures_803 = await ws.CoinFutures.StopUserStreamAsync("---LISTEN-KEY---");
+
+        // Coin-M Futures -> Account Methods (PRIVATE)
+        var futures_901 = await ws.CoinFutures.GetBalancesAsync();
+        var futures_902 = await ws.CoinFutures.GetUserCommissionRateAsync("---SYMBOL---");
+        var futures_903 = await ws.CoinFutures.GetAccountInfoAsync();
+        var futures_904 = await ws.CoinFutures.GetPositionModeAsync();
+        var futures_905 = await ws.CoinFutures.GetIncomeHistoryAsync();
+        var futures_906 = await ws.CoinFutures.GetDownloadIdForTransactionHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_907 = await ws.CoinFutures.GetDownloadLinkForTransactionHistoryAsync("---DOWNLOAD-ID---");
+        var futures_908 = await ws.CoinFutures.GetDownloadIdForOrderHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_909 = await ws.CoinFutures.GetDownloadLinkForOrderHistoryAsync("---DOWNLOAD-ID---");
+        var futures_910 = await ws.CoinFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var futures_911 = await ws.CoinFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
+        */
 
 
 
@@ -245,7 +393,7 @@ internal class Program
         // Spot > Account Methods (PRIVATE)
         var spot_401 = await api.Spot.GetAccountAsync();
         var spot_402 = await api.Spot.GetUserTradesAsync("BTCUSDT");
-        var spot_403 = await api.Spot.GetOrderRateLimitStatusAsync();
+        var spot_403 = await api.Spot.GetRateLimitsAsync();
         var spot_404 = await api.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
         var spot_405 = await api.Spot.StartUserStreamAsync();
         var spot_406 = await api.Spot.KeepAliveUserStreamAsync("---LISTEN-KEY---");
@@ -280,7 +428,7 @@ internal class Program
         var margin_306 = await api.Margin.CancelMarginOrderAsync("---SYMBOL---");
         var margin_307 = await api.Margin.PlaceMarginOCOOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, 100.0m, 15.0m);
         var margin_308 = await api.Margin.PlaceMarginOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, 100.0m);
-        var margin_309 = await api.Margin.GetMarginOrderRateLimitStatusAsync();
+        var margin_309 = await api.Margin.GetMarginRateLimitsAsync();
         var margin_310 = await api.Margin.GetMarginOcoOrdersAsync();
         var margin_311 = await api.Margin.GetMarginOrdersAsync("---SYMBOL---");
         var margin_312 = await api.Margin.GetMarginOcoOrderAsync();
@@ -452,7 +600,7 @@ internal class Program
         var futures_403 = await api.UsdFutures.GetUserCommissionRateAsync("---SYMBOL---");
         var futures_404 = await api.UsdFutures.GetAccountConfigurationAsync();
         var futures_405 = await api.UsdFutures.GetSymbolConfigurationAsync();
-        var futures_406 = await api.UsdFutures.GetOrderRateLimitAsync();
+        var futures_406 = await api.UsdFutures.GetRateLimitsAsync();
         var futures_407 = await api.UsdFutures.GetBracketsAsync();
         var futures_408 = await api.UsdFutures.GetMultiAssetsModeAsync();
         var futures_409 = await api.UsdFutures.GetPositionModeAsync();

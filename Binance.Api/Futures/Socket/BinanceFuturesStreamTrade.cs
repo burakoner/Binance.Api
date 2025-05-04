@@ -32,30 +32,12 @@ public record BinanceFuturesStreamTrade : BinanceFuturesStreamEvent
     /// <summary>
     /// The buyer order id
     /// </summary>
-    [JsonProperty("b")]
-    public long BuyerOrderId { get; set; }
-
-    /// <summary>
-    /// The sell order id
-    /// </summary>
-    [JsonProperty("a")]
-    public long SellerOrderId { get; set; }
-
-    /// <summary>
-    /// The time of the trade
-    /// </summary>
-    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime TradeTime { get; set; }
+    [JsonProperty("X")]
+    public string Type { get; set; } = "";
 
     /// <summary>
     /// Whether the buyer was the maker
     /// </summary>
     [JsonProperty("m")]
     public bool BuyerIsMaker { get; set; }
-
-    /// <summary>
-    /// Unused
-    /// </summary>
-    [JsonProperty("M")]
-    public bool IsBestMatch { get; set; }
 }

@@ -73,14 +73,14 @@ internal partial class BinanceFuturesSocketClientCoin
     }
 
     public Task<CallResult<BinanceFuturesOrder>> ModifyOrderAsync(
-        string symbol, 
-        BinanceOrderSide side, 
-        decimal quantity, 
-        decimal? price = null, 
-        BinanceFuturesPriceMatch? priceMatch = null, 
-        long? orderId = null, 
-        string? origClientOrderId = null, 
-        int? receiveWindow = null, 
+        string symbol,
+        BinanceOrderSide side,
+        decimal quantity,
+        decimal? price = null,
+        BinanceFuturesPriceMatch? priceMatch = null,
+        long? orderId = null,
+        string? origClientOrderId = null,
+        int? receiveWindow = null,
         CancellationToken ct = default)
     {
         if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))

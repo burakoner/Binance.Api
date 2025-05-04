@@ -13,6 +13,7 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="side">The order side (buy/sell)</param>
     /// <param name="type">The order type</param>
     /// <param name="timeInForce">Lifetime of the order (GoodTillCancel/ImmediateOrCancel/FillOrKill)</param>
+    /// <param name="orderResponseType">Response type</param>
     /// <param name="quantity">The quantity of the symbol</param>
     /// <param name="quoteQuantity">The quantity of the quote symbol. Only valid for market orders</param>
     /// <param name="price">The price to use</param>
@@ -35,6 +36,7 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="side">The order side (buy/sell)</param>
     /// <param name="type">The order type (limit/market)</param>
     /// <param name="timeInForce">Lifetime of the order (GoodTillCancel/ImmediateOrCancel)</param>
+    /// <param name="orderResponseType">Response type</param>
     /// <param name="quantity">The quantity of the symbol</param>
     /// <param name="quoteQuantity">The quantity of the quote symbol. Only valid for market orders</param>
     /// <param name="price">The price to use</param>
@@ -45,6 +47,7 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="strategyId">Strategy id</param>
     /// <param name="strategyType">Strategy type</param>
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
+    /// <param name="computeFeeRates">Compute fee rates</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for the placed test order</returns>
     Task<CallResult<BinanceSpotOrderTest>> PlaceTestOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, long? strategyId = null, int? strategyType = null, bool? computeFeeRates = null, CancellationToken ct = default);
@@ -68,6 +71,7 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="orderId">Order id</param>
     /// <param name="origClientOrderId">Client order id</param>
     /// <param name="newClientOrderId">New client order id for the order</param>
+    /// <param name="cancelRestriction">Cancel restriction</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<CallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, CancellationToken ct = default);
@@ -91,6 +95,8 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="stopPrice">Used for stop orders</param>
     /// <param name="icebergQuantity">Used for iceberg orders</param>
     /// <param name="orderResponseType">Used for the response JSON</param>
+    /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
+    /// <param name="cancelRestriction">Cancel restriction</param>
     /// <param name="trailingDelta">Trailing delta value for order in BIPS. A value of 1 means 0.01% trailing delta.</param>
     /// <param name="strategyId">Strategy id</param>
     /// <param name="strategyType">Strategy type</param>

@@ -21,7 +21,7 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceCurrentRateLimit>>> GetOrderRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default);
+    Task<CallResult<IEnumerable<BinanceCurrentRateLimit>>> GetRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get order history

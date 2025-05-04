@@ -2,13 +2,13 @@
 
 internal partial class BinanceFuturesSocketClientUsd
 {
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(
         string symbol,
         Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToAggregatedTradeUpdatesAsync([symbol], onMessage, ct);
+        => SubscribeToAggregatedTradesAsync([symbol], onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(
         IEnumerable<string> symbols,
         Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage,
         CancellationToken ct = default)
@@ -23,14 +23,14 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
         string symbol,
         int? updateInterval,
         Action<WebSocketDataEvent<BinanceFuturesUsdtStreamMarkPrice>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToMarkPriceUpdatesAsync([symbol], updateInterval, onMessage, ct);
+        => SubscribeToMarkPricesAsync([symbol], updateInterval, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
         IEnumerable<string> symbols,
         int? updateInterval,
         Action<WebSocketDataEvent<BinanceFuturesUsdtStreamMarkPrice>> onMessage,
@@ -47,7 +47,7 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
         int? updateInterval,
         Action<WebSocketDataEvent<IEnumerable<BinanceFuturesUsdtStreamMarkPrice>>> onMessage,
         CancellationToken ct = default)
@@ -61,31 +61,31 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         string symbol,
         BinanceKlineInterval interval,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
         bool premiumIndex = false,
         CancellationToken ct = default)
-        => SubscribeToKlineUpdatesAsync([symbol], interval, onMessage, premiumIndex, ct);
+        => SubscribeToKlinesAsync([symbol], interval, onMessage, premiumIndex, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         string symbol,
         IEnumerable<BinanceKlineInterval> intervals,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
         bool premiumIndex = false,
         CancellationToken ct = default)
-        => SubscribeToKlineUpdatesAsync([symbol], intervals, onMessage, premiumIndex, ct);
+        => SubscribeToKlinesAsync([symbol], intervals, onMessage, premiumIndex, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         IEnumerable<string> symbols,
         BinanceKlineInterval interval,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
         bool premiumIndex = false,
         CancellationToken ct = default)
-        => SubscribeToKlineUpdatesAsync(symbols, [interval], onMessage, premiumIndex, ct);
+        => SubscribeToKlinesAsync(symbols, [interval], onMessage, premiumIndex, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         IEnumerable<string> symbols,
         IEnumerable<BinanceKlineInterval> intervals,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
@@ -101,14 +101,14 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(string pair,
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(string pair,
         BinanceFuturesContractType contractType,
         BinanceKlineInterval interval,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToContinuousContractKlineUpdatesAsync([pair], contractType, interval, onMessage, ct);
+        => SubscribeToContinuousContractKlinesAsync([pair], contractType, interval, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(
         IEnumerable<string> pairs,
         BinanceFuturesContractType contractType,
         BinanceKlineInterval interval,
@@ -123,60 +123,59 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(pairs, false, handler, ct);
     }
 
-    /*
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(string symbol, Action<WebSocketDataEvent<IBinanceMiniTick>> onMessage, CancellationToken ct = default) => SubscribeToMiniTickerUpdatesAsync(new[] { symbol }, onMessage, ct);
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default) => SubscribeToMiniTickersAsync(new[] { symbol }, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<IBinanceMiniTick>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
 
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceStreamMiniTick>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamMiniTick>>>(data =>
         {
-            onMessage(data.As<IBinanceMiniTick>(data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@miniTicker").ToArray();
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<WebSocketDataEvent<IEnumerable<IBinance24HPrice>>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamTick>>> onMessage, CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceStreamTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamTick>>>>(data =>
         {
-            onMessage(data.As<IEnumerable<IBinance24HPrice>>(data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
         return SubscribeAsync(["!ticker@arr"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickerUpdatesAsync(string symbol, Action<WebSocketDataEvent<IBinance24HPrice>> onMessage, CancellationToken ct = default) => SubscribeToTickerUpdatesAsync(new[] { symbol }, onMessage, ct);
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage, CancellationToken ct = default) => SubscribeToTickersAsync(new[] { symbol }, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickerUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<IBinance24HPrice>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage, CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
 
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceStreamTick>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTick>>>(data =>
         {
-            onMessage(data.As<IBinance24HPrice>(data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker").ToArray();
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(Action<WebSocketDataEvent<IEnumerable<IBinanceMiniTick>>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamMiniTick>>> onMessage, CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceStreamMiniTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamMiniTick>>>>(data =>
         {
-            onMessage(data.As<IEnumerable<IBinanceMiniTick>>(data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
         return SubscribeAsync(["!miniTicker@arr"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickerUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(
         string symbol,
         Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToBookTickerUpdatesAsync(new[] { symbol }, onMessage, ct);
+        => SubscribeToBookTickersAsync(new[] { symbol }, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickerUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(
         IEnumerable<string> symbols,
         Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage,
         CancellationToken ct = default)
@@ -191,7 +190,7 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllBookTickerUpdatesAsync(Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default)
     {
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamBookPrice>>>(data =>
         {
@@ -200,13 +199,13 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(["!bookTicker"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(
         string symbol,
         Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToLiquidationUpdatesAsync(new[] { symbol }, onMessage, ct);
+        => SubscribeToLiquidationsAsync([symbol], onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(
         IEnumerable<string> symbols,
         Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage,
         CancellationToken ct = default)
@@ -221,7 +220,7 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllLiquidationUpdatesAsync(Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default)
     {
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidationData>>>(data =>
         {
@@ -230,20 +229,19 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(["!forceOrder@arr"], false, handler, ct);
     }
 
-    /*
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(
         string symbol,
         int levels,
         int? updateInterval,
-        Action<WebSocketDataEvent<IBinanceFuturesEventOrderBook>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToPartialOrderBookUpdatesAsync([symbol], levels, updateInterval, onMessage, ct);
+        => SubscribeToPartialOrderBooksAsync([symbol], levels, updateInterval, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(
         IEnumerable<string> symbols,
         int levels,
         int? updateInterval,
-        Action<WebSocketDataEvent<IBinanceFuturesEventOrderBook>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
         CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
@@ -253,36 +251,36 @@ internal partial class BinanceFuturesSocketClientUsd
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamOrderBookDepth>>>(data =>
         {
             data.Data.Data.Symbol = data.Data.Stream?.Split('@')[0] ?? "";
-            onMessage(data.As<IBinanceFuturesEventOrderBook>(data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
 
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBookUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(
         string symbol,
         int? updateInterval,
-        Action<WebSocketDataEvent<IBinanceFuturesEventOrderBook>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
         CancellationToken ct = default)
-        => SubscribeToOrderBookUpdatesAsync([symbol], updateInterval, onMessage, ct);
+        => SubscribeToOrderBooksAsync([symbol], updateInterval, onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBookUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(
         IEnumerable<string> symbols,
         int? updateInterval,
-        Action<WebSocketDataEvent<IBinanceFuturesEventOrderBook>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
         CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
 
         updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamOrderBookDepth>>>(data =>
-            onMessage(data.As<IBinanceFuturesEventOrderBook>(data.Data.Data)));
+            onMessage(data.As(data.Data.Data)));
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToCompositeIndexUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamCompositeIndex>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToCompositeIndexesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamCompositeIndex>> onMessage, CancellationToken ct = default)
     {
         var action = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamCompositeIndex>>>(data =>
         {
@@ -291,7 +289,7 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync([symbol.ToLower(BinanceConstants.CI) + "@compositeIndex"], false, action, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToSymbolUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToSymbolsAsync(
         Action<WebSocketDataEvent<BinanceFuturesStreamSymbolUpdate>> onMessage,
         CancellationToken ct = default)
     {
@@ -302,7 +300,7 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(["!contractInfo"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(
         string symbol,
         Action<WebSocketDataEvent<BinanceFuturesStreamAssetIndexUpdate>> onMessage,
         CancellationToken ct = default)
@@ -314,7 +312,7 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync([symbol.ToLowerInvariant() + "@assetIndex"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(
         Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamAssetIndexUpdate>>> onMessage,
         CancellationToken ct = default)
     {
@@ -325,21 +323,21 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(["!assetIndex@arr"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol,
-        Action<WebSocketDataEvent<BinanceStreamTrade>> onMessage,
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(string symbol,
+        Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage,
         bool filterOutNonTradeUpdates = true,
         CancellationToken ct = default)
-        => SubscribeToTradeUpdatesAsync([symbol], onMessage, filterOutNonTradeUpdates, ct);
+        => SubscribeToTradesAsync([symbol], onMessage, filterOutNonTradeUpdates, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradeUpdatesAsync(
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(
         IEnumerable<string> symbols,
-        Action<WebSocketDataEvent<BinanceStreamTrade>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage,
         bool filterOutNonTradeUpdates = true,
         CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
 
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceStreamTrade>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTrade>>>(data =>
         {
             if (filterOutNonTradeUpdates && data.Data.Data.Type != "MARKET")
                 return;
@@ -349,5 +347,4 @@ internal partial class BinanceFuturesSocketClientUsd
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@trade").ToArray();
         return SubscribeAsync(symbols, false, handler, ct);
     }
-    */
 }

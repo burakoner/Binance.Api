@@ -31,7 +31,7 @@ internal partial class BinanceSpotRestClient
         return RequestAsync<IEnumerable<BinanceSpotUserTrade>>(GetUrl(api, v3, "myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSpotOrderRateLimit>>> GetOrderRateLimitStatusAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<IEnumerable<BinanceSpotOrderRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
