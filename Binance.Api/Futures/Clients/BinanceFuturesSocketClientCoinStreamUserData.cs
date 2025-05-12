@@ -37,7 +37,7 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onAccountUpdated?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: {Error}", result.Error);
                         break;
                     }
 
@@ -50,7 +50,7 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onLeverageUpdated?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: {Error}", result.Error);
                         break;
                     }
 
@@ -63,7 +63,7 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onMarginUpdated?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from account position stream: {Error}", result.Error);
                         break;
                     }
 
@@ -76,7 +76,7 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onOrderUpdated?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from order stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from order stream: {Error}", result.Error);
                         break;
                     }
 
@@ -89,7 +89,7 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onStrategyUpdated?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: {Error}", result.Error);
                         break;
                     }
 
@@ -102,7 +102,7 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onGridUpdated?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: {Error}", result.Error);
                         break;
                     }
 
@@ -115,13 +115,13 @@ internal partial class BinanceFuturesSocketClientCoin
                             result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
                             onListenKeyExpired?.Invoke(data.As(result.Data));
                         }
-                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: " + result.Error);
+                        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from oco order stream: {Error}", result.Error);
                         break;
                     }
 
                 // Default
                 default:
-                    Logger.Log(LogLevel.Warning, $"Received unknown user data event {evnt}: " + data);
+                    Logger.Log(LogLevel.Warning, "Received unknown user data event {Event}: {Data}", evnt, data);
                     break;
             }
         });
