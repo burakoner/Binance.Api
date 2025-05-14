@@ -31,7 +31,7 @@ internal partial class BinanceFuturesRestClientCoin(BinanceFuturesRestClient par
         => _._.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     // GetUrl
-    private Uri GetUrl(string api, string version, string endpoint)
+    private static Uri GetUrl(string api, string version, string endpoint)
     {
         var url = BinanceAddress.Default.CoinFuturesRestApiAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");

@@ -28,7 +28,7 @@ internal partial class BinanceWalletRestClient(BinanceRestApiClient root) : IBin
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.SpotRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.WalletRestApiAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

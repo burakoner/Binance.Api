@@ -56,10 +56,17 @@ public class BinanceAddress
     public string UsdFuturesSocketApiStreamAddress { get; set; } = "";
     #endregion
 
+    public string MarginRestApiAddress { get; set; } = "";
+    public string WalletRestApiAddress { get; set; } = "";
+    public string SubAccountRestApiAddress { get; set; } = "";
+
+    public string AlgoTradingRestApiAddress { get; set; } = "";
+    public string CopyTradingRestApiAddress { get; set; } = "";
+
     /// <summary>
     /// The default addresses to connect to the binance.com API
     /// </summary>
-    public static BinanceAddress Default = new()
+    public static BinanceAddress Default { get; } = new BinanceAddress
     {
         SpotRestApiAddress = "https://api.binance.com",
         SpotSocketApiQueryAddress = "wss://ws-api.binance.com:443/",
@@ -72,12 +79,19 @@ public class BinanceAddress
         UsdFuturesRestApiAddress = "https://fapi.binance.com",
         UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com/",
+
+        MarginRestApiAddress = "https://api.binance.com",
+        WalletRestApiAddress = "https://api.binance.com",
+        SubAccountRestApiAddress = "https://api.binance.com",
+
+        AlgoTradingRestApiAddress = "https://api.binance.com",
+        CopyTradingRestApiAddress = "https://api.binance.com",
     };
 
     /// <summary>
     /// The addresses to connect to the binance testnet
     /// </summary>
-    public static BinanceAddress TestNet = new()
+    public static BinanceAddress TestNet { get; } = new BinanceAddress
     {
         SpotRestApiAddress = "https://testnet.binance.vision",
         SpotSocketApiQueryAddress = "wss://ws-api.testnet.binance.vision/",
@@ -90,12 +104,18 @@ public class BinanceAddress
         UsdFuturesRestApiAddress = "https://testnet.binancefuture.com",
         UsdFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
+
+        MarginRestApiAddress = "https://testnet.binance.vision",
+        WalletRestApiAddress = "https://testnet.binance.vision",
+
+        AlgoTradingRestApiAddress = "https://testnet.binance.vision",
+        CopyTradingRestApiAddress = "https://testnet.binance.vision",
     };
 
     /// <summary>
     /// The addresses to connect to binance.us. (binance.us futures not are not available)
     /// </summary>
-    public static BinanceAddress Us = new()
+    public static BinanceAddress US { get; } = new BinanceAddress
     {
         SpotRestApiAddress = "https://api.binance.us",
     };

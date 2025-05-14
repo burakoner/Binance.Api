@@ -3,10 +3,13 @@ using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Shared;
 using Binance.Api.Spot;
+using Binance.Api.SubAccount;
 using Binance.Api.Wallet;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Binance.ApiConsole;
 
@@ -16,20 +19,13 @@ internal class Program
     {
         var apikey = "";
         var secret = "";
-
-        var cli = new Binance.Net.Clients.BinanceRestClient(x =>
-        {
-            x.OutputOriginalData = true;
-            x.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials(apikey, secret);
-        });
-        var listenKeyNet = await cli.SpotApi.Account.StartUserStreamAsync();
-
         var api = new BinanceRestApiClient(new BinanceRestApiClientOptions
         {
             RawResponse = true,
             ApiCredentials = new ApiSharp.Authentication.ApiCredentials(apikey, secret)
         });
         var listenKey = await api.Spot.StartUserStreamAsync();
+        Console.WriteLine("listenKey: " + listenKey.Raw);
 
         var ws = new BinanceSocketApiClient(new BinanceSocketApiClientOptions
         {
@@ -37,7 +33,10 @@ internal class Program
             ApiCredentials = new ApiSharp.Authentication.ApiCredentials(apikey, secret)
         });
 
-        var sub = await ws.Spot.SubscribeToUserDataStreamAsync(listenKey.Data);
+        var sub = await ws.Spot.SubscribeToUserDataStreamAsync(listenKey.Data, onAccountBalanceUpdate: data =>
+        {
+            Console.WriteLine("onAccountBalanceUpdate: " + JsonConvert.SerializeObject(data));
+        });
 
         Console.WriteLine("Press any key to unsubscribe...");
         Console.ReadKey();
@@ -393,6 +392,49 @@ internal class Program
         var futures_909 = await api.CoinFutures.GetDownloadLinkForOrderHistoryAsync("---DOWNLOAD-ID---");
         var futures_910 = await api.CoinFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
         var futures_911 = await api.CoinFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
+
+        // Copy Trading -> Futures Methods (PRIVATE)
+        var copy_101 = await api.CopyTrading.Futures.GetLeadTraderStatusAsync();
+        var copy_102 = await api.CopyTrading.Futures.GetLeadTradingSymbolsAsync();
+
+        // Sub-Account -> Account Methods (PRIVATE)
+        var subaccount_101 = await api.SubAccount.CreateVirtualSubAccountAsync("---SUBACCOUNT-STRING---");
+        var subaccount_102 = await api.SubAccount.GetSubAccountsAsync();
+        var subaccount_103 = await api.SubAccount.EnableFuturesAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_104 = await api.SubAccount.EnableMarginAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_105 = await api.SubAccount.EnableOptionsAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_106 = await api.SubAccount.EnableBlvtAsync("---SUBACCOUNT-EMAIL---", true);
+        var subaccount_107 = await api.SubAccount.GetSubAccountStatusAsync();
+        var subaccount_108 = await api.SubAccount.GetFuturesPositionRiskAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_109 = await api.SubAccount.GetFuturesPositionRiskAsync(BinanceSubAccountFuturesType.UsdtMarginedFutures, "---SUBACCOUNT-EMAIL---");
+        var subaccount_110 = await api.SubAccount.GetTransactionStatisticsAsync("---SUBACCOUNT-EMAIL---");
+
+        // Sub-Account -> API Management Methods (PRIVATE)
+        var subaccount_201 = await api.SubAccount.GetApiKeyIpRestrictionAsync("---SUBACCOUNT-EMAIL---", "---SUBACCOUNT-APIKEY---");
+        var subaccount_202 = await api.SubAccount.RemoveApiKeyIpRestrictionAsync("---SUBACCOUNT-EMAIL---", "---SUBACCOUNT-APIKEY---", null);
+        var subaccount_203 = await api.SubAccount.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-EMAIL---", "---SUBACCOUNT-APIKEY---", false, null);
+
+        // Sub-Account -> Asset Management Methods (PRIVATE)
+        var subaccount_301 = await api.SubAccount.FuturesTransferAsync("---SUBACCOUNT-EMAIL---", "---ASSET---", 100.0m, BinanceSubAccountFuturesTransferType.FromCoinFuturesToSpot);
+        var subaccount_302 = await api.SubAccount.GetFuturesDetailsAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_303 = await api.SubAccount.GetFuturesDetailsAsync(BinanceSubAccountFuturesType.UsdtMarginedFutures, "---SUBACCOUNT-EMAIL---");
+        var subaccount_304 = await api.SubAccount.GetMarginDetailsAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_305 = await api.SubAccount.GetDepositAddressAsync("---SUBACCOUNT-EMAIL---", "---ASSET---");
+        var subaccount_306 = await api.SubAccount.GetDepositHistoryAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_307 = await api.SubAccount.GetFuturesSummaryAsync();
+        var subaccount_308 = await api.SubAccount.GetFuturesSummaryAsync();
+        var subaccount_309 = await api.SubAccount.GetMarginSummaryAsync();
+        var subaccount_310 = await api.SubAccount.MarginTransferAsync("---SUBACCOUNT-EMAIL---", "---ASSET---", 100.0m, BinanceSubAccountMarginTransferType.FromSubAccountSpotToSubAccountMargin);
+        var subaccount_311 = await api.SubAccount.GetBalancesAsync("---SUBACCOUNT-EMAIL---");
+        var subaccount_312 = await api.SubAccount.GetFuturesTransferHistoryAsync("---SUBACCOUNT-EMAIL---", BinanceSubAccountFuturesType.UsdtMarginedFutures);
+        var subaccount_313 = await api.SubAccount.GetSpotTransferHistoryAsync();
+        var subaccount_314 = await api.SubAccount.GetSpotSummaryAsync();
+        var subaccount_315 = await api.SubAccount.GetUniversalTransferHistoryAsync();
+        var subaccount_316 = await api.SubAccount.FuturesAssetTransferAsync("---FROM-EMAIL---", "---TO-EMAIL---", BinanceSubAccountFuturesType.UsdtMarginedFutures, "---ASSET---", 100.0m);
+        var subaccount_317 = await api.SubAccount.GetTransferHistoryAsync();
+        var subaccount_318 = await api.SubAccount.TransferSubAccountToMasterAsync("---ASSET---", 100.0m);
+        var subaccount_319 = await api.SubAccount.TransferSubAccountToSubAccountAsync("---SUBACCOUNT-EMAIL---", "---ASSET---", 100.0m);
+        var subaccount_320 = await api.SubAccount.UniversalTransferAsync(BinanceSubAccountTransferAccountType.Spot, BinanceSubAccountTransferAccountType.UsdtFuture, "---ASSET---", 100.0m);
     }
 
     static async Task WebSocketApiSamplesAsync()
@@ -493,7 +535,7 @@ internal class Program
         await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 1000, (data) => { });
 
         // Spot Web Socket Stream > User Data Subscriptions (PRIVATE)
-        await ws.Spot.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----", 
+        await ws.Spot.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
             onOrderUpdateMessage: (data) => { },
             onOcoOrderUpdateMessage: (data) => { },
             onAccountPositionMessage: (data) => { },
@@ -528,7 +570,7 @@ internal class Program
         var futures_501 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync("---SYMBOL---", (data) => { });
         var futures_502 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync(["---SYMBOL---"], (data) => { });
         var futures_503 = await ws.UsdFutures.SubscribeToMarkPricesAsync("---SYMBOL---", 1000, (data) => { });
-        var futures_504 = await ws.UsdFutures.SubscribeToMarkPricesAsync(["---SYMBOL---"],3000, (data) => { });
+        var futures_504 = await ws.UsdFutures.SubscribeToMarkPricesAsync(["---SYMBOL---"], 3000, (data) => { });
         var futures_505 = await ws.UsdFutures.SubscribeToMarkPricesAsync(null, (data) => { });
         var futures_506 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", BinanceKlineInterval.FourHours, (data) => { });
         var futures_507 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });

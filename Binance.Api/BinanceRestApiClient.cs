@@ -1,7 +1,9 @@
 ﻿using Binance.Api.Algo;
+using Binance.Api.CopyTrading;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Spot;
+using Binance.Api.SubAccount;
 using Binance.Api.Wallet;
 
 namespace Binance.Api;
@@ -51,10 +53,18 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceWalletRestClient Wallet { get; }
 
-    // TODO: Copy Trading
+    /// <summary>
+    /// Binance Copy Trading Rest API Client
+    /// </summary>
+    public IBinanceCopyTradingRestClient CopyTrading { get; }
+
     // TODO: Convert
 
-    // TODO: SubAccount
+    /// <summary>
+    /// Binance Sub-Account Rest API Client
+    /// </summary>
+    public IBinanceSubAccountRestClient SubAccount { get; }
+
     // TODO: Link
 
     // TODO: Investment & Service
@@ -98,6 +108,8 @@ public sealed class BinanceRestApiClient : RestApiClient
         Margin = new BinanceMarginRestClient(this);
         Algo = new BinanceAlgoRestClient(this);
         Wallet = new BinanceWalletRestClient(this);
+        CopyTrading = new BinanceCopyTradingRestClient(this);
+        SubAccount = new BinanceSubAccountRestClient(this);
     }
 
     #region Overrided Methods
@@ -121,16 +133,13 @@ public sealed class BinanceRestApiClient : RestApiClient
     }
 
     /// <inheritdoc/>
-    protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync()
-        => Spot.GetTimeAsync();
+    protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync() => Spot.GetTimeAsync();
 
     /// <inheritdoc/>
-    protected override TimeSyncInfo GetTimeSyncInfo()
-        => new(Logger, RestOptions.AutoTimestamp, RestOptions.TimestampRecalculationInterval, TimeSyncState);
+    protected override TimeSyncInfo GetTimeSyncInfo() => new(Logger, RestOptions.AutoTimestamp, RestOptions.TimestampRecalculationInterval, TimeSyncState);
 
     /// <inheritdoc/>
-    protected override TimeSpan GetTimeOffset()
-        => TimeSyncState.TimeOffset;
+    protected override TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
     #endregion
 
     #region Internal Methods

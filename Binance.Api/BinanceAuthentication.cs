@@ -1,5 +1,15 @@
 ﻿namespace Binance.Api;
 
+/*
+ * Security Type	Description
+ * ---------------- -------------------------------------------------------- 
+ * NONE	            Endpoint can be accessed freely.
+ * TRADE	        Endpoint requires sending a valid API-Key and signature.
+ * USER_DATA	    Endpoint requires sending a valid API-Key and signature.
+ * USER_STREAM	    Endpoint requires sending a valid API-Key.
+ * 
+ * https://developers.binance.com/docs/binance-spot-api-docs/rest-api/endpoint-security-type
+ */
 internal class BinanceAuthentication(ApiCredentials credentials) : AuthenticationProvider(credentials)
 {
     public override void AuthenticateRestApi(RestApiClient apiClient, Uri uri, HttpMethod method, bool signed, ArraySerialization serialization, SortedDictionary<string, object> query, SortedDictionary<string, object> body, string bodyContent, SortedDictionary<string, string> headers)

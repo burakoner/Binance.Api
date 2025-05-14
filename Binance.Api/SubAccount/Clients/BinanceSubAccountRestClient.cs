@@ -1,10 +1,12 @@
-﻿namespace Binance.Api.Margin;
+﻿namespace Binance.Api.SubAccount;
 
-internal partial class BinanceMarginRestClient(BinanceRestApiClient root): IBinanceMarginRestClient
+internal partial class BinanceSubAccountRestClient(BinanceRestApiClient root) : IBinanceSubAccountRestClient
 {
     // Api
     private const string v1 = "1";
+    private const string v2 = "2";
     private const string v3 = "3";
+    private const string v4 = "4";
     private const string api = "api";
     private const string sapi = "sapi";
 
@@ -13,7 +15,7 @@ internal partial class BinanceMarginRestClient(BinanceRestApiClient root): IBina
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    internal BinanceRestApiClientOptions Options => _.RestOptions;
 
     internal Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
@@ -28,7 +30,7 @@ internal partial class BinanceMarginRestClient(BinanceRestApiClient root): IBina
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.MarginRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.SubAccountRestApiAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 
