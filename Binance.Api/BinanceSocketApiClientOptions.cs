@@ -1,5 +1,8 @@
 ﻿namespace Binance.Api;
 
+/// <summary>
+/// Binance WebSocket API Client Options
+/// </summary>
 public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
 {
     /// <summary>
@@ -27,39 +30,90 @@ public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
     /// </summary>
     public bool AllowAppendingClientOrderId { get; set; } = true;
 
-    // Platform Based Options
+    /// <summary>
+    /// Binance Spot WebSocket API Options
+    /// </summary>
     public BinanceSocketApiClientSpotOptions SpotOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance USDⓈ-M Futures WebSocket API Options
+    /// </summary>
     public BinanceSocketApiClientUsdtFuturesOptions UsdtFuturesOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance Coin-M Futures WebSocket API Options
+    /// </summary>
     public BinanceSocketApiClientCoinFuturesOptions CoinFuturesOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance European Options WebSocket API Options
+    /// </summary>
     public BinanceSocketApiClientEuropeanOptions EuropeanOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance Broker WebSocket API Options
+    /// </summary>
     public BinanceSocketApiClientBrokerOptions BrokerOptions { get; set; } = new();
 }
 
+/// <summary>
+/// Binance Spot WebSocket API Options
+/// </summary>
 public class BinanceSocketApiClientSpotOptions
 {
-    // Trade Rules
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
     public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
+/// <summary>
+/// Binance USDⓈ-M Futures WebSocket API Options
+/// </summary>
 public class BinanceSocketApiClientUsdtFuturesOptions
 {
-    // Trade Rules
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
     public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
+/// <summary>
+/// Binance Coin-M Futures WebSocket API Options
+/// </summary>
 public class BinanceSocketApiClientCoinFuturesOptions
 {
-    // Trade Rules
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
     public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
+/// <summary>
+/// Binance European Options WebSocket API Options
+/// </summary>
 public class BinanceSocketApiClientEuropeanOptions
 {
 }
 
+/// <summary>
+/// Binance Broker WebSocket API Options
+/// </summary>
 public class BinanceSocketApiClientBrokerOptions
 {
 }

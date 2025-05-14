@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Algo;
+using Binance.Api.Convert;
 using Binance.Api.CopyTrading;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
@@ -15,7 +16,6 @@ public sealed class BinanceRestApiClient : RestApiClient
 {
     // Internal
     internal ILogger Logger => this._logger;
-    internal IBinanceFuturesRestClient Futures { get; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
     internal BinanceRestApiClientOptions RestOptions => (BinanceRestApiClientOptions)ClientOptions;
 
@@ -23,6 +23,11 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// Binance Spot Rest API Client
     /// </summary>
     public IBinanceSpotRestClient Spot { get; }
+
+    /// <summary>
+    /// Binance Futures Rest API Client
+    /// </summary>
+    internal IBinanceFuturesRestClient Futures { get; }
 
     /// <summary>
     /// Binance USDⓈ Futures Rest API Client
@@ -58,7 +63,10 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceCopyTradingRestClient CopyTrading { get; }
 
-    // TODO: Convert
+    /// <summary>
+    /// Binance Convert Rest API Client
+    /// </summary>
+    public IBinanceConvertRestClient Convert { get; }
 
     /// <summary>
     /// Binance Sub-Account Rest API Client
@@ -66,9 +74,28 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceSubAccountRestClient SubAccount { get; }
 
     // TODO: Link
-
-    // TODO: Investment & Service
-    // TODO: Web3 Wallet
+    // TODO: Staking
+    // TODO: Dual Investment
+    // TODO: Mining
+    // TODO: Crypto Loan
+    // TODO: VIP Loan
+    // TODO: C2C
+    // TODO: Fiat
+    // TODO: NFT
+    // TODO: Gift Card
+    // TODO: BAB Token
+    // TODO: Rebate
+    // TODO: Simple Earn
+    // TODO: Binance Pay History
+    // TODO: Web3 DApp
+    // TODO: Binance Web3 Connect
+    // TODO: Task Verification
+    // TODO: Open Platform
+    // TODO: Mini Program
+    // TODO: Binance Open API
+    // TODO: Binance Fiat Widget
+    // TODO: Binance Pay Merchant
+    // TODO: Binance Connect
 
     /// <summary>
     /// Default Constructor
@@ -109,6 +136,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         Algo = new BinanceAlgoRestClient(this);
         Wallet = new BinanceWalletRestClient(this);
         CopyTrading = new BinanceCopyTradingRestClient(this);
+        Convert = new BinanceConvertRestClient(this);
         SubAccount = new BinanceSubAccountRestClient(this);
     }
 

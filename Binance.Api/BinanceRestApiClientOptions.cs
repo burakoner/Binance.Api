@@ -1,5 +1,8 @@
 ﻿namespace Binance.Api;
 
+/// <summary>
+/// Binance Rest API Client Options
+/// </summary>
 public class BinanceRestApiClientOptions : RestApiClientOptions
 {
     /// <summary>
@@ -27,21 +30,51 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     /// </summary>
     public TimeSpan TimestampRecalculationInterval { get; set; } = TimeSpan.FromHours(1);
 
-    // Platform Based Options
+    /// <summary>
+    /// Binance Spot Rest API Options
+    /// </summary>
     public BinanceRestApiClientSpotOptions SpotOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance USDⓈ-M Futures Rest API Options
+    /// </summary>
     public BinanceRestApiClientUsdtFuturesOptions UsdtFuturesOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance Coin-M Futures Rest API Options
+    /// </summary>
     public BinanceRestApiClientCoinFuturesOptions CoinFuturesOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance European Options Rest API Options
+    /// </summary>
     public BinanceRestApiClientEuropeanOptions EuropeanOptions { get; set; } = new();
+
+    /// <summary>
+    /// Binance Broker Rest API Options
+    /// </summary>
     public BinanceRestApiClientBrokerOptions BrokerOptions { get; set; } = new();
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public BinanceRestApiClientOptions() : this("", "")
     {
     }
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="apikey">API Key</param>
+    /// <param name="secret">API Secret</param>
     public BinanceRestApiClientOptions(string apikey, string secret) : this(new ApiCredentials(apikey, secret))
     {
     }
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="credentials">API Credentials</param>
     public BinanceRestApiClientOptions(ApiCredentials credentials)
     {
         // API Credentials
@@ -58,32 +91,64 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     }
 }
 
-
+/// <summary>
+/// Binance Rest API Client Spot Options
+/// </summary>
 public class BinanceRestApiClientSpotOptions
 {
-    // Trade Rules
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
     public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
+/// <summary>
+/// Binance Rest API Client USDⓈ-M Futures Options
+/// </summary>
 public class BinanceRestApiClientUsdtFuturesOptions
 {
-    // Trade Rules
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
     public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
+/// <summary>
+/// Binance Rest API Client Coin-M Futures Options
+/// </summary>
 public class BinanceRestApiClientCoinFuturesOptions
 {
-    // Trade Rules
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
     public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
+/// <summary>
+/// Binance Rest API Client European Options Options
+/// </summary>
 public class BinanceRestApiClientEuropeanOptions
 {
 }
 
+/// <summary>
+/// Binance Rest API Client Broker Options
+/// </summary>
 public class BinanceRestApiClientBrokerOptions
 {
 }

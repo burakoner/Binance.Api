@@ -57,7 +57,7 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
             { "apiKey", Credentials.Key.GetString() },
             { "timestamp", timestamp },
         };
-        var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + Convert.ToString(p.Value, BinanceConstants.CI)));
+        var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + System.Convert.ToString(p.Value, BinanceConstants.CI)));
 
         if (Credentials.Type == ApiCredentialsType.HMAC)
         {

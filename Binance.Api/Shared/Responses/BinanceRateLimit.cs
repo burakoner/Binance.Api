@@ -1,4 +1,4 @@
-﻿namespace Binance.Api;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Rate limit info

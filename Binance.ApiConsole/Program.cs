@@ -1,4 +1,5 @@
 ﻿using Binance.Api;
+using Binance.Api.Convert;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Shared;
@@ -9,7 +10,6 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Binance.ApiConsole;
 
@@ -435,6 +435,19 @@ internal class Program
         var subaccount_318 = await api.SubAccount.TransferSubAccountToMasterAsync("---ASSET---", 100.0m);
         var subaccount_319 = await api.SubAccount.TransferSubAccountToSubAccountAsync("---SUBACCOUNT-EMAIL---", "---ASSET---", 100.0m);
         var subaccount_320 = await api.SubAccount.UniversalTransferAsync(BinanceSubAccountTransferAccountType.Spot, BinanceSubAccountTransferAccountType.UsdtFuture, "---ASSET---", 100.0m);
+
+        // Convert -> Market Data Methods (PRIVATE)
+        var convert_101 = await api.Convert.GetPairsAsync();
+        var convert_102 = await api.Convert.GetAssetsAsync();
+
+        // Convert -> Trade Methods (PRIVATE)
+        var convert_201 = await api.Convert.QuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---");
+        var convert_202 = await api.Convert.AcceptQuoteAsync("---QUOTE-ID---");
+        var convert_203 = await api.Convert.GetHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var convert_204 = await api.Convert.GetStatusAsync("---ORDER-ID---");
+        var convert_205 = await api.Convert.PlaceLimitOrderAsync("---BASE-ASSET---", "---QUOTE-ASSET---", 100.0m, BinanceOrderSide.Buy, BinanceConvertExpiredTime.OneDay, 10.0m);
+        var convert_206 = await api.Convert.CancelLimitOrderAsync("---ORDER-ID---");
+        var convert_207 = await api.Convert.GetLimitOrdersAsync();
     }
 
     static async Task WebSocketApiSamplesAsync()

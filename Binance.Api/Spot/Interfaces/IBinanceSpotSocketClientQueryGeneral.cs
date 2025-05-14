@@ -38,12 +38,19 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <returns></returns>
     Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default);
 
+    /// <summary>
+    /// Gets information about the exchange including rate limits and symbol list
+    /// </summary>
+    /// <param name="status">Status</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
     Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
     /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#exchange-information" /></para>
     /// </summary>
+    /// <param name="permission">Permission</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default);
@@ -53,6 +60,9 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#exchange-information" /></para>
     /// </summary>
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
+    /// <param name="status">Status</param>
+    /// <param name="permissions">Permissions</param>
+    /// <param name="showPermissionSets">Show Permission Sets</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSymbolStatus? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);

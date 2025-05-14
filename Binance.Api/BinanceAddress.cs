@@ -56,11 +56,34 @@ public class BinanceAddress
     public string UsdFuturesSocketApiStreamAddress { get; set; } = "";
     #endregion
 
+    /// <summary>
+    /// Binance Convert Rest API Address
+    /// </summary>
+    public string ConvertRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Margin Rest API Address
+    /// </summary>
     public string MarginRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Wallet Rest API Address
+    /// </summary>
     public string WalletRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance SubAccount Rest API Address
+    /// </summary>
     public string SubAccountRestApiAddress { get; set; } = "";
 
+    /// <summary>
+    /// Binance Algo Trading Rest API Address
+    /// </summary>
     public string AlgoTradingRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Copy Trading Rest API Address
+    /// </summary>
     public string CopyTradingRestApiAddress { get; set; } = "";
 
     /// <summary>
@@ -80,6 +103,7 @@ public class BinanceAddress
         UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com/",
 
+        ConvertRestApiAddress = "https://api.binance.com",
         MarginRestApiAddress = "https://api.binance.com",
         WalletRestApiAddress = "https://api.binance.com",
         SubAccountRestApiAddress = "https://api.binance.com",
@@ -105,8 +129,10 @@ public class BinanceAddress
         UsdFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
 
+        ConvertRestApiAddress = "https://testnet.binance.vision",
         MarginRestApiAddress = "https://testnet.binance.vision",
         WalletRestApiAddress = "https://testnet.binance.vision",
+        SubAccountRestApiAddress = "https://testnet.binance.vision",
 
         AlgoTradingRestApiAddress = "https://testnet.binance.vision",
         CopyTradingRestApiAddress = "https://testnet.binance.vision",

@@ -12,7 +12,7 @@ public interface IBinanceFuturesSocketClientUsdQueryAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The account information</returns>
-    Task<CallResult<IEnumerable<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(long? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<IEnumerable<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get account information, including position and balances
@@ -20,5 +20,5 @@ public interface IBinanceFuturesSocketClientUsdQueryAccount
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    Task<CallResult<BinanceFuturesAccountInfoV3>> GetAccountAsync(long? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<BinanceFuturesAccountInfoV3>> GetAccountAsync(int? receiveWindow = null, CancellationToken ct = default);
 }

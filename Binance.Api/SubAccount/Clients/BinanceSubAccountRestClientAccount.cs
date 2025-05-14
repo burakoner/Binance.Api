@@ -17,8 +17,8 @@ internal partial class BinanceSubAccountRestClient
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("email", email);
-        parameters.AddOptional("page", page?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("page", page?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
         parameters.AddOptional("isFreeze", isFreeze);
 

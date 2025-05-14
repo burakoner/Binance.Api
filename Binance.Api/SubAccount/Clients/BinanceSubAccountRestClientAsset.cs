@@ -11,7 +11,7 @@ internal partial class BinanceSubAccountRestClient
         {
             { "email", email },
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddEnum("type", type);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
@@ -88,8 +88,8 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("coin", asset);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("offset", offset?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("offset", offset?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<IEnumerable<BinanceSubAccountDeposit>>(GetUrl(sapi, v1, "capital/deposit/subHisrec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
@@ -132,7 +132,7 @@ internal partial class BinanceSubAccountRestClient
         {
             { "email", email },
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddEnum("type", type);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
@@ -163,8 +163,8 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddEnum("futuresType", futuresType);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("page", page?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("page", page?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceSubAccountFuturesTransferHistory>(GetUrl(sapi, v1, "sub-account/futures/internalTransfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
@@ -177,8 +177,8 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("toEmail", toEmail);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("page", page?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("page", page?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<IEnumerable<BinanceSubAccountSpotTransfer>>(GetUrl(sapi, v1, "sub-account/sub/transfer/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
@@ -202,8 +202,8 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("toEmail", toEmail);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("page", page?.ToString(CultureInfo.InvariantCulture));
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("page", page?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var result = await RequestAsync<BinanceSubAccountUniversalTransfersContainer>(GetUrl(sapi, v1, "sub-account/universalTransfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
@@ -219,7 +219,7 @@ internal partial class BinanceSubAccountRestClient
             { "fromEmail", fromEmail },
             { "toEmail", toEmail },
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddEnum("futuresType", futuresType);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
@@ -234,7 +234,7 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptionalEnum("type", type);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<IEnumerable<BinanceSubAccountTransferSubAccount>>(GetUrl(sapi, v1, "sub-account/transfer/subUserHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
@@ -247,7 +247,7 @@ internal partial class BinanceSubAccountRestClient
         var parameters = new ParameterCollection
         {
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
@@ -263,7 +263,7 @@ internal partial class BinanceSubAccountRestClient
         {
             { "toEmail", email },
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
@@ -278,7 +278,7 @@ internal partial class BinanceSubAccountRestClient
         var parameters = new ParameterCollection
         {
             { "asset", asset },
-            { "amount", quantity.ToString(CultureInfo.InvariantCulture) }
+            { "amount", quantity.ToString(BinanceConstants.CI) }
         };
         parameters.AddEnum("fromAccountType", fromAccountType);
         parameters.AddEnum("toAccountType", toAccountType);

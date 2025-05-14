@@ -1,6 +1,4 @@
-﻿using Binance.Api.Margin;
-
-namespace Binance.Api.Shared;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Binance response
