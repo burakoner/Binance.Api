@@ -61,13 +61,25 @@ public class BinanceSocketApiClient
     public BinanceSocketApiClient(ILogger? logger, BinanceSocketApiClientOptions options)
     {
         SocketOptions = options;
-        RestApiClient = new(logger, new());
-        Logger = logger ?? BaseClient.LoggerFactory.CreateLogger(typeof(BinanceSocketApiClient));
+        Logger = logger ?? BaseClient.LoggerFactory.CreateLogger<BinanceSocketApiClient>();
+        RestApiClient = new(Logger, new());
 
         Spot = new BinanceSpotSocketClient(this);
         Futures = new BinanceFuturesSocketClient(this);
     }
 
     internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (SocketOptions.ReceiveWindow != null ? System.Convert.ToInt32(SocketOptions.ReceiveWindow?.TotalMilliseconds) : null);
+
+    /// <summary>
+    /// Sets API Credentials
+    /// </summary>
+    /// <param name="apikey"></param>
+    /// <param name="secret"></param>
+    public void SetApiCredentials(string apikey, string secret)
+    {
+        ((BinanceSpotSocketClient)Spot).SetApiCredentials(new ApiCredentials(apikey, secret));
+        ((BinanceFuturesSocketClientUsd)Futures.USD).SetApiCredentials(new ApiCredentials(apikey, secret));
+        ((BinanceFuturesSocketClientCoin)Futures.Coin).SetApiCredentials(new ApiCredentials(apikey, secret));
+    }
 
 }

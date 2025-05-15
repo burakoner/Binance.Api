@@ -140,6 +140,18 @@ public sealed class BinanceRestApiClient : RestApiClient
         SubAccount = new BinanceSubAccountRestClient(this);
     }
 
+    #region Public Nethods
+    /// <summary>
+    /// Sets API Credentials
+    /// </summary>
+    /// <param name="apikey"></param>
+    /// <param name="secret"></param>
+    public void SetApiCredentials(string apikey, string secret)
+    {
+        SetApiCredentials(new ApiCredentials(apikey, secret));
+    }
+    #endregion
+
     #region Overrided Methods
     /// <inheritdoc/>
     protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)

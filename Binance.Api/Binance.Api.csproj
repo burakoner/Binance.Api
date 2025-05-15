@@ -9,17 +9,15 @@
 	<PropertyGroup>
 		<PackageId>Binance.Api</PackageId>
 		<Authors>Burak Öner</Authors>
-		<Version>5.5.15</Version>
-		<FileVersion>5.5.15</FileVersion>
-		<PackageVersion>5.5.15</PackageVersion>
-		<AssemblyVersion>5.5.15</AssemblyVersion>
-		<Description>Up-to-date, most-complete, well-organized, well-documented, easy-to-use, multi-task and multi-thread compatible Binance Cryptocurrency Exchange Rest and Websocket Api Wrapper</Description>
+		<Version>5.5.16</Version>
+		<FileVersion>5.5.16</FileVersion>
+		<PackageVersion>5.5.16</PackageVersion>
+		<AssemblyVersion>5.5.16</AssemblyVersion>
+		<Description>Binance API Wrapper. Up-to-date, most-complete, well-organized, well-documented, easy-to-use, multi-task and multi-thread compatible Binance Cryptocurrency Exchange Rest and Websocket Api Wrapper</Description>
 		<PackageTags>Binance;BNB;BTC;Api;Client;Rest;Web;Websocket;Socket;Wrapper;Crypto;Currency;Cryptocurrency;Exchange;Trade;Trading;Bitcoin;Spot;Margin;Futures;Derivates;Stock;Options;Swap;</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReleaseNotes>
-			Version 5.5.15 - 14 May 2025
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Please refer to changelog at Github https://github.com/burakoner/Binance.Api/blob/master/CHANGELOG.md</PackageReleaseNotes>
 		<PackageIcon>Binance.png</PackageIcon>
 		<PackageIconUrl />
 		<PackageProjectUrl>https://github.com/burakoner/Binance.Api</PackageProjectUrl>
@@ -27,12 +25,15 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<NeutralLanguage>en</NeutralLanguage>
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Include="Binance.png" Pack="true" PackagePath="" />
+		<None Include="Binance.png" Pack="true" PackagePath="\" />
+		<None Include="../CHANGELOG.md" Pack="true" PackagePath="\" />
+		<None Include="../README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>
