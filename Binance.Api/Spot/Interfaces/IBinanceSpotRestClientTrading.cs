@@ -124,6 +124,7 @@ public interface IBinanceSpotRestClientTrading
     /// <param name="strategyId">Strategy id</param>
     /// <param name="strategyType">Strategy type</param>
     /// <param name="cancelRestriction">Restrict cancellation based on order state</param>
+    /// <param name="selfTradePreventionMode">Self Trade Prevention Mode</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>

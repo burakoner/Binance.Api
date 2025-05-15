@@ -28,22 +28,7 @@
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<NeutralLanguage>en</NeutralLanguage>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-	  <DebugType>embedded</DebugType>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
-	  <DebugType>embedded</DebugType>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-	  <DebugType>embedded</DebugType>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
-	  <DebugType>embedded</DebugType>
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
