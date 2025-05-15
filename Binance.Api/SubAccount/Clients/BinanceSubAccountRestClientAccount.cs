@@ -13,7 +13,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountEmail>(GetUrl(sapi, v1, "sub-account/virtualSubAccount"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceSubAccount>>> GetSubAccountsAsync(string? email = null, int? page = null, int? limit = null, int? receiveWindow = null, bool? isFreeze = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceSubAccount>>> GetSubAccountsAsync(string? email = null, int? page = null, int? limit = null, int? receiveWindow = null, bool? isFreeze = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("email", email);
@@ -23,7 +23,7 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("isFreeze", isFreeze);
 
         var result = await RequestAsync<BinanceSubAccountContainer>(GetUrl(sapi, v1, "sub-account/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
-        return result ? result.As(result.Data.Payload) : result.As<IEnumerable<BinanceSubAccount>>([]);
+        return result ? result.As(result.Data.Payload) : result.As<List<BinanceSubAccount>>([]);
     }
 
     public Task<RestCallResult<BinanceSubAccountFuturesEnabled>> EnableFuturesAsync(string email, int? receiveWindow = null, CancellationToken ct = default)
@@ -76,16 +76,16 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountBlvt>(GetUrl(sapi, v1, "sub-account/blvt/enable"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSubAccountStatus>>> GetSubAccountStatusAsync(string? email = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSubAccountStatus>>> GetSubAccountStatusAsync(string? email = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("email", email);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSubAccountStatus>>(GetUrl(sapi, v1, "sub-account/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceSubAccountStatus>>(GetUrl(sapi, v1, "sub-account/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSubAccountFuturesPositionRisk>>> GetFuturesPositionRiskAsync(string email, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSubAccountFuturesPositionRisk>>> GetFuturesPositionRiskAsync(string email, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -93,10 +93,10 @@ internal partial class BinanceSubAccountRestClient
         };
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSubAccountFuturesPositionRisk>>(GetUrl(sapi, v1, "sub-account/futures/positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceSubAccountFuturesPositionRisk>>(GetUrl(sapi, v1, "sub-account/futures/positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<BinanceSubAccountFuturesPositionRiskV2>> GetFuturesPositionRiskAsync(BinanceSubAccountFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSubAccountFuturesPositionRiskV2>> GetFuturesPositionRiskAsync(BinanceFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {

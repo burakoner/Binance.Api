@@ -10,20 +10,20 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<BinanceWalletVipLevelAndStatus>(GetUrl(sapi, v1, "account/info"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceWalletSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(
+    public Task<RestCallResult<List<BinanceWalletSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
         CancellationToken ct = default)
-        => GetDailyAccountSnapshot<IEnumerable<BinanceWalletSpotAccountSnapshot>>(BinanceAccountType.Spot, startTime, endTime, limit, receiveWindow, ct);
+        => GetDailyAccountSnapshot<List<BinanceWalletSpotAccountSnapshot>>(BinanceAccountType.Spot, startTime, endTime, limit, receiveWindow, ct);
 
-    public Task<RestCallResult<IEnumerable<BinanceWalletMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(
+    public Task<RestCallResult<List<BinanceWalletMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
         CancellationToken ct = default)
-        => GetDailyAccountSnapshot<IEnumerable<BinanceWalletMarginAccountSnapshot>>(BinanceAccountType.Margin, startTime, endTime, limit, receiveWindow, ct);
+        => GetDailyAccountSnapshot<List<BinanceWalletMarginAccountSnapshot>>(BinanceAccountType.Margin, startTime, endTime, limit, receiveWindow, ct);
 
-    public Task<RestCallResult<IEnumerable<BinanceWalletFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(
+    public Task<RestCallResult<List<BinanceWalletFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,
         CancellationToken ct = default)
-        => GetDailyAccountSnapshot<IEnumerable<BinanceWalletFuturesAccountSnapshot>>(BinanceAccountType.Futures, startTime, endTime, limit, receiveWindow, ct);
+        => GetDailyAccountSnapshot<List<BinanceWalletFuturesAccountSnapshot>>(BinanceAccountType.Futures, startTime, endTime, limit, receiveWindow, ct);
 
     private async Task<RestCallResult<T>> GetDailyAccountSnapshot<T>(BinanceAccountType accountType,
         DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null,

@@ -99,7 +99,7 @@ public record BinanceFuturesSymbol
     /// Sub types
     /// </summary>
     [JsonProperty("underlyingSubType")]
-    public IEnumerable<string> UnderlyingSubType { get; set; } = [];
+    public List<string> UnderlyingSubType { get; set; } = [];
 
     /// <summary>
     /// Trigger protect
@@ -128,19 +128,19 @@ public record BinanceFuturesSymbol
     /// Filters for order on this symbol
     /// </summary>
     [JsonProperty("filters")]
-    public IEnumerable<BinanceSymbolFilter> Filters { get; set; } = [];
+    public List<BinanceSymbolFilter> Filters { get; set; } = [];
 
     /// <summary>
     /// Allowed order types
     /// </summary>
     [JsonProperty("orderTypes")]
-    public IEnumerable<BinanceFuturesOrderType> OrderTypes { get; set; } = [];
+    public List<BinanceFuturesOrderType> OrderTypes { get; set; } = [];
 
     /// <summary>
     /// Allowed order time in force
     /// </summary>
     [JsonProperty("timeInForce")]
-    public IEnumerable<BinanceTimeInForce> TimeInForce { get; set; } = [];
+    public List<BinanceTimeInForce> TimeInForce { get; set; } = [];
 
     /// <summary>
     /// Filter for the max accuracy of the price for this symbol

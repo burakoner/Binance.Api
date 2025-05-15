@@ -25,7 +25,7 @@ public record BinanceAlgoSubOrderList
     /// <summary>
     /// Sub orders
     /// </summary>
-    public IEnumerable<BinanceAlgoSubOrder> SubOrders { get; set; } = [];
+    public List<BinanceAlgoSubOrder> SubOrders { get; set; } = [];
 }
 
 /// <summary>

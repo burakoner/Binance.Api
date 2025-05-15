@@ -23,7 +23,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the historical trades for a symbol
@@ -34,7 +34,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTrade>>> GetTradeHistoryAsync(string symbol, long? fromId = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTrade>>> GetHistoricalTradesAsync(string symbol, long? fromId = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets compressed, aggregate trades. Trades that fill at the same time, from the same order, with the same price will have the quantity aggregated.
@@ -47,7 +47,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotStreamAggregatedTrade>>> GetAggregatedTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotStreamAggregatedTrade>>> GetAggregatedTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get candlestick data for the provided symbol
@@ -60,7 +60,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get candlestick data for the provided symbol. Returns modified kline data, optimized for the presentation of candlestick charts
@@ -73,7 +73,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotKline>>> GetUIKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotKline>>> GetUIKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the current average price for a symbol
@@ -100,7 +100,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTicker>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours
@@ -108,7 +108,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTicker>>> GetTickersAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours
@@ -126,7 +126,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotMiniTicker>>> GetMiniTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotMiniTicker>>> GetMiniTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours
@@ -134,7 +134,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotMiniTicker>>> GetMiniTickersAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotMiniTicker>>> GetMiniTickersAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Get Price change statistics for a trading day
@@ -154,7 +154,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="timeZone">Default: 0 (UTC)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Price change statistics for a trading day
@@ -163,7 +163,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="timeZone">Default: 0 (UTC)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Price change statistics for a trading day
@@ -183,7 +183,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="timeZone">Default: 0 (UTC)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Price change statistics for a trading day
@@ -192,7 +192,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="timeZone">Default: 0 (UTC)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(string? timeZone = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(string? timeZone = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get rolling window price change statistics with a custom window.
@@ -216,7 +216,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="windowSize">Default 1d</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetRollingWindowTickersAsync(IEnumerable<string> symbols, TimeSpan? windowSize = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotTicker>>> GetRollingWindowTickersAsync(IEnumerable<string> symbols, TimeSpan? windowSize = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get the latest market price for a symbol.
@@ -234,7 +234,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="symbols">Query price for multiple symbols</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotPriceTicker>>> GetPriceTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotPriceTicker>>> GetPriceTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
 
     /// <summary>
     /// Get the latest market price for a symbol.
@@ -242,7 +242,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotPriceTicker>>> GetPriceTickersAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotPriceTicker>>> GetPriceTickersAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Get the current best price and quantity on the order book.
@@ -260,7 +260,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// <param name="symbols">Query ticker for multiple symbols</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotBookTicker>>> GetBookTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotBookTicker>>> GetBookTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default);
 
     /// <summary>
     /// Get the current best price and quantity on the order book.
@@ -268,5 +268,5 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotBookTicker>>> GetBookTickersAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotBookTicker>>> GetBookTickersAsync(CancellationToken ct = default);
 }

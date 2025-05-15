@@ -25,12 +25,12 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceQueryRecords<BinanceMarginForcedLiquidation>>(GetUrl(sapi, v1, "margin/forceLiquidationRec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginSmallLiabilityAsset>>> GetSmallLiabilityExchangeAssetsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginSmallLiabilityAsset>>> GetSmallLiabilityExchangeAssetsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceMarginSmallLiabilityAsset>>(GetUrl(sapi, v1, "margin/exchange-small-liability"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+        return RequestAsync<List<BinanceMarginSmallLiabilityAsset>>(GetUrl(sapi, v1, "margin/exchange-small-liability"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
     public Task<RestCallResult<BinanceQueryRecords<BinanceMarginSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -45,7 +45,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceQueryRecords<BinanceMarginSmallLiabilityHistory>>(GetUrl(sapi, v1, "margin/exchange-small-liability-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSpotOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSpotOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
             {
@@ -54,7 +54,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("isIsolated", isIsolated);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSpotOrderBase>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceSpotOrderBase>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceMarginOrderOcoList>> CancelMarginOcoOrderAsync(string symbol, bool? isIsolated = null, long? orderListId = null, string? listClientOrderId = null, string? newClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -227,15 +227,15 @@ internal partial class BinanceMarginRestClient
         return result;
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceCurrentRateLimit>>> GetMarginRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceCurrentRateLimit>>> GetMarginRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceCurrentRateLimit>>(GetUrl(sapi, v1, "margin/rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<List<BinanceCurrentRateLimit>>(GetUrl(sapi, v1, "margin/rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginOrderOcoList>>> GetMarginOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginOrderOcoList>>> GetMarginOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (fromId != null && (startTime != null || endTime != null))
             throw new ArgumentException("Start/end time can only be provided without fromId parameter");
@@ -251,10 +251,10 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceMarginOrderOcoList>>(GetUrl(sapi, v1, "margin/allOrderList"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 200);
+        return RequestAsync<List<BinanceMarginOrderOcoList>>(GetUrl(sapi, v1, "margin/allOrderList"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 200);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginOrder>>> GetMarginOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginOrder>>> GetMarginOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
@@ -269,7 +269,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
         parameters.AddOptional("limit", limit);
 
-        return RequestAsync<IEnumerable<BinanceMarginOrder>>(GetUrl(sapi, v1, "margin/allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 200);
+        return RequestAsync<List<BinanceMarginOrder>>(GetUrl(sapi, v1, "margin/allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 200);
     }
 
     public Task<RestCallResult<BinanceMarginOrderOcoList>> GetMarginOcoOrderAsync(string? symbol = null, bool? isIsolated = null, long? orderListId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -290,17 +290,17 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/orderList"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginOrderOcoList>>> GetMarginOpenOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginOrderOcoList>>> GetMarginOpenOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("isIsolated", isIsolated?.ToString());
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceMarginOrderOcoList>>(GetUrl(sapi, v1, "margin/openOrderList"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceMarginOrderOcoList>>(GetUrl(sapi, v1, "margin/openOrderList"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginOrder>>> GetOpenMarginOrdersAsync(string? symbol = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginOrder>>> GetOpenMarginOrdersAsync(string? symbol = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (isIsolated == true && symbol == null)
             throw new ArgumentException("Symbol must be provided for isolated margin");
@@ -311,7 +311,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("isIsolated", isIsolated);
 
-        return RequestAsync<IEnumerable<BinanceMarginOrder>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceMarginOrder>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
     public Task<RestCallResult<BinanceMarginOrder>> GetMarginOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -334,7 +334,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceMarginOrder>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginTrade>>> GetMarginUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null,
+    public Task<RestCallResult<List<BinanceMarginTrade>>> GetMarginUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null,
         int? limit = null, long? fromId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
@@ -351,7 +351,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceMarginTrade>>(GetUrl(sapi, v1, "margin/myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceMarginTrade>>(GetUrl(sapi, v1, "margin/myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
     public async Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default)

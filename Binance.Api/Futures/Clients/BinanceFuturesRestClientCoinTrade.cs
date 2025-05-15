@@ -80,7 +80,7 @@ internal partial class BinanceFuturesRestClientCoin
         return result;
     }
 
-    public async Task<RestCallResult<IEnumerable<CallResult<BinanceFuturesOrder>>>> PlaceMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orders.Count() <= 0 || orders.Count() > 5)
             throw new ArgumentException("Order list should be at least 1 and max 5 orders");
@@ -93,7 +93,7 @@ internal partial class BinanceFuturesRestClientCoin
                 if (!rulesCheck.Passed)
                 {
                     Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-                    return new RestCallResult<IEnumerable<CallResult<BinanceFuturesOrder>>>(new ArgumentError(rulesCheck.ErrorMessage!));
+                    return new RestCallResult<List<CallResult<BinanceFuturesOrder>>>(new ArgumentError(rulesCheck.ErrorMessage!));
                 }
 
                 order.Quantity = rulesCheck.Quantity;
@@ -137,8 +137,8 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        var response = await RequestAsync<IEnumerable<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5);
-        if (!response.Success) return response.As<IEnumerable<CallResult<BinanceFuturesOrder>>>(default);
+        var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)
@@ -154,7 +154,7 @@ internal partial class BinanceFuturesRestClientCoin
             }
         }
 
-        return response.As<IEnumerable<CallResult<BinanceFuturesOrder>>>(result);
+        return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
     }
 
     // TODO: Modify Order (TRADE)
@@ -180,7 +180,7 @@ internal partial class BinanceFuturesRestClientCoin
         return result;
     }
 
-    public async Task<RestCallResult<IEnumerable<CallResult<BinanceFuturesOrder>>>> CancelMultipleOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> CancelMultipleOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orderIdList == null && origClientOrderIdList == null)
             throw new ArgumentException("Either orderIdList or origClientOrderIdList must be sent");
@@ -204,10 +204,10 @@ internal partial class BinanceFuturesRestClientCoin
 
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        var response = await RequestAsync<IEnumerable<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
 
         if (!response.Success)
-            return response.As<IEnumerable<CallResult<BinanceFuturesOrder>>>(default);
+            return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)
@@ -223,7 +223,7 @@ internal partial class BinanceFuturesRestClientCoin
             }
         }
 
-        return response.As<IEnumerable<CallResult<BinanceFuturesOrder>>>(result);
+        return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
     }
 
     public Task<RestCallResult<BinanceResult>> CancelAllOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
@@ -265,7 +265,7 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetOrdersAsync(string? symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetOrdersAsync(string? symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
@@ -278,17 +278,17 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
         var weight = symbol == null ? 40 : 20;
-        return RequestAsync<IEnumerable<BinanceFuturesOrder>>(GetUrl(dapi, v1, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(dapi, v1, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
         parameters.AddOptional("symbol", symbol);
 
         var weight = symbol == null ? 40 : 1;
-        return RequestAsync<IEnumerable<BinanceFuturesOrder>>(GetUrl(dapi, v1, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(dapi, v1, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> GetOpenOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -307,7 +307,7 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "openOrder"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
@@ -317,10 +317,10 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
         var weight = symbol == null ? 50 : 20;
-        return RequestAsync<IEnumerable<BinanceFuturesOrder>>(GetUrl(dapi, v1, "forceOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(dapi, v1, "forceOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesCoinUserTrade>>> GetUserTradesAsync(string? symbol = null, string? pair = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? orderId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesCoinUserTrade>>> GetUserTradesAsync(string? symbol = null, string? pair = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? orderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
@@ -335,10 +335,10 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         var weight = symbol == null ? 40 : 20;
-        return RequestAsync<IEnumerable<BinanceFuturesCoinUserTrade>>(GetUrl(dapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesCoinUserTrade>>(GetUrl(dapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
 
@@ -346,7 +346,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("pair", pair);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesCoinPosition>>(GetUrl(dapi, v1, "positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesCoinPosition>>(GetUrl(dapi, v1, "positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceResult>> SetPositionModeAsync(bool dualPositionSide, int? receiveWindow = null, CancellationToken ct = default)
@@ -386,13 +386,13 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesInitialLeverageChangeResult>(GetUrl(dapi, v1, "leverage"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesQuantileEstimation>>> GetPositionAdlQuantileEstimationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesQuantileEstimation>>> GetPositionAdlQuantileEstimationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesQuantileEstimation>>(GetUrl(dapi, v1, "adlQuantile"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<List<BinanceFuturesQuantileEstimation>>(GetUrl(dapi, v1, "adlQuantile"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<BinanceFuturesPositionMarginResult>> SetPositionMarginAsync(string symbol, decimal quantity, BinanceFuturesMarginChangeDirectionType type, BinancePositionSide? positionSide = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -409,7 +409,7 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesPositionMarginResult>(GetUrl(dapi, v1, "positionMargin"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -421,6 +421,6 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
-        return RequestAsync<IEnumerable<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(dapi, v1, "positionMargin/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(dapi, v1, "positionMargin/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 }

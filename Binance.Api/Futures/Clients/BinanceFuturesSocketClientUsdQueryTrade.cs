@@ -129,13 +129,13 @@ internal partial class BinanceFuturesSocketClientUsd
         return RequestAsync<BinanceFuturesOrder>("ws-fapi/v1", $"order.status", parameters, true, true, weight: 1, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesPositionV3>>("ws-fapi/v1", $"v2/account.position", parameters, true, true, weight: 5, ct: ct);
+        return RequestAsync<List<BinanceFuturesPositionV3>>("ws-fapi/v1", $"v2/account.position", parameters, true, true, weight: 5, ct: ct);
     }
 
 }

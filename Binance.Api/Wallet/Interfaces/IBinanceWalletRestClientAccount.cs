@@ -24,7 +24,7 @@ public interface IBinanceWalletRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletSpotAccountSnapshot>>> GetDailySpotAccountSnapshotAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get a daily account snapshot (balances)
@@ -36,7 +36,7 @@ public interface IBinanceWalletRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletMarginAccountSnapshot>>> GetDailyMarginAccountSnapshotAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get a daily account snapshot (balances)
@@ -48,7 +48,7 @@ public interface IBinanceWalletRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletFuturesAccountSnapshot>>> GetDailyFutureAccountSnapshotAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// This request will disable fastwithdraw switch under your account.

@@ -15,7 +15,7 @@ public record BinancePlacedOrder : BinanceSpotOrderBase
     /// Trades for the order
     /// </summary>
     [JsonProperty("fills")]
-    public IEnumerable<BinanceSpotOrderTrade> Fills { get; set; } = [];
+    public List<BinanceSpotOrderTrade> Fills { get; set; } = [];
 
     /// <summary>
     /// Only present if a margin trade happened

@@ -15,7 +15,7 @@ public record BinanceSpotStreamPositionsUpdate : BinanceSpotStreamEvent
     /// Balances
     /// </summary>
     [JsonProperty("B")]
-    public IEnumerable<BinanceSpotStreamBalance> Balances { get; set; } = [];
+    public List<BinanceSpotStreamBalance> Balances { get; set; } = [];
 
     /// <summary>
     /// The listen key the update was for

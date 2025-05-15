@@ -12,7 +12,7 @@ public interface IBinanceFuturesRestClientUsdConvert
     /// <param name="fromAsset">From asset</param>
     /// <param name="toAsset">To asset</param>
     /// <param name="ct">Cancellation token</param>
-    Task<RestCallResult<IEnumerable<BinanceFuturesConvertSymbol>>> GetConvertSymbolsAsync(string? fromAsset = null, string? toAsset = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesConvertSymbol>>> GetConvertSymbolsAsync(string? fromAsset = null, string? toAsset = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get a convert quote

@@ -45,7 +45,7 @@ public record BinanceSubAccountTransactionStatistics
     /// Trade Info
     /// </summary>
     [JsonProperty("tradeInfoVos")]
-    public IEnumerable<BinanceSubAccountTransactionStatisticsTradeInfoVos> TradeInfoVos { get; set; } = [];
+    public List<BinanceSubAccountTransactionStatisticsTradeInfoVos> TradeInfoVos { get; set; } = [];
 }
 
 /// <summary>

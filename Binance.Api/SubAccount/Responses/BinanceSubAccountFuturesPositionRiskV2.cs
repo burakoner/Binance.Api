@@ -9,13 +9,13 @@ public record BinanceSubAccountFuturesPositionRiskV2
     /// Futures account response (USDT margined)
     /// </summary>
     [JsonProperty("futurePositionRiskVos")]
-    public BinanceSubAccountFuturesPositionRisk[] UsdtMarginedFutures { get; set; } = [];
+    public List<BinanceSubAccountFuturesPositionRisk> UsdtMarginedFutures { get; set; } = [];
 
     /// <summary>
     /// Delivery account response (COIN margined)
     /// </summary>
     [JsonProperty("deliveryPositionRiskVos")]
-    public BinanceSubAccountFuturesPositionRiskCoin[] CoinMarginedFutures { get; set; } = [];
+    public List<BinanceSubAccountFuturesPositionRiskCoin> CoinMarginedFutures { get; set; } = [];
 }
 
 /// <summary>

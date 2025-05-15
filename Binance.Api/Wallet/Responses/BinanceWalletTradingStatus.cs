@@ -24,7 +24,7 @@ public record BinanceWalletTradingStatus
     /// <summary>
     /// Dictionary of indicator lists for symbols
     /// </summary>
-    public Dictionary<string, IEnumerable<BinanceWalletIndicator>> Indicators { get; set; } = [];
+    public Dictionary<string, List<BinanceWalletIndicator>> Indicators { get; set; } = [];
 
     /// <summary>
     /// Last update time

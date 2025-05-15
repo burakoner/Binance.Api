@@ -64,5 +64,5 @@ public record BinanceSubAccountDeposit
     /// The status of the deposit
     /// </summary>
     [JsonProperty("status")]
-    public BinanceSubAccountDepositStatus Status { get; set; }
+    public BinanceDepositStatus Status { get; set; }
 }

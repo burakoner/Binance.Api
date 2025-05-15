@@ -13,24 +13,24 @@ internal partial class BinanceSpotSocketClient
         return result;
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptionalParameter("limit", limit);
-        return RequestAsync<IEnumerable<BinanceSpotTrade>>("ws-api/v3", $"trades.recent", parameters, weight: 25, ct: ct);
+        return RequestAsync<List<BinanceSpotTrade>>("ws-api/v3", $"trades.recent", parameters, weight: 25, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTrade>>> GetTradeHistoryAsync(string symbol, long? fromId = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTrade>>> GetHistoricalTradesAsync(string symbol, long? fromId = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptionalParameter("limit", limit);
         parameters.AddOptionalParameter("fromId", fromId);
-        return RequestAsync<IEnumerable<BinanceSpotTrade>>("ws-api/v3", $"trades.historical", parameters, false, weight: 25, ct: ct);
+        return RequestAsync<List<BinanceSpotTrade>>("ws-api/v3", $"trades.historical", parameters, false, weight: 25, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotStreamAggregatedTrade>>> GetAggregatedTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotStreamAggregatedTrade>>> GetAggregatedTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -38,10 +38,10 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptionalParameter("fromId", fromId);
-        return RequestAsync<IEnumerable<BinanceSpotStreamAggregatedTrade>>("ws-api/v3", $"trades.aggregate", parameters, false, weight: 2, ct: ct);
+        return RequestAsync<List<BinanceSpotStreamAggregatedTrade>>("ws-api/v3", $"trades.aggregate", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -49,10 +49,10 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalParameter("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        return RequestAsync<IEnumerable<BinanceSpotKline>>("ws-api/v3", $"klines", parameters, false, weight: 2, ct: ct);
+        return RequestAsync<List<BinanceSpotKline>>("ws-api/v3", $"klines", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotKline>>> GetUIKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotKline>>> GetUIKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -60,7 +60,7 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalParameter("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        return RequestAsync<IEnumerable<BinanceSpotKline>>("ws-api/v3", $"uiKlines", parameters, false, weight: 2, ct: ct);
+        return RequestAsync<List<BinanceSpotKline>>("ws-api/v3", $"uiKlines", parameters, false, weight: 2, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotAveragePrice>> GetAveragePriceAsync(string symbol, CancellationToken ct = default)
@@ -80,7 +80,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotTicker>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTicker>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -89,16 +89,16 @@ internal partial class BinanceSpotSocketClient
         };
         var symbolCount = symbols?.Count();
         int weight = symbolCount == null || symbolCount > 100 ? 80 : symbolCount <= 20 ? 2 : 40;
-        return RequestAsync<IEnumerable<BinanceSpotTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: weight, ct: ct);
+        return RequestAsync<List<BinanceSpotTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: weight, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetTickersAsync(CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTicker>>> GetTickersAsync(CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
             { "type", "FULL" }
         };
-        return RequestAsync<IEnumerable<BinanceSpotTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 80, ct: ct);
+        return RequestAsync<List<BinanceSpotTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 80, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotMiniTicker>> GetMiniTickerAsync(string symbol, CancellationToken ct = default)
@@ -111,7 +111,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotMiniTicker>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotMiniTicker>>> GetMiniTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotMiniTicker>>> GetMiniTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -120,16 +120,16 @@ internal partial class BinanceSpotSocketClient
         };
         var symbolCount = symbols?.Count();
         int weight = symbolCount == null || symbolCount > 100 ? 80 : symbolCount <= 20 ? 2 : 40;
-        return RequestAsync<IEnumerable<BinanceSpotMiniTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: weight, ct: ct);
+        return RequestAsync<List<BinanceSpotMiniTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: weight, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotMiniTicker>>> GetMiniTickersAsync(CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotMiniTicker>>> GetMiniTickersAsync(CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
             { "type", "MINI" }
         };
-        return RequestAsync<IEnumerable<BinanceSpotMiniTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 80, ct: ct);
+        return RequestAsync<List<BinanceSpotMiniTicker>>("ws-api/v3", $"ticker.24hr", parameters, false, weight: 80, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotTradingDayTicker>> GetTradingDayTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default)
@@ -146,7 +146,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotTradingDayTicker>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: 4, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default)
     {
         if (symbols.Count() > 100) throw new ArgumentException("The maximum number of symbols is 100", nameof(symbols));
         foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
@@ -160,10 +160,10 @@ internal partial class BinanceSpotSocketClient
 
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 4, 200);
-        return RequestAsync<IEnumerable<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: weight, ct: ct);
+        return RequestAsync<List<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: weight, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayTickersAsync(string? timeZone = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -171,7 +171,7 @@ internal partial class BinanceSpotSocketClient
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return RequestAsync<IEnumerable<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: 80, ct: ct);
+        return RequestAsync<List<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: 80, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotTradingDayTicker>> GetTradingDayMiniTickerAsync(string symbol, string? timeZone = null, CancellationToken ct = default)
@@ -188,7 +188,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotTradingDayTicker>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: 4, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(IEnumerable<string> symbols, string? timeZone = null, CancellationToken ct = default)
     {
         if (symbols.Count() > 100) throw new ArgumentException("The maximum number of symbols is 100", nameof(symbols));
         foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
@@ -202,10 +202,10 @@ internal partial class BinanceSpotSocketClient
 
         var symbolCount = symbols.Count();
         var weight = Math.Min(symbolCount * 4, 200);
-        return RequestAsync<IEnumerable<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: weight, ct: ct);
+        return RequestAsync<List<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: weight, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(string? timeZone = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTradingDayTicker>>> GetTradingDayMiniTickersAsync(string? timeZone = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -213,7 +213,7 @@ internal partial class BinanceSpotSocketClient
         };
         parameters.AddOptional("timeZone", timeZone);
 
-        return RequestAsync<IEnumerable<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: 80, ct: ct);
+        return RequestAsync<List<BinanceSpotTradingDayTicker>>("ws-api/v3", $"ticker.tradingDay", parameters, false, weight: 80, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotTicker>> GetRollingWindowTickerAsync(string symbol, TimeSpan? windowSize = null, CancellationToken ct = default)
@@ -226,7 +226,7 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotTicker>("ws-api/v3", $"ticker", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotTicker>>> GetRollingWindowTickersAsync(IEnumerable<string> symbols, TimeSpan? windowSize = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotTicker>>> GetRollingWindowTickersAsync(IEnumerable<string> symbols, TimeSpan? windowSize = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -235,7 +235,7 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptional("windowSize", windowSize == null ? null : GetWindowSize(windowSize.Value));
         var symbolCount = symbols?.Count();
         int weight = symbolCount == null || symbolCount > 100 ? 80 : symbolCount <= 20 ? 2 : 40;
-        return RequestAsync<IEnumerable<BinanceSpotTicker>>("ws-api/v3", $"ticker", parameters, false, weight: weight, ct: ct);
+        return RequestAsync<List<BinanceSpotTicker>>("ws-api/v3", $"ticker", parameters, false, weight: weight, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotPriceTicker>> GetPriceTickerAsync(string symbol, CancellationToken ct = default)
@@ -249,18 +249,18 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotPriceTicker>("ws-api/v3", $"ticker.price", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotPriceTicker>>> GetPriceTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotPriceTicker>>> GetPriceTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
     {
         foreach (var symbol in symbols)
             symbol.ValidateBinanceSymbol();
 
         var parameters = new ParameterCollection { { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" } };
-        return RequestAsync<IEnumerable<BinanceSpotPriceTicker>>("ws-api/v3", $"ticker.price", parameters, false, weight: 4, ct: ct);
+        return RequestAsync<List<BinanceSpotPriceTicker>>("ws-api/v3", $"ticker.price", parameters, false, weight: 4, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotPriceTicker>>> GetPriceTickersAsync(CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotPriceTicker>>> GetPriceTickersAsync(CancellationToken ct = default)
     {
-        return RequestAsync<IEnumerable<BinanceSpotPriceTicker>>("ws-api/v3", $"ticker.price", [], false, weight: 4, ct: ct);
+        return RequestAsync<List<BinanceSpotPriceTicker>>("ws-api/v3", $"ticker.price", [], false, weight: 4, ct: ct);
     }
 
     public Task<CallResult<BinanceSpotBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default)
@@ -272,18 +272,18 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotBookTicker>("ws-api/v3", $"ticker.book", parameters, false, weight: 2, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotBookTicker>>> GetBookTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotBookTicker>>> GetBookTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
             { "symbols", $"[{string.Join(",", symbols.Select(s => $"\"{s}\""))}]" },
         };
-        return RequestAsync<IEnumerable<BinanceSpotBookTicker>>("ws-api/v3", $"ticker.book", parameters, false, weight: 4, ct: ct);
+        return RequestAsync<List<BinanceSpotBookTicker>>("ws-api/v3", $"ticker.book", parameters, false, weight: 4, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotBookTicker>>> GetBookTickersAsync(CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotBookTicker>>> GetBookTickersAsync(CancellationToken ct = default)
     {
-        return RequestAsync<IEnumerable<BinanceSpotBookTicker>>("ws-api/v3", $"ticker.book", [], false, weight: 4, ct: ct);
+        return RequestAsync<List<BinanceSpotBookTicker>>("ws-api/v3", $"ticker.book", [], false, weight: 4, ct: ct);
     }
 
     private string GetWindowSize(TimeSpan timeSpan)

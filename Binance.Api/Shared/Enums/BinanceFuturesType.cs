@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.SubAccount;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// Futures account type
 /// </summary>
-public enum BinanceSubAccountFuturesType : byte
+public enum BinanceFuturesType : byte
 {
     /// <summary>
     /// USDT Margined Futures

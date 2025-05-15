@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Algo;
+using Binance.Api.Broker;
 using Binance.Api.Convert;
 using Binance.Api.CopyTrading;
 using Binance.Api.Futures;
@@ -73,7 +74,11 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceSubAccountRestClient SubAccount { get; }
 
-    // TODO: Link
+    /// <summary>
+    /// Binance Broker (Binance Link) Rest API Client
+    /// </summary>
+    public IBinanceBrokerRestClient Broker { get; }
+
     // TODO: Staking
     // TODO: Dual Investment
     // TODO: Mining
@@ -138,6 +143,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         CopyTrading = new BinanceCopyTradingRestClient(this);
         Convert = new BinanceConvertRestClient(this);
         SubAccount = new BinanceSubAccountRestClient(this);
+        Broker = new BinanceBrokerRestClient(this);
     }
 
     #region Public Nethods

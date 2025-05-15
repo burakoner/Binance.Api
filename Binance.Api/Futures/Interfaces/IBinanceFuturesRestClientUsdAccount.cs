@@ -12,7 +12,7 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The account information</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     // TODO: Account Information V3(USER_DATA)
 
@@ -50,7 +50,7 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    Task<RestCallResult<IEnumerable<BinanceFuturesSymbolConfiguration>>> GetSymbolConfigurationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesSymbolConfiguration>>> GetSymbolConfigurationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get the order rate limits
@@ -59,7 +59,7 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets Notional and Leverage Brackets.
@@ -69,7 +69,7 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Notional and Leverage Brackets</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
@@ -102,7 +102,7 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The income history for the futures account</returns>
-    Task<RestCallResult<IEnumerable<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the current status of the trading rules for the account

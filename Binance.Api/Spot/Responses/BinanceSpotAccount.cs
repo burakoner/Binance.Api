@@ -82,13 +82,13 @@ public record BinanceSpotAccount
     /// List of assets with their current balances
     /// </summary>
     [JsonProperty("balances")]
-    public IEnumerable<BinanceSpotAccountBalance> Balances { get; set; } = [];
+    public List<BinanceSpotAccountBalance> Balances { get; set; } = [];
 
     /// <summary>
     /// Permissions types
     /// </summary>
     [JsonProperty("permissions")]
-    public IEnumerable<BinancePermissionType> Permissions { get; set; } = [];
+    public List<BinancePermissionType> Permissions { get; set; } = [];
 
     /// <summary>
     /// User id

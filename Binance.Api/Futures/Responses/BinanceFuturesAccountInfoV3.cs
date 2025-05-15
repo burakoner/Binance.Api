@@ -75,13 +75,13 @@ public record BinanceFuturesAccountInfoV3
     /// Assets
     /// </summary>
     [JsonProperty("assets")]
-    public IEnumerable<BinanceFuturesAccountInfoV3Asset> Assets { get; set; } = [];
+    public List<BinanceFuturesAccountInfoV3Asset> Assets { get; set; } = [];
 
     /// <summary>
     /// Positions
     /// </summary>
     [JsonProperty("positions")]
-    public IEnumerable<BinanceFuturesAccountInfoV3Position> Positions { get; set; } = [];
+    public List<BinanceFuturesAccountInfoV3Position> Positions { get; set; } = [];
 }
 
 /// <summary>

@@ -129,12 +129,12 @@ internal partial class BinanceFuturesSocketClientCoin
         return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.status", parameters, true, true, weight: 1, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesCoinPosition>>("ws-dapi/v1", $"account.position", parameters, true, true, weight: 5, ct: ct);
+        return RequestAsync<List<BinanceFuturesCoinPosition>>("ws-dapi/v1", $"account.position", parameters, true, true, weight: 5, ct: ct);
     }
 }

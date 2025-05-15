@@ -3,5 +3,5 @@
 internal class BinanceSubAccountBalanceContainer
 {
     [JsonProperty("balances")]
-    public IEnumerable<BinanceSubAccountBalance> Payload { get; set; } = [];
+    public List<BinanceSubAccountBalance> Payload { get; set; } = [];
 }

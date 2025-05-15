@@ -10,15 +10,15 @@ internal partial class BinanceSpotSocketClient
         return RequestAsync<BinanceSpotAccount>("ws-api/v3", $"account.status", parameters, true, true, weight: 20, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceCurrentRateLimit>>> GetRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceCurrentRateLimit>>> GetRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalParameter("symbols", symbols);
 
-        return RequestAsync<IEnumerable<BinanceCurrentRateLimit>>("ws-api/v3", $"account.rateLimits.orders", parameters, true, true, weight: 40, ct: ct);
+        return RequestAsync<List<BinanceCurrentRateLimit>>("ws-api/v3", $"account.rateLimits.orders", parameters, true, true, weight: 40, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -27,10 +27,10 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptionalParameter("limit", limit);
 
-        return RequestAsync<IEnumerable<BinanceSpotOrder>>("ws-api/v3", $"allOrders", parameters, true, true, weight: 20, ct: ct);
+        return RequestAsync<List<BinanceSpotOrder>>("ws-api/v3", $"allOrders", parameters, true, true, weight: 20, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceOrderOcoList>>> GetOcoOrdersAsync(long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceOrderOcoList>>> GetOcoOrdersAsync(long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalParameter("fromId", fromOrderId);
@@ -38,10 +38,10 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptionalParameter("limit", limit);
 
-        return RequestAsync<IEnumerable<BinanceOrderOcoList>>("ws-api/v3", $"allOrderLists", parameters, true, true, weight: 20, ct: ct);
+        return RequestAsync<List<BinanceOrderOcoList>>("ws-api/v3", $"allOrderLists", parameters, true, true, weight: 20, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -51,10 +51,10 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptionalParameter("limit", limit);
 
-        return RequestAsync<IEnumerable<BinanceSpotUserTrade>>("ws-api/v3", $"myTrades", parameters, true, true, weight: 20, ct: ct);
+        return RequestAsync<List<BinanceSpotUserTrade>>("ws-api/v3", $"myTrades", parameters, true, true, weight: 20, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? preventedTradeId = null, long? orderId = null, long? fromPreventedTradeId = null, int? limit = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? preventedTradeId = null, long? orderId = null, long? fromPreventedTradeId = null, int? limit = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -64,7 +64,7 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptionalParameter("limit", limit);
         int weight = preventedTradeId != null ? 2 : 20;
 
-        return RequestAsync<IEnumerable<BinanceSpotPreventedTrade>>("ws-api/v3", $"myPreventedMatches", parameters, true, true, weight: weight, ct: ct);
+        return RequestAsync<List<BinanceSpotPreventedTrade>>("ws-api/v3", $"myPreventedMatches", parameters, true, true, weight: weight, ct: ct);
     }
 
     // TODO: Account allocations (USER_DATA)

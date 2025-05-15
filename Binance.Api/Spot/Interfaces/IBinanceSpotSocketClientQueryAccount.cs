@@ -21,7 +21,7 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceCurrentRateLimit>>> GetRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceCurrentRateLimit>>> GetRateLimitsAsync(IEnumerable<string>? symbols = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get order history
@@ -34,7 +34,7 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Oco order history
@@ -46,7 +46,7 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceOrderOcoList>>> GetOcoOrdersAsync(long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceOrderOcoList>>> GetOcoOrdersAsync(long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets user trades for provided symbol
@@ -60,7 +60,7 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, long? fromOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
     
     /// <summary>
     /// Get prevented trades because of self trade prevention
@@ -73,5 +73,5 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="limit">Max results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? preventedTradeId = null, long? orderId = null, long? fromPreventedTradeId = null, int? limit = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? preventedTradeId = null, long? orderId = null, long? fromPreventedTradeId = null, int? limit = null, CancellationToken ct = default);
 }

@@ -39,7 +39,7 @@ public record BinanceSpotSymbol
     /// <summary>
     /// Allowed order types
     /// </summary>
-    public IEnumerable<BinanceSpotOrderType> OrderTypes { get; set; } = [];
+    public List<BinanceSpotOrderType> OrderTypes { get; set; } = [];
 
     /// <summary>
     /// Ice berg orders allowed
@@ -97,14 +97,14 @@ public record BinanceSpotSymbol
     /// <summary>
     /// Permissions types
     /// </summary>
-    public IEnumerable<BinancePermissionType> Permissions { get; set; } = [];
+    public List<BinancePermissionType> Permissions { get; set; } = [];
 
     /// <summary>
     /// Permission sets
     /// </summary>
     [JsonProperty("permissionSets")]
     [JsonConverter(typeof(BinancePermissionTypeConverter))]
-    public IEnumerable<IEnumerable<BinancePermissionType>> PermissionSets { get; set; } = [];
+    public List<List<BinancePermissionType>> PermissionSets { get; set; } = [];
 
     /// <summary>
     /// Default self trade prevention
@@ -116,12 +116,12 @@ public record BinanceSpotSymbol
     /// Allowed self trade prevention modes
     /// </summary>
     [JsonProperty("allowedSelfTradePreventionModes")]
-    public IEnumerable<BinanceSelfTradePreventionMode> AllowedSelfTradePreventionModes { get; set; } = [];
+    public List<BinanceSelfTradePreventionMode> AllowedSelfTradePreventionModes { get; set; } = [];
 
     /// <summary>
     /// Filters for order on this symbol
     /// </summary>
-    public IEnumerable<BinanceSymbolFilter> Filters { get; set; } = [];
+    public List<BinanceSymbolFilter> Filters { get; set; } = [];
 
     /// <summary>
     /// Filter for the max accuracy of the price for this symbol

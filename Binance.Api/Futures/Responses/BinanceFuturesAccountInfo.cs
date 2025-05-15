@@ -9,7 +9,7 @@ public record BinanceFuturesAccountInfo
     /// Information about an account assets
     /// </summary>
     [JsonProperty("assets")]
-    public IEnumerable<BinanceFuturesAccountAsset> Assets { get; set; } = [];
+    public List<BinanceFuturesAccountAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Boolean indicating if this account can deposit
@@ -57,7 +57,7 @@ public record BinanceFuturesAccountInfo
     /// Information about an account positions
     /// </summary>
     [JsonProperty("positions")]
-    public IEnumerable<BinanceFuturesUsdPositionInfo> Positions { get; set; } = [];
+    public List<BinanceFuturesUsdPositionInfo> Positions { get; set; } = [];
 
     /// <summary>
     /// Total initial margin

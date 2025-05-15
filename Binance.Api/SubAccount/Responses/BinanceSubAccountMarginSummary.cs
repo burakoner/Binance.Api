@@ -27,7 +27,7 @@ public record BinanceSubAccountMarginSummary
     /// Sub account details
     /// </summary>
     [JsonProperty("subAccountList")]
-    public BinanceSubAccountMarginInfo[] SubAccounts { get; set; } = [];
+    public List<BinanceSubAccountMarginInfo>  SubAccounts { get; set; } = [];
 }
 
 /// <summary>

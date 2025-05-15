@@ -37,7 +37,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Futures details</returns>
-    Task<RestCallResult<BinanceSubAccountFuturesDetailsV2>> GetFuturesDetailsAsync(BinanceSubAccountFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSubAccountFuturesDetailsV2>> GetFuturesDetailsAsync(BinanceFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets margin details for a sub account
@@ -74,7 +74,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The deposit history</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountDeposit>>> GetDepositHistoryAsync(string email, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? offset = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountDeposit>>> GetDepositsAsync(string email, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? offset = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets futures summary for sub accounts
@@ -95,7 +95,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceSubAccountFuturesSummary>> GetFuturesSummaryAsync(BinanceSubAccountFuturesType futuresType, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSubAccountFuturesSummary>> GetFuturesSummaryAsync(BinanceFuturesType futuresType, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets margin summary for sub accounts
@@ -127,7 +127,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of balances</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountBalance>>> GetBalancesAsync(string email, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountBalance>>> GetBalancesAsync(string email, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get internal asset transfers for a sub account (for master account)
@@ -142,7 +142,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceSubAccountFuturesTransferHistory>> GetFuturesTransferHistoryAsync(string email, BinanceSubAccountFuturesType futuresType, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSubAccountFuturesTransferHistory>> GetFuturesTransferHistoryAsync(string email, BinanceFuturesType futuresType, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the transfer history of a sub account (from the master account) 
@@ -157,7 +157,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of transfers</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountSpotTransfer>>> GetSpotTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountSpotTransfer>>> GetSpotTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get BTC valued asset summary of subaccounts.
@@ -184,7 +184,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of universal transfers</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountUniversalTransfer>>> GetUniversalTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountUniversalTransfer>>> GetUniversalTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Transfer futures asset (for master account)
@@ -198,7 +198,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceSubAccountTransactionId>> FuturesAssetTransferAsync(string fromEmail, string toEmail, BinanceSubAccountFuturesType futuresType, string asset, decimal quantity, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSubAccountTransactionId>> FuturesAssetTransferAsync(string fromEmail, string toEmail, BinanceFuturesType futuresType, string asset, decimal quantity, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the transfer history of a sub account (from the sub account)
@@ -212,7 +212,7 @@ public interface IBinanceSubAccountRestClientAsset
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Transfer history</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountTransferSubAccount>>> GetTransferHistoryAsync(string? asset = null, BinanceSubAccountTransferType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountTransferSubAccount>>> GetTransferHistoryAsync(string? asset = null, BinanceSubAccountTransferType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Transfers to master account

@@ -111,7 +111,7 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="symbol">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all open orders for the symbol
@@ -120,5 +120,5 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, CancellationToken ct = default);
 }

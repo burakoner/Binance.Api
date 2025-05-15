@@ -6,5 +6,5 @@ internal record BinanceSubAccountUniversalTransfersContainer
     /// Transactions
     /// </summary>
     [JsonProperty("result")]
-    public IEnumerable<BinanceSubAccountUniversalTransfer> Payload { get; set; } = [];
+    public List<BinanceSubAccountUniversalTransfer> Payload { get; set; } = [];
 }

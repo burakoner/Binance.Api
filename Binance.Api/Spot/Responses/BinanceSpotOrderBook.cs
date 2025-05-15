@@ -20,12 +20,12 @@ public record BinanceSpotOrderBook
     /// <summary>
     /// The list of bids
     /// </summary>
-    public IEnumerable<BinanceSpotOrderBookEntry> Bids { get; set; } = [];
+    public List<BinanceSpotOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of asks
     /// </summary>
-    public IEnumerable<BinanceSpotOrderBookEntry> Asks { get; set; } = [];
+    public List<BinanceSpotOrderBookEntry> Asks { get; set; } = [];
 }
 
 /// <summary>

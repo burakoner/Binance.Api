@@ -15,5 +15,5 @@ public record BinanceWalletDelistSchedule
     /// Symbols being delisted
     /// </summary>
     [JsonProperty("symbols")]
-    public IEnumerable<string> Symbols { get; set; } = [];
+    public List<string> Symbols { get; set; } = [];
 }

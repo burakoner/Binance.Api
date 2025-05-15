@@ -19,7 +19,7 @@ public record BinanceWalletDustTransferResult
     /// <summary>
     /// Transfer entries
     /// </summary>
-    public IEnumerable<BinanceDustTransferResultEntry> TransferResult { get; set; } = [];
+    public List<BinanceDustTransferResultEntry> TransferResult { get; set; } = [];
 }
 
 /// <summary>

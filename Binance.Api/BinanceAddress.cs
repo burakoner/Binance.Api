@@ -56,6 +56,23 @@ public class BinanceAddress
     public string UsdFuturesSocketApiStreamAddress { get; set; } = "";
     #endregion
 
+    #region Broker (Binance Link)
+    /// <summary>
+    /// Exchange Link Rest API Address
+    /// </summary>
+    public string BrokerExchangeLinkRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Link and Trade (Spot) Rest API Address
+    /// </summary>
+    public string BrokerLinkAndTradeSpotRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Link and Trade (Futures) Rest API Address
+    /// </summary>
+    public string BrokerLinkAndTradeFuturesRestApiAddress { get; set; } = "";
+    #endregion
+
     /// <summary>
     /// Binance Convert Rest API Address
     /// </summary>
@@ -102,6 +119,10 @@ public class BinanceAddress
         UsdFuturesRestApiAddress = "https://fapi.binance.com",
         UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com/",
+
+        BrokerExchangeLinkRestApiAddress = "https://api.binance.com",
+        BrokerLinkAndTradeSpotRestApiAddress = "https://api.binance.com",
+        BrokerLinkAndTradeFuturesRestApiAddress = "https://fapi.binance.com",
 
         ConvertRestApiAddress = "https://api.binance.com",
         MarginRestApiAddress = "https://api.binance.com",

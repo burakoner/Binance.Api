@@ -19,15 +19,15 @@ public record BinanceSpotExchangeInfo
     /// <summary>
     /// The rate limits used
     /// </summary>
-    public IEnumerable<BinanceRateLimit> RateLimits { get; set; } = [];
+    public List<BinanceRateLimit> RateLimits { get; set; } = [];
 
     /// <summary>
     /// Filters
     /// </summary>
-    public IEnumerable<object> ExchangeFilters { get; set; } = [];
+    public List<object> ExchangeFilters { get; set; } = [];
 
     /// <summary>
     /// All symbols supported
     /// </summary>
-    public IEnumerable<BinanceSpotSymbol> Symbols { get; set; } = [];
+    public List<BinanceSpotSymbol> Symbols { get; set; } = [];
 }

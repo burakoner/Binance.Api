@@ -49,5 +49,5 @@ public record BinanceMarginAccount
     /// Balance list
     /// </summary>
     [JsonProperty("userAssets")]
-    public IEnumerable<BinanceMarginAccountBalance> Balances { get; set; } = [];
+    public List<BinanceMarginAccountBalance> Balances { get; set; } = [];
 }

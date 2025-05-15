@@ -75,7 +75,7 @@ public record BinanceWalletUserAsset
     /// <summary>
     /// Networks
     /// </summary>
-    public IEnumerable<BinanceNetwork> NetworkList { get; set; } = [];
+    public List<BinanceNetwork> NetworkList { get; set; } = [];
 }
 
 /// <summary>

@@ -39,13 +39,13 @@ public record BinanceFuturesCoinAccountInfo
     /// Account assets
     /// </summary>
     [JsonProperty("assets")]
-    public IEnumerable<BinanceFuturesAccountAsset> Assets { get; set; } = [];
+    public List<BinanceFuturesAccountAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Account positions
     /// </summary>
     [JsonProperty("positions")]
-    public IEnumerable<BinanceFuturesCoinPositionInfo> Positions { get; set; } = [];
+    public List<BinanceFuturesCoinPositionInfo> Positions { get; set; } = [];
 
     /// <summary>
     /// Update time

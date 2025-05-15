@@ -4,7 +4,7 @@ namespace Binance.Api.Margin;
 
 internal partial class BinanceMarginRestClient
 {
-    public Task<RestCallResult<IEnumerable<BinanceMarginInterestRate>>> GetFutureHourlyInterestRateAsync(IEnumerable<string> assets, bool isolated, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginInterestRate>>> GetFutureHourlyInterestRateAsync(IEnumerable<string> assets, bool isolated, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
@@ -13,7 +13,7 @@ internal partial class BinanceMarginRestClient
         };
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceMarginInterestRate>>(GetUrl(sapi, v1, "margin/next-hourly-interest-rate"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+        return RequestAsync<List<BinanceMarginInterestRate>>(GetUrl(sapi, v1, "margin/next-hourly-interest-rate"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
     public Task<RestCallResult<BinanceQueryRecords<BinanceMarginInterestHistory>>> GetMarginInterestHistoryAsync(string? asset = null, int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, bool? archived = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -91,7 +91,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceQueryRecords<BinanceLoan>>(GetUrl(sapi, v1, "margin/borrow-repay"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceMarginInterestRateHistory>>> GetMarginInterestRateHistoryAsync(string asset, string? vipLevel = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginInterestRateHistory>>> GetMarginInterestRateHistoryAsync(string asset, string? vipLevel = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset?.ValidateNotNull(nameof(asset));
         limit?.ValidateIntBetween(nameof(limit), 1, 100);
@@ -106,7 +106,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceMarginInterestRateHistory>>(GetUrl(sapi, v1, "margin/interestRateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceMarginInterestRateHistory>>(GetUrl(sapi, v1, "margin/interestRateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceMarginAmount>> GetMarginMaxBorrowAmountAsync(string asset, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)

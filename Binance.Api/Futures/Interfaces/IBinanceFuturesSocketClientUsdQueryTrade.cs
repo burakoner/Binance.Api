@@ -79,5 +79,5 @@ public interface IBinanceFuturesSocketClientUsdQueryTrade
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    Task<CallResult<IEnumerable<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 }

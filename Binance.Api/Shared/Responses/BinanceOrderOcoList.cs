@@ -56,12 +56,12 @@ public record BinanceOrderOcoList
     /// <summary>
     /// The order in this list
     /// </summary>
-    public IEnumerable<BinanceOrderId> Orders { get; set; } = [];
+    public List<BinanceOrderId> Orders { get; set; } = [];
 
     /// <summary>
     /// The order details
     /// </summary>
-    public IEnumerable<BinancePlacedOcoOrder> OrderReports { get; set; } = [];
+    public List<BinancePlacedOcoOrder> OrderReports { get; set; } = [];
 }
 
 /// <summary>

@@ -12,7 +12,7 @@ public interface IBinanceConvertRestClientMarketData
     /// <param name="toAsset">To Asset</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceConvertPair>>> GetPairsAsync(string? fromAsset = null, string? toAsset = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceConvertPair>>> GetPairsAsync(string? fromAsset = null, string? toAsset = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query for supported asset’s precision information
@@ -20,5 +20,5 @@ public interface IBinanceConvertRestClientMarketData
     /// <param name="receiveWindow">The value cannot be greater than 60000</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceConvertAsset>>> GetAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceConvertAsset>>> GetAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
 }

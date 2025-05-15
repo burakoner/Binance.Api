@@ -27,7 +27,7 @@ public record BinanceFuturesCompositeIndexInfo
     /// Base asset list
     /// </summary>
     [JsonProperty("baseAssetList")]
-    public IEnumerable<BinanceFuturesCompositeIndexInfoAsset> BaseAssets { get; set; } = [];
+    public List<BinanceFuturesCompositeIndexInfoAsset> BaseAssets { get; set; } = [];
 }
 
 /// <summary>

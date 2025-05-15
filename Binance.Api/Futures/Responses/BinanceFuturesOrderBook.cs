@@ -38,12 +38,12 @@ public record BinanceFuturesOrderBook
     /// <summary>
     /// The list of bids
     /// </summary>
-    public IEnumerable<BinanceFuturesOrderBookEntry> Bids { get; set; } = [];
+    public List<BinanceFuturesOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of asks
     /// </summary>
-    public IEnumerable<BinanceFuturesOrderBookEntry> Asks { get; set; } = [];
+    public List<BinanceFuturesOrderBookEntry> Asks { get; set; } = [];
 }
 
 /// <summary>

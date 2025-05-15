@@ -47,7 +47,7 @@ public record BinanceSubAccountMarginDetails
     /// Asset list
     /// </summary>
     [JsonProperty("marginUserAssetVoList")]
-    public BinanceMarginAccountBalance[] MarginUserAssets { get; set; } = [];
+    public List<BinanceMarginAccountBalance>  MarginUserAssets { get; set; } = [];
 }
 
 /// <summary>

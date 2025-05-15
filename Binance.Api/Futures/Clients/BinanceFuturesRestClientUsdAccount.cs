@@ -2,12 +2,12 @@
 
 internal partial class BinanceFuturesRestClientUsd
 {
-    public Task<RestCallResult<IEnumerable<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesUsdAccountBalance>>(GetUrl(fapi, v3, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<List<BinanceFuturesUsdAccountBalance>>(GetUrl(fapi, v3, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     // TODO: Account Information V3(USER_DATA)
@@ -39,30 +39,30 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesAccountConfiguration>(GetUrl(fapi, v1, "accountConfig"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesSymbolConfiguration>>> GetSymbolConfigurationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesSymbolConfiguration>>> GetSymbolConfigurationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesSymbolConfiguration>>(GetUrl(fapi, v1, "symbolConfig"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<List<BinanceFuturesSymbolConfiguration>>(GetUrl(fapi, v1, "symbolConfig"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceRateLimit>>(GetUrl(fapi, v1, "rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceRateLimit>>(GetUrl(fapi, v1, "rateLimit/order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceFuturesSymbolBracket>>(GetUrl(fapi, v1, "leverageBracket"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesSymbolBracket>>(GetUrl(fapi, v1, "leverageBracket"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceFuturesMultiAssetMode>> GetMultiAssetsModeAsync(int? receiveWindow = null, CancellationToken ct = default)
@@ -81,7 +81,7 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesPositionMode>(GetUrl(fapi, v1, "positionSide/dual"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
@@ -94,7 +94,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
-        return RequestAsync<IEnumerable<BinanceFuturesIncomeHistory>>(GetUrl(fapi, v1, "income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
+        return RequestAsync<List<BinanceFuturesIncomeHistory>>(GetUrl(fapi, v1, "income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
     }
 
     public Task<RestCallResult<BinanceFuturesTradingStatus>> GetTradingStatusAsync(int? receiveWindow = null, CancellationToken ct = default)

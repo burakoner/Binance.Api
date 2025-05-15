@@ -12,7 +12,7 @@ public interface IBinanceWalletRestClientCapital
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Assets info</returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletUserAsset>>> GetUserAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletUserAsset>>> GetUserAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Withdraw assets from Binance to an address
@@ -46,7 +46,7 @@ public interface IBinanceWalletRestClientCapital
     /// <param name="limit">Add limit. Default: 1000, Max: 1000</param>
     /// <param name="offset">Add offset</param>
     /// <returns>List of withdrawals</returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletWithdrawal>>> GetWithdrawalHistoryAsync(string? asset = null, string? withdrawOrderId = null, BinanceWithdrawalStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, int? offset = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletWithdrawal>>> GetWithdrawalsAsync(string? asset = null, string? withdrawOrderId = null, BinanceWithdrawalStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, int? offset = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get list of withdrawal addresses
@@ -55,7 +55,7 @@ public interface IBinanceWalletRestClientCapital
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletWithdrawalAddress>>> GetWithdrawalAddressesAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletWithdrawalAddress>>> GetWithdrawalAddressesAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     // TODO: Fetch withdraw quota (USER_DATA)
 
@@ -73,7 +73,7 @@ public interface IBinanceWalletRestClientCapital
     /// <param name="includeSource">Include source address to response</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of deposits</returns>
-    Task<RestCallResult<IEnumerable<BinanceWalletDeposit>>> GetDepositHistoryAsync(string? asset = null, BinanceWalletDepositStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? offset = null, int? limit = null, int? receiveWindow = null, bool includeSource = false, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceWalletDeposit>>> GetDepositsAsync(string? asset = null, BinanceDepositStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? offset = null, int? limit = null, int? receiveWindow = null, bool includeSource = false, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the deposit address for an asset

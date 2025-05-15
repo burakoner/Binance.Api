@@ -22,10 +22,10 @@ internal partial class BinanceFuturesSocketClientUsd
         return await RequestAsync<BinanceFuturesPrice>("ws-fapi/v1", $"ticker.price", parameters, weight: 1, ct: ct);
     }
 
-    public async Task<CallResult<IEnumerable<BinanceFuturesPrice>>> GetPricesAsync(CancellationToken ct = default)
+    public async Task<CallResult<List<BinanceFuturesPrice>>> GetPricesAsync(CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        return await RequestAsync<IEnumerable<BinanceFuturesPrice>>("ws-fapi/v1", $"ticker.price", parameters, weight: 2, ct: ct);
+        return await RequestAsync<List<BinanceFuturesPrice>>("ws-fapi/v1", $"ticker.price", parameters, weight: 2, ct: ct);
     }
 
     public async Task<CallResult<BinanceFuturesBookTicker>> GetBookPriceAsync(string symbol, CancellationToken ct = default)
@@ -35,8 +35,8 @@ internal partial class BinanceFuturesSocketClientUsd
         return await RequestAsync<BinanceFuturesBookTicker>("ws-fapi/v1", $"ticker.book", parameters, weight: 2, ct: ct);
     }
 
-    public async Task<CallResult<IEnumerable<BinanceFuturesBookTicker>>> GetBookPricesAsync(CancellationToken ct = default)
+    public async Task<CallResult<List<BinanceFuturesBookTicker>>> GetBookPricesAsync(CancellationToken ct = default)
     {
-        return await RequestAsync<IEnumerable<BinanceFuturesBookTicker>>("ws-fapi/v1", $"ticker.book", [], weight: 5, ct: ct);
+        return await RequestAsync<List<BinanceFuturesBookTicker>>("ws-fapi/v1", $"ticker.book", [], weight: 5, ct: ct);
     }
 }

@@ -14,7 +14,7 @@ public record BinanceFuturesStreamMarginUpdate : BinanceFuturesStreamEvent
     /// Positions
     /// </summary>
     [JsonProperty("p")]
-    public IEnumerable<BinanceFuturesStreamMarginPosition> Positions { get; set; } = [];
+    public List<BinanceFuturesStreamMarginPosition> Positions { get; set; } = [];
 
     /// <summary>
     /// The listen key the update was for

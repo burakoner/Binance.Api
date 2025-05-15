@@ -24,7 +24,7 @@ public record BinanceEligibleDusts
     /// <summary>
     /// Assets
     /// </summary>
-    public IEnumerable<BinanceWalletEligibleDust> Details { get; set; } = [];
+    public List<BinanceWalletEligibleDust> Details { get; set; } = [];
 }
 
 /// <summary>

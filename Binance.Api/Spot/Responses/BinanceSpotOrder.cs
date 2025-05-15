@@ -151,7 +151,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// Trades for the order
     /// </summary>
-    public IEnumerable<BinanceSpotOrderFill> Fills { get; set; } = [];
+    public List<BinanceSpotOrderFill> Fills { get; set; } = [];
 
     /// <summary>
     /// Base Quantity which is still open to be filled

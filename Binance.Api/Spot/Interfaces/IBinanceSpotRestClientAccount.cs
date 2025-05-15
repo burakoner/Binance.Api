@@ -28,7 +28,7 @@ public interface IBinanceSpotRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of trades</returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSpotUserTrade>>> GetUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get the current used order rate limits
@@ -37,7 +37,7 @@ public interface IBinanceSpotRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotOrderRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSpotOrderRateLimit>>> GetRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get prevented matches because of self trade prevention
@@ -51,7 +51,7 @@ public interface IBinanceSpotRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? orderId = null, long? preventedMatchId = null, long? fromPreventedMatchId = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? orderId = null, long? preventedMatchId = null, long? fromPreventedMatchId = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     // TODO: Query Allocations (USER_DATA)
     // TODO: Query Commission Rates (USER_DATA)

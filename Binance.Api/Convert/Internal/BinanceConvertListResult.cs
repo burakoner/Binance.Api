@@ -10,5 +10,5 @@ internal record BinanceConvertListResult<T>
     /// The data
     /// </summary>
     [JsonProperty("list")]
-    public IEnumerable<T> List { get; set; } = [];
+    public List<T> List { get; set; } = [];
 }

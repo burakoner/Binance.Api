@@ -5,8 +5,8 @@ internal class BinancePermissionTypeConverter : JsonConverter
     public override bool CanConvert(Type type)
     {
         return type == typeof(BinancePermissionType)
-            || type == typeof(IEnumerable<BinancePermissionType>)
-            || type == typeof(IEnumerable<IEnumerable<BinancePermissionType>>);
+            || type == typeof(List<BinancePermissionType>)
+            || type == typeof(List<List<BinancePermissionType>>);
     }
 
     public override object? ReadJson(JsonReader reader, Type type, object? existingValue, JsonSerializer serializer)
@@ -15,7 +15,7 @@ internal class BinancePermissionTypeConverter : JsonConverter
         {
             return ParseBinancePermissionType(ref reader) ?? null;
         }
-        else if (type == typeof(IEnumerable<BinancePermissionType>))
+        else if (type == typeof(List<BinancePermissionType>))
         {
             var result = new List<BinancePermissionType>();
             while (reader.Read())
@@ -32,7 +32,7 @@ internal class BinancePermissionTypeConverter : JsonConverter
             }
             return result;
         }
-        else if (type == typeof(IEnumerable<IEnumerable<BinancePermissionType>>))
+        else if (type == typeof(List<List<BinancePermissionType>>))
         {
             var result = new List<List<BinancePermissionType>>();
 
@@ -66,14 +66,14 @@ internal class BinancePermissionTypeConverter : JsonConverter
         {
             WriteBinancePermissionType(writer, act);
         }
-        else if (value is IEnumerable<BinancePermissionType> actList)
+        else if (value is List<BinancePermissionType> actList)
         {
             writer.WriteStartArray();
             foreach (var val in actList)
                 WriteBinancePermissionType(writer, val);
             writer.WriteEndArray();
         }
-        else if (value is IEnumerable<IEnumerable<BinancePermissionType>> actListList)
+        else if (value is List<List<BinancePermissionType>> actListList)
         {
             writer.WriteStartArray();
             foreach (var valList in actListList)

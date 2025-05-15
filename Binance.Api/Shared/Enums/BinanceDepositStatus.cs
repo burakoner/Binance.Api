@@ -1,16 +1,16 @@
-﻿namespace Binance.Api.Wallet;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// The status of a deposit
 /// </summary>
-public enum BinanceWalletDepositStatus : byte
+public enum BinanceDepositStatus : byte
 {
     /// <summary>
     /// Pending
     /// </summary>
     [Map("0")]
     Pending = 0,
-
+    
     /// <summary>
     /// Success
     /// </summary>

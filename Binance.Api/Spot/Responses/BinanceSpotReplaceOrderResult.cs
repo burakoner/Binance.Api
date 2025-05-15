@@ -10,19 +10,22 @@ public record BinanceSpotReplaceOrderResult : BinanceReplaceResult
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
     public BinanceSpotOrderOperationResult CancelResult { get; set; }
+
     /// <summary>
     /// New order result
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
     public BinanceSpotOrderOperationResult NewOrderResult { get; set; }
+
     /// <summary>
     /// Cancel order response. Make sure to check that the CancelResult is Success, else the CancelResponse.Message will contain more info
     /// </summary>
-    public BinanceReplaceCancelOrder CancelResponse { get; set; }
+    public BinanceReplaceCancelOrder CancelResponse { get; set; } = default!;
+
     /// <summary>
     /// New order response. Make sure to check that the NewOrderResult is Success, else the NewOrderResponse.Message will contain more info
     /// </summary>
-    public BinanceReplaceOrder NewOrderResponse { get; set; }
+    public BinanceReplaceOrder NewOrderResponse { get; set; } = default!;
 }
 
 /// <summary>
@@ -35,6 +38,7 @@ public record BinanceReplaceOrder : BinancePlacedOrder
     /// </summary>
     [JsonProperty("msg")]
     public string? Message { get; set; }
+
     /// <summary>
     /// Error code if not successful
     /// </summary>
@@ -51,6 +55,7 @@ public record BinanceReplaceCancelOrder : BinanceSpotOrderBase
     /// </summary>
     [JsonProperty("msg")]
     public string? Message { get; set; }
+
     /// <summary>
     /// Error code if not successful
     /// </summary>
@@ -67,6 +72,7 @@ public record BinanceReplaceResult
     /// </summary>
     [JsonProperty("msg")]
     public string? Message { get; set; }
+
     /// <summary>
     /// Error code if not successful
     /// </summary>

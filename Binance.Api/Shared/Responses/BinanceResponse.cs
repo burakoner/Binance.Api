@@ -27,8 +27,7 @@ public class BinanceResponse
     /// Rate limit info
     /// </summary>
     [JsonProperty("rateLimits")]
-    public IEnumerable<BinanceCurrentRateLimit> Ratelimits { get; set; } = new List<BinanceCurrentRateLimit>();
-
+    public List<BinanceCurrentRateLimit> Ratelimits { get; set; } = [];
 }
 
 /// <summary>

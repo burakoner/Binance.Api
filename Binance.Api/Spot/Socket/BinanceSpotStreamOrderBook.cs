@@ -33,11 +33,11 @@ public record BinanceSpotStreamOrderBook : BinanceSpotOrderBook
     /// Setter for bids (needed forJson.Net)
     /// </summary>
     [JsonProperty("b")]
-    internal IEnumerable<BinanceSpotOrderBookEntry> BidsStream { set => Bids = value; }
+    internal List<BinanceSpotOrderBookEntry> BidsStream { set => Bids = value; }
 
     /// <summary>
     /// Setter for asks (needed forJson.Net)
     /// </summary>
     [JsonProperty("a")]
-    internal IEnumerable<BinanceSpotOrderBookEntry> AsksStream { set => Asks = value; }
+    internal List<BinanceSpotOrderBookEntry> AsksStream { set => Asks = value; }
 }

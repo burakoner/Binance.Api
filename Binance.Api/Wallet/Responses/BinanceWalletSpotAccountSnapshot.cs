@@ -37,5 +37,5 @@ public record BinanceSpotAccountSnapshotData
     /// <summary>
     /// List of balances
     /// </summary>
-    public IEnumerable<BinanceWalletSpotAccountBalance> Balances { get; set; } = [];
+    public List<BinanceWalletSpotAccountBalance> Balances { get; set; } = [];
 }

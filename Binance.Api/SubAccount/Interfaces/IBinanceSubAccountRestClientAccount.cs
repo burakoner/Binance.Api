@@ -26,7 +26,7 @@ public interface IBinanceSubAccountRestClientAccount
     /// <param name="isFreeze">Is frozen</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of sub accounts</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccount>>> GetSubAccountsAsync(string? email = null, int? page = null, int? limit = null, int? receiveWindow = null, bool? isFreeze = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccount>>> GetSubAccountsAsync(string? email = null, int? page = null, int? limit = null, int? receiveWindow = null, bool? isFreeze = null, CancellationToken ct = default);
 
     /// <summary>
     /// Enables futures for a sub account
@@ -77,7 +77,7 @@ public interface IBinanceSubAccountRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of sub accounts status</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountStatus>>> GetSubAccountStatusAsync(string? email = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountStatus>>> GetSubAccountStatusAsync(string? email = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets futures position risk for a sub account
@@ -87,7 +87,7 @@ public interface IBinanceSubAccountRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Position risk</returns>
-    Task<RestCallResult<IEnumerable<BinanceSubAccountFuturesPositionRisk>>> GetFuturesPositionRiskAsync(string email, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSubAccountFuturesPositionRisk>>> GetFuturesPositionRiskAsync(string email, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets futures position risk for a sub account
@@ -98,7 +98,7 @@ public interface IBinanceSubAccountRestClientAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Position risk</returns>
-    Task<RestCallResult<BinanceSubAccountFuturesPositionRiskV2>> GetFuturesPositionRiskAsync(BinanceSubAccountFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSubAccountFuturesPositionRiskV2>> GetFuturesPositionRiskAsync(BinanceFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query Sub-account Transaction statistics (For Master Account).

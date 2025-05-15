@@ -27,7 +27,7 @@ public record BinanceFuturesStreamCompositeIndex : BinanceFuturesStreamEvent
     /// Composition
     /// </summary>
     [JsonProperty("c")]
-    public IEnumerable<BinanceFuturesStreamCompositeIndexAsset> Composition { get; set; } = [];
+    public List<BinanceFuturesStreamCompositeIndexAsset> Composition { get; set; } = [];
 }
 
 /// <summary>

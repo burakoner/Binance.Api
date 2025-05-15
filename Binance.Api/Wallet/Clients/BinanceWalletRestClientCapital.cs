@@ -2,12 +2,12 @@
 
 internal partial class BinanceWalletRestClient
 {
-    public Task<RestCallResult<IEnumerable<BinanceWalletUserAsset>>> GetUserAssetsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceWalletUserAsset>>> GetUserAssetsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceWalletUserAsset>>(GetUrl(sapi, v1, "capital/config/getall"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceWalletUserAsset>>(GetUrl(sapi, v1, "capital/config/getall"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
     public Task<RestCallResult<BinanceWalletWithdrawalPlaced>> WithdrawAsync(string asset, string address, decimal quantity, string? withdrawOrderId = null, string? network = null, string? addressTag = null, string? name = null, bool? transactionFeeFlag = null, BinanceWalletType? walletType = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -32,7 +32,7 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<BinanceWalletWithdrawalPlaced>(GetUrl(sapi, v1, "capital/withdraw/apply"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 900);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceWalletWithdrawal>>> GetWithdrawalHistoryAsync(string? asset = null, string? withdrawOrderId = null, BinanceWithdrawalStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, int? offset = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceWalletWithdrawal>>> GetWithdrawalsAsync(string? asset = null, string? withdrawOrderId = null, BinanceWithdrawalStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, int? offset = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("coin", asset);
@@ -44,19 +44,19 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("offset", offset);
 
-        return RequestAsync<IEnumerable<BinanceWalletWithdrawal>>(GetUrl(sapi, v1, "capital/withdraw/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 18000);
+        return RequestAsync<List<BinanceWalletWithdrawal>>(GetUrl(sapi, v1, "capital/withdraw/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 18000);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceWalletWithdrawalAddress>>> GetWithdrawalAddressesAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceWalletWithdrawalAddress>>> GetWithdrawalAddressesAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceWalletWithdrawalAddress>>(GetUrl(sapi, v1, "capital/withdraw/address/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceWalletWithdrawalAddress>>(GetUrl(sapi, v1, "capital/withdraw/address/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
 
-    public Task<RestCallResult<IEnumerable<BinanceWalletDeposit>>> GetDepositHistoryAsync(string? asset = null, BinanceWalletDepositStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? offset = null, int? limit = null, int? receiveWindow = null, bool includeSource = false, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceWalletDeposit>>> GetDepositsAsync(string? asset = null, BinanceDepositStatus? status = null, DateTime? startTime = null, DateTime? endTime = null, int? offset = null, int? limit = null, int? receiveWindow = null, bool includeSource = false, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("coin", asset);
@@ -68,7 +68,7 @@ internal partial class BinanceWalletRestClient
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
         parameters.AddOptional("includeSource", includeSource.ToString());
 
-        return RequestAsync<IEnumerable<BinanceWalletDeposit>>(GetUrl(sapi, v1, "capital/deposit/hisrec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceWalletDeposit>>(GetUrl(sapi, v1, "capital/deposit/hisrec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceWalletDepositAddress>> GetDepositAddressAsync(string asset, string? network = null, int? receiveWindow = null, CancellationToken ct = default)

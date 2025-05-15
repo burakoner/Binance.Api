@@ -47,7 +47,7 @@ public record BinanceFuturesStreamSymbolUpdate : BinanceFuturesStreamEvent
     /// Brackets
     /// </summary>
     [JsonProperty("bks")]
-    public IEnumerable<BinanceBracketUpdate>? Brackets { get; set; }
+    public List<BinanceBracketUpdate>? Brackets { get; set; }
 }
 
 /// <summary>

@@ -8,12 +8,12 @@ public record BinanceCrossMarginCollateralRatio
     /// <summary>
     /// Collaterals
     /// </summary>
-    public IEnumerable<BinanceCrossMarginCollateral> Collaterals { get; set; } = [];
+    public List<BinanceCrossMarginCollateral> Collaterals { get; set; } = [];
 
     /// <summary>
     /// Asset names
     /// </summary>
-    public IEnumerable<string> AssetNames { get; set; } = [];
+    public List<string> AssetNames { get; set; } = [];
 }
 
 /// <summary>

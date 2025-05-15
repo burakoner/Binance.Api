@@ -15,13 +15,13 @@ public record BinanceSubAccountFuturesTransferHistory
     /// Futures Type
     /// </summary>
     [JsonProperty("futuresType")]
-    public BinanceSubAccountFuturesType FuturesType { get; set; }
+    public BinanceFuturesType FuturesType { get; set; }
 
     /// <summary>
     /// Transfers
     /// </summary>
     [JsonProperty("transfers")]
-    public IEnumerable<BinanceSubAccountAssetTransfer[]> Transfers { get; set; } = [];
+    public List<BinanceSubAccountAssetTransfer> Transfers { get; set; } = [];
 }
 
 /// <summary>

@@ -49,12 +49,12 @@ internal partial class BinanceFuturesSocketClientUsd
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
         int? updateInterval,
-        Action<WebSocketDataEvent<IEnumerable<BinanceFuturesUsdtStreamMarkPrice>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesUsdtStreamMarkPrice>>> onMessage,
         CancellationToken ct = default)
     {
         updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
 
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesUsdtStreamMarkPrice>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesUsdtStreamMarkPrice>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
@@ -137,9 +137,9 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamTick>>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamTick>>> onMessage, CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamTick>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
@@ -160,9 +160,9 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeAsync(symbols, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamMiniTick>>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamMiniTick>>> onMessage, CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamMiniTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamMiniTick>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
@@ -313,10 +313,10 @@ internal partial class BinanceFuturesSocketClientUsd
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(
-        Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamAssetIndexUpdate>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesStreamAssetIndexUpdate>>> onMessage,
         CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamAssetIndexUpdate>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamAssetIndexUpdate>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });

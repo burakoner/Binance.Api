@@ -29,7 +29,7 @@ public interface IBinanceFuturesSocketClientUsdQueryMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Price of symbol</returns>
-    Task<CallResult<IEnumerable<BinanceFuturesPrice>>> GetPricesAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceFuturesPrice>>> GetPricesAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Gets the best price/quantity on the order book for a symbol.
@@ -46,5 +46,5 @@ public interface IBinanceFuturesSocketClientUsdQueryMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of book prices</returns>
-    Task<CallResult<IEnumerable<BinanceFuturesBookTicker>>> GetBookPricesAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceFuturesBookTicker>>> GetBookPricesAsync(CancellationToken ct = default);
 }

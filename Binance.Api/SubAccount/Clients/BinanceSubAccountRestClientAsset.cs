@@ -32,7 +32,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountFuturesDetails>(GetUrl(sapi, v1, "sub-account/futures/account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceSubAccountFuturesDetailsV2>> GetFuturesDetailsAsync(BinanceSubAccountFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSubAccountFuturesDetailsV2>> GetFuturesDetailsAsync(BinanceFuturesType futuresType, string email, int? receiveWindow = null, CancellationToken ct = default)
     {
         email.ValidateNotNull(nameof(email));
 
@@ -76,7 +76,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountDepositAddress>(GetUrl(sapi, v1, "capital/deposit/subAddress"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSubAccountDeposit>>> GetDepositHistoryAsync(string email, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? offset = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSubAccountDeposit>>> GetDepositsAsync(string email, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? offset = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         email.ValidateNotNull(nameof(email));
 
@@ -92,7 +92,7 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("offset", offset?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSubAccountDeposit>>(GetUrl(sapi, v1, "capital/deposit/subHisrec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceSubAccountDeposit>>(GetUrl(sapi, v1, "capital/deposit/subHisrec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceSubAccountFuturesSummary>> GetFuturesSummaryAsync(int? receiveWindow = null, CancellationToken ct = default)
@@ -103,7 +103,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountFuturesSummary>(GetUrl(sapi, v1, "sub-account/futures/accountSummary"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<BinanceSubAccountFuturesSummary>> GetFuturesSummaryAsync(BinanceSubAccountFuturesType futuresType, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceSubAccountFuturesSummary>> GetFuturesSummaryAsync(BinanceFuturesType futuresType, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddEnum("futuresType", futuresType);
@@ -140,7 +140,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountTransactionId>(GetUrl(sapi, v1, "sub-account/margin/transfer"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceSubAccountBalance>>> GetBalancesAsync(string email, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceSubAccountBalance>>> GetBalancesAsync(string email, int? receiveWindow = null, CancellationToken ct = default)
     {
         email.ValidateNotNull(nameof(email));
 
@@ -151,10 +151,10 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var result = await RequestAsync<BinanceSubAccountBalanceContainer>(GetUrl(sapi, v4, "sub-account/assets"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 60).ConfigureAwait(false);
-        return result.Success ? result.As(result.Data.Payload) : result.As<IEnumerable<BinanceSubAccountBalance>>([]);
+        return result.Success ? result.As(result.Data.Payload) : result.As<List<BinanceSubAccountBalance>>([]);
     }
 
-    public Task<RestCallResult<BinanceSubAccountFuturesTransferHistory>> GetFuturesTransferHistoryAsync(string email, BinanceSubAccountFuturesType futuresType, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSubAccountFuturesTransferHistory>> GetFuturesTransferHistoryAsync(string email, BinanceFuturesType futuresType, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
@@ -170,7 +170,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountFuturesTransferHistory>(GetUrl(sapi, v1, "sub-account/futures/internalTransfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSubAccountSpotTransfer>>> GetSpotTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSubAccountSpotTransfer>>> GetSpotTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("fromEmail", fromEmail);
@@ -181,7 +181,7 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSubAccountSpotTransfer>>(GetUrl(sapi, v1, "sub-account/sub/transfer/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceSubAccountSpotTransfer>>(GetUrl(sapi, v1, "sub-account/sub/transfer/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceSubAccountSpotSummary>> GetSpotSummaryAsync(string? email = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -195,7 +195,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountSpotSummary>(GetUrl(sapi, v1, "sub-account/spotSummary"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceSubAccountUniversalTransfer>>> GetUniversalTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceSubAccountUniversalTransfer>>> GetUniversalTransferHistoryAsync(string? fromEmail = null, string? toEmail = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("fromEmail", fromEmail);
@@ -207,10 +207,10 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var result = await RequestAsync<BinanceSubAccountUniversalTransfersContainer>(GetUrl(sapi, v1, "sub-account/universalTransfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
-        return result.Success ? result.As(result.Data.Payload) : result.As<IEnumerable<BinanceSubAccountUniversalTransfer>>([]);
+        return result.Success ? result.As(result.Data.Payload) : result.As<List<BinanceSubAccountUniversalTransfer>>([]);
     }
 
-    public Task<RestCallResult<BinanceSubAccountTransactionId>> FuturesAssetTransferAsync(string fromEmail, string toEmail, BinanceSubAccountFuturesType futuresType, string asset, decimal quantity, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSubAccountTransactionId>> FuturesAssetTransferAsync(string fromEmail, string toEmail, BinanceFuturesType futuresType, string asset, decimal quantity, int? receiveWindow = null, CancellationToken ct = default)
     {
         asset.ValidateNotNull(nameof(asset));
 
@@ -227,7 +227,7 @@ internal partial class BinanceSubAccountRestClient
         return RequestAsync<BinanceSubAccountTransactionId>(GetUrl(sapi, v1, "sub-account/futures/internalTransfer"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSubAccountTransferSubAccount>>> GetTransferHistoryAsync(string? asset = null, BinanceSubAccountTransferType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSubAccountTransferSubAccount>>> GetTransferHistoryAsync(string? asset = null, BinanceSubAccountTransferType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("asset", asset);
@@ -237,7 +237,7 @@ internal partial class BinanceSubAccountRestClient
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSubAccountTransferSubAccount>>(GetUrl(sapi, v1, "sub-account/transfer/subUserHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceSubAccountTransferSubAccount>>(GetUrl(sapi, v1, "sub-account/transfer/subUserHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceSubAccountTransactionId>> TransferSubAccountToMasterAsync(string asset, decimal quantity, int? receiveWindow = null, CancellationToken ct = default)

@@ -23,7 +23,7 @@ public record BinanceIsolatedMarginFee
     /// <summary>
     /// Data
     /// </summary>
-    public IEnumerable<BinanceIsolatedMarginFeeData> Data { get; set; } = [];
+    public List<BinanceIsolatedMarginFeeData> Data { get; set; } = [];
 }
 
 /// <summary>

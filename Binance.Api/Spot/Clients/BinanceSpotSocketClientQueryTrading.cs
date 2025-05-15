@@ -214,20 +214,20 @@ internal partial class BinanceSpotSocketClient
 
     // TODO: Order Amend Keep Priority (TRADE)
 
-    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
 
-        return RequestAsync<IEnumerable<BinanceSpotOrder>>("ws-api/v3", $"openOrders.status", parameters, true, true, weight: symbol == null ? 80 : 6, ct: ct);
+        return RequestAsync<List<BinanceSpotOrder>>("ws-api/v3", $"openOrders.status", parameters, true, true, weight: symbol == null ? 80 : 6, ct: ct);
     }
 
-    public Task<CallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
 
-        return RequestAsync<IEnumerable<BinanceSpotOrder>>("ws-api/v3", $"openOrders.cancelAll", parameters, true, true, ct: ct);
+        return RequestAsync<List<BinanceSpotOrder>>("ws-api/v3", $"openOrders.cancelAll", parameters, true, true, ct: ct);
     }
 
     // TODO: Place new order using SOR (TRADE)

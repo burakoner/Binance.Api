@@ -54,5 +54,5 @@ public record BinanceMarginAccountSnapshotData
     /// <summary>
     /// Assets
     /// </summary>
-    public IEnumerable<BinanceMarginAccountBalance> UserAssets { get; set; } = [];
+    public List<BinanceMarginAccountBalance> UserAssets { get; set; } = [];
 }

@@ -165,7 +165,7 @@ internal partial class BinanceSpotRestClient
         return result;
     }
     
-    public async Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
 
@@ -175,7 +175,7 @@ internal partial class BinanceSpotRestClient
         };
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        var result = await RequestAsync<List<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) foreach (var order in result.Data) InvokeOrderCanceled(order.Id);
         return result;
     }
@@ -271,16 +271,16 @@ internal partial class BinanceSpotRestClient
         return result;
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return await RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
+        return await RequestAsync<List<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 3).ConfigureAwait(false);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
@@ -292,7 +292,7 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceSpotOrder>>(GetUrl(api, v3, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<List<BinanceSpotOrder>>(GetUrl(api, v3, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
 }

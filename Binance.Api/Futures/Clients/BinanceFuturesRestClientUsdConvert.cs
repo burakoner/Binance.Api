@@ -2,13 +2,13 @@
 
 internal partial class BinanceFuturesRestClientUsd
 {
-    public Task<RestCallResult<IEnumerable<BinanceFuturesConvertSymbol>>> GetConvertSymbolsAsync(string? fromAsset = null, string? toAsset = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesConvertSymbol>>> GetConvertSymbolsAsync(string? fromAsset = null, string? toAsset = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("fromAsset", fromAsset);
         parameters.AddOptional("toAsset", toAsset);
 
-        return RequestAsync<IEnumerable<BinanceFuturesConvertSymbol>>(GetUrl(fapi, v1, "convert/exchangeInfo"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<List<BinanceFuturesConvertSymbol>>(GetUrl(fapi, v1, "convert/exchangeInfo"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
     public Task<RestCallResult<BinanceFuturesConvertQuote>> ConvertQuoteRequestAsync(string fromAsset, string toAsset, decimal? fromQuantity = null, decimal? toQuantity = null, BinanceValidTime? validTime = null, CancellationToken ct = default)

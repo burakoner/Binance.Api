@@ -8,7 +8,7 @@ public record BinanceIsolatedMarginAccount
     /// <summary>
     /// Account assets
     /// </summary>
-    public IEnumerable<BinanceIsolatedMarginAccountSymbol> Assets { get; set; } = [];
+    public List<BinanceIsolatedMarginAccountSymbol> Assets { get; set; } = [];
 
     /// <summary>
     /// Total btc asset

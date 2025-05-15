@@ -88,12 +88,12 @@ internal partial class BinanceConvertRestClient
         return RequestAsync<BinanceConvertLimitOrderStatus>(GetUrl(sapi, v1, "convert/limit/cancelOrder"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 500);
     }
 
-    public async Task<RestCallResult<IEnumerable<BinanceConvertLimitOrder>>> GetLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceConvertLimitOrder>>> GetLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         var result = await RequestAsync<BinanceConvertListResult<BinanceConvertLimitOrder>>(GetUrl(sapi, v1, "convert/limit/queryOpenOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
-        return result.Success ? result.As(result.Data.List) : result.As<IEnumerable<BinanceConvertLimitOrder>>([]);
+        return result.Success ? result.As(result.Data.List) : result.As<List<BinanceConvertLimitOrder>>([]);
     }
 }

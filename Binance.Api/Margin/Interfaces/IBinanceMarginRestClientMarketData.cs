@@ -12,7 +12,7 @@ public interface IBinanceMarginRestClientMarketData
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceCrossMarginCollateralRatio>>> GetCrossMarginCollateralRatioAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceCrossMarginCollateralRatio>>> GetCrossMarginCollateralRatioAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get all asset pairs available for margin trading
@@ -21,7 +21,7 @@ public interface IBinanceMarginRestClientMarketData
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of margin pairs</returns>
-    Task<RestCallResult<IEnumerable<BinanceMarginSymbol>>> GetMarginSymbolsAsync(string? symbol = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceMarginSymbol>>> GetMarginSymbolsAsync(string? symbol = null, CancellationToken ct = default);
 
     /// <summary>
     /// Isolated margin symbol info
@@ -31,7 +31,7 @@ public interface IBinanceMarginRestClientMarketData
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceIsolatedMarginSymbol>>> GetIsolatedMarginSymbolsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceIsolatedMarginSymbol>>> GetIsolatedMarginSymbolsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get all assets available for margin trading
@@ -40,7 +40,7 @@ public interface IBinanceMarginRestClientMarketData
     /// <param name="asset">Filter by asset, for example `ETH`</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of margin assets</returns>
-    Task<RestCallResult<IEnumerable<BinanceMarginAsset>>> GetMarginAssetsAsync(string? asset = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceMarginAsset>>> GetMarginAssetsAsync(string? asset = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get cross and isolated delist schedule
@@ -49,7 +49,7 @@ public interface IBinanceMarginRestClientMarketData
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceMarginDelistSchedule>>> GetMarginDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceMarginDelistSchedule>>> GetMarginDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Isolated Margin Tier Data
@@ -60,7 +60,7 @@ public interface IBinanceMarginRestClientMarketData
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceIsolatedMarginTier>>> GetIsolatedMarginTierDataAsync(string symbol, int? tier = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceIsolatedMarginTier>>> GetIsolatedMarginTierDataAsync(string symbol, int? tier = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get margin price index
@@ -86,5 +86,5 @@ public interface IBinanceMarginRestClientMarketData
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<IEnumerable<BinanceCrossMarginProLiabilityCoinLeverageBracket>>> GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync(CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceCrossMarginProLiabilityCoinLeverageBracket>>> GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync(CancellationToken ct = default);
 }

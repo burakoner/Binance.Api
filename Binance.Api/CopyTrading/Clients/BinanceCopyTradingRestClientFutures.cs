@@ -46,11 +46,11 @@ internal partial class BinanceCopyTradingRestClientFutures(BinanceCopyTradingRes
         return RequestAsync<BinanceCopyTradingFuturesLeadTraderStatus>(GetUrl(sapi, v1, "copyTrading/futures/userStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
-    public Task<RestCallResult<IEnumerable<BinanceCopyTradingFuturesLeadTradingSymbol>>> GetLeadTradingSymbolsAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceCopyTradingFuturesLeadTradingSymbol>>> GetLeadTradingSymbolsAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<IEnumerable<BinanceCopyTradingFuturesLeadTradingSymbol>>(GetUrl(sapi, v1, "copyTrading/futures/userStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<List<BinanceCopyTradingFuturesLeadTradingSymbol>>(GetUrl(sapi, v1, "copyTrading/futures/userStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 }

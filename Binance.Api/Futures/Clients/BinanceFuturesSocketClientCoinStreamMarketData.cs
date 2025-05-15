@@ -74,13 +74,13 @@ internal partial class BinanceFuturesSocketClientCoin
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(
-        Action<WebSocketDataEvent<IEnumerable<BinanceFuturesCoinStreamMarkPrice>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage,
         int? updateInterval = null,
         CancellationToken ct = default)
     {
         updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
 
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesCoinStreamMarkPrice>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesCoinStreamMarkPrice>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
@@ -219,10 +219,10 @@ internal partial class BinanceFuturesSocketClientCoin
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(
-        Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamCoinMiniTick>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinMiniTick>>> onMessage,
         CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamCoinMiniTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamCoinMiniTick>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
@@ -251,10 +251,10 @@ internal partial class BinanceFuturesSocketClientCoin
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllTickerUpdatesAsync(
-        Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamCoinTick>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinTick>>> onMessage,
         CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<IEnumerable<BinanceFuturesStreamCoinTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamCoinTick>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });

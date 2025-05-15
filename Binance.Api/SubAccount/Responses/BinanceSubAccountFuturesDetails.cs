@@ -21,7 +21,7 @@ public record BinanceSubAccountFuturesDetails
     /// List of asset details
     /// </summary>
     [JsonProperty("assets")]
-    public BinanceSubAccountFuturesAsset[] Assets { get; set; } = [];
+    public List<BinanceSubAccountFuturesAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Can deposit

@@ -15,7 +15,7 @@ public record BinanceSubAccountIpRestriction
     /// Ip whitelist
     /// </summary>
     [JsonProperty("ipList")]
-    public string[] IpList { get; set; } = [];
+    public List<string>  IpList { get; set; } = [];
     
     /// <summary>
     /// Update Time

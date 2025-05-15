@@ -77,7 +77,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesCoinStreamMarkPrice>>> onMessage, int? updateInterval = null, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage, int? updateInterval = null, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the candlestick update stream for the provided symbol
@@ -218,7 +218,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamCoinMiniTick>>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinMiniTick>>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to ticker updates stream for a specific symbol
@@ -247,7 +247,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<WebSocketDataEvent<IEnumerable<BinanceFuturesStreamCoinTick>>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinTick>>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the book ticker update stream for the provided symbol

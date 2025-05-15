@@ -14,10 +14,10 @@ public record BinanceMarginDelistSchedule
     /// <summary>
     /// Cross margin assets
     /// </summary>
-    public IEnumerable<string> CrossMarginAssets { get; set; } = [];
+    public List<string> CrossMarginAssets { get; set; } = [];
 
     /// <summary>
     /// Isolated margin symbols
     /// </summary>
-    public IEnumerable<string> IsolatedMarginSymbols { get; set; } = [];
+    public List<string> IsolatedMarginSymbols { get; set; } = [];
 }

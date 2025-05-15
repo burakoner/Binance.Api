@@ -8,7 +8,7 @@ public record BinanceCrossMarginProLiabilityCoinLeverageBracket
     /// <summary>
     /// Asset names
     /// </summary>
-    public IEnumerable<string> AssetNames { get; set; } = [];
+    public List<string> AssetNames { get; set; } = [];
 
     /// <summary>
     /// Rank
@@ -18,7 +18,7 @@ public record BinanceCrossMarginProLiabilityCoinLeverageBracket
     /// <summary>
     /// Brackets
     /// </summary>
-    public IEnumerable<BinanceCrossMarginProBracket> Brackets { get; set; } = [];
+    public List<BinanceCrossMarginProBracket> Brackets { get; set; } = [];
 }
 
 /// <summary>

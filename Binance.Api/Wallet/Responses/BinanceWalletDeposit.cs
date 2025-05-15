@@ -53,7 +53,7 @@ public record BinanceWalletDeposit
     /// <summary>
     /// The status of the deposit
     /// </summary>
-    public BinanceWalletDepositStatus Status { get; set; }
+    public BinanceDepositStatus Status { get; set; }
 
     /// <summary>
     /// The transfer type

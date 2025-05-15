@@ -57,7 +57,7 @@ public record BinanceSubAccountFuturesSummary
     /// Sub accounts info
     /// </summary>
     [JsonProperty("subAccountList")]
-    public BinanceSubAccountFuturesInfo[] SubAccounts { get; set; } = [];
+    public List<BinanceSubAccountFuturesInfo>  SubAccounts { get; set; } = [];
 }
 
 /// <summary>

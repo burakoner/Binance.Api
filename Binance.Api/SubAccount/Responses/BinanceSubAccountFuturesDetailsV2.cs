@@ -33,7 +33,7 @@ public record BinanceSubAccountFuturesDetailV2
     /// List of asset details
     /// </summary>
     [JsonProperty("assets")]
-    public BinanceSubAccountFuturesAsset[] Assets { get; set; } = [];
+    public List<BinanceSubAccountFuturesAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Can deposit

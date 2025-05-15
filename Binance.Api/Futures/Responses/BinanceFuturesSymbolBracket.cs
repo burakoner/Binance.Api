@@ -27,7 +27,7 @@ public record BinanceFuturesSymbolBracket
     /// Brackets
     /// </summary>
     [JsonProperty("brackets")]
-    public IEnumerable<BinanceFuturesBracket> Brackets { get; set; } = [];
+    public List<BinanceFuturesBracket> Brackets { get; set; } = [];
 
 }
 

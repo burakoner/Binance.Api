@@ -3,5 +3,5 @@
 internal record BinanceSubAccountContainer
 {
     [JsonProperty("subAccounts")]
-    public IEnumerable<BinanceSubAccount> Payload { get; set; } = [];
+    public List<BinanceSubAccount> Payload { get; set; } = [];
 }

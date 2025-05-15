@@ -58,7 +58,7 @@ public record BinanceSpotStreamOrderListUpdate: BinanceSpotStreamEvent
     /// The order in this list
     /// </summary>
     [JsonProperty("O")]
-    public IEnumerable<BinanceSpotStreamOrderId> Orders { get; set; } = [];
+    public List<BinanceSpotStreamOrderId> Orders { get; set; } = [];
 
     /// <summary>
     /// The listen key the update was for

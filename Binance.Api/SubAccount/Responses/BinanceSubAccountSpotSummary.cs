@@ -21,7 +21,7 @@ public record BinanceSubAccountSpotSummary
     /// Sub account values
     /// </summary>
     [JsonProperty("spotSubUserAssetBtcVoList")]
-    public IEnumerable<BinanceSubAccountBtcValue> SubAccountsBtcValues { get; set; } = [];
+    public List<BinanceSubAccountBtcValue> SubAccountsBtcValues { get; set; } = [];
 }
 
 /// <summary>
