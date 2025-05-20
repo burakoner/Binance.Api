@@ -23,7 +23,7 @@ internal partial class BinanceBrokerRestClientLinkAndTrade
                 { "brokerId", brokerId }
             };
         parameters.AddEnum("type", IfNewUserMarginedFuturesType.UsdtMarginedFutures);
-        parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        parameters.AddOptional("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
         var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/apiReferral/ifNewUser", BinanceExchange.RateLimiter.FuturesRest, 100, true);
         return await _baseClient.SendAsync<BinanceFuturesIfNewUser>(request, parameters, ct).ConfigureAwait(false);

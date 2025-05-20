@@ -23,7 +23,7 @@ internal partial class BinanceSubAccountRestClient
         };
 
         if (ipAddresses != null)
-            parameters.AddOptionalParameter("ipAddress", string.Join(",", ipAddresses));
+            parameters.AddOptional("ipAddress", string.Join(",", ipAddresses));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceSubAccountIpRestriction>(GetUrl(sapi, v1, "sub-account/subAccountApi/ipRestriction/ipList"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 3000);
@@ -39,7 +39,7 @@ internal partial class BinanceSubAccountRestClient
         };
 
         if (ipAddresses != null)
-            parameters.AddOptionalParameter("ipAddress", string.Join(",", ipAddresses));
+            parameters.AddOptional("ipAddress", string.Join(",", ipAddresses));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceSubAccountIpRestriction>(GetUrl(sapi, v2, "sub-account/subAccountApi/ipRestriction"), HttpMethod.Post, ct, true, queryParameters: parameters, requestWeight: 3000);

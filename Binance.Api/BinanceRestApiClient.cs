@@ -6,6 +6,7 @@ using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Mining;
 using Binance.Api.Spot;
+using Binance.Api.Staking;
 using Binance.Api.SubAccount;
 using Binance.Api.Wallet;
 
@@ -85,7 +86,11 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceMiningRestClient Mining { get; }
 
-    // TODO: Staking
+    /// <summary>
+    /// Binane Staking Rest API Client
+    /// </summary>
+    public IBinanceStakingRestClient Staking { get; }
+
     // TODO: Dual Investment
     // TODO: Crypto Loan
     // TODO: VIP Loan
@@ -150,6 +155,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         SubAccount = new BinanceSubAccountRestClient(this);
         Broker = new BinanceBrokerRestClient(this);
         Mining = new BinanceMiningRestClient(this);
+        Staking = new BinanceStakingRestClient(this);
     }
 
     #region Public Nethods

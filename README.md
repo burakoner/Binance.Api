@@ -36,15 +36,15 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Product|Rest API|WS Query|WS Stream|
 |--|:--|:--|:--|
 |Spot Trading|✅|✅|✅|
-|USDⓈ-M Futures|✅|✅|✅|
+|Margin Trading|✅|✅|✅|
 |Coin-M Futures|✅|✅|✅|
+|USDⓈ-M Futures|✅|✅|✅|
 |European Options|⌛|-|⌛|
 |Portfolio Margin|⌛|-|⌛|
 |Portfolio Margin Pro|⌛|-|⌛|
-|Margin Trading|✅|✅|✅|
 |Algo Trading|✅|-|-|
-|Wallet|✅|-|-|
 |Copy Trading|✅|-|-|
+|Wallet|✅|-|-|
 |Convert|✅|-|-|
 |Sub Account|✅|-|-|
 |Exchange Link|✅|-|-|
@@ -538,6 +538,41 @@ var mining_110 = await api.Mining.GetEarningsAsync("---ALGORITHM---");
 var mining_111 = await api.Mining.GetStatisticsAsync("---ALGORITHM---", "---USERNAME---");
 var mining_112 = await api.Mining.PlaceHashrateResaleRequestAsync("---ALGORITHM---", "---USERNAME---", DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "---TO-USER---", 10.0m);
 var mining_113 = await api.Mining.GetAccountsAsync("---ALGORITHM---", "---USERNAME---");
+
+// ETH Staking -> Account Methods (PRIVATE)
+var ethstaking_101 = await api.Staking.ETH.GetAccountAsync();
+var ethstaking_102 = await api.Staking.ETH.GetQuotaAsync();
+
+// ETH Staking -> Staking Methods (PRIVATE)
+var ethstaking_201 = await api.Staking.ETH.StakeAsync(100.0m);
+var ethstaking_202 = await api.Staking.ETH.RedeemAsync(100.0m);
+var ethstaking_203 = await api.Staking.ETH.WrapAsync(100.0m);
+
+// ETH Staking -> History Methods (PRIVATE)
+var ethstaking_301 = await api.Staking.ETH.GetStakingHistoryAsync();
+var ethstaking_302 = await api.Staking.ETH.GetRedemptionHistoryAsync();
+var ethstaking_303 = await api.Staking.ETH.GetRewardsHistoryAsync();
+var ethstaking_304 = await api.Staking.ETH.GetWbEthRewardsHistoryAsync();
+var ethstaking_305 = await api.Staking.ETH.GetWbEthRateHistoryAsync();
+var ethstaking_306 = await api.Staking.ETH.GetWbEthWrapHistoryAsync();
+var ethstaking_307 = await api.Staking.ETH.GetWbEthUnwrapHistoryAsync();
+
+// SOL Staking -> Account Methods (PRIVATE)
+var solstaking_101 = await api.Staking.SOL.GetAccountAsync();
+var solstaking_102 = await api.Staking.SOL.GetQuotaAsync();
+
+// SOL Staking -> Staking Methods (PRIVATE)
+var solstaking_201 = await api.Staking.SOL.StakeAsync(100.0m);
+var solstaking_202 = await api.Staking.SOL.RedeemAsync(100.0m);
+var solstaking_203 = await api.Staking.SOL.ClaimAsync();
+
+// SOL Staking -> History Methods (PRIVATE)
+var solstaking_301 = await api.Staking.SOL.GetStakingHistoryAsync();
+var solstaking_302 = await api.Staking.SOL.GetRedemptionHistoryAsync();
+var solstaking_303 = await api.Staking.SOL.GetBnSolRewardsHistoryAsync();
+var solstaking_304 = await api.Staking.SOL.GetBnSolRateHistoryAsync();
+var solstaking_305 = await api.Staking.SOL.GetBoostRewardsHistoryAsync(Api.Staking.SolRewardType.Claim);
+var solstaking_306 = await api.Staking.SOL.GetUnclaimedRewardsAsync();
 ```
 
 ## WebSocket Api Query Examples

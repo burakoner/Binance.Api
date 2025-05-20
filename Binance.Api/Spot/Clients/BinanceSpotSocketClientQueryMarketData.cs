@@ -6,7 +6,7 @@ internal partial class BinanceSpotSocketClient
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
-        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptional("limit", limit);
         int weight = limit <= 100 ? 5 : limit <= 500 ? 25 : limit <= 1000 ? 50 : 250;
         var result = await RequestAsync<BinanceSpotOrderBook>("ws-api/v3", $"depth", parameters, weight: weight, ct: ct).ConfigureAwait(false);
         if (result) result.Data.Symbol = symbol;
@@ -17,7 +17,7 @@ internal partial class BinanceSpotSocketClient
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
-        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptional("limit", limit);
         return RequestAsync<List<BinanceSpotTrade>>("ws-api/v3", $"trades.recent", parameters, weight: 25, ct: ct);
     }
 
@@ -25,8 +25,8 @@ internal partial class BinanceSpotSocketClient
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
-        parameters.AddOptionalParameter("limit", limit);
-        parameters.AddOptionalParameter("fromId", fromId);
+        parameters.AddOptional("limit", limit);
+        parameters.AddOptional("fromId", fromId);
         return RequestAsync<List<BinanceSpotTrade>>("ws-api/v3", $"trades.historical", parameters, false, weight: 25, ct: ct);
     }
 
@@ -34,10 +34,10 @@ internal partial class BinanceSpotSocketClient
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
-        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptional("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptionalParameter("fromId", fromId);
+        parameters.AddOptional("fromId", fromId);
         return RequestAsync<List<BinanceSpotStreamAggregatedTrade>>("ws-api/v3", $"trades.aggregate", parameters, false, weight: 2, ct: ct);
     }
 
@@ -46,7 +46,7 @@ internal partial class BinanceSpotSocketClient
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddEnum("interval", interval);
-        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptional("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         return RequestAsync<List<BinanceSpotKline>>("ws-api/v3", $"klines", parameters, false, weight: 2, ct: ct);
@@ -57,7 +57,7 @@ internal partial class BinanceSpotSocketClient
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddEnum("interval", interval);
-        parameters.AddOptionalParameter("limit", limit);
+        parameters.AddOptional("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         return RequestAsync<List<BinanceSpotKline>>("ws-api/v3", $"uiKlines", parameters, false, weight: 2, ct: ct);
