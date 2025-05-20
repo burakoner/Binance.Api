@@ -50,6 +50,8 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Exchange Link|✅|-|-|
 |Link and Trade|⌛|-|-|
 |Staking|⌛|-|-|
+|Mining|✅|-|-|
+|Simple Earn|⌛|-|-|
 ## Installation
 
 ![Nuget version](https://img.shields.io/nuget/v/Binance.Api.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/Binance.Api.svg)
@@ -521,6 +523,21 @@ var exlink_304 = await api.Broker.ExchangeLink.SetCoinFuturesCommissionAdjustmen
 var exlink_305 = await api.Broker.ExchangeLink.GetCoinFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---");
 var exlink_306 = await api.Broker.ExchangeLink.GetBrokerCommissionRebatesAsync("---SUBACCOUNT-ID---");
 var exlink_307 = await api.Broker.ExchangeLink.GetBrokerFuturesCommissionRebatesAsync(BinanceFuturesType.CoinMarginedFutures, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+
+// Mining Methods (PRIVATE)
+var mining_101 = await api.Mining.GetAlgorithmsAsync(); // PUBLIC
+var mining_102 = await api.Mining.GetCoinsAsync(); // PUBLIC
+var mining_103 = await api.Mining.GetHashrateResalesAsync();
+var mining_104 = await api.Mining.GetWorkersAsync("---ALGORITHM---", "---USERNAME---");
+var mining_105 = await api.Mining.GetWorkerDetailsAsync("---ALGORITHM---", "---USERNAME---", "---WORKER---");
+var mining_106 = await api.Mining.GetOtherRevenuesAsync("---ALGORITHM---", "---USERNAME---");
+var mining_107 = await api.Mining.GetMiningRevenuesAsync("---ALGORITHM---", "---USERNAME---");
+var mining_108 = await api.Mining.CancelHashrateResaleRequestAsync(1_000_000, "---USERNAME---");
+var mining_109 = await api.Mining.GetHashrateResaleDetailsAsync(1_000_000, "---USERNAME---");
+var mining_110 = await api.Mining.GetEarningsAsync("---ALGORITHM---");
+var mining_111 = await api.Mining.GetStatisticsAsync("---ALGORITHM---", "---USERNAME---");
+var mining_112 = await api.Mining.PlaceHashrateResaleRequestAsync("---ALGORITHM---", "---USERNAME---", DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "---TO-USER---", 10.0m);
+var mining_113 = await api.Mining.GetAccountsAsync("---ALGORITHM---", "---USERNAME---");
 ```
 
 ## WebSocket Api Query Examples

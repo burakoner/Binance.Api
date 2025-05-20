@@ -4,6 +4,7 @@ using Binance.Api.Convert;
 using Binance.Api.CopyTrading;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
+using Binance.Api.Mining;
 using Binance.Api.Spot;
 using Binance.Api.SubAccount;
 using Binance.Api.Wallet;
@@ -79,9 +80,13 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceBrokerRestClient Broker { get; }
 
+    /// <summary>
+    /// Binane Mining Rest API Client
+    /// </summary>
+    public IBinanceMiningRestClient Mining { get; }
+
     // TODO: Staking
     // TODO: Dual Investment
-    // TODO: Mining
     // TODO: Crypto Loan
     // TODO: VIP Loan
     // TODO: C2C
@@ -144,24 +149,30 @@ public sealed class BinanceRestApiClient : RestApiClient
         Convert = new BinanceConvertRestClient(this);
         SubAccount = new BinanceSubAccountRestClient(this);
         Broker = new BinanceBrokerRestClient(this);
+        Mining = new BinanceMiningRestClient(this);
     }
 
     #region Public Nethods
     /// <summary>
     /// Sets API Credentials
     /// </summary>
-    /// <param name="apikey"></param>
-    /// <param name="secret"></param>
-    public void SetApiCredentials(string apikey, string secret)
-    {
-        SetApiCredentials(new ApiCredentials(apikey, secret));
-    }
+    /// <param name="apikey">API Key</param>
+    /// <param name="secret">API Secret</param>
+    public void SetApiCredentials(string apikey, string secret) => SetApiCredentials(new ApiCredentials(apikey, secret));
     #endregion
 
     #region Overrided Methods
     /// <inheritdoc/>
-    protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-        => new BinanceAuthentication(credentials);
+    protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials) => new BinanceAuthentication(credentials);
+
+    /// <inheritdoc/>
+    protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync() => Spot.GetTimeAsync();
+
+    /// <inheritdoc/>
+    protected override TimeSyncInfo GetTimeSyncInfo() => new(Logger, RestOptions.AutoTimestamp, RestOptions.TimestampRecalculationInterval, TimeSyncState);
+
+    /// <inheritdoc/>
+    protected override TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
 
     /// <inheritdoc/>
     protected override Error ParseErrorResponse(JToken error)
@@ -177,15 +188,6 @@ public sealed class BinanceRestApiClient : RestApiClient
 
         return new ServerError((int)error["code"]!, (string)error["msg"]!);
     }
-
-    /// <inheritdoc/>
-    protected override Task<RestCallResult<DateTime>> GetServerTimestampAsync() => Spot.GetTimeAsync();
-
-    /// <inheritdoc/>
-    protected override TimeSyncInfo GetTimeSyncInfo() => new(Logger, RestOptions.AutoTimestamp, RestOptions.TimestampRecalculationInterval, TimeSyncState);
-
-    /// <inheritdoc/>
-    protected override TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
     #endregion
 
     #region Internal Methods

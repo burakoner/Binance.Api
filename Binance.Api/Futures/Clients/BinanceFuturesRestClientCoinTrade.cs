@@ -138,7 +138,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
         var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5);
-        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>([]);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)
@@ -207,7 +207,7 @@ internal partial class BinanceFuturesRestClientCoin
         var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
 
         if (!response.Success)
-            return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
+            return response.As<List<CallResult<BinanceFuturesOrder>>>(default!);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)

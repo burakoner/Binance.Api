@@ -87,7 +87,7 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
         throw new NotImplementedException();
     }
 
-    protected override bool HandleSubscriptionResponse(WebSocketConnection connection, WebSocketSubscription subscription, object request, JToken message, out CallResult<object> callResult)
+    protected override bool HandleSubscriptionResponse(WebSocketConnection connection, WebSocketSubscription subscription, object request, JToken message, out CallResult<object>? callResult)
     {
         callResult = null;
         if (message.Type != JTokenType.Object)

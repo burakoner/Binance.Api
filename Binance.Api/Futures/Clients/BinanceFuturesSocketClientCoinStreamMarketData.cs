@@ -146,7 +146,7 @@ internal partial class BinanceFuturesSocketClientCoin
         });
         var topics = pairs.Select(a =>
             a.ToLower(BinanceConstants.CI) + "_" +
-            MapConverter.GetString(contractType).ToLower() + "@continuousKline_" +
+            MapConverter.GetString(contractType)!.ToLower() + "@continuousKline_" +
             MapConverter.GetString(interval)).ToArray();
         return SubscribeAsync(topics, false, handler, ct);
     }

@@ -94,6 +94,11 @@ public class BinanceAddress
     public string SubAccountRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance Mining Rest API Address
+    /// </summary>
+    public string MiningRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// Binance Algo Trading Rest API Address
     /// </summary>
     public string AlgoTradingRestApiAddress { get; set; } = "";
@@ -128,6 +133,7 @@ public class BinanceAddress
         MarginRestApiAddress = "https://api.binance.com",
         WalletRestApiAddress = "https://api.binance.com",
         SubAccountRestApiAddress = "https://api.binance.com",
+        MiningRestApiAddress = "https://api.binance.com",
 
         AlgoTradingRestApiAddress = "https://api.binance.com",
         CopyTradingRestApiAddress = "https://api.binance.com",

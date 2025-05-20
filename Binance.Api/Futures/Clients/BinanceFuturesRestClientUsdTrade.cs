@@ -137,7 +137,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
         var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(fapi, v1, "batchOrders"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default!);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)
@@ -153,7 +153,7 @@ internal partial class BinanceFuturesRestClientUsd
             }
         }
 
-        return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
+        return response.As(result);
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal? price = null, BinanceFuturesPriceMatch? priceMatch = null, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -164,9 +164,9 @@ internal partial class BinanceFuturesRestClientUsd
         var parameters = new ParameterCollection
         {
             { "symbol", symbol },
-            { "side", MapConverter.GetString(side) },
             { "quantity", quantity.ToString(BinanceConstants.CI) },
         };
+        parameters.AddEnum("side", side);
         parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("priceMatch", priceMatch);
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
@@ -201,7 +201,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
         var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(fapi, v1, "batchOrders"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default!);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)
@@ -274,7 +274,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
         var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(fapi, v1, "batchOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
-        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default!);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)
@@ -494,7 +494,7 @@ internal partial class BinanceFuturesRestClientUsd
         }
 
         var result = await RequestAsync<BinanceFuturesQuantileEstimation>(GetUrl(fapi, v1, "adlQuantile"), HttpMethod.Get, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        if (!result) return result.As<List<BinanceFuturesQuantileEstimation>>(null);
+        if (!result) return result.As<List<BinanceFuturesQuantileEstimation>>([]);
 
         return result.As<List<BinanceFuturesQuantileEstimation>>([result.Data]);
     }

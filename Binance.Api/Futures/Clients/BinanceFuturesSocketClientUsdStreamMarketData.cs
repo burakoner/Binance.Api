@@ -119,7 +119,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data.Data));
         });
-        pairs = pairs.Select(a => a.ToLower(BinanceConstants.CI) + "_" + MapConverter.GetString(contractType).ToLower() + "@continuousKline_" + MapConverter.GetString(interval)).ToArray();
+        pairs = pairs.Select(a => a.ToLower(BinanceConstants.CI) + "_" + MapConverter.GetString(contractType)!.ToLower() + "@continuousKline_" + MapConverter.GetString(interval)).ToArray();
         return SubscribeAsync(pairs, false, handler, ct);
     }
 
