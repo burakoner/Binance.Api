@@ -9,10 +9,10 @@
 	<PropertyGroup>
 		<PackageId>Binance.Api</PackageId>
 		<Authors>Burak Öner</Authors>
-		<Version>5.5.21</Version>
-		<FileVersion>5.5.21</FileVersion>
-		<PackageVersion>5.5.21</PackageVersion>
-		<AssemblyVersion>5.5.21</AssemblyVersion>
+		<Version>5.5.22</Version>
+		<FileVersion>5.5.22</FileVersion>
+		<PackageVersion>5.5.22</PackageVersion>
+		<AssemblyVersion>5.5.22</AssemblyVersion>
 		<Description>Binance API Wrapper. Up-to-date, most-complete, well-organized, well-documented, easy-to-use, multi-task and multi-thread compatible Binance Cryptocurrency Exchange Rest and Websocket Api Wrapper</Description>
 		<PackageTags>Binance;BNB;BTC;Api;Client;Rest;Web;Websocket;Socket;Wrapper;Crypto;Currency;Cryptocurrency;Exchange;Trade;Trading;Bitcoin;Spot;Margin;Futures;Derivates;Stock;Options;Swap;</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -45,6 +45,14 @@
 		<Folder Include="Algo\Internal\" />
 		<Folder Include="Algo\Socket\" />
 		<Folder Include="Algo\Requests\" />
+		<Folder Include="SimpleEarn\Converters\" />
+		<Folder Include="SimpleEarn\Internal\" />
+		<Folder Include="SimpleEarn\Requests\" />
+		<Folder Include="SimpleEarn\Socket\" />
+		<Folder Include="NFT\Converters\" />
+		<Folder Include="NFT\Internal\" />
+		<Folder Include="NFT\Requests\" />
+		<Folder Include="NFT\Socket\" />
 		<Folder Include="Staking\Converters\" />
 		<Folder Include="Staking\Internal\" />
 		<Folder Include="Staking\Requests\" />

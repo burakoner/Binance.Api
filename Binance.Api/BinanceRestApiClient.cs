@@ -5,6 +5,8 @@ using Binance.Api.CopyTrading;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Mining;
+using Binance.Api.NFT;
+using Binance.Api.SimpleEarn;
 using Binance.Api.Spot;
 using Binance.Api.Staking;
 using Binance.Api.SubAccount;
@@ -82,25 +84,33 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceBrokerRestClient Broker { get; }
 
     /// <summary>
-    /// Binane Mining Rest API Client
+    /// Binance Mining Rest API Client
     /// </summary>
     public IBinanceMiningRestClient Mining { get; }
 
     /// <summary>
-    /// Binane Staking Rest API Client
+    /// Binance NFT Rest API Client
+    /// </summary>
+    public IBinanceNftRestClient NFT { get; }
+
+    /// <summary>
+    /// Binance Staking Rest API Client
     /// </summary>
     public IBinanceStakingRestClient Staking { get; }
+
+    /// <summary>
+    /// Binance Simple Earn Rest API Client
+    /// </summary>
+    public IBinanceSimpleEarnRestClient SimpleEarn { get; }
 
     // TODO: Dual Investment
     // TODO: Crypto Loan
     // TODO: VIP Loan
     // TODO: C2C
     // TODO: Fiat
-    // TODO: NFT
     // TODO: Gift Card
     // TODO: BAB Token
     // TODO: Rebate
-    // TODO: Simple Earn
     // TODO: Binance Pay History
     // TODO: Web3 DApp
     // TODO: Binance Web3 Connect
@@ -155,7 +165,9 @@ public sealed class BinanceRestApiClient : RestApiClient
         SubAccount = new BinanceSubAccountRestClient(this);
         Broker = new BinanceBrokerRestClient(this);
         Mining = new BinanceMiningRestClient(this);
+        NFT = new BinanceNftRestClient(this);
         Staking = new BinanceStakingRestClient(this);
+        SimpleEarn = new BinanceSimpleEarnRestClient(this);
     }
 
     #region Public Nethods

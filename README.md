@@ -48,10 +48,10 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Convert|✅|-|-|
 |Sub Account|✅|-|-|
 |Exchange Link|✅|-|-|
-|Link and Trade|⌛|-|-|
-|Staking|⌛|-|-|
+|Link-n-Trade|⌛|-|-|
+|Staking|✅|-|-|
 |Mining|✅|-|-|
-|Simple Earn|⌛|-|-|
+|NFT|✅|-|-|
 ## Installation
 
 ![Nuget version](https://img.shields.io/nuget/v/Binance.Api.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/Binance.Api.svg)
@@ -493,7 +493,7 @@ var exlink_104 = await api.Broker.ExchangeLink.EnableMarginAsync("---SUBACCOUNT-
 var exlink_105 = await api.Broker.ExchangeLink.EnableLeverageTokenAsync("---SUBACCOUNT-ID---");
 var exlink_106 = await api.Broker.ExchangeLink.CreateApiKeyAsync("---SUBACCOUNT-ID---", true, true, true);
 var exlink_107 = await api.Broker.ExchangeLink.SetApiKeyPermissionAsync("---SUBACCOUNT-ID---", "---API-KEY---", true, true, true);
-var exlink_108 = await api.Broker.ExchangeLink.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", Api.Broker.BinanceBrokerIpRestrictionStatus.IpUnrestricted);
+var exlink_108 = await api.Broker.ExchangeLink.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", BinanceBrokerIpRestrictionStatus.IpUnrestricted);
 var exlink_109 = await api.Broker.ExchangeLink.DeleteApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", "---IP-ADDRESS---");
 var exlink_110 = await api.Broker.ExchangeLink.DeleteApiKeyAsync("---SUBACCOUNT-ID---", "---API-KEY---");
 var exlink_111 = await api.Broker.ExchangeLink.GetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---");
@@ -539,6 +539,12 @@ var mining_111 = await api.Mining.GetStatisticsAsync("---ALGORITHM---", "---USER
 var mining_112 = await api.Mining.PlaceHashrateResaleRequestAsync("---ALGORITHM---", "---USERNAME---", DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "---TO-USER---", 10.0m);
 var mining_113 = await api.Mining.GetAccountsAsync("---ALGORITHM---", "---USERNAME---");
 
+// NFT Methods (PRIVATE)
+var nft_101 = await api.NFT.GetDepositsAsync();
+var nft_102 = await api.NFT.GetWithdrawalsAsync();
+var nft_103 = await api.NFT.GetTransactionsAsync(BinanceNftOrderType.PurchaseOrder);
+var nft_104 = await api.NFT.GetAssetsAsync();
+
 // ETH Staking -> Account Methods (PRIVATE)
 var ethstaking_101 = await api.Staking.ETH.GetAccountAsync();
 var ethstaking_102 = await api.Staking.ETH.GetQuotaAsync();
@@ -571,8 +577,45 @@ var solstaking_301 = await api.Staking.SOL.GetStakingHistoryAsync();
 var solstaking_302 = await api.Staking.SOL.GetRedemptionHistoryAsync();
 var solstaking_303 = await api.Staking.SOL.GetBnSolRewardsHistoryAsync();
 var solstaking_304 = await api.Staking.SOL.GetBnSolRateHistoryAsync();
-var solstaking_305 = await api.Staking.SOL.GetBoostRewardsHistoryAsync(Api.Staking.SolRewardType.Claim);
+var solstaking_305 = await api.Staking.SOL.GetBoostRewardsHistoryAsync(BinanceSolStakingRewardType.Claim);
 var solstaking_306 = await api.Staking.SOL.GetUnclaimedRewardsAsync();
+
+// Simple Earn -> Flexible -> Account Methods (PRIVATE)
+var flexible_101 = await api.SimpleEarn.Flexible.GetAccountAsync();
+var flexible_102 = await api.SimpleEarn.Flexible.GetProductsAsync();
+var flexible_103 = await api.SimpleEarn.Flexible.GetPositionsAsync();
+var flexible_104 = await api.SimpleEarn.Flexible.GetQuotaAsync("---PRODUCT-ID---");
+
+// Simple Earn -> Flexible -> Earn Methods (PRIVATE)
+var flexible_201 = await api.SimpleEarn.Flexible.SubscribeAsync("---PRODUCT-ID---", 100.0m);
+var flexible_202 = await api.SimpleEarn.Flexible.RedeemAsync("---PRODUCT-ID---");
+var flexible_203 = await api.SimpleEarn.Flexible.SetAutoSubscribeAsync("---PRODUCT-ID---", true);
+var flexible_204 = await api.SimpleEarn.Flexible.GetSubscriptionPreviewAsync("---PRODUCT-ID---", 100.0m);
+
+// Simple Earn -> Flexible -> Earn History (PRIVATE)
+var flexible_301 = await api.SimpleEarn.Flexible.GetSubscriptionsAsync("---PRODUCT-ID---");
+var flexible_302 = await api.SimpleEarn.Flexible.GetRedemptionsAsync("---PRODUCT-ID---");
+var flexible_303 = await api.SimpleEarn.Flexible.GetRewardsAsync(BinanceSimpleEarnRewardType.All);
+var flexible_304 = await api.SimpleEarn.Flexible.GetCollateralsAsync("---PRODUCT-ID---");
+var flexible_305 = await api.SimpleEarn.Flexible.GetRatesAsync("---PRODUCT-ID---");
+
+// Simple Earn -> Locked -> Account Methods (PRIVATE)
+var locked_101 = await api.SimpleEarn.Locked.GetAccountAsync();
+var locked_102 = await api.SimpleEarn.Locked.GetProductsAsync();
+var locked_103 = await api.SimpleEarn.Locked.GetPositionsAsync();
+var locked_104 = await api.SimpleEarn.Locked.GetQuotaAsync("---PRODUCT-ID---");
+
+// Simple Earn -> Locked -> Earn Methods (PRIVATE)
+var locked_201 = await api.SimpleEarn.Locked.SubscribeAsync("---PROJECT-ID---", 100.0m);
+var locked_202 = await api.SimpleEarn.Locked.RedeemAsync("---POSITION-ID---");
+var locked_203 = await api.SimpleEarn.Locked.SetAutoSubscribeAsync("---POSITION-ID---", true);
+var locked_204 = await api.SimpleEarn.Locked.GetSubscriptionPreviewAsync("---PROJECT-ID---", 100.0m);
+var locked_205 = await api.SimpleEarn.Locked.SetRedeemOptionAsync("---POSITION-ID---", BinanceSimpleEarnRedeemOption.Spot);
+
+// Simple Earn -> Locked -> Earn History (PRIVATE)
+var locked_301 = await api.SimpleEarn.Locked.GetSubscriptionsAsync();
+var locked_302 = await api.SimpleEarn.Locked.GetRedemptionsAsync();
+var locked_303 = await api.SimpleEarn.Locked.GetRewardsAsync();
 ```
 
 ## WebSocket Api Query Examples

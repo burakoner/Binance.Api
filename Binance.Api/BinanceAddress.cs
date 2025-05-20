@@ -99,9 +99,19 @@ public class BinanceAddress
     public string MiningRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance NFT Rest API Address
+    /// </summary>
+    public string NFTRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// Binance Staking Rest API Address
     /// </summary>
     public string StakingRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Simple Earn Rest API Address
+    /// </summary>
+    public string SimpleEarnRestApiAddress { get; set; } = "";
 
     /// <summary>
     /// Binance Algo Trading Rest API Address
@@ -139,7 +149,9 @@ public class BinanceAddress
         WalletRestApiAddress = "https://api.binance.com",
         SubAccountRestApiAddress = "https://api.binance.com",
         MiningRestApiAddress = "https://api.binance.com",
+        NFTRestApiAddress = "https://api.binance.com",
         StakingRestApiAddress = "https://api.binance.com",
+        SimpleEarnRestApiAddress = "https://api.binance.com",
 
         AlgoTradingRestApiAddress = "https://api.binance.com",
         CopyTradingRestApiAddress = "https://api.binance.com",
