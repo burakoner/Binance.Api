@@ -49,6 +49,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Sub Account|✅|-|-|
 |Exchange Link|✅|-|-|
 |Link-n-Trade|⌛|-|-|
+|Simple Earn|✅|-|-|
 |Staking|✅|-|-|
 |Mining|✅|-|-|
 |NFT|✅|-|-|
