@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Algo;
+using Binance.Api.AutoInvest;
 using Binance.Api.Broker;
 using Binance.Api.Convert;
 using Binance.Api.CopyTrading;
@@ -67,6 +68,11 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// Binance Copy Trading Rest API Client
     /// </summary>
     public IBinanceCopyTradingRestClient CopyTrading { get; }
+
+    /// <summary>
+    /// Binance Auto Invest Rest API Client
+    /// </summary>
+    public IBinanceAutoInvestRestClient AutoInvest { get; }
 
     /// <summary>
     /// Binance Convert Rest API Client
@@ -161,6 +167,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         Algo = new BinanceAlgoRestClient(this);
         Wallet = new BinanceWalletRestClient(this);
         CopyTrading = new BinanceCopyTradingRestClient(this);
+        AutoInvest = new BinanceAutoInvestRestClient(this);
         Convert = new BinanceConvertRestClient(this);
         SubAccount = new BinanceSubAccountRestClient(this);
         Broker = new BinanceBrokerRestClient(this);

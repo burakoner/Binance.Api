@@ -47,12 +47,14 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Wallet|✅|-|-|
 |Convert|✅|-|-|
 |Sub Account|✅|-|-|
+|Auto Invest|✅|-|-|
 |Exchange Link|✅|-|-|
 |Link-n-Trade|⌛|-|-|
 |Simple Earn|✅|-|-|
 |Staking|✅|-|-|
 |Mining|✅|-|-|
 |NFT|✅|-|-|
+
 ## Installation
 
 ![Nuget version](https://img.shields.io/nuget/v/Binance.Api.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/Binance.Api.svg)
@@ -617,6 +619,27 @@ var locked_205 = await api.SimpleEarn.Locked.SetRedeemOptionAsync("---POSITION-I
 var locked_301 = await api.SimpleEarn.Locked.GetSubscriptionsAsync();
 var locked_302 = await api.SimpleEarn.Locked.GetRedemptionsAsync();
 var locked_303 = await api.SimpleEarn.Locked.GetRewardsAsync();
+
+// Auto Invest -> Market Data (PRIVATE)
+var autoinvest_101 = await api.AutoInvest.GetAssetsAsync();
+var autoinvest_102 = await api.AutoInvest.GetSourceAssetsAsync("---USAGE-TYPE---");
+var autoinvest_103 = await api.AutoInvest.GetTargetAssetsAsync();
+var autoinvest_104 = await api.AutoInvest.GetTargetAssetRoisAsync("---ASSET---", AutoInvestRoiType.OneYear);
+var autoinvest_105 = await api.AutoInvest.GetIndexInfoAsync("---INDEX-ID---");
+var autoinvest_106 = await api.AutoInvest.GetPlansAsync(BinanceAutoInvestPlanType.All);
+
+// Auto Invest -> Trade (PRIVATE)
+var autoinvest_201 = await api.AutoInvest.OneTimeTransactionAsync("---USAGE-TYPE---", "---REQUEST-ID---", 100.0m, "---ASSET---", true, 1_000_000L, []);
+var autoinvest_202 = await api.AutoInvest.SetPlanStatusAsync(1_000_000L, BinanceAutoInvestPlanStatus.Ongoing);
+var autoinvest_203 = await api.AutoInvest.SetPlanAsync("---PLAN-ID---", 100.0m, AutoInvestSubscriptionCycle.Daily, "---ASSET---", []);
+var autoinvest_204 = await api.AutoInvest.RedeemAsync("---INDEX-ID---", "---REQUEST-ID---", 10);
+var autoinvest_205 = await api.AutoInvest.GetSubscriptionHistoryAsync();
+var autoinvest_206 = await api.AutoInvest.GetOneTimeTransactionAsync(1_000_000L, "---REQUEST-ID---");
+var autoinvest_207 = await api.AutoInvest.CreatePlanAsync("---SOURCE-TYPE---", BinanceAutoInvestPlanType.All, 100.0m, AutoInvestSubscriptionCycle.Daily, 6, "---ASSET---", []);
+var autoinvest_208 = await api.AutoInvest.GetRedemptionHistoryAsync(1_000_000L);
+var autoinvest_209 = await api.AutoInvest.GetHoldingsAsync();
+var autoinvest_210 = await api.AutoInvest.GetPositionAsync(1_000_000L);
+var autoinvest_211 = await api.AutoInvest.GetRebalanceHistoryAsync();
 ```
 
 ## WebSocket Api Query Examples

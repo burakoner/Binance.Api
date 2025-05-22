@@ -74,6 +74,11 @@ public class BinanceAddress
     #endregion
 
     /// <summary>
+    /// Binance Auto Invest Rest API Address
+    /// </summary>
+    public string AutoInvestRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// Binance Convert Rest API Address
     /// </summary>
     public string ConvertRestApiAddress { get; set; } = "";
@@ -144,6 +149,7 @@ public class BinanceAddress
         BrokerLinkAndTradeSpotRestApiAddress = "https://api.binance.com",
         BrokerLinkAndTradeFuturesRestApiAddress = "https://fapi.binance.com",
 
+        AutoInvestRestApiAddress = "https://api.binance.com",
         ConvertRestApiAddress = "https://api.binance.com",
         MarginRestApiAddress = "https://api.binance.com",
         WalletRestApiAddress = "https://api.binance.com",
