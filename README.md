@@ -54,6 +54,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Staking|✅|-|-|
 |Mining|✅|-|-|
 |NFT|✅|-|-|
+|Crypto Loan|⌛|-|-|
 
 ## Installation
 

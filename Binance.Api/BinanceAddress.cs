@@ -129,6 +129,11 @@ public class BinanceAddress
     public string CopyTradingRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance Crypto Loan Rest API Address
+    /// </summary>
+    public string CryptoLoanRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// The default addresses to connect to the binance.com API
     /// </summary>
     public static BinanceAddress Default { get; } = new BinanceAddress
@@ -161,6 +166,7 @@ public class BinanceAddress
 
         AlgoTradingRestApiAddress = "https://api.binance.com",
         CopyTradingRestApiAddress = "https://api.binance.com",
+        CryptoLoanRestApiAddress = "https://api.binance.com",
     };
 
     /// <summary>
@@ -187,6 +193,7 @@ public class BinanceAddress
 
         AlgoTradingRestApiAddress = "https://testnet.binance.vision",
         CopyTradingRestApiAddress = "https://testnet.binance.vision",
+        CryptoLoanRestApiAddress = "https://testnet.binance.vision",
     };
 
     /// <summary>

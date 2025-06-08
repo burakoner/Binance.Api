@@ -1,6 +1,6 @@
-﻿namespace Binance.Api.Algo;
+﻿namespace Binance.Api.CryptoLoan;
 
-internal class BinanceAlgoRestClient: IBinanceAlgoRestClient
+internal class BinanceCryptoLoanRestClient : IBinanceCryptoLoanRestClient
 {
     // Parent
     internal BinanceRestApiClient _ { get; }
@@ -10,15 +10,15 @@ internal class BinanceAlgoRestClient: IBinanceAlgoRestClient
     internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
 
     // Interface Properties
-    public IBinanceAlgoRestClientSpot Spot { get; }
-    public IBinanceAlgoRestClientFutures Futures { get; }
+    public IBinanceCryptoLoanRestClientFlexible Flexible { get; }
+    public IBinanceCryptoLoanRestClientStable Stable { get; }
 
     // Constructor
-    internal BinanceAlgoRestClient(BinanceRestApiClient root)
+    internal BinanceCryptoLoanRestClient(BinanceRestApiClient root)
     {
         _ = root;
-        Spot = new BinanceAlgoRestClientSpot(this);
-        Futures = new BinanceAlgoRestClientFutures(this);
+        Flexible = new BinanceCryptoLoanRestClientFlexible(this);
+        Stable = new BinanceCryptoLoanRestClientStable(this);
     }
 
     internal Task<RestCallResult<T>> RequestAsync<T>(
@@ -34,7 +34,7 @@ internal class BinanceAlgoRestClient: IBinanceAlgoRestClient
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.AlgoTradingRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.CryptoLoanRestApiAddress.AppendPath(api);
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

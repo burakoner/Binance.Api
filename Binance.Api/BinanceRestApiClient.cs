@@ -3,6 +3,7 @@ using Binance.Api.AutoInvest;
 using Binance.Api.Broker;
 using Binance.Api.Convert;
 using Binance.Api.CopyTrading;
+using Binance.Api.CryptoLoan;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.Mining;
@@ -109,8 +110,12 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceSimpleEarnRestClient SimpleEarn { get; }
 
+    /// <summary>
+    /// Binance Crypto Loan Rest API Client
+    /// </summary>
+    public IBinanceCryptoLoanRestClient CryptoLoan { get; }
+
     // TODO: Dual Investment
-    // TODO: Crypto Loan
     // TODO: VIP Loan
     // TODO: C2C
     // TODO: Fiat
@@ -175,6 +180,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         NFT = new BinanceNftRestClient(this);
         Staking = new BinanceStakingRestClient(this);
         SimpleEarn = new BinanceSimpleEarnRestClient(this);
+        CryptoLoan = new BinanceCryptoLoanRestClient(this);
     }
 
     #region Public Nethods
