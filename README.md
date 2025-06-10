@@ -25,11 +25,12 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |--|--|
 |.NET Core|`2.0` and higher|
 |.NET Framework|`4.6.1` and higher|
+|.NET Standard|`2.0` and higher|
 |Mono|`5.4` and higher|
-|Xamarin.iOS|`10.14` and higher|
-|Xamarin.Android|`8.0` and higher|
-|UWP|`10.0.16299` and higher|
 |Unity|`2018.1` and higher|
+|UWP|`10.0.16299` and higher|
+|Xamarin.Android|`8.0` and higher|
+|Xamarin.iOS|`10.14` and higher|
 
 ## Supported Endpoints
 
