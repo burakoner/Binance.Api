@@ -7,7 +7,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleMarketData
 {
     /// <summary>
     /// Get LTV information and collateral limit of flexible loan's collateral assets. The collateral limit is shown in USD value.
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data" /></para>
     /// </summary>
     /// <param name="asset">Collateral Coin</param>
     /// <param name="receiveWindow">Receive Window</param>
@@ -30,7 +30,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleMarketData
 
     /// <summary>
     /// Get interest rate and borrow limit of flexible loanable assets. The borrow limit is shown in USD value.
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Assets-Data</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Assets-Data" /></para>
     /// </summary>
     /// <param name="asset">Loan Coin</param>
     /// <param name="receiveWindow">Receive Window</param>

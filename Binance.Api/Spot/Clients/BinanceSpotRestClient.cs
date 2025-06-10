@@ -9,15 +9,15 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
     private const string sapi = "sapi";
 
     // Parent
-    internal BinanceRestApiClient _ { get; } = root;
+    private BinanceRestApiClient _ { get; } = root;
 
     // Internal
-    internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
-    internal DateTime? LastExchangeInfoUpdate { get; private set; }
-    internal BinanceSpotExchangeInfo? ExchangeInfo { get; private set; }
+    private ILogger Logger => _.Logger;
+    private BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    private DateTime? LastExchangeInfoUpdate { get;  set; }
+    private BinanceSpotExchangeInfo? ExchangeInfo { get;  set; }
 
-    internal Task<RestCallResult<T>> RequestAsync<T>(
+    private Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
         Dictionary<string, object>? queryParameters = null,
         Dictionary<string, object>? bodyParameters = null,
@@ -28,9 +28,10 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
         int requestWeight = 1) where T : class
         => _.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
-    internal Uri GetUrl(string api, string version, string endpoint)
+    private Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.SpotRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.SpotRestApiAddress;
+        if (!string.IsNullOrEmpty(api)) url = url.AppendPath($"{api}");
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

@@ -49,7 +49,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Sub Account|✅|-|-|
 |Auto Invest|✅|-|-|
 |Exchange Link|✅|-|-|
-|Link-n-Trade|⌛|-|-|
+|Link-n-Trade|✅|-|-|
 |Simple Earn|✅|-|-|
 |Staking|✅|-|-|
 |Mining|✅|-|-|
@@ -567,6 +567,37 @@ var exlink_304 = await api.Broker.ExchangeLink.SetCoinFuturesCommissionAdjustmen
 var exlink_305 = await api.Broker.ExchangeLink.GetCoinFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---");
 var exlink_306 = await api.Broker.ExchangeLink.GetBrokerCommissionRebatesAsync("---SUBACCOUNT-ID---");
 var exlink_307 = await api.Broker.ExchangeLink.GetBrokerFuturesCommissionRebatesAsync(BinanceFuturesType.CoinMarginedFutures, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+
+// Broker -> Link and Trade -> Spot Methods (PRIVATE)
+var linktrade_101 = await api.Broker.LinkAndTrade.Spot.GetIfNewUserAsync("---AGENT-CODE---");
+var linktrade_102 = await api.Broker.LinkAndTrade.Spot.SetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+var linktrade_103 = await api.Broker.LinkAndTrade.Spot.GetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+var linktrade_104 = await api.Broker.LinkAndTrade.Spot.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
+var linktrade_105 = await api.Broker.LinkAndTrade.Spot.GetCustomerIdByClientAsync("---AGENT-CODE---");
+var linktrade_106 = await api.Broker.LinkAndTrade.Spot.GetRebateHistoryByPartnerAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+var linktrade_107 = await api.Broker.LinkAndTrade.Spot.GetRebateHistoryByClientAsync();
+
+// Broker -> Link and Trade -> Futures Methods (PRIVATE)
+var linktrade_201 = await api.Broker.LinkAndTrade.Futures.GetIfNewUserAsync("---BROKER-ID---");
+var linktrade_202 = await api.Broker.LinkAndTrade.Futures.SetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+var linktrade_203 = await api.Broker.LinkAndTrade.Futures.GetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+var linktrade_204 = await api.Broker.LinkAndTrade.Futures.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
+var linktrade_205 = await api.Broker.LinkAndTrade.Futures.GetCustomerIdByClientAsync("---AGENT-CODE---");
+var linktrade_206 = await api.Broker.LinkAndTrade.Futures.GetIncomeHistoryAsync();
+var linktrade_207 = await api.Broker.LinkAndTrade.Futures.GetTraderNumberAsync();
+var linktrade_208 = await api.Broker.LinkAndTrade.Futures.GetRebateDataOverviewAsync();
+var linktrade_209 = await api.Broker.LinkAndTrade.Futures.GetUserTradeVolumeAsync();
+var linktrade_210 = await api.Broker.LinkAndTrade.Futures.GetUserRebateVolumeAsync();
+var linktrade_211 = await api.Broker.LinkAndTrade.Futures.GetTraderDetailsAsync();
+
+// Broker -> Link and Trade -> Portfolio Margin Methods (PRIVATE)
+var linktrade_301 = await api.Broker.LinkAndTrade.PortfolioMargin.GetIfNewUserAsync("---BROKER-ID---");
+var linktrade_302 = await api.Broker.LinkAndTrade.PortfolioMargin.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
+var linktrade_303 = await api.Broker.LinkAndTrade.PortfolioMargin.GetCustomerIdByClientAsync("---AGENT-CODE---");
+
+// Broker -> Link and Trade -> Fast API Methods (PRIVATE)
+var linktrade_401 = await api.Broker.LinkAndTrade.FastApi.GetUserStatusAsync("---ACCESS-TOKEN---");
+var linktrade_402 = await api.Broker.LinkAndTrade.FastApi.CreateApiKeyForUserAsync("---ACCESS-TOKEN---", "---API-NAME---", true, true, true, true, "---PUBLIC-KEY---");
 
 // Mining Methods (PRIVATE)
 var mining_101 = await api.Mining.GetAlgorithmsAsync(); // PUBLIC

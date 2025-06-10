@@ -7,7 +7,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleTrade
 {
     /// <summary>
     /// Borrow Flexible Loan
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/trade</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/trade" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -20,7 +20,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleTrade
 
     /// <summary>
     /// Flexible Loan Repay
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Repay</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Repay" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -35,7 +35,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleTrade
 
     /// <summary>
     /// Flexible Loan Adjust LTV
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Adjust-LTV</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Adjust-LTV" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>

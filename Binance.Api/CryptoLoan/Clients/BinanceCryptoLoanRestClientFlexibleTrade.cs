@@ -13,7 +13,7 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddOptional("collateralAmount", collateralQuantity);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceCryptoLoanFlexibleBorrow>(_.GetUrl(sapi, v2, "loan/flexible/borrow"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
+        return RequestAsync<BinanceCryptoLoanFlexibleBorrow>(GetUrl(sapi, v2, "loan/flexible/borrow"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
     }
 
     public Task<RestCallResult<BinanceCryptoLoanFlexibleRepay>> RepayAsync(string loanAsset, string collateralAsset, decimal quantity, bool? collateralReturn = null, bool? fullRepayment = null, BinanceCryptoLoanFlexibleRepaymentType? repaymentType = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -29,7 +29,7 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddOptionalEnum("repaymentType", repaymentType);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceCryptoLoanFlexibleRepay>(_.GetUrl(sapi, v2, "loan/flexible/repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
+        return RequestAsync<BinanceCryptoLoanFlexibleRepay>(GetUrl(sapi, v2, "loan/flexible/repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
     }
 
     public Task<RestCallResult<BinanceCryptoLoanFlexibleAdjustment>> AdjustAsync(string loanAsset, string collateralAsset, decimal quantity, BinanceCryptoLoanAdjustmentDirection direction, int? receiveWindow = null, CancellationToken ct = default)
@@ -43,6 +43,6 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddEnum("direction", direction);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceCryptoLoanFlexibleAdjustment>(_.GetUrl(sapi, v2, "loan/flexible/adjust/ltv"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
+        return RequestAsync<BinanceCryptoLoanFlexibleAdjustment>(GetUrl(sapi, v2, "loan/flexible/adjust/ltv"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
     }
 }

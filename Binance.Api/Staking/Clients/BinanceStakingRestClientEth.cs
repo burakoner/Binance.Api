@@ -30,7 +30,8 @@ internal partial class BinanceStakingRestClientEth(BinanceStakingRestClient pare
 
     private static Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.StakingRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.StakingRestApiAddress;
+        if (!string.IsNullOrEmpty(api)) url = url.AppendPath($"{api}");
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

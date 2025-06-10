@@ -98,7 +98,7 @@ internal partial class BinanceBrokerRestClientExchangeLink
         return RequestAsync<BinanceBrokerSubAccountApiKey>(GetUrl(sapi, v1, "broker/subAccountApi/permission"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 0);
     }
 
-    public Task<RestCallResult<BinanceBrokerIpRestrictionV2>> SetApiKeyIpRestrictionAsync(string subAccountId, string apiKey, BinanceBrokerIpRestrictionStatus status, string? ipAddress = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceBrokerIpRestrictionV2>> SetApiKeyIpRestrictionAsync(string subAccountId, string apiKey, BinanceBrokerApiKeyIpRestriction status, string? ipAddress = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         subAccountId.ValidateNotNull(nameof(subAccountId));
         apiKey.ValidateNotNull(nameof(apiKey));

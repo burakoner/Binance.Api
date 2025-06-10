@@ -9,7 +9,7 @@ internal class BinanceBrokerRestClient : IBinanceBrokerRestClient
     internal ILogger Logger => _.Logger;
     internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
 
-    // Interface Properties
+    // Clients
     public IBinanceBrokerRestClientExchangeLink ExchangeLink { get; }
     public IBinanceBrokerRestClientLinkAndTrade LinkAndTrade { get; }
 

@@ -9,7 +9,28 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
     private const string sapi = "sapi";
 
     // Parent
-    internal BinanceAlgoRestClient _ { get; } = parent;
+    private BinanceAlgoRestClient _ { get; } = parent;
+
+    private Task<RestCallResult<T>> RequestAsync<T>(
+        Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
+        Dictionary<string, object>? queryParameters = null,
+        Dictionary<string, object>? bodyParameters = null,
+        Dictionary<string, string>? headerParameters = null,
+        ArraySerialization? serialization = null,
+        JsonSerializer? deserializer = null,
+        bool ignoreRatelimit = false,
+        int requestWeight = 1) where T : class
+        => _._.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
+
+    private Uri GetUrl(string api, string version, string endpoint)
+    {
+        var url = BinanceAddress.Default.AlgoTradingRestApiAddress;
+        if (!string.IsNullOrEmpty(api)) url = url.AppendPath($"{api}");
+        if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
+        if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
+
+        return new Uri(url);
+    }
 
     public Task<RestCallResult<BinanceAlgoOrderResult>> PlaceTimeWeightedAveragePriceOrderAsync(
         string symbol,
@@ -34,7 +55,7 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         parameters.AddOptional("limitPrice", limitPrice);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceAlgoOrderResult>(_.GetUrl(sapi, v1, "algo/spot/newOrderTwap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceAlgoOrderResult>(GetUrl(sapi, v1, "algo/spot/newOrderTwap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
     }
 
     public Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoOrderId, int? receiveWindow = null, CancellationToken ct = default)
@@ -45,7 +66,7 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         };
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceAlgoResult>(_.GetUrl(sapi, v1, "algo/spot/order"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceAlgoResult>(GetUrl(sapi, v1, "algo/spot/order"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceAlgoSubOrderList>> GetAlgoSubOrdersAsync(long algoId, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -58,7 +79,7 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         parameters.AddOptional("pageSize", limit);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceAlgoSubOrderList>(_.GetUrl(sapi, v1, "algo/spot/subOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceAlgoSubOrderList>(GetUrl(sapi, v1, "algo/spot/subOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceAlgoOrders>> GetOpenAlgoOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)
@@ -66,7 +87,7 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceAlgoOrders>(_.GetUrl(sapi, v1, "algo/spot/openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceAlgoOrders>(GetUrl(sapi, v1, "algo/spot/openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceAlgoOrders>> GetClosedAlgoOrdersAsync(string? symbol = null, BinanceOrderSide? side = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -80,6 +101,6 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         parameters.AddOptional("pageSize", limit);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceAlgoOrders>(_.GetUrl(sapi, v1, "algo/spot/historicalOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceAlgoOrders>(GetUrl(sapi, v1, "algo/spot/historicalOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 }

@@ -8,7 +8,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
 
     /// <summary>
     /// Get Flexible Loan LTV Adjustment History
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -23,7 +23,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
 
     /// <summary>
     /// Get the latest rate of collateral coin/loan coin when using collateral repay.
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Check-Collateral-Repay-Rate</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Check-Collateral-Repay-Rate" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -34,7 +34,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
 
     /// <summary>
     /// Get Flexible Loan Borrow History
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Borrow-History</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Borrow-History" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -49,7 +49,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
 
     /// <summary>
     /// Get Flexible Loan Ongoing Orders
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Ongoing-Orders</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Ongoing-Orders" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -62,7 +62,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
 
     /// <summary>
     /// Get Flexible Loan Liquidation History
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Liquidation-History</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Liquidation-History" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>
@@ -77,7 +77,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
 
     /// <summary>
     /// Get Flexible Loan Repayment History
-    /// <para>https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Repayment-History</para>
+    /// <para><a href="https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Repayment-History" /></para>
     /// </summary>
     /// <param name="loanAsset">Loan Coin</param>
     /// <param name="collateralAsset">Collateral Coin</param>

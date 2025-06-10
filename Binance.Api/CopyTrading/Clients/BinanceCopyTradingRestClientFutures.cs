@@ -26,12 +26,13 @@ internal partial class BinanceCopyTradingRestClientFutures(BinanceCopyTradingRes
         JsonSerializer? deserializer = null,
         bool ignoreRatelimit = false,
         int requestWeight = 1) where T : class
-        => _._.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
+        => __.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     // GetUrl
     private static Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.CopyTradingRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.CopyTradingRestApiAddress;
+        if (!string.IsNullOrEmpty(api)) url = url.AppendPath($"{api}");
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

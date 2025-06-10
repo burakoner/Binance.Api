@@ -14,6 +14,6 @@ internal partial class BinanceCryptoLoanRestClientStable
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<List<BinanceCryptoLoanStableIncome>>(_.GetUrl(sapi, v1, "loan/income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 6000);
+        return RequestAsync<List<BinanceCryptoLoanStableIncome>>(GetUrl(sapi, v1, "loan/income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 6000);
     }
 }

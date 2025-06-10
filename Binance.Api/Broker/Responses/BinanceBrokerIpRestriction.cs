@@ -51,5 +51,5 @@ public record BinanceBrokerIpRestrictionV2 : BinanceBrokerIpRestrictionBase
     /// IP Restriction Status
     /// </summary>
     [JsonProperty("status")]
-    public BinanceBrokerIpRestrictionStatus Status { get; set; }
+    public BinanceBrokerApiKeyIpRestriction Status { get; set; }
 }

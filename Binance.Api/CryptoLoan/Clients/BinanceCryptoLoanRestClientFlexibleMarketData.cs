@@ -8,7 +8,7 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddOptional("collateralCoin", asset);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleCollateralAsset>>(_.GetUrl(sapi, v2, "loan/flexible/collateral/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleCollateralAsset>>(GetUrl(sapi, v2, "loan/flexible/collateral/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 
     public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleInterestRate>>> GetInterestRateHistoryAsync(string asset, DateTime? startTime = null, DateTime? endTime = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -23,7 +23,7 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleInterestRate>>(_.GetUrl(sapi, v2, "loan/interestRateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleInterestRate>>(GetUrl(sapi, v2, "loan/interestRateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 
     public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>> GetLoanableAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default)
@@ -32,6 +32,6 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddOptional("collateralCoin", asset);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return _.RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>(_.GetUrl(sapi, v2, "loan/flexible/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>(GetUrl(sapi, v2, "loan/flexible/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 }

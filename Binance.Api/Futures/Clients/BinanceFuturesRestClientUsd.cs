@@ -12,13 +12,13 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
     private BinanceFuturesRestClient _ { get; } = parent;
 
     // Internal
-    internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
-    internal DateTime? LastExchangeInfoUpdate { get; private set; }
-    internal BinanceFuturesUsdExchangeInfo? ExchangeInfo { get; private set; }
+    private ILogger Logger => _.Logger;
+    private BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    private DateTime? LastExchangeInfoUpdate { get;  set; }
+    private BinanceFuturesUsdExchangeInfo? ExchangeInfo { get;  set; }
 
     // Request
-    internal Task<RestCallResult<T>> RequestAsync<T>(
+    private Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,
         Dictionary<string, object>? queryParameters = null,
         Dictionary<string, object>? bodyParameters = null,
@@ -30,9 +30,10 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
         => _._.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
     // GetUrl
-    internal Uri GetUrl(string api, string version, string endpoint)
+    private Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.UsdFuturesRestApiAddress.AppendPath(api);
+        var url = BinanceAddress.Default.UsdFuturesRestApiAddress;
+        if (!string.IsNullOrEmpty(api)) url = url.AppendPath($"{api}");
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");
 

@@ -10,7 +10,7 @@ internal partial class BinanceStakingRestClientEth
         };
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceEthStakingStake>(GetUrl(sapi, v2, "eth-staking/eth/stake"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceEthStakingStake>(GetUrl(sapi, v2, "eth-staking/eth/stake"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 150);
     }
 
     public Task<RestCallResult<BinanceEthStakingRedeem>> RedeemAsync(decimal quantity, int? receiveWindow = null, CancellationToken ct = default)
@@ -21,7 +21,7 @@ internal partial class BinanceStakingRestClientEth
         };
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceEthStakingRedeem>(GetUrl(sapi, v1, "eth-staking/eth/redeem"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceEthStakingRedeem>(GetUrl(sapi, v1, "eth-staking/eth/redeem"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 150);
     }
 
     public Task<RestCallResult<BinanceEthStakingWrap>> WrapAsync(decimal quantity, int? receiveWindow = null, CancellationToken ct = default)
@@ -32,7 +32,7 @@ internal partial class BinanceStakingRestClientEth
         };
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceEthStakingWrap>(GetUrl(sapi, v1, "eth-staking/wbeth/wrap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceEthStakingWrap>(GetUrl(sapi, v1, "eth-staking/wbeth/wrap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 150);
     }
 
 }

@@ -11,7 +11,7 @@ internal partial class BinanceStakingRestClientSol
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceQueryRecords<BinanceSolStakingRecord>>(GetUrl(sapi, v1, "sol-staking/sol/history/stakingHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceQueryRecords<BinanceSolStakingRecord>>(GetUrl(sapi, v1, "sol-staking/sol/history/stakingHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
     public  Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingRedemption>>> GetRedemptionHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -23,7 +23,7 @@ internal partial class BinanceStakingRestClientSol
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceQueryRecords<BinanceSolStakingRedemption>>(GetUrl(sapi, v1, "sol-staking/sol/history/redemptionHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceQueryRecords<BinanceSolStakingRedemption>>(GetUrl(sapi, v1, "sol-staking/sol/history/redemptionHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
     public  Task<RestCallResult<BinanceSolStakingRewards>> GetBnSolRewardsHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -35,7 +35,7 @@ internal partial class BinanceStakingRestClientSol
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceSolStakingRewards>(GetUrl(sapi, v1, "sol-staking/sol/history/bnsolRewardsHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceSolStakingRewards>(GetUrl(sapi, v1, "sol-staking/sol/history/bnsolRewardsHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
     public  Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingBnSolRate>>> GetBnSolRateHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -47,7 +47,7 @@ internal partial class BinanceStakingRestClientSol
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceQueryRecords<BinanceSolStakingBnSolRate>>(GetUrl(sapi, v1, "sol-staking/sol/history/rateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceQueryRecords<BinanceSolStakingBnSolRate>>(GetUrl(sapi, v1, "sol-staking/sol/history/rateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
     public  Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingBnSolReward>>> GetBoostRewardsHistoryAsync(BinanceSolStakingRewardType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -60,7 +60,7 @@ internal partial class BinanceStakingRestClientSol
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<BinanceQueryRecords<BinanceSolStakingBnSolReward>>(GetUrl(sapi, v1, "sol-staking/sol/history/boostRewardsHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceQueryRecords<BinanceSolStakingBnSolReward>>(GetUrl(sapi, v1, "sol-staking/sol/history/boostRewardsHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
     public  Task<RestCallResult<List<BinanceSolStakingUnclaimedReward>>> GetUnclaimedRewardsAsync(int? receiveWindow = null, CancellationToken ct = default)
@@ -68,6 +68,6 @@ internal partial class BinanceStakingRestClientSol
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return __.RequestAsync<List<BinanceSolStakingUnclaimedReward>>(GetUrl(sapi, v1, "sol-staking/sol/history/unclaimedRewards"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<List<BinanceSolStakingUnclaimedReward>>(GetUrl(sapi, v1, "sol-staking/sol/history/unclaimedRewards"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 }

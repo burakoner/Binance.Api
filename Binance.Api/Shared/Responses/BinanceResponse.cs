@@ -84,3 +84,33 @@ public class BinanceResponseErrorData
     [JsonProperty("retryAfter")]
     public DateTime? RetryAfter { get; set; }
 }
+
+/// <summary>
+/// Binance error response
+/// </summary>
+public class BinanceDataResponse<T>
+{
+    /// <summary>
+    /// Error code
+    /// </summary>
+    [JsonProperty("code")]
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Error message
+    /// </summary>
+    [JsonProperty("msg")]
+    public string Message { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Error data
+    /// </summary>
+    [JsonProperty("data")]
+    public T? Data { get; set; }
+
+    /// <summary>
+    /// Success
+    /// </summary>
+    [JsonProperty("success")]
+    public bool Success { get; set; }
+}

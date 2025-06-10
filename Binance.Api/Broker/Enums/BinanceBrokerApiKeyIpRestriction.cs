@@ -3,7 +3,7 @@
 /// <summary>
 /// Broker IpRestriction Status
 /// </summary>
-public enum BinanceBrokerIpRestrictionStatus : byte
+public enum BinanceBrokerApiKeyIpRestriction : byte
 {
     /// <summary> 
     /// IP Unrestricted 
@@ -15,5 +15,11 @@ public enum BinanceBrokerIpRestrictionStatus : byte
     /// Restrict access to trusted IPs only
     /// </summary>
     [Map("2")]
-    RestrictAccessToTrustedIpAddressesOnly = 2,
+    TrustedIpAddressesOnly = 2,
+
+    /// <summary>
+    /// Restrict access to trusted IPs and third-party IPs only
+    /// </summary>
+    [Map("3")]
+    TrustedThirdPartyIpAddressesOnly = 3,
 }
