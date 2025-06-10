@@ -3,7 +3,7 @@
 /// <summary>
 /// Ltv adjustment info
 /// </summary>
-public record BinanceCryptoLoanLtvAdjustRecord
+public record BinanceCryptoLoanStableAdjustmentRecord
 {
     /// <summary>
     /// The loaning asset

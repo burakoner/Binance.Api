@@ -1,9 +1,9 @@
 ﻿namespace Binance.Api.CryptoLoan;
 
 /// <summary>
-/// Borrow record
+/// Borrow info
 /// </summary>
-public record BinanceCryptoLoanBorrowRecord
+public record BinanceCryptoLoanStableBorrow
 {
     /// <summary>
     /// The loaning asset
@@ -20,14 +20,14 @@ public record BinanceCryptoLoanBorrowRecord
     /// <summary>
     /// The loan quantity
     /// </summary>
-    [JsonProperty("initialLoanAmount")]
-    public decimal InitialLoanQuantity { get; set; }
+    [JsonProperty("loanAmount")]
+    public decimal LoanQuantity { get; set; }
 
     /// <summary>
     /// The collateral quantity
     /// </summary>
-    [JsonProperty("initialCollateralAmount")]
-    public decimal InitialCollateralQuantity { get; set; }
+    [JsonProperty("collateralAmount")]
+    public decimal CollateralQuantity { get; set; }
 
     /// <summary>
     /// Hourly interest rate
@@ -36,27 +36,8 @@ public record BinanceCryptoLoanBorrowRecord
     public decimal HourlyInterestRate { get; set; }
 
     /// <summary>
-    /// Loan term
-    /// </summary>
-    [JsonProperty("loanTerm")]
-    public int LoanTerm { get; set; }
-
-    /// <summary>
     /// Borrow order id
     /// </summary>
     [JsonProperty("orderId")]
     public long OrderId { get; set; }
-
-    /// <summary>
-    /// Borrow timestamp
-    /// </summary>
-    [JsonConverter(typeof(DateTimeConverter))]
-    [JsonProperty("borrowTime")]
-    public DateTime BorrowTime { get; set; }
-
-    /// <summary>
-    /// Status of the order
-    /// </summary>
-    [JsonProperty("status")]
-    public BinanceCryptoLoanBorrowStatus Status { get; set; }
 }

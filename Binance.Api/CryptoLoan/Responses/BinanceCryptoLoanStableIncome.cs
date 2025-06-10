@@ -3,7 +3,7 @@
 /// <summary>
 /// Crypto loan income info
 /// </summary>
-public record BinanceCryptoLoanIncome
+public record BinanceCryptoLoanStableIncome
 {
     /// <summary>
     /// Asset
@@ -15,7 +15,7 @@ public record BinanceCryptoLoanIncome
     /// Income type
     /// </summary>
     [JsonProperty("type")]
-    public BinanceCryptoLoanIncomeType Type { get; set; }
+    public BinanceCryptoLoanStableIncomeType Type { get; set; }
 
     /// <summary>
     /// Quantity

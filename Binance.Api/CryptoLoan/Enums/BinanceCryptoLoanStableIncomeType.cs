@@ -3,7 +3,7 @@
 /// <summary>
 /// Income type
 /// </summary>
-public enum BinanceCryptoLoanIncomeType : byte
+public enum BinanceCryptoLoanStableIncomeType : byte
 {
     /// <summary>
     /// Borrow in

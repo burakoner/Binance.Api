@@ -2,7 +2,36 @@
 
 internal partial class BinanceCryptoLoanRestClientFlexible
 {
-    // TODO: Get Flexible Loan Collateral Assets Data(USER_DATA)
-    // TODO: Get Flexible Loan Interest Rate History (USER_DATA)
-    // TODO: Get Flexible Loan Assets Data(USER_DATA)
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleCollateralAsset>>> GetCollateralAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("collateralCoin", asset);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return _.RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleCollateralAsset>>(_.GetUrl(sapi, v2, "loan/flexible/collateral/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+    }
+
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleInterestRate>>> GetInterestRateHistoryAsync(string asset, DateTime? startTime = null, DateTime? endTime = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "coin", asset }
+        };
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptional("current", current);
+        parameters.AddOptional("limit", limit);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return _.RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleInterestRate>>(_.GetUrl(sapi, v2, "loan/interestRateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+    }
+
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>> GetLoanableAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("collateralCoin", asset);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return _.RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>(_.GetUrl(sapi, v2, "loan/flexible/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+    }
 }

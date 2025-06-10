@@ -3,7 +3,7 @@
 /// <summary>
 /// Open borrow order info
 /// </summary>
-public record BinanceCryptoLoanOpenBorrowOrder
+public record BinanceCryptoLoanStableOpenOrder
 {
     /// <summary>
     /// The loaning asset

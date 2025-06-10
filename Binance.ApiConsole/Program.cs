@@ -2,6 +2,7 @@
 using Binance.Api.AutoInvest;
 using Binance.Api.Broker;
 using Binance.Api.Convert;
+using Binance.Api.CryptoLoan;
 using Binance.Api.Futures;
 using Binance.Api.Margin;
 using Binance.Api.NFT;
@@ -430,6 +431,42 @@ internal class Program
         // Convert -> Market Data Methods (PRIVATE)
         var convert_101 = await api.Convert.GetPairsAsync();
         var convert_102 = await api.Convert.GetAssetsAsync();
+
+        // Crypto Loan -> Flexible Rate -> Market Data Methods (PRIVATE)
+        var loan_103 = await api.CryptoLoan.Flexible.GetLoanableAssetsAsync("---ASSET---");
+        var loan_101 = await api.CryptoLoan.Flexible.GetCollateralAssetsAsync("---ASSET---");
+        var loan_102 = await api.CryptoLoan.Flexible.GetInterestRateHistoryAsync("---ASSET---");
+
+        // Crypto Loan -> Flexible Rate -> Trade Methods (PRIVATE)
+        var loan_201 = await api.CryptoLoan.Flexible.BorrowAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---", 100.0m);
+        var loan_202 = await api.CryptoLoan.Flexible.RepayAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---", 100.0m);
+        var loan_203 = await api.CryptoLoan.Flexible.AdjustAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---", 100.0m, BinanceCryptoLoanAdjustmentDirection.Additional);
+
+        // Crypto Loan -> Flexible Rate -> User Information Methods (PRIVATE)
+        var loan_301 = await api.CryptoLoan.Flexible.GetAdjustmentHistoryAsync();
+        var loan_302 = await api.CryptoLoan.Flexible.GetCollateralRepayRateAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---");
+        var loan_303 = await api.CryptoLoan.Flexible.GetBorrowHistoryAsync();
+        var loan_304 = await api.CryptoLoan.Flexible.GetOpenBorrowOrdersAsync();
+        var loan_305 = await api.CryptoLoan.Flexible.GetLiquidationHistoryAsync();
+        var loan_306 = await api.CryptoLoan.Flexible.GetRepayHistoryAsync();
+
+        // Crypto Loan -> Stable Rate -> Market Data Methods (PRIVATE)
+        var loan_401 = await api.CryptoLoan.Stable.GetIncomeHistoryAsync("---ASSET---");
+        var loan_402 = await api.CryptoLoan.Stable.GetLoanableAssetsAsync();
+        var loan_403 = await api.CryptoLoan.Stable.GetCollateralAssetsAsync();
+
+        // Crypto Loan -> Stable Rate -> Trade Methods (PRIVATE)
+        var loan_501 = await api.CryptoLoan.Stable.BorrowAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---", 10, 100.0m);
+        var loan_502 = await api.CryptoLoan.Stable.RepayAsync(1_000_000, 100.0m);
+        var loan_503 = await api.CryptoLoan.Stable.AdjustAsync(1_000_000, 100.0m, BinanceCryptoLoanAdjustmentDirection.Additional);
+
+        // Crypto Loan -> Stable Rate -> User Information Methods (PRIVATE)
+        var loan_601 = await api.CryptoLoan.Stable.GetAdjustmentHistoryAsync();
+        var loan_602 = await api.CryptoLoan.Stable.GetCollateralRepayRateAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---", 100.0m);
+        var loan_603 = await api.CryptoLoan.Stable.GetBorrowHistoryAsync();
+        var loan_604 = await api.CryptoLoan.Stable.GetOpenBorrowOrdersAsync();
+        var loan_605 = await api.CryptoLoan.Stable.GetRepayHistoryAsync();
+        var loan_606 = await api.CryptoLoan.Stable.CustomizeMarginCallAsync(100.0m);
 
         // Convert -> Trade Methods (PRIVATE)
         var convert_201 = await api.Convert.QuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---");

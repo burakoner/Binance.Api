@@ -3,7 +3,7 @@
 /// <summary>
 /// Customize margin call result
 /// </summary>
-public record BinanceCryptoLoanMarginCallResult
+public record BinanceCryptoLoanStableMarginCall
 {
     /// <summary>
     /// Order id

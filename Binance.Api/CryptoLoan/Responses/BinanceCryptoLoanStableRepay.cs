@@ -3,7 +3,7 @@
 /// <summary>
 /// Repay info
 /// </summary>
-public record BinanceCryptoLoanRepay
+public record BinanceCryptoLoanStableRepay
 {
     /// <summary>
     /// The loaning asset
@@ -33,7 +33,7 @@ public record BinanceCryptoLoanRepay
     /// Repay status
     /// </summary>
     [JsonProperty("repayStatus")]
-    public BinanceCryptoLoanBorrowStatus RepayStatus { get; set; }
+    public BinanceCryptoLoanStableBorrowStatus RepayStatus { get; set; }
 
     /// <summary>
     /// Remaining collateral

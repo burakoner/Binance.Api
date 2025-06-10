@@ -3,7 +3,7 @@
 /// <summary>
 /// Repay rate info
 /// </summary>
-public record BinanceCryptoLoanRepayRate
+public record BinanceCryptoLoanStableRepayRate
 {
     /// <summary>
     /// Loan asset

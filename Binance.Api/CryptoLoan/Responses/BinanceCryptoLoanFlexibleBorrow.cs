@@ -3,7 +3,7 @@
 /// <summary>
 /// Borrow info
 /// </summary>
-public record BinanceCryptoLoanBorrow
+public record BinanceCryptoLoanFlexibleBorrow
 {
     /// <summary>
     /// The loaning asset
@@ -12,16 +12,16 @@ public record BinanceCryptoLoanBorrow
     public string LoanAsset { get; set; } = string.Empty;
 
     /// <summary>
-    /// The collateral asset
-    /// </summary>
-    [JsonProperty("collateralCoin")]
-    public string CollateralAsset { get; set; } = string.Empty;
-
-    /// <summary>
     /// The loan quantity
     /// </summary>
     [JsonProperty("loanAmount")]
     public decimal LoanQuantity { get; set; }
+
+    /// <summary>
+    /// The collateral asset
+    /// </summary>
+    [JsonProperty("collateralCoin")]
+    public string CollateralAsset { get; set; } = string.Empty;
 
     /// <summary>
     /// The collateral quantity
@@ -30,14 +30,8 @@ public record BinanceCryptoLoanBorrow
     public decimal CollateralQuantity { get; set; }
 
     /// <summary>
-    /// Hourly interest rate
-    /// </summary>
-    [JsonProperty("hourlyInterestRate")]
-    public decimal HourlyInterestRate { get; set; }
-
-    /// <summary>
-    /// Borrow order id
+    /// Status of the borrow order
     /// </summary>
     [JsonProperty("orderId")]
-    public long OrderId { get; set; }
+    public BinanceCryptoLoanFlexibleBorrowStatus Status { get; set; }
 }

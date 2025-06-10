@@ -5,4 +5,5 @@
 /// </summary>
 public interface IBinanceCryptoLoanRestClientStable :
     IBinanceCryptoLoanRestClientStableMarketData,
+    IBinanceCryptoLoanRestClientStableTrade,
     IBinanceCryptoLoanRestClientStableUser;

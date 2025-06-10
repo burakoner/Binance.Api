@@ -3,7 +3,7 @@
 /// <summary>
 /// Borrow status
 /// </summary>
-public enum BinanceCryptoLoanBorrowStatus : byte
+public enum BinanceCryptoLoanStableBorrowStatus : byte
 {
     /// <summary>
     /// Accruing interest
