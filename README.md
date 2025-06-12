@@ -61,8 +61,8 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 
 ## Installation
 
-![Nuget version](https://img.shields.io/nuget/v/Binance.Api.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/Binance.Api.svg)
 Available on [Nuget](https://www.nuget.org/packages/Binance.Api).
+![Nuget version](https://img.shields.io/nuget/v/Binance.Api.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/Binance.Api.svg)
 
 ```console
 PM> Install-Package Binance.Api
