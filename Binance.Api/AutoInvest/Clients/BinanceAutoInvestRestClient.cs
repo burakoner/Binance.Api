@@ -13,7 +13,7 @@ internal partial class BinanceAutoInvestRestClient(BinanceRestApiClient root) : 
 
     // Internal
     private ILogger Logger => _.Logger;
-    private BinanceRestApiClientOptions Options => _.RestOptions;
+    private BinanceRestApiClientOptions Options => _.ApiOptions;
 
     private Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,

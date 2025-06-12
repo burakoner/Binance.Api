@@ -9,7 +9,7 @@ public record BinanceSpotTrade
     /// The id of the trade
     /// </summary>
     [JsonProperty("id")]
-    public long OrderId { get; set; }
+    public long TradeId { get; set; }
 
     /// <summary>
     /// The price of the trade

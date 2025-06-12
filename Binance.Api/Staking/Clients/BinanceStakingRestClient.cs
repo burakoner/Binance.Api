@@ -7,7 +7,7 @@ internal class BinanceStakingRestClient : IBinanceStakingRestClient
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    internal BinanceRestApiClientOptions RestOptions => _.ApiOptions;
 
     // Interface Properties
     public IBinanceStakingRestClientEth ETH { get; }

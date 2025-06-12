@@ -16,11 +16,11 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     internal BinanceSocketApiClient _ { get; }
 
     // Internal
-    internal BinanceSocketApiClientOptions SocketOptions => _.SocketOptions;
+    internal BinanceSocketApiClientOptions SocketOptions => _.ApiOptions;
     internal DateTime? LastExchangeInfoUpdate { get; private set; }
     internal BinanceSpotExchangeInfo? ExchangeInfo { get; private set; }
 
-    internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.SocketOptions)
+    internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ApiOptions)
     {
         _ = root;
 

@@ -13,7 +13,7 @@ internal partial class BinanceMarginRestClient(BinanceRestApiClient root): IBina
 
     // Internal
     private ILogger Logger => _.Logger;
-    private BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    private BinanceRestApiClientOptions RestOptions => _.ApiOptions;
 
     private Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,

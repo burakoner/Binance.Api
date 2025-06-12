@@ -40,9 +40,9 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Margin Trading|✅|✅|✅|
 |Coin-M Futures|✅|✅|✅|
 |USDⓈ-M Futures|✅|✅|✅|
-|European Options|⌛|-|⌛|
-|Portfolio Margin|⌛|-|⌛|
-|Portfolio Margin Pro|⌛|-|⌛|
+|European Options|⌛|-|⏺|
+|Portfolio Margin|⏺|-|⏺|
+|Portfolio Margin Pro|⏺|-|⏺|
 |Algo Trading|✅|-|-|
 |Copy Trading|✅|-|-|
 |Wallet|✅|-|-|
@@ -51,11 +51,13 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Auto Invest|✅|-|-|
 |Exchange Link|✅|-|-|
 |Link-n-Trade|✅|-|-|
+|Crypto Loan|✅|-|-|
 |Simple Earn|✅|-|-|
 |Staking|✅|-|-|
 |Mining|✅|-|-|
 |NFT|✅|-|-|
-|Crypto Loan|✅|-|-|
+
+⏺: Planned, ⌛: In Progress, ✅: Done, -: Not Supported
 
 ## Installation
 
@@ -312,12 +314,12 @@ var futures_132 = await api.UsdFutures.GetAssetIndexesAsync();
 
 // USDⓈ-M Futures -> Trading Methods (PRIVATE)
 var futures_201 = await api.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
-var futures_202 = await api.UsdFutures.PlaceMultipleOrdersAsync([]);
+var futures_202 = await api.UsdFutures.PlaceOrdersAsync([]);
 var futures_203 = await api.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
-var futures_204 = await api.UsdFutures.EditMultipleOrdersAsync([]);
+var futures_204 = await api.UsdFutures.ModifyOrdersAsync([]);
 var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("---SYMBOL---");
 var futures_206 = await api.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
-var futures_207 = await api.UsdFutures.CancelMultipleOrdersAsync("---SYMBOL---", [1_000_000L]);
+var futures_207 = await api.UsdFutures.CancelOrdersAsync("---SYMBOL---", [1_000_000L]);
 var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("---SYMBOL---");
 var futures_209 = await api.UsdFutures.CancelAllOrdersAfterTimeoutAsync("---SYMBOL---", TimeSpan.FromSeconds(15));
 var futures_210 = await api.UsdFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
@@ -397,9 +399,9 @@ var futures_625 = await api.CoinFutures.GetBasisAsync("---SYMBOL---", BinanceFut
 
 // Coin-M Futures -> Trading Methods (PRIVATE)
 var futures_701 = await api.CoinFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
-var futures_702 = await api.CoinFutures.PlaceMultipleOrdersAsync([]);
+var futures_702 = await api.CoinFutures.PlaceOrdersAsync([]);
 var futures_703 = await api.CoinFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
-var futures_704 = await api.CoinFutures.CancelMultipleOrdersAsync("---SYMBOL---", [1_000_000L]);
+var futures_704 = await api.CoinFutures.CancelOrdersAsync("---SYMBOL---", [1_000_000L]);
 var futures_705 = await api.CoinFutures.CancelAllOrdersAsync("---SYMBOL---");
 var futures_706 = await api.CoinFutures.CancelAllOrdersAfterTimeoutAsync("---SYMBOL---", TimeSpan.FromSeconds(15));
 var futures_707 = await api.CoinFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
@@ -433,6 +435,48 @@ var futures_908 = await api.CoinFutures.GetDownloadIdForOrderHistoryAsync(DateTi
 var futures_909 = await api.CoinFutures.GetDownloadLinkForOrderHistoryAsync("---DOWNLOAD-ID---");
 var futures_910 = await api.CoinFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
 var futures_911 = await api.CoinFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
+
+// European Options -> General Methods (PUBLIC)
+var options_101 = await api.Options.PingAsync();
+var options_102 = await api.Options.GetTimeAsync();
+var options_103 = await api.Options.GetExchangeInfoAsync();
+
+// European Options -> Market Data Methods (PUBLIC)
+var options_201 = await api.Options.GetTickersAsync();
+var options_202 = await api.Options.GetTickersAsync("---SYMBOL---");
+var options_203 = await api.Options.GetPublicExerciseRecordsAsync();
+var options_204 = await api.Options.GetOpenInterestAsync("---UNDERLYING---", DateTime.UtcNow);
+var options_205 = await api.Options.GetOrderBookAsync("---SYMBOL---");
+var options_206 = await api.Options.GetRecentTradesAsync("---SYMBOL---");
+var options_207 = await api.Options.GetRecentBlockTradesAsync("---SYMBOL---");
+var options_208 = await api.Options.GetIndexPriceAsync("---UNDERLYING---");
+var options_209 = await api.Options.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
+var options_210 = await api.Options.GetHistoricalTradesAsync("---SYMBOL---");
+var options_211 = await api.Options.GetMarkPriceAsync("---SYMBOL---");
+
+// European Options -> Account Methods (PRIVATE)
+var options_301 = await api.Options.GetAccountAsync();
+var options_302 = await api.Options.GetAccountFundingFlowAsync("---CURRENCY---");
+var options_303 = await api.Options.GetTransactionHistoryDownloadIdAsync();
+var options_304 = await api.Options.GetTransactionHistoryDownloadLinkAsync(1_000_001);
+
+// European Options -> Trade Methods (PRIVATE)
+var options_401 = await api.Options.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceOptionsOrderType.Limit, 100.0m, 1.10m, BinanceTimeInForce.GoodTillCanceled);
+var options_402 = await api.Options.PlaceOrdersAsync([]);
+var options_403 = await api.Options.CancelOrderAsync("---SYMBOL---",1_000_001);
+var options_404 = await api.Options.CancelOrdersAsync("---SYMBOL---", []);
+var options_405 = await api.Options.CancelOrdersByUnderlyingAsync("---UNDERLYING---");
+var options_406 = await api.Options.CancelOrdersBySymbolAsync("---SYMBOL---");
+var options_407 = await api.Options.GetOrderAsync("---SYMBOL---", 1_000_001);
+var options_408 = await api.Options.GetOrdersHistoryAsync("---SYMBOL---");
+var options_409 = await api.Options.GetOpenOrdersAsync();
+var options_410 = await api.Options.GetPositionsAsync();
+var options_411 = await api.Options.GetUserExerciseRecordsAsync();
+var options_412 = await api.Options.GetUserTradesAsync();
+
+// TODO: European Options -> User Data Stream Methods (PRIVATE)
+// TODO: European Options -> Market Maker -> Endpoints (PRIVATE)
+// TODO: European Options -> Market Maker -> Block Trade Methods (PRIVATE)
 
 // Copy Trading -> Futures Methods (PRIVATE)
 var copy_101 = await api.CopyTrading.Futures.GetLeadTraderStatusAsync();
@@ -517,10 +561,6 @@ var loan_604 = await api.CryptoLoan.Stable.GetOpenBorrowOrdersAsync();
 var loan_605 = await api.CryptoLoan.Stable.GetRepayHistoryAsync();
 var loan_606 = await api.CryptoLoan.Stable.CustomizeMarginCallAsync(100.0m);
 
-// Convert -> Market Data Methods (PRIVATE)
-var convert_101 = await api.Convert.GetPairsAsync();
-var convert_102 = await api.Convert.GetAssetsAsync();
-
 // Convert -> Trade Methods (PRIVATE)
 var convert_201 = await api.Convert.QuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---");
 var convert_202 = await api.Convert.AcceptQuoteAsync("---QUOTE-ID---");
@@ -538,7 +578,7 @@ var exlink_104 = await api.Broker.ExchangeLink.EnableMarginAsync("---SUBACCOUNT-
 var exlink_105 = await api.Broker.ExchangeLink.EnableLeverageTokenAsync("---SUBACCOUNT-ID---");
 var exlink_106 = await api.Broker.ExchangeLink.CreateApiKeyAsync("---SUBACCOUNT-ID---", true, true, true);
 var exlink_107 = await api.Broker.ExchangeLink.SetApiKeyPermissionAsync("---SUBACCOUNT-ID---", "---API-KEY---", true, true, true);
-var exlink_108 = await api.Broker.ExchangeLink.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", BinanceBrokerIpRestrictionStatus.IpUnrestricted);
+var exlink_108 = await api.Broker.ExchangeLink.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", BinanceBrokerApiKeyIpRestriction.IpUnrestricted);
 var exlink_109 = await api.Broker.ExchangeLink.DeleteApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", "---IP-ADDRESS---");
 var exlink_110 = await api.Broker.ExchangeLink.DeleteApiKeyAsync("---SUBACCOUNT-ID---", "---API-KEY---");
 var exlink_111 = await api.Broker.ExchangeLink.GetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---");

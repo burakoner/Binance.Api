@@ -7,7 +7,7 @@ internal class BinanceFuturesRestClient : IBinanceFuturesRestClient
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    internal BinanceRestApiClientOptions RestOptions => _.ApiOptions;
 
     // Interface Properties
     public IBinanceFuturesRestClientCoin Coin { get; }

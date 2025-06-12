@@ -13,7 +13,7 @@ internal partial class BinanceSpotRestClient(BinanceRestApiClient root) : IBinan
 
     // Internal
     private ILogger Logger => _.Logger;
-    private BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    private BinanceRestApiClientOptions RestOptions => _.ApiOptions;
     private DateTime? LastExchangeInfoUpdate { get;  set; }
     private BinanceSpotExchangeInfo? ExchangeInfo { get;  set; }
 

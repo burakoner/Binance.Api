@@ -80,7 +80,7 @@ internal partial class BinanceFuturesRestClientCoin
         return result;
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orders.Count() <= 0 || orders.Count() > 5)
             throw new ArgumentException("Order list should be at least 1 and max 5 orders");
@@ -180,7 +180,7 @@ internal partial class BinanceFuturesRestClientCoin
         return result;
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> CancelMultipleOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> CancelOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orderIdList == null && origClientOrderIdList == null)
             throw new ArgumentException("Either orderIdList or origClientOrderIdList must be sent");

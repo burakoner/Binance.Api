@@ -15,7 +15,7 @@ internal partial class BinanceSubAccountRestClient(BinanceRestApiClient root) : 
 
     // Internal
     private ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions Options => _.RestOptions;
+    internal BinanceRestApiClientOptions Options => _.ApiOptions;
 
     private Task<RestCallResult<T>> RequestAsync<T>(
         Uri uri, HttpMethod method, CancellationToken cancellationToken, bool signed = false,

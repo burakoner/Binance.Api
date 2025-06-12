@@ -83,7 +83,7 @@ internal partial class BinanceFuturesRestClientUsd
         return result;
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (RestOptions.UsdtFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
         {
@@ -176,7 +176,7 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesOrder>(GetUrl(fapi, v1, "order"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> EditMultipleOrdersAsync(IEnumerable<BinanceFuturesBatchOrderModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchOrderModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         var parameterOrders = new List<Dictionary<string, object>>();
@@ -249,7 +249,7 @@ internal partial class BinanceFuturesRestClientUsd
         return result;
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> CancelMultipleOrdersAsync(string symbol, List<long>? orderIdList = null, List<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> CancelOrdersAsync(string symbol, List<long>? orderIdList = null, List<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orderIdList == null && origClientOrderIdList == null)
             throw new ArgumentException("Either orderIdList or origClientOrderIdList must be sent");

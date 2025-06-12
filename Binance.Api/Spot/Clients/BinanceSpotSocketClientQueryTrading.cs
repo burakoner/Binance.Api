@@ -47,7 +47,7 @@ internal partial class BinanceSpotSocketClient
         parameters.AddOptional("icebergQty", icebergQuantity?.ToString(BinanceConstants.CI));
         parameters.AddOptional("newClientOrderId", clientOrderId);
         parameters.AddOptionalEnum("timeInForce", timeInForce);
-        parameters.AddOptionalEnum("newOrderRespjsoType", orderResponseType);
+        parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);

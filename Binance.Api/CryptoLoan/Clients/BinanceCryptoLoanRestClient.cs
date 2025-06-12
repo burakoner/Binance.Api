@@ -7,7 +7,7 @@ internal class BinanceCryptoLoanRestClient : IBinanceCryptoLoanRestClient
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceRestApiClientOptions RestOptions => _.RestOptions;
+    internal BinanceRestApiClientOptions RestOptions => _.ApiOptions;
 
     // Interface Properties
     public IBinanceCryptoLoanRestClientFlexible Flexible { get; }

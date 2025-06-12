@@ -7,7 +7,7 @@ internal partial class BinanceFuturesSocketClient : IBinanceFuturesSocketClient
 
     // Internal
     internal ILogger Logger => _.Logger;
-    internal BinanceSocketApiClientOptions SocketOptions => _.SocketOptions;
+    internal BinanceSocketApiClientOptions SocketOptions => _.ApiOptions;
 
     // Interface Properties
     public IBinanceFuturesSocketClientCoin Coin { get; }

@@ -1,5 +1,7 @@
 ## Change Log & Release Notes
 
+* Version 5.6.12 - 12 Jun 2025
+* Version 5.6.11 - 11 Jun 2025
 * Version 5.6.10 - 10 Jun 2025
 * Version 5.6.08 - 08 Jun 2025
 * Version 5.5.23 - 22 May 2025

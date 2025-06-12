@@ -21,7 +21,7 @@ public record BinanceResult
 /// Query result
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal record BinanceResult<T> : BinanceResult
+public record BinanceResult<T> : BinanceResult
 {
     /// <summary>
     /// The data

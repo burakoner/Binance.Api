@@ -12,7 +12,7 @@ public class BinanceSocketApiClient
     internal ILogger Logger { get; }
     internal IBinanceFuturesSocketClient Futures { get; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
-    internal BinanceSocketApiClientOptions SocketOptions { get; }
+    internal BinanceSocketApiClientOptions ApiOptions { get; }
     internal BinanceRestApiClient RestApiClient { get; }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class BinanceSocketApiClient
     /// <param name="options">Web Socket API Options</param>
     public BinanceSocketApiClient(ILogger? logger, BinanceSocketApiClientOptions options)
     {
-        SocketOptions = options;
+        ApiOptions = options;
         Logger = logger ?? BaseClient.LoggerFactory.CreateLogger<BinanceSocketApiClient>();
         RestApiClient = new(Logger, new());
 
@@ -68,7 +68,7 @@ public class BinanceSocketApiClient
         Futures = new BinanceFuturesSocketClient(this);
     }
 
-    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (SocketOptions.ReceiveWindow != null ? System.Convert.ToInt32(SocketOptions.ReceiveWindow?.TotalMilliseconds) : null);
+    internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (ApiOptions.ReceiveWindow != null ? System.Convert.ToInt32(ApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
 
     /// <summary>
     /// Sets API Credentials
