@@ -57,7 +57,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Mining|✅|-|-|
 |NFT|✅|-|-|
 
-⏺: Planned   ⌛: In Progress   ✅: Done   -: Not Supported
+⏺Planned ⌛In Progress ✅Done -Not Supported
 
 ## Installation
 
