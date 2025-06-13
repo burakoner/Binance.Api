@@ -1,7 +1,7 @@
 ﻿namespace Binance.Api.Shared;
 
 /// <summary>
-/// Rwos results
+/// Rows Results
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public record BinanceRowsResult<T>

@@ -51,9 +51,9 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     public BinanceRestApiClientEuropeanOptions EuropeanOptions { get; set; } = new();
 
     /// <summary>
-    /// Binance Broker Rest API Options
+    /// Binance Link Rest API Options
     /// </summary>
-    public BinanceRestApiClientBrokerOptions BrokerOptions { get; set; } = new();
+    public BinanceRestApiClientLinkOptions LinkOptions { get; set; } = new();
 
     /// <summary>
     /// Constructor
@@ -147,8 +147,8 @@ public class BinanceRestApiClientEuropeanOptions
 }
 
 /// <summary>
-/// Binance Rest API Client Broker Options
+/// Binance Rest API Client Link Options
 /// </summary>
-public class BinanceRestApiClientBrokerOptions
+public class BinanceRestApiClientLinkOptions
 {
 }

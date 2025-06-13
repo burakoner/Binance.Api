@@ -1,5 +1,11 @@
 ## Change Log & Release Notes
 
+* Version 5.6.13 - 13 Jun 2025
+  * Renamed "Broker" Section to "Link"
+  * Implemented "Institutional Loan" Section
+  * Implemented "Rebate" Section
+  * Implemented "Binance Pay History" Section
+
 * Version 5.6.12 - 12 Jun 2025
 * Version 5.6.11 - 11 Jun 2025
 * Version 5.6.10 - 10 Jun 2025

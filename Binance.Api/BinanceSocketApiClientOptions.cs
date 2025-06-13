@@ -51,9 +51,9 @@ public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
     public BinanceSocketApiClientEuropeanOptions EuropeanOptions { get; set; } = new();
 
     /// <summary>
-    /// Binance Broker WebSocket API Options
+    /// Binance Link WebSocket API Options
     /// </summary>
-    public BinanceSocketApiClientBrokerOptions BrokerOptions { get; set; } = new();
+    public BinanceSocketApiClientLinkOptions LinkOptions { get; set; } = new();
 }
 
 /// <summary>
@@ -112,8 +112,8 @@ public class BinanceSocketApiClientEuropeanOptions
 }
 
 /// <summary>
-/// Binance Broker WebSocket API Options
+/// Binance Link WebSocket API Options
 /// </summary>
-public class BinanceSocketApiClientBrokerOptions
+public class BinanceSocketApiClientLinkOptions
 {
 }

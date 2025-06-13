@@ -68,26 +68,26 @@ public class BinanceAddress
     public string OptionsSocketApiStreamAddress { get; set; } = "";
     #endregion
 
-    #region Broker (Binance Link)
+    #region Binance Link
     /// <summary>
     /// Exchange Link Rest API Address
     /// </summary>
-    public string BrokerExchangeLinkRestApiAddress { get; set; } = "";
+    public string ExchangeLinkRestApiAddress { get; set; } = "";
 
     /// <summary>
     /// Link and Trade (Fast API) Rest API Address
     /// </summary>
-    public string BrokerLinkAndTradeFastApiRestApiAddress { get; set; } = "";
+    public string LinkAndTradeFastApiRestApiAddress { get; set; } = "";
 
     /// <summary>
     /// Link and Trade (Futures) Rest API Address
     /// </summary>
-    public string BrokerLinkAndTradeFuturesRestApiAddress { get; set; } = "";
+    public string LinkAndTradeFuturesRestApiAddress { get; set; } = "";
 
     /// <summary>
     /// Link and Trade (Spot) Rest API Address
     /// </summary>
-    public string BrokerLinkAndTradeSpotRestApiAddress { get; set; } = "";
+    public string LinkAndTradeSpotRestApiAddress { get; set; } = "";
     #endregion
 
     /// <summary>
@@ -99,6 +99,26 @@ public class BinanceAddress
     /// Binance Convert Rest API Address
     /// </summary>
     public string ConvertRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Institutional Loan Rest API Address
+    /// </summary>
+    public string InstitutionalLoanRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Rebate Rest API Address
+    /// </summary>
+    public string RebateRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Pay History Rest API Address
+    /// </summary>
+    public string PayHistoryRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Pay Merchant Rest API Address
+    /// </summary>
+    public string PayMerchantRestApiAddress { get; set; } = "";
 
     /// <summary>
     /// Binance Margin Rest API Address
@@ -170,13 +190,14 @@ public class BinanceAddress
         OptionsRestApiAddress = "https://eapi.binance.com",
         OptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions/",
 
-        BrokerExchangeLinkRestApiAddress = "https://api.binance.com",
-        BrokerLinkAndTradeFastApiRestApiAddress = "https://api.binance.com",
-        BrokerLinkAndTradeFuturesRestApiAddress = "https://fapi.binance.com",
-        BrokerLinkAndTradeSpotRestApiAddress = "https://api.binance.com",
+        ExchangeLinkRestApiAddress = "https://api.binance.com",
+        LinkAndTradeFastApiRestApiAddress = "https://api.binance.com",
+        LinkAndTradeFuturesRestApiAddress = "https://fapi.binance.com",
+        LinkAndTradeSpotRestApiAddress = "https://api.binance.com",
 
         AutoInvestRestApiAddress = "https://api.binance.com",
         ConvertRestApiAddress = "https://api.binance.com",
+        InstitutionalLoanRestApiAddress = "https://api.binance.com",
         MarginRestApiAddress = "https://api.binance.com",
         WalletRestApiAddress = "https://api.binance.com",
         SubAccountRestApiAddress = "https://api.binance.com",
@@ -184,6 +205,9 @@ public class BinanceAddress
         NFTRestApiAddress = "https://api.binance.com",
         StakingRestApiAddress = "https://api.binance.com",
         SimpleEarnRestApiAddress = "https://api.binance.com",
+        RebateRestApiAddress = "https://api.binance.com",
+        PayHistoryRestApiAddress = "https://api.binance.com",
+        PayMerchantRestApiAddress = "https://api.binance.com",
 
         AlgoTradingRestApiAddress = "https://api.binance.com",
         CopyTradingRestApiAddress = "https://api.binance.com",
@@ -206,15 +230,6 @@ public class BinanceAddress
         UsdFuturesRestApiAddress = "https://testnet.binancefuture.com",
         UsdFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
-
-        ConvertRestApiAddress = "https://testnet.binance.vision",
-        MarginRestApiAddress = "https://testnet.binance.vision",
-        WalletRestApiAddress = "https://testnet.binance.vision",
-        SubAccountRestApiAddress = "https://testnet.binance.vision",
-
-        AlgoTradingRestApiAddress = "https://testnet.binance.vision",
-        CopyTradingRestApiAddress = "https://testnet.binance.vision",
-        CryptoLoanRestApiAddress = "https://testnet.binance.vision",
     };
 
     /// <summary>

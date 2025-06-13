@@ -1,6 +1,6 @@
 ﻿using Binance.Api.Algo;
 using Binance.Api.AutoInvest;
-using Binance.Api.Broker;
+using Binance.Api.Link;
 using Binance.Api.Convert;
 using Binance.Api.CopyTrading;
 using Binance.Api.CryptoLoan;
@@ -14,6 +14,9 @@ using Binance.Api.Spot;
 using Binance.Api.Staking;
 using Binance.Api.SubAccount;
 using Binance.Api.Wallet;
+using Binance.Api.InstitutionalLoan;
+using Binance.Api.Rebate;
+using Binance.Api.Pay;
 
 namespace Binance.Api;
 
@@ -71,14 +74,14 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceWalletRestClient Wallet { get; }
 
     /// <summary>
-    /// Binance Copy Trading Rest API Client
-    /// </summary>
-    public IBinanceCopyTradingRestClient CopyTrading { get; }
-
-    /// <summary>
     /// Binance Auto Invest Rest API Client
     /// </summary>
     public IBinanceAutoInvestRestClient AutoInvest { get; }
+
+    /// <summary>
+    /// Binance Copy Trading Rest API Client
+    /// </summary>
+    public IBinanceCopyTradingRestClient CopyTrading { get; }
 
     /// <summary>
     /// Binance Convert Rest API Client
@@ -86,14 +89,26 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceConvertRestClient Convert { get; }
 
     /// <summary>
+    /// Binance Institutional Loan Rest API Client
+    /// </summary>
+    public IBinanceInstitutionalLoanRestClient InstitutionalLoan { get; }
+
+    /// <summary>
     /// Binance Sub-Account Rest API Client
     /// </summary>
     public IBinanceSubAccountRestClient SubAccount { get; }
 
     /// <summary>
-    /// Binance Broker (Binance Link) Rest API Client
+    /// Binance Link Rest API Client
     /// </summary>
-    public IBinanceBrokerRestClient Broker { get; }
+    public IBinanceLinkRestClient Link { get; }
+
+    /// <summary>
+    /// Binance Staking Rest API Client
+    /// </summary>
+    public IBinanceStakingRestClient Staking { get; }
+
+    // TODO: Dual Investment
 
     /// <summary>
     /// Binance Mining Rest API Client
@@ -101,14 +116,25 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceMiningRestClient Mining { get; }
 
     /// <summary>
+    /// Binance Crypto Loan Rest API Client
+    /// </summary>
+    public IBinanceCryptoLoanRestClient CryptoLoan { get; }
+
+    // TODO: VIP Loan
+    // TODO: C2C
+    // TODO: Fiat
+
+    /// <summary>
     /// Binance NFT Rest API Client
     /// </summary>
     public IBinanceNftRestClient NFT { get; }
 
+    // TODO: Gift Card
+
     /// <summary>
-    /// Binance Staking Rest API Client
+    /// Binance Rebate Rest API Client
     /// </summary>
-    public IBinanceStakingRestClient Staking { get; }
+    public IBinanceRebateRestClient Rebate { get; }
 
     /// <summary>
     /// Binance Simple Earn Rest API Client
@@ -116,26 +142,10 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceSimpleEarnRestClient SimpleEarn { get; }
 
     /// <summary>
-    /// Binance Crypto Loan Rest API Client
+    /// Binance Pay Rest API Client
     /// </summary>
-    public IBinanceCryptoLoanRestClient CryptoLoan { get; }
+    public IBinancePayRestClient Pay { get; }
 
-    // TODO: Dual Investment
-    // TODO: VIP Loan
-    // TODO: C2C
-    // TODO: Fiat
-    // TODO: Gift Card
-    // TODO: BAB Token
-    // TODO: Rebate
-    // TODO: Binance Pay History
-    // TODO: Web3 DApp
-    // TODO: Binance Web3 Connect
-    // TODO: Task Verification
-    // TODO: Open Platform
-    // TODO: Mini Program
-    // TODO: Binance Open API
-    // TODO: Binance Fiat Widget
-    // TODO: Binance Pay Merchant
     // TODO: Binance Connect
 
     /// <summary>
@@ -177,16 +187,19 @@ public sealed class BinanceRestApiClient : RestApiClient
         Margin = new BinanceMarginRestClient(this);
         Algo = new BinanceAlgoRestClient(this);
         Wallet = new BinanceWalletRestClient(this);
-        CopyTrading = new BinanceCopyTradingRestClient(this);
         AutoInvest = new BinanceAutoInvestRestClient(this);
+        CopyTrading = new BinanceCopyTradingRestClient(this);
         Convert = new BinanceConvertRestClient(this);
+        InstitutionalLoan = new BinanceInstitutionalLoanRestClient(this);
         SubAccount = new BinanceSubAccountRestClient(this);
-        Broker = new BinanceBrokerRestClient(this);
-        Mining = new BinanceMiningRestClient(this);
-        NFT = new BinanceNftRestClient(this);
+        Link = new BinanceLinkRestClient(this);
         Staking = new BinanceStakingRestClient(this);
-        SimpleEarn = new BinanceSimpleEarnRestClient(this);
+        Mining = new BinanceMiningRestClient(this);
         CryptoLoan = new BinanceCryptoLoanRestClient(this);
+        NFT = new BinanceNftRestClient(this);
+        Rebate = new BinanceRebateRestClient(this);
+        SimpleEarn = new BinanceSimpleEarnRestClient(this);
+        Pay = new BinancePayRestClient(this);
     }
 
     #region Public Nethods

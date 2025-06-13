@@ -1,6 +1,6 @@
 ﻿using Binance.Api;
 using Binance.Api.AutoInvest;
-using Binance.Api.Broker;
+using Binance.Api.Link;
 using Binance.Api.Convert;
 using Binance.Api.CryptoLoan;
 using Binance.Api.Futures;
@@ -520,75 +520,79 @@ internal class Program
         var convert_206 = await api.Convert.CancelLimitOrderAsync("---ORDER-ID---");
         var convert_207 = await api.Convert.GetLimitOrdersAsync();
 
-        // Broker -> Exchange Link -> Account Methods (PRIVATE)
-        var exlink_101 = await api.Broker.ExchangeLink.CreateSubAccountAsync();
-        var exlink_102 = await api.Broker.ExchangeLink.GetSubAccountsAsync();
-        var exlink_103 = await api.Broker.ExchangeLink.EnableFuturesAsync("---SUBACCOUNT-ID---");
-        var exlink_104 = await api.Broker.ExchangeLink.EnableMarginAsync("---SUBACCOUNT-ID---");
-        var exlink_105 = await api.Broker.ExchangeLink.EnableLeverageTokenAsync("---SUBACCOUNT-ID---");
-        var exlink_106 = await api.Broker.ExchangeLink.CreateApiKeyAsync("---SUBACCOUNT-ID---", true, true, true);
-        var exlink_107 = await api.Broker.ExchangeLink.SetApiKeyPermissionAsync("---SUBACCOUNT-ID---", "---API-KEY---", true, true, true);
-        var exlink_108 = await api.Broker.ExchangeLink.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", BinanceBrokerApiKeyIpRestriction.IpUnrestricted);
-        var exlink_109 = await api.Broker.ExchangeLink.DeleteApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", "---IP-ADDRESS---");
-        var exlink_110 = await api.Broker.ExchangeLink.DeleteApiKeyAsync("---SUBACCOUNT-ID---", "---API-KEY---");
-        var exlink_111 = await api.Broker.ExchangeLink.GetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---");
-        var exlink_112 = await api.Broker.ExchangeLink.GetApiKeyAsync("---SUBACCOUNT-ID---");
-        var exlink_113 = await api.Broker.ExchangeLink.GetBrokerAccountAsync();
-        var exlink_114 = await api.Broker.ExchangeLink.SetBnbBurnForSpotAndMarginAsync("---SUBACCOUNT-ID---", true);
-        var exlink_115 = await api.Broker.ExchangeLink.SetBnbBurnForMarginInterestAsync("---SUBACCOUNT-ID---", true);
-        var exlink_116 = await api.Broker.ExchangeLink.GetBnbBurnStatusAsync("---SUBACCOUNT-ID---");
+        // Institutional Loan Methods (PRIVATE)
+        var insloan_101 = await api.InstitutionalLoan.GetLoanGroupsAsync();
+        var insloan_102 = await api.InstitutionalLoan.GetLoanGroupAsync(1_000_000);
 
-        // Broker -> Exchange Link -> Asset Methods (PRIVATE)
-        var exlink_201 = await api.Broker.ExchangeLink.TransferAsync("---ASSET---", 100.0m, "---FROM-ID---", "---TO-ID---");
-        var exlink_202 = await api.Broker.ExchangeLink.GetTransfersAsync();
-        var exlink_203 = await api.Broker.ExchangeLink.FuturesTransferAsync("---ASSET---", 100.0m, BinanceFuturesType.CoinMarginedFutures, "---FROM-ID---", "---TO-ID---");
-        var exlink_204 = await api.Broker.ExchangeLink.GetFuturesTransfersAsync("---SUBACCOUNT-ID---", BinanceFuturesType.CoinMarginedFutures);
-        var exlink_205 = await api.Broker.ExchangeLink.GetDepositsAsync();
-        var exlink_206 = await api.Broker.ExchangeLink.GetSpotAssetInfoAsync();
-        var exlink_207 = await api.Broker.ExchangeLink.GetMarginAssetInfoAsync();
-        var exlink_208 = await api.Broker.ExchangeLink.GetFuturesAssetInfoAsync(BinanceFuturesType.CoinMarginedFutures, "---SUBACCOUNT-ID---");
-        var exlink_209 = await api.Broker.ExchangeLink.UniversalTransferAsync("---ASSET---", 100.0m, "---FROM-ID---", BinanceBrokerAccountType.FuturesCoin, "---TO-ID---", BinanceBrokerAccountType.FuturesCoin);
-        var exlink_210 = await api.Broker.ExchangeLink.GetUniversalTransfersAsync();
+        // Binance Link -> Exchange Link -> Account Methods (PRIVATE)
+        var exclink_101 = await api.Link.ExchangeLink.CreateSubAccountAsync();
+        var exclink_102 = await api.Link.ExchangeLink.GetSubAccountsAsync();
+        var exclink_103 = await api.Link.ExchangeLink.EnableFuturesAsync("---SUBACCOUNT-ID---");
+        var exclink_104 = await api.Link.ExchangeLink.EnableMarginAsync("---SUBACCOUNT-ID---");
+        var exclink_105 = await api.Link.ExchangeLink.EnableLeverageTokenAsync("---SUBACCOUNT-ID---");
+        var exclink_106 = await api.Link.ExchangeLink.CreateApiKeyAsync("---SUBACCOUNT-ID---", true, true, true);
+        var exclink_107 = await api.Link.ExchangeLink.SetApiKeyPermissionAsync("---SUBACCOUNT-ID---", "---API-KEY---", true, true, true);
+        var exclink_108 = await api.Link.ExchangeLink.SetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", BinanceLinkApiKeyIpRestriction.IpUnrestricted);
+        var exclink_109 = await api.Link.ExchangeLink.DeleteApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---", "---IP-ADDRESS---");
+        var exclink_110 = await api.Link.ExchangeLink.DeleteApiKeyAsync("---SUBACCOUNT-ID---", "---API-KEY---");
+        var exclink_111 = await api.Link.ExchangeLink.GetApiKeyIpRestrictionAsync("---SUBACCOUNT-ID---", "---API-KEY---");
+        var exclink_112 = await api.Link.ExchangeLink.GetApiKeyAsync("---SUBACCOUNT-ID---");
+        var exclink_113 = await api.Link.ExchangeLink.GetBrokerAccountAsync();
+        var exclink_114 = await api.Link.ExchangeLink.SetBnbBurnForSpotAndMarginAsync("---SUBACCOUNT-ID---", true);
+        var exclink_115 = await api.Link.ExchangeLink.SetBnbBurnForMarginInterestAsync("---SUBACCOUNT-ID---", true);
+        var exclink_116 = await api.Link.ExchangeLink.GetBnbBurnStatusAsync("---SUBACCOUNT-ID---");
 
-        // Broker -> Exchange Link -> Fee Methods (PRIVATE)
-        var exlink_301 = await api.Broker.ExchangeLink.SetCommissionAsync("---SUBACCOUNT-ID---", 100, 150);
-        var exlink_302 = await api.Broker.ExchangeLink.SetFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---", "---SYMBOL---", 100, 150);
-        var exlink_303 = await api.Broker.ExchangeLink.GetFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---");
-        var exlink_304 = await api.Broker.ExchangeLink.SetCoinFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---", "---PAIR---", 100, 150);
-        var exlink_305 = await api.Broker.ExchangeLink.GetCoinFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---");
-        var exlink_306 = await api.Broker.ExchangeLink.GetBrokerCommissionRebatesAsync("---SUBACCOUNT-ID---");
-        var exlink_307 = await api.Broker.ExchangeLink.GetBrokerFuturesCommissionRebatesAsync(BinanceFuturesType.CoinMarginedFutures, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        // Binance Link -> Exchange Link -> Asset Methods (PRIVATE)
+        var exclink_201 = await api.Link.ExchangeLink.TransferAsync("---ASSET---", 100.0m, "---FROM-ID---", "---TO-ID---");
+        var exclink_202 = await api.Link.ExchangeLink.GetTransfersAsync();
+        var exclink_203 = await api.Link.ExchangeLink.FuturesTransferAsync("---ASSET---", 100.0m, BinanceFuturesType.CoinMarginedFutures, "---FROM-ID---", "---TO-ID---");
+        var exclink_204 = await api.Link.ExchangeLink.GetFuturesTransfersAsync("---SUBACCOUNT-ID---", BinanceFuturesType.CoinMarginedFutures);
+        var exclink_205 = await api.Link.ExchangeLink.GetDepositsAsync();
+        var exclink_206 = await api.Link.ExchangeLink.GetSpotAssetInfoAsync();
+        var exclink_207 = await api.Link.ExchangeLink.GetMarginAssetInfoAsync();
+        var exclink_208 = await api.Link.ExchangeLink.GetFuturesAssetInfoAsync(BinanceFuturesType.CoinMarginedFutures, "---SUBACCOUNT-ID---");
+        var exclink_209 = await api.Link.ExchangeLink.UniversalTransferAsync("---ASSET---", 100.0m, "---FROM-ID---", BinanceLinkAccountType.FuturesCoin, "---TO-ID---", BinanceLinkAccountType.FuturesCoin);
+        var exclink_210 = await api.Link.ExchangeLink.GetUniversalTransfersAsync();
 
-        // Broker -> Link and Trade -> Spot Methods (PRIVATE)
-        var linktrade_101 = await api.Broker.LinkAndTrade.Spot.GetIfNewUserAsync("---AGENT-CODE---");
-        var linktrade_102 = await api.Broker.LinkAndTrade.Spot.SetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
-        var linktrade_103 = await api.Broker.LinkAndTrade.Spot.GetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
-        var linktrade_104 = await api.Broker.LinkAndTrade.Spot.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
-        var linktrade_105 = await api.Broker.LinkAndTrade.Spot.GetCustomerIdByClientAsync("---AGENT-CODE---");
-        var linktrade_106 = await api.Broker.LinkAndTrade.Spot.GetRebateHistoryByPartnerAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
-        var linktrade_107 = await api.Broker.LinkAndTrade.Spot.GetRebateHistoryByClientAsync();
+        // Binance Link -> Exchange Link -> Fee Methods (PRIVATE)
+        var exclink_301 = await api.Link.ExchangeLink.SetCommissionAsync("---SUBACCOUNT-ID---", 100, 150);
+        var exclink_302 = await api.Link.ExchangeLink.SetFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---", "---SYMBOL---", 100, 150);
+        var exclink_303 = await api.Link.ExchangeLink.GetFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---");
+        var exclink_304 = await api.Link.ExchangeLink.SetCoinFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---", "---PAIR---", 100, 150);
+        var exclink_305 = await api.Link.ExchangeLink.GetCoinFuturesCommissionAdjustmentAsync("---SUBACCOUNT-ID---");
+        var exclink_306 = await api.Link.ExchangeLink.GetBrokerCommissionRebatesAsync("---SUBACCOUNT-ID---");
+        var exclink_307 = await api.Link.ExchangeLink.GetBrokerFuturesCommissionRebatesAsync(BinanceFuturesType.CoinMarginedFutures, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
 
-        // Broker -> Link and Trade -> Futures Methods (PRIVATE)
-        var linktrade_201 = await api.Broker.LinkAndTrade.Futures.GetIfNewUserAsync("---BROKER-ID---");
-        var linktrade_202 = await api.Broker.LinkAndTrade.Futures.SetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
-        var linktrade_203 = await api.Broker.LinkAndTrade.Futures.GetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
-        var linktrade_204 = await api.Broker.LinkAndTrade.Futures.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
-        var linktrade_205 = await api.Broker.LinkAndTrade.Futures.GetCustomerIdByClientAsync("---AGENT-CODE---");
-        var linktrade_206 = await api.Broker.LinkAndTrade.Futures.GetIncomeHistoryAsync();
-        var linktrade_207 = await api.Broker.LinkAndTrade.Futures.GetTraderNumberAsync();
-        var linktrade_208 = await api.Broker.LinkAndTrade.Futures.GetRebateDataOverviewAsync();
-        var linktrade_209 = await api.Broker.LinkAndTrade.Futures.GetUserTradeVolumeAsync();
-        var linktrade_210 = await api.Broker.LinkAndTrade.Futures.GetUserRebateVolumeAsync();
-        var linktrade_211 = await api.Broker.LinkAndTrade.Futures.GetTraderDetailsAsync();
+        // Binance Link -> Link and Trade -> Spot Methods (PRIVATE)
+        var linktrade_101 = await api.Link.LinkAndTrade.Spot.GetIfNewUserAsync("---AGENT-CODE---");
+        var linktrade_102 = await api.Link.LinkAndTrade.Spot.SetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+        var linktrade_103 = await api.Link.LinkAndTrade.Spot.GetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+        var linktrade_104 = await api.Link.LinkAndTrade.Spot.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
+        var linktrade_105 = await api.Link.LinkAndTrade.Spot.GetCustomerIdByClientAsync("---AGENT-CODE---");
+        var linktrade_106 = await api.Link.LinkAndTrade.Spot.GetRebateHistoryByPartnerAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+        var linktrade_107 = await api.Link.LinkAndTrade.Spot.GetRebateHistoryByClientAsync();
 
-        // Broker -> Link and Trade -> Portfolio Margin Methods (PRIVATE)
-        var linktrade_301 = await api.Broker.LinkAndTrade.PortfolioMargin.GetIfNewUserAsync("---BROKER-ID---");
-        var linktrade_302 = await api.Broker.LinkAndTrade.PortfolioMargin.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
-        var linktrade_303 = await api.Broker.LinkAndTrade.PortfolioMargin.GetCustomerIdByClientAsync("---AGENT-CODE---");
+        // Binance Link -> Link and Trade -> Futures Methods (PRIVATE)
+        var linktrade_201 = await api.Link.LinkAndTrade.Futures.GetIfNewUserAsync("---BROKER-ID---");
+        var linktrade_202 = await api.Link.LinkAndTrade.Futures.SetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+        var linktrade_203 = await api.Link.LinkAndTrade.Futures.GetCustomerIdByPartnerAsync("---EMAIL---", "---CUSTOMER-ID---");
+        var linktrade_204 = await api.Link.LinkAndTrade.Futures.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
+        var linktrade_205 = await api.Link.LinkAndTrade.Futures.GetCustomerIdByClientAsync("---AGENT-CODE---");
+        var linktrade_206 = await api.Link.LinkAndTrade.Futures.GetIncomeHistoryAsync();
+        var linktrade_207 = await api.Link.LinkAndTrade.Futures.GetTraderNumberAsync();
+        var linktrade_208 = await api.Link.LinkAndTrade.Futures.GetRebateDataOverviewAsync();
+        var linktrade_209 = await api.Link.LinkAndTrade.Futures.GetUserTradeVolumeAsync();
+        var linktrade_210 = await api.Link.LinkAndTrade.Futures.GetUserRebateVolumeAsync();
+        var linktrade_211 = await api.Link.LinkAndTrade.Futures.GetTraderDetailsAsync();
 
-        // Broker -> Link and Trade -> Fast API Methods (PRIVATE)
-        var linktrade_401 = await api.Broker.LinkAndTrade.FastApi.GetUserStatusAsync("---ACCESS-TOKEN---");
-        var linktrade_402 = await api.Broker.LinkAndTrade.FastApi.CreateApiKeyForUserAsync("---ACCESS-TOKEN---", "---API-NAME---", true, true, true, true, "---PUBLIC-KEY---");
+        // Binance Link -> Link and Trade -> Portfolio Margin Methods (PRIVATE)
+        var linktrade_301 = await api.Link.LinkAndTrade.PortfolioMargin.GetIfNewUserAsync("---BROKER-ID---");
+        var linktrade_302 = await api.Link.LinkAndTrade.PortfolioMargin.SetCustomerIdByClientAsync("---CUSTOMER-ID---", "---AGENT-CODE---");
+        var linktrade_303 = await api.Link.LinkAndTrade.PortfolioMargin.GetCustomerIdByClientAsync("---AGENT-CODE---");
+
+        // Binance Link -> Link and Trade -> Fast API Methods (PRIVATE)
+        var linktrade_401 = await api.Link.LinkAndTrade.FastApi.GetUserStatusAsync("---ACCESS-TOKEN---");
+        var linktrade_402 = await api.Link.LinkAndTrade.FastApi.CreateApiKeyForUserAsync("---ACCESS-TOKEN---", "---API-NAME---", true, true, true, true, "---PUBLIC-KEY---");
 
         // Mining Methods (PRIVATE)
         var mining_101 = await api.Mining.GetAlgorithmsAsync(); // PUBLIC
@@ -645,6 +649,12 @@ internal class Program
         var solstaking_304 = await api.Staking.SOL.GetBnSolRateHistoryAsync();
         var solstaking_305 = await api.Staking.SOL.GetBoostRewardsHistoryAsync(BinanceSolStakingRewardType.Claim);
         var solstaking_306 = await api.Staking.SOL.GetUnclaimedRewardsAsync();
+
+        // Pay History Methods (PRIVATE)
+        var pay_101 = await api.Pay.History.GetHistoryAsync();
+
+        // Rebate Methods (PRIVATE)
+        var rebate_101 = await api.Rebate.GetSpotRebateHistoryAsync();
 
         // Simple Earn -> Flexible -> Account Methods (PRIVATE)
         var flexible_101 = await api.SimpleEarn.Flexible.GetAccountAsync();
