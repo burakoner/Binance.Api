@@ -95,7 +95,14 @@ After installing it's time to actually use it. To get started we have to add the
 
 Binance.Api provides two clients to interact with the Binance.Api. The  `BinanceRestApiClient`  provides all rest API calls. The  `BinanceSocketApiClient` provides functions to interact with the websocket provided by the Binance.Api. Both clients are disposable and as such can be used in a  `using`statement.
 
-## Rest Api Examples
+## Usage
+
+You can find the basic usage of the methods in this library as below.
+[Rest Api Methods](#rest-api-methods)
+[WebSocket Api Query Methods](#websocket-api-query-methods)
+[WebSocket Api Stream Methods](#rest-api-methods)
+
+## Rest Api Methods
 
 ```csharp
 // Rest API Client
@@ -794,7 +801,7 @@ var autoinvest_210 = await api.AutoInvest.GetPositionAsync(1_000_000L);
 var autoinvest_211 = await api.AutoInvest.GetRebalanceHistoryAsync();
 ```
 
-## WebSocket Api Query Examples
+## WebSocket Api Query Methods
 
 The Binance.Api socket client provides several query methods.
 
@@ -891,7 +898,7 @@ var futures_901 = await ws.CoinFutures.GetBalancesAsync();
 var futures_903 = await ws.CoinFutures.GetAccountInfoAsync();
 ```
 
-## WebSocket Api Stream Examples
+## WebSocket Api Stream Methods
 
 The Binance.Api socket client provides several stream methods to which can be subscribed.
 
