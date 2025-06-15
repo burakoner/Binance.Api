@@ -16,7 +16,7 @@ Donations are greatly appreciated and a motivation to keep improving.
 
 ## Changes & Release Notes
 
-Please take a look to [ChangeLog](https://github.com/burakoner/Binance.Api/blob/master/CHANGELOG.md) for all changes.
+Please take a look to 👉 [ChangeLog](https://github.com/burakoner/Binance.Api/blob/master/CHANGELOG.md) for all changes.
 
 ## Supported Frameworks
 The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for optimal compatibility, as well as dotnet 6.0, 7.0, 8.0 and 9.0 to use the latest framework features.
@@ -98,9 +98,9 @@ Binance.Api provides two clients to interact with the Binance.Api. The  `Binance
 ## Usage
 
 You can find the basic usage of the methods in this library as below.  
-[Rest Api Methods](#rest-api-methods)  
-[WebSocket Api Query Methods](#websocket-api-query-methods)  
-[WebSocket Api Stream Methods](#rest-api-methods)  
+👉 [Rest Api Methods](#rest-api-methods)  
+👉 [WebSocket Api Query Methods](#websocket-api-query-methods)  
+👉 [WebSocket Api Stream Methods](#rest-api-methods)  
 
 ## Rest Api Methods
 
