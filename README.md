@@ -40,7 +40,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Margin Trading|✅|✅|✅|
 |Coin-M Futures|✅|✅|✅|
 |USDⓈ-M Futures|✅|✅|✅|
-|European Options|⌛|-|⌛|
+|European Options|✅|-|⌛|
 |Portfolio Margin|⏹|-|⏹|
 |Portfolio Margin Pro|⏹|-|⏹|
 |Algo Trading|✅|-|-|
