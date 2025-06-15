@@ -167,22 +167,26 @@ internal partial class BinanceOptionsRestClient
         return response;
     }
 
-    public Task<RestCallResult<BinanceResponse<long>>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<long>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("underlying", underlying);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResponse<long>>(GetUrl(eapi, v1, "allOpenOrdersByUnderlying"), HttpMethod.Delete, ct, true, bodyParameters: parameters);
+        var result =await RequestAsync<BinanceResponse<long>>(GetUrl(eapi, v1, "allOpenOrdersByUnderlying"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        if(!result.Success) return result.As<long>(0);
+
+        return result.As(result.Data.Data);
     }
 
-    public Task<RestCallResult<BinanceResponse>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<bool>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResponse>(GetUrl(eapi, v1, "allOpenOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters);
+        var result = await RequestAsync<BinanceResponse>(GetUrl(eapi, v1, "allOpenOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        return result.As(result.Success);
     }
 
     public Task<RestCallResult<BinanceOptionsOrder>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)

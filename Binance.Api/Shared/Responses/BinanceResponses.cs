@@ -85,7 +85,7 @@ public class BinanceResultErrorData
 /// <summary>
 /// Binance Response
 /// </summary>
-public record BinanceResponse
+internal record BinanceResponse
 {
     /// <summary>
     /// Result code
@@ -104,7 +104,7 @@ public record BinanceResponse
 /// Query result
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public record BinanceResponse<T> : BinanceResponse
+internal record BinanceResponse<T> : BinanceResponse
 {
     /// <summary>
     /// The data
@@ -114,11 +114,10 @@ public record BinanceResponse<T> : BinanceResponse
 }
 #endregion
 
-
 /// <summary>
 /// Binance error response
 /// </summary>
-public class BinanceDataResponse<T>
+internal class BinanceDataResponse<T>
 {
     /// <summary>
     /// Error code
@@ -150,7 +149,7 @@ public class BinanceDataResponse<T>
 /// List Result
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public record BinanceListResponse<T>
+internal record BinanceListResponse<T>
 {
     /// <summary>
     /// The Data
@@ -163,8 +162,14 @@ public record BinanceListResponse<T>
 /// List Response with Total Count
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public record BinanceListTotalResponse<T>: BinanceListResponse<T>
+public record BinanceListTotalResponse<T>
 {
+    /// <summary>
+    /// The Data
+    /// </summary>
+    [JsonProperty("list")]
+    public List<T> List { get; set; } = [];
+
     /// <summary>
     /// The total count of the records
     /// </summary>
@@ -176,8 +181,14 @@ public record BinanceListTotalResponse<T>: BinanceListResponse<T>
 /// List Response with Toal Count and Time Range
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public record BinanceListRangeResponse<T> : BinanceListResponse<T>
+public record BinanceListRangeResponse<T>
 {
+    /// <summary>
+    /// The Data
+    /// </summary>
+    [JsonProperty("list")]
+    public List<T> List { get; set; } = [];
+
     /// <summary>
     /// Data start time
     /// </summary>

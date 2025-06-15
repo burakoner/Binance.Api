@@ -3,8 +3,20 @@
 /// <summary>
 /// Algo order result
 /// </summary>
-public record BinanceAlgoResult: BinanceResponse
+public record BinanceAlgoResult
 {
+    /// <summary>
+    /// Result code
+    /// </summary>
+    [JsonProperty("code")]
+    public int Code { get; set; }
+
+    /// <summary>
+    /// Message
+    /// </summary>
+    [JsonProperty("msg")]
+    public string? Message { get; set; }
+
     /// <summary>
     /// Algo order id
     /// </summary>

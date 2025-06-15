@@ -3,8 +3,26 @@
 /// <summary>
 /// Algo order result
 /// </summary>
-public record BinanceAlgoOrderResult: BinanceResponse
+public record BinanceAlgoOrderResult
 {
+    /// <summary>
+    /// Result code
+    /// </summary>
+    [JsonProperty("code")]
+    public int Code { get; set; }
+
+    /// <summary>
+    /// Message
+    /// </summary>
+    [JsonProperty("msg")]
+    public string? Message { get; set; }
+
+    /// <summary>
+    /// Successful
+    /// </summary>
+    [JsonProperty("msg")]
+    public bool Success { get; set; }
+
     /// <summary>
     /// Order id
     /// </summary>
@@ -16,9 +34,4 @@ public record BinanceAlgoOrderResult: BinanceResponse
     public string RequestClientAlgoId => ClientAlgoId
         .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
         .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
-
-    /// <summary>
-    /// Successful
-    /// </summary>
-    public bool Success { get; set; }
 }
