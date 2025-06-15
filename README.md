@@ -14,7 +14,7 @@ Donations are greatly appreciated and a motivation to keep improving.
 |**ETH**|0x65b02db9b67b73f5f1e983ae10796f91ded57b64|
 |**USDT (TRC-20)**|TXwqoD7doMESgitfWa8B2gHL7HuweMmNBJ|
 
-## Changes
+## Changes & Release Notes
 
 Please take a look to [ChangeLog](https://github.com/burakoner/Binance.Api/blob/master/CHANGELOG.md) for all changes.
 
