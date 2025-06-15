@@ -97,10 +97,10 @@ Binance.Api provides two clients to interact with the Binance.Api. The  `Binance
 
 ## Usage
 
-You can find the basic usage of the methods in this library as below.
-[Rest Api Methods](#rest-api-methods)
-[WebSocket Api Query Methods](#websocket-api-query-methods)
-[WebSocket Api Stream Methods](#rest-api-methods)
+You can find the basic usage of the methods in this library as below.  
+[Rest Api Methods](#rest-api-methods)  
+[WebSocket Api Query Methods](#websocket-api-query-methods)  
+[WebSocket Api Stream Methods](#rest-api-methods)  
 
 ## Rest Api Methods
 
