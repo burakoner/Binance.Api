@@ -12,6 +12,7 @@ internal class BinanceFuturesRestClient : IBinanceFuturesRestClient
     // Interface Properties
     public IBinanceFuturesRestClientCoin Coin { get; }
     public IBinanceFuturesRestClientUsd USD { get; }
+    public IBinanceFuturesRestClientData Data { get; }
 
     // Constructor
     internal BinanceFuturesRestClient(BinanceRestApiClient root)
@@ -19,5 +20,6 @@ internal class BinanceFuturesRestClient : IBinanceFuturesRestClient
         _ = root;
         Coin = new BinanceFuturesRestClientCoin(this);
         USD = new BinanceFuturesRestClientUsd(this);
+        Data = new BinanceFuturesRestClientData(this);
     }
 }

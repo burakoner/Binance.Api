@@ -255,7 +255,7 @@ internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBin
         };
 
         var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.CoinFuturesSocketApiQueryAddress.AppendPath(url);
-        var result = await base.QueryAsync<BinanceResponse<T>>(address, request, sign).ConfigureAwait(false);
+        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, sign).ConfigureAwait(false);
         if (!result.Success)
         {
             if (result.Error is BinanceRateLimitError rle)

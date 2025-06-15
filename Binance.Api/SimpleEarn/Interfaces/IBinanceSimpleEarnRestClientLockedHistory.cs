@@ -18,7 +18,7 @@ public interface IBinanceSimpleEarnRestClientLockedHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSimpleEarnLockedRecord>>> GetSubscriptionsAsync(string? purchaseId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSimpleEarnLockedRecord>>> GetSubscriptionsAsync(string? purchaseId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Simple Earn locked product redemption records
@@ -34,7 +34,7 @@ public interface IBinanceSimpleEarnRestClientLockedHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSimpleEarnLockedRedemptionRecord>>> GetRedemptionsAsync(string? positionId = null, string? redeemId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSimpleEarnLockedRedemptionRecord>>> GetRedemptionsAsync(string? positionId = null, string? redeemId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Simple Earn locked product reward records
@@ -49,5 +49,5 @@ public interface IBinanceSimpleEarnRestClientLockedHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSimpleEarnLockedRewardRecord>>> GetRewardsAsync(string? positionId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSimpleEarnLockedRewardRecord>>> GetRewardsAsync(string? positionId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 }

@@ -272,7 +272,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         };
 
         var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url);
-        var result = await base.QueryAsync<BinanceResponse<T>>(address, request, sign).ConfigureAwait(false);
+        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, sign).ConfigureAwait(false);
         if (!result.Success)
         {
             if (result.Error is BinanceRateLimitError rle)

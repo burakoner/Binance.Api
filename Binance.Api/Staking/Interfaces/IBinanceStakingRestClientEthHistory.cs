@@ -17,7 +17,7 @@ public interface IBinanceStakingRestClientEthHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceEthStakingRecord>>> GetStakingHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceEthStakingRecord>>> GetStakingHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get ETH redemption history
@@ -30,7 +30,7 @@ public interface IBinanceStakingRestClientEthHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceEthStakingRedemption>>> GetRedemptionHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceEthStakingRedemption>>> GetRedemptionHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get ETH rewards history
@@ -43,7 +43,7 @@ public interface IBinanceStakingRestClientEthHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceEthStakingReward>>> GetRewardsHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceEthStakingReward>>> GetRewardsHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get WBETH rewards history
@@ -68,7 +68,7 @@ public interface IBinanceStakingRestClientEthHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceEthStakingWbEthRate>>> GetWbEthRateHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceEthStakingWbEthRate>>> GetWbEthRateHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get wrap history
@@ -81,7 +81,7 @@ public interface IBinanceStakingRestClientEthHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceEthStakingWbEthWrap>>> GetWbEthWrapHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceEthStakingWbEthWrap>>> GetWbEthWrapHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get unwrap history
@@ -94,5 +94,5 @@ public interface IBinanceStakingRestClientEthHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceEthStakingWbEthWrap>>> GetWbEthUnwrapHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceEthStakingWbEthWrap>>> GetWbEthUnwrapHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 }

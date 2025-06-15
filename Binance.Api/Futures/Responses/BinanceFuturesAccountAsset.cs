@@ -82,6 +82,7 @@ public record BinanceFuturesAccountAsset
     /// </summary>
     [JsonProperty("marginAvailable")]
     public bool? MarginAvailable { get; set; }
+
     /// <summary>
     /// Last update time
     /// </summary>

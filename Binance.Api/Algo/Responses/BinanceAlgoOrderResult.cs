@@ -3,7 +3,7 @@
 /// <summary>
 /// Algo order result
 /// </summary>
-public record BinanceAlgoOrderResult: BinanceResult
+public record BinanceAlgoOrderResult: BinanceResponse
 {
     /// <summary>
     /// Order id

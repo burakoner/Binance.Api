@@ -16,6 +16,8 @@ using Binance.Api.Wallet;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Binance.Api.Fiat;
+using Binance.Api.DualInvestment;
 
 namespace Binance.ApiConsole;
 
@@ -386,6 +388,9 @@ internal class Program
         var futures_910 = await api.CoinFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
         var futures_911 = await api.CoinFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
 
+        // Futures Data Methods (PRIVATE)
+        var futures_1001 = await api.FuturesData.GetFuturesDataLinkAsync("---SYMBOL---", BinanceFuturesDataType.TickData, DateTime.UtcNow.AddMonths(-3), DateTime.UtcNow);
+
         // European Options -> General Methods (PUBLIC)
         var options_101 = await api.Options.PingAsync();
         var options_102 = await api.Options.GetTimeAsync();
@@ -510,6 +515,14 @@ internal class Program
         var loan_604 = await api.CryptoLoan.Stable.GetOpenBorrowOrdersAsync();
         var loan_605 = await api.CryptoLoan.Stable.GetRepayHistoryAsync();
         var loan_606 = await api.CryptoLoan.Stable.CustomizeMarginCallAsync(100.0m);
+
+        // C2C Methods (PRIVATE)
+        var c2c_101 = await api.C2C.GetHistoryAsync();
+
+        // Fiat Methods (PRIVATE)
+        var fiat_101 = await api.Fiat.GetDepositHistoryAsync();
+        var fiat_102 = await api.Fiat.GetWithdrawalHistoryAsync();
+        var fiat_103 = await api.Fiat.GetPaymentHistoryAsync(BinanceFiatPaymentType.Buy);
 
         // Convert -> Trade Methods (PRIVATE)
         var convert_201 = await api.Convert.QuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---");
@@ -649,6 +662,15 @@ internal class Program
         var solstaking_304 = await api.Staking.SOL.GetBnSolRateHistoryAsync();
         var solstaking_305 = await api.Staking.SOL.GetBoostRewardsHistoryAsync(BinanceSolStakingRewardType.Claim);
         var solstaking_306 = await api.Staking.SOL.GetUnclaimedRewardsAsync();
+
+        // Dual Investment -> Market Data Methods (PUBLIC)
+        var dual_101 = await api.DualInvestment.GetProductsAsync( BinanceOptionsSide.Put, "BNB", "USDT");
+
+        // Dual Investment -> Market Data Methods (PRIVATE)
+        var dual_201 = await api.DualInvestment.SubscribeAsync(1_000_000, 1_000_000, 100.0m, BinanceDualInvestmentAutoCompoundPlan.Standard);
+        var dual_202 = await api.DualInvestment.GetPositionsAsync();
+        var dual_203 = await api.DualInvestment.GetAccountAsync();
+        var dual_204 = await api.DualInvestment.SetAutoCompoundPlanAsync(1_000_000, BinanceDualInvestmentAutoCompoundPlan.Advanced);
 
         // Pay History Methods (PRIVATE)
         var pay_101 = await api.Pay.History.GetHistoryAsync();

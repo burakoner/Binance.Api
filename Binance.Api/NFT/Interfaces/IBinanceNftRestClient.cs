@@ -16,7 +16,7 @@ public interface IBinanceNftRestClient
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceListRecords<BinanceNftDeposit>>> GetDepositsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceListTotalResponse<BinanceNftDeposit>>> GetDepositsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get NFT withdraw history
@@ -29,7 +29,7 @@ public interface IBinanceNftRestClient
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceListRecords<BinanceNftWithdrawal>>> GetWithdrawalsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceListTotalResponse<BinanceNftWithdrawal>>> GetWithdrawalsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get NFT transaction history
@@ -43,7 +43,7 @@ public interface IBinanceNftRestClient
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceListRecords<BinanceNftTransaction>>> GetTransactionsAsync(BinanceNftOrderType orderType, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceListTotalResponse<BinanceNftTransaction>>> GetTransactionsAsync(BinanceNftOrderType orderType, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get NFT Asset
@@ -54,5 +54,5 @@ public interface IBinanceNftRestClient
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceListRecords<BinanceNftAsset>>> GetAssetsAsync(int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceListTotalResponse<BinanceNftAsset>>> GetAssetsAsync(int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default);
 }

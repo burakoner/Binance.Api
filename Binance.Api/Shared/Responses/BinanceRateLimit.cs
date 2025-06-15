@@ -27,3 +27,15 @@ public record BinanceRateLimit
     /// </summary>
     public int Limit { get; set; }
 }
+
+/// <summary>
+/// Rate limit info
+/// </summary>
+public record BinanceCurrentRateLimit : BinanceRateLimit
+{
+    /// <summary>
+    /// The current used amount
+    /// </summary>
+    [JsonProperty("count")]
+    public int Count { get; set; }
+}

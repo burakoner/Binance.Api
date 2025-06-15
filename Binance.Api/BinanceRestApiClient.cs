@@ -17,6 +17,9 @@ using Binance.Api.Wallet;
 using Binance.Api.InstitutionalLoan;
 using Binance.Api.Rebate;
 using Binance.Api.Pay;
+using Binance.Api.C2C;
+using Binance.Api.Fiat;
+using Binance.Api.DualInvestment;
 
 namespace Binance.Api;
 
@@ -49,6 +52,11 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// Binance Coin Futures Rest API Client
     /// </summary>
     public IBinanceFuturesRestClientCoin CoinFutures { get => Futures.Coin; }
+
+    /// <summary>
+    /// Binance Futures Data Rest API Client
+    /// </summary>
+    public IBinanceFuturesRestClientData FuturesData { get => Futures.Data; }
 
     /// <summary>
     /// Binance Options Rest API Client
@@ -108,7 +116,10 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceStakingRestClient Staking { get; }
 
-    // TODO: Dual Investment
+    /// <summary>
+    /// Binance Dual Investment Rest API Client
+    /// </summary>
+    public IBinanceDualInvestmentRestClient DualInvestment { get; }
 
     /// <summary>
     /// Binance Mining Rest API Client
@@ -121,8 +132,16 @@ public sealed class BinanceRestApiClient : RestApiClient
     public IBinanceCryptoLoanRestClient CryptoLoan { get; }
 
     // TODO: VIP Loan
-    // TODO: C2C
-    // TODO: Fiat
+
+    /// <summary>
+    /// Binance C2C Rest API Client
+    /// </summary>
+    public IBinanceC2CRestClient C2C { get; }
+
+    /// <summary>
+    /// Binance Fiat Rest API Client
+    /// </summary>
+    public IBinanceFiatRestClient Fiat { get; }
 
     /// <summary>
     /// Binance NFT Rest API Client
@@ -194,8 +213,11 @@ public sealed class BinanceRestApiClient : RestApiClient
         SubAccount = new BinanceSubAccountRestClient(this);
         Link = new BinanceLinkRestClient(this);
         Staking = new BinanceStakingRestClient(this);
+        DualInvestment = new BinanceDualInvestmentRestClient(this);
         Mining = new BinanceMiningRestClient(this);
         CryptoLoan = new BinanceCryptoLoanRestClient(this);
+        C2C = new BinanceC2CRestClient(this);
+        Fiat = new BinanceFiatRestClient(this);
         NFT = new BinanceNftRestClient(this);
         Rebate = new BinanceRebateRestClient(this);
         SimpleEarn = new BinanceSimpleEarnRestClient(this);

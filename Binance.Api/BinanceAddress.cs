@@ -56,6 +56,11 @@ public class BinanceAddress
     public string UsdFuturesSocketApiStreamAddress { get; set; } = "";
     #endregion
 
+    /// <summary>
+    /// Binance Futures Data Rest API Address
+    /// </summary>
+    public string FuturesDataRestApiAddress { get; set; } = "";
+
     #region European Options
     /// <summary>
     /// Binance Options Rest API Address
@@ -151,6 +156,11 @@ public class BinanceAddress
     public string StakingRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance Dual Investment Rest API Address
+    /// </summary>
+    public string DualInvestmentRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// Binance Simple Earn Rest API Address
     /// </summary>
     public string SimpleEarnRestApiAddress { get; set; } = "";
@@ -171,6 +181,16 @@ public class BinanceAddress
     public string CryptoLoanRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance C2C Rest API Address
+    /// </summary>
+    public string C2CRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Fiat Rest API Address
+    /// </summary>
+    public string FiatRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// The default addresses to connect to the binance.com API
     /// </summary>
     public static BinanceAddress Default { get; } = new BinanceAddress
@@ -187,6 +207,8 @@ public class BinanceAddress
         UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com/",
 
+        FuturesDataRestApiAddress = "https://api.binance.com",
+
         OptionsRestApiAddress = "https://eapi.binance.com",
         OptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions/",
 
@@ -194,7 +216,6 @@ public class BinanceAddress
         LinkAndTradeFastApiRestApiAddress = "https://api.binance.com",
         LinkAndTradeFuturesRestApiAddress = "https://fapi.binance.com",
         LinkAndTradeSpotRestApiAddress = "https://api.binance.com",
-
         AutoInvestRestApiAddress = "https://api.binance.com",
         ConvertRestApiAddress = "https://api.binance.com",
         InstitutionalLoanRestApiAddress = "https://api.binance.com",
@@ -204,14 +225,16 @@ public class BinanceAddress
         MiningRestApiAddress = "https://api.binance.com",
         NFTRestApiAddress = "https://api.binance.com",
         StakingRestApiAddress = "https://api.binance.com",
+        DualInvestmentRestApiAddress = "https://api.binance.com",
         SimpleEarnRestApiAddress = "https://api.binance.com",
         RebateRestApiAddress = "https://api.binance.com",
         PayHistoryRestApiAddress = "https://api.binance.com",
         PayMerchantRestApiAddress = "https://api.binance.com",
-
         AlgoTradingRestApiAddress = "https://api.binance.com",
         CopyTradingRestApiAddress = "https://api.binance.com",
         CryptoLoanRestApiAddress = "https://api.binance.com",
+        C2CRestApiAddress = "https://api.binance.com",
+        FiatRestApiAddress = "https://api.binance.com",
     };
 
     /// <summary>
@@ -230,6 +253,33 @@ public class BinanceAddress
         UsdFuturesRestApiAddress = "https://testnet.binancefuture.com",
         UsdFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
+
+        OptionsRestApiAddress = "",
+        OptionsSocketApiStreamAddress = "",
+
+        ExchangeLinkRestApiAddress = "https://testnet.binance.vision",
+        LinkAndTradeFastApiRestApiAddress = "https://testnet.binance.vision",
+        LinkAndTradeFuturesRestApiAddress = "https://testnet.binance.vision",
+        LinkAndTradeSpotRestApiAddress = "https://testnet.binance.vision",
+        AutoInvestRestApiAddress = "https://testnet.binance.vision",
+        ConvertRestApiAddress = "https://testnet.binance.vision",
+        InstitutionalLoanRestApiAddress = "https://testnet.binance.vision",
+        MarginRestApiAddress = "https://testnet.binance.vision",
+        WalletRestApiAddress = "https://testnet.binance.vision",
+        SubAccountRestApiAddress = "https://testnet.binance.vision",
+        MiningRestApiAddress = "https://testnet.binance.vision",
+        NFTRestApiAddress = "https://testnet.binance.vision",
+        StakingRestApiAddress = "https://testnet.binance.vision",
+        DualInvestmentRestApiAddress = "https://testnet.binance.vision",
+        SimpleEarnRestApiAddress = "https://testnet.binance.vision",
+        RebateRestApiAddress = "https://testnet.binance.vision",
+        PayHistoryRestApiAddress = "https://testnet.binance.vision",
+        PayMerchantRestApiAddress = "https://testnet.binance.vision",
+        AlgoTradingRestApiAddress = "https://testnet.binance.vision",
+        CopyTradingRestApiAddress = "https://testnet.binance.vision",
+        CryptoLoanRestApiAddress = "https://testnet.binance.vision",
+        C2CRestApiAddress = "https://testnet.binance.vision",
+        FiatRestApiAddress = "https://testnet.binance.vision",
     };
 
     /// <summary>

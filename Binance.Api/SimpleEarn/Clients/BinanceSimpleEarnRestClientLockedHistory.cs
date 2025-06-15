@@ -2,7 +2,7 @@
 
 internal partial class BinanceSimpleEarnRestClientLocked
 {
-    public Task<RestCallResult<BinanceQueryRecords<BinanceSimpleEarnLockedRecord>>> GetSubscriptionsAsync(string? purchaseId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceSimpleEarnLockedRecord>>> GetSubscriptionsAsync(string? purchaseId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("purchaseId", purchaseId);
@@ -13,10 +13,10 @@ internal partial class BinanceSimpleEarnRestClientLocked
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceSimpleEarnLockedRecord>>(GetUrl(sapi, v1, "simple-earn/locked/history/subscriptionRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceRowsResult<BinanceSimpleEarnLockedRecord>>(GetUrl(sapi, v1, "simple-earn/locked/history/subscriptionRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
-    public Task<RestCallResult<BinanceQueryRecords<BinanceSimpleEarnLockedRedemptionRecord>>> GetRedemptionsAsync(string? positionId = null, string? redeemId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceSimpleEarnLockedRedemptionRecord>>> GetRedemptionsAsync(string? positionId = null, string? redeemId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("positionId", positionId);
@@ -28,10 +28,10 @@ internal partial class BinanceSimpleEarnRestClientLocked
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceSimpleEarnLockedRedemptionRecord>>(GetUrl(sapi, v1, "simple-earn/locked/history/redemptionRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceRowsResult<BinanceSimpleEarnLockedRedemptionRecord>>(GetUrl(sapi, v1, "simple-earn/locked/history/redemptionRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
-    public Task<RestCallResult<BinanceQueryRecords<BinanceSimpleEarnLockedRewardRecord>>> GetRewardsAsync(string? positionId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceSimpleEarnLockedRewardRecord>>> GetRewardsAsync(string? positionId = null, string? asset = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("positionId", positionId);
@@ -42,7 +42,7 @@ internal partial class BinanceSimpleEarnRestClientLocked
         parameters.AddOptional("size", pageSize);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceSimpleEarnLockedRewardRecord>>(GetUrl(sapi, v1, "simple-earn/locked/history/rewardsRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
+        return RequestAsync<BinanceRowsResult<BinanceSimpleEarnLockedRewardRecord>>(GetUrl(sapi, v1, "simple-earn/locked/history/rewardsRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 150);
     }
 
 }

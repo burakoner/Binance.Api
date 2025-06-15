@@ -16,7 +16,7 @@ public interface IBinanceStakingRestClientSolHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingRecord>>> GetStakingHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSolStakingRecord>>> GetStakingHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get SOL redemption history
@@ -29,7 +29,7 @@ public interface IBinanceStakingRestClientSolHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingRedemption>>> GetRedemptionHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSolStakingRedemption>>> GetRedemptionHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get BN SOL rewards history
@@ -55,7 +55,7 @@ public interface IBinanceStakingRestClientSolHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingBnSolRate>>> GetBnSolRateHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSolStakingBnSolRate>>> GetBnSolRateHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get SOL boost reward history
@@ -69,7 +69,7 @@ public interface IBinanceStakingRestClientSolHistory
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceQueryRecords<BinanceSolStakingBnSolReward>>> GetBoostRewardsHistoryAsync(BinanceSolStakingRewardType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceSolStakingBnSolReward>>> GetBoostRewardsHistoryAsync(BinanceSolStakingRewardType type, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get SOL unclaimed rewards

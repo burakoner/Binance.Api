@@ -1,5 +1,12 @@
 ## Change Log & Release Notes
 
+* Version 5.6.15 - 15 Jun 2025
+  * Refactored base response models
+  * Implemented "C2C" Section
+  * Implemented "Fiat" Section
+  * Implemented "Dual Investment" Section
+  * Implemented "Futures Data" Section
+
 * Version 5.6.13 - 13 Jun 2025
   * Renamed "Broker" Section to "Link"
   * Implemented "Institutional Loan" Section

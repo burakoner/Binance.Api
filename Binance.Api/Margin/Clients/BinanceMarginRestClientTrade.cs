@@ -10,7 +10,7 @@ internal partial class BinanceMarginRestClient
     internal void InvokeOrderPlaced(long id) => OnOrderPlaced?.Invoke(id);
     internal void InvokeOrderCanceled(long id) => OnOrderCanceled?.Invoke(id);
 
-    public Task<RestCallResult<BinanceQueryRecords<BinanceMarginForcedLiquidation>>> GetMarginForcedLiquidationHistoryAsync(int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceMarginForcedLiquidation>>> GetMarginForcedLiquidationHistoryAsync(int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 100);
 
@@ -22,7 +22,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceMarginForcedLiquidation>>(GetUrl(sapi, v1, "margin/forceLiquidationRec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceRowsResult<BinanceMarginForcedLiquidation>>(GetUrl(sapi, v1, "margin/forceLiquidationRec"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<List<BinanceMarginSmallLiabilityAsset>>> GetSmallLiabilityExchangeAssetsAsync(int? receiveWindow = null, CancellationToken ct = default)
@@ -33,7 +33,7 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<List<BinanceMarginSmallLiabilityAsset>>(GetUrl(sapi, v1, "margin/exchange-small-liability"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
-    public Task<RestCallResult<BinanceQueryRecords<BinanceMarginSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceMarginSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalMilliseconds("startTime", startTime);
@@ -42,7 +42,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("size", limit);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceMarginSmallLiabilityHistory>>(GetUrl(sapi, v1, "margin/exchange-small-liability-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+        return RequestAsync<BinanceRowsResult<BinanceMarginSmallLiabilityHistory>>(GetUrl(sapi, v1, "margin/exchange-small-liability-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
     public Task<RestCallResult<List<BinanceSpotOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)

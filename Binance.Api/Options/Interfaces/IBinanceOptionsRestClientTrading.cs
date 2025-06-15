@@ -89,7 +89,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceResult<long>>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceResponse<long>>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all active order on a symbol.
@@ -99,7 +99,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceResult>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceResponse>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Check an order status.

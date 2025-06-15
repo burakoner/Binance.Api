@@ -36,7 +36,7 @@ internal partial class BinanceNftRestClient(BinanceRestApiClient root) : IBinanc
         return new Uri(url);
     }
 
-    public Task<RestCallResult<BinanceListRecords<BinanceNftDeposit>>> GetDepositsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceListTotalResponse<BinanceNftDeposit>>> GetDepositsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalMilliseconds("startTime", startTime);
@@ -45,10 +45,10 @@ internal partial class BinanceNftRestClient(BinanceRestApiClient root) : IBinanc
         parameters.AddOptional("page", page);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceListRecords<BinanceNftDeposit>>(GetUrl(sapi, v1, "nft/history/deposit"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceListTotalResponse<BinanceNftDeposit>>(GetUrl(sapi, v1, "nft/history/deposit"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceListRecords<BinanceNftWithdrawal>>> GetWithdrawalsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceListTotalResponse<BinanceNftWithdrawal>>> GetWithdrawalsAsync(DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptionalMilliseconds("startTime", startTime);
@@ -57,10 +57,10 @@ internal partial class BinanceNftRestClient(BinanceRestApiClient root) : IBinanc
         parameters.AddOptional("page", page);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceListRecords<BinanceNftWithdrawal>>(GetUrl(sapi, v1, "nft/history/withdraw"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceListTotalResponse<BinanceNftWithdrawal>>(GetUrl(sapi, v1, "nft/history/withdraw"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceListRecords<BinanceNftTransaction>>> GetTransactionsAsync(BinanceNftOrderType orderType, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceListTotalResponse<BinanceNftTransaction>>> GetTransactionsAsync(BinanceNftOrderType orderType, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddEnum("orderType", orderType);
@@ -70,16 +70,16 @@ internal partial class BinanceNftRestClient(BinanceRestApiClient root) : IBinanc
         parameters.AddOptional("page", page);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceListRecords<BinanceNftTransaction>>(GetUrl(sapi, v1, "nft/history/transactions"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceListTotalResponse<BinanceNftTransaction>>(GetUrl(sapi, v1, "nft/history/transactions"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceListRecords<BinanceNftAsset>>> GetAssetsAsync(int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceListTotalResponse<BinanceNftAsset>>> GetAssetsAsync(int? limit = null, int? page = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("page", page);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceListRecords<BinanceNftAsset>>(GetUrl(sapi, v1, "nft/user/getAsset"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceListTotalResponse<BinanceNftAsset>>(GetUrl(sapi, v1, "nft/user/getAsset"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
     }
 }

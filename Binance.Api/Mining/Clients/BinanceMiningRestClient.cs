@@ -39,7 +39,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
     public async Task<RestCallResult<List<BinanceMiningAlgorithm>>> GetAlgorithmsAsync(CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        var result = await RequestAsync<BinanceResult<List<BinanceMiningAlgorithm>>>(GetUrl(sapi, v1, "mining/pub/algoList"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<List<BinanceMiningAlgorithm>>>(GetUrl(sapi, v1, "mining/pub/algoList"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result.Success) return result.As<List<BinanceMiningAlgorithm>>([]);
         if (result.Data?.Code != 0) return result.AsError<List<BinanceMiningAlgorithm>>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -49,7 +49,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
     public async Task<RestCallResult<List<BinanceMiningCoin>>> GetCoinsAsync(CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        var result = await RequestAsync<BinanceResult<List<BinanceMiningCoin>>>(GetUrl(sapi, v1, "mining/pub/coinList"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<List<BinanceMiningCoin>>>(GetUrl(sapi, v1, "mining/pub/coinList"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result.Success) return result.As<List<BinanceMiningCoin>>([]);
         if (result.Data?.Code != 0) return result.AsError<List<BinanceMiningCoin>>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -62,7 +62,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddOptional("pageIndex", page?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptional("pageSize", pageSize?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningHashrateResaleList>>(GetUrl(sapi, v1, "mining/hash-transfer/config/details/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningHashrateResaleList>>(GetUrl(sapi, v1, "mining/hash-transfer/config/details/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningHashrateResaleList>(default!);
         if (result.Data?.Code != 0) return result.AsError<BinanceMiningHashrateResaleList>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -85,7 +85,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddOptional("sortColumn", sortColumn);
         parameters.AddOptionalEnum("workerStatus", workerStatus);
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningWorkers>>(GetUrl(sapi, v1, "mining/worker/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningWorkers>>(GetUrl(sapi, v1, "mining/worker/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningWorkers>(default!);
         if (result.Data?.Code != 0) return result.AsError<BinanceMiningWorkers>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -105,7 +105,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
                 {"workerName", workerName}
             };
 
-        var result = await RequestAsync<BinanceResult<List<BinanceMiningWorkerDetails>>>(GetUrl(sapi, v1, "mining/worker/detail"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<List<BinanceMiningWorkerDetails>>>(GetUrl(sapi, v1, "mining/worker/detail"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<List<BinanceMiningWorkerDetails>>([]);
         if (result.Data?.Code != 0) return result.AsError<List<BinanceMiningWorkerDetails>>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -129,7 +129,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddOptionalMilliseconds("startDate", startDate);
         parameters.AddOptionalMilliseconds("endDate", endDate);
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningOtherRevenues>>(GetUrl(sapi, v1, "mining/payment/other"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningOtherRevenues>>(GetUrl(sapi, v1, "mining/payment/other"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningOtherRevenues>(default!);
         if (result.Data?.Code != 0) return result.AsError<BinanceMiningOtherRevenues>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -153,7 +153,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddOptionalMilliseconds("startDate", startDate);
         parameters.AddOptionalMilliseconds("endDate", endDate);
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningRevenues>>(GetUrl(sapi, v1, "mining/payment/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningRevenues>>(GetUrl(sapi, v1, "mining/payment/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningRevenues>(default!);
         if (result.Data?.Code != 0) return result.AsError<BinanceMiningRevenues>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -170,7 +170,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
             { "userName", userName }
         };
 
-        var result = await RequestAsync<BinanceResult<bool>>(GetUrl(sapi, v1, "mining/hash-transfer/config/cancel"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<bool>>(GetUrl(sapi, v1, "mining/hash-transfer/config/cancel"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<bool>(default);
         if (result.Data?.Code != 0) return result.AsError<bool>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -190,7 +190,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddOptional("pageIndex", page?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptional("pageSize", pageSize?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningHashrateResaleDetails>>(GetUrl(sapi, v1, "mining/hash-transfer/profit/details"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningHashrateResaleDetails>>(GetUrl(sapi, v1, "mining/hash-transfer/profit/details"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningHashrateResaleDetails>(default!);
         if (result.Data?.Code != 0) result.AsError<BinanceMiningHashrateResaleDetails>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -208,7 +208,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddOptional("pageIndex", page?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptional("pageSize", pageSize?.ToString(CultureInfo.InvariantCulture));
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningEarnings>>(GetUrl(sapi, v1, "mining/payment/uid"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningEarnings>>(GetUrl(sapi, v1, "mining/payment/uid"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningEarnings>(default!);
         if (result.Data?.Code != 0) return result.AsError<BinanceMiningEarnings>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -226,7 +226,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
             {"userName", userName}
         };
 
-        var result = await RequestAsync<BinanceResult<BinanceMiningStatistic>>(GetUrl(sapi, v1, "mining/statistics/user/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceMiningStatistic>>(GetUrl(sapi, v1, "mining/statistics/user/status"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<BinanceMiningStatistic>(default!);
         if (result.Data?.Code != 0) return result.AsError<BinanceMiningStatistic>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -249,7 +249,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
         parameters.AddMilliseconds("startDate", startDate);
         parameters.AddMilliseconds("endDate", endDate);
 
-        var result = await RequestAsync<BinanceResult<int>>(GetUrl(sapi, v1, "mining/hash-transfer/config"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<int>>(GetUrl(sapi, v1, "mining/hash-transfer/config"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<int>(default);
         if (result.Data?.Code != 0) return result.AsError<int>(new ServerError(result.Data!.Code, result.Data!.Message!));
 
@@ -267,7 +267,7 @@ internal partial class BinanceMiningRestClient(BinanceRestApiClient root) : IBin
             {"userName", userName}
         };
 
-        var result = await RequestAsync<BinanceResult<List<BinanceMiningAccount>>>(GetUrl(sapi, v1, "mining/statistics/user/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<List<BinanceMiningAccount>>>(GetUrl(sapi, v1, "mining/statistics/user/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5).ConfigureAwait(false);
         if (!result.Success) return result.As<List<BinanceMiningAccount>>([]);
         if (result.Data?.Code != 0) return result.AsError<List<BinanceMiningAccount>>(new ServerError(result.Data!.Code, result.Data!.Message!));
 

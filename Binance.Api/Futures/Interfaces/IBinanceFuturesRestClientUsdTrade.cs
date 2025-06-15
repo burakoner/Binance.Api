@@ -126,7 +126,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for canceled order</returns>
-    Task<RestCallResult<BinanceResult>> CancelAllOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceResponse>> CancelAllOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all open orders of the specified symbol at the end of the specified countdown. This rest endpoint means to ensure your open orders are canceled in case of an outage. The endpoint should be called repeatedly as heartbeats
@@ -225,7 +225,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Whether the request was successful</returns>
-    Task<RestCallResult<BinanceResult>> SetMarginTypeAsync(string symbol, BinanceFuturesMarginType marginType, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceResponse>> SetMarginTypeAsync(string symbol, BinanceFuturesMarginType marginType, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
@@ -235,7 +235,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Whether the request was successful</returns>
-    Task<RestCallResult<BinanceResult>> SetPositionModeAsync(bool dualPositionSide, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceResponse>> SetPositionModeAsync(bool dualPositionSide, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Requests to change the initial leverage of the given symbol
@@ -256,7 +256,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Success</returns>
-    Task<RestCallResult<BinanceResult>> SetMultiAssetsModeAsync(bool enabled, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceResponse>> SetMultiAssetsModeAsync(bool enabled, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Change the margin on an open position

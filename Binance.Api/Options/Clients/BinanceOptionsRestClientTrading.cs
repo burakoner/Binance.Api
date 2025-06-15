@@ -167,22 +167,22 @@ internal partial class BinanceOptionsRestClient
         return response;
     }
 
-    public Task<RestCallResult<BinanceResult<long>>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceResponse<long>>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("underlying", underlying);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResult<long>>(GetUrl(eapi, v1, "allOpenOrdersByUnderlying"), HttpMethod.Delete, ct, true, bodyParameters: parameters);
+        return RequestAsync<BinanceResponse<long>>(GetUrl(eapi, v1, "allOpenOrdersByUnderlying"), HttpMethod.Delete, ct, true, bodyParameters: parameters);
     }
 
-    public Task<RestCallResult<BinanceResult>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceResponse>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResult>(GetUrl(eapi, v1, "allOpenOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters);
+        return RequestAsync<BinanceResponse>(GetUrl(eapi, v1, "allOpenOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters);
     }
 
     public Task<RestCallResult<BinanceOptionsOrder>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)

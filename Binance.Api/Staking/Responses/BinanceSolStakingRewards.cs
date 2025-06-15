@@ -3,7 +3,7 @@
 /// <summary>
 /// SOL rewards
 /// </summary>
-public record BinanceSolStakingRewards : BinanceQueryRecords<BinanceSolStakingReward>
+public record BinanceSolStakingRewards : BinanceRowsResult<BinanceSolStakingReward>
 {
     /// <summary>
     /// Estimated rewards in SOL

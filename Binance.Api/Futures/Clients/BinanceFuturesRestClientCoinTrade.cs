@@ -226,7 +226,7 @@ internal partial class BinanceFuturesRestClientCoin
         return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
     }
 
-    public Task<RestCallResult<BinanceResult>> CancelAllOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceResponse>> CancelAllOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -234,7 +234,7 @@ internal partial class BinanceFuturesRestClientCoin
         };
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResult>(GetUrl(dapi, v1, "allOpenOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceResponse>(GetUrl(dapi, v1, "allOpenOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceFuturesCountDownResult>> CancelAllOrdersAfterTimeoutAsync(string symbol, TimeSpan countDownTime, int? receiveWindow = null, CancellationToken ct = default)
@@ -349,7 +349,7 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<List<BinanceFuturesCoinPosition>>(GetUrl(dapi, v1, "positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceResult>> SetPositionModeAsync(bool dualPositionSide, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceResponse>> SetPositionModeAsync(bool dualPositionSide, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
@@ -357,10 +357,10 @@ internal partial class BinanceFuturesRestClientCoin
         };
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResult>(GetUrl(dapi, v1, "positionSide/dual"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceResponse>(GetUrl(dapi, v1, "positionSide/dual"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceResult>> SetMarginTypeAsync(string symbol, BinanceFuturesMarginType marginType, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceResponse>> SetMarginTypeAsync(string symbol, BinanceFuturesMarginType marginType, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -369,7 +369,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddEnum("marginType", marginType);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceResult>(GetUrl(dapi, v1, "marginType"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceResponse>(GetUrl(dapi, v1, "marginType"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceFuturesInitialLeverageChangeResult>> SetInitialLeverageAsync(string symbol, int leverage, int? receiveWindow = null, CancellationToken ct = default)

@@ -66,7 +66,7 @@ public interface IBinanceAutoInvestRestClientTrade
     /// <param name="page">Current page</param>
     /// <param name="pageSize">Page size</param>
     /// <param name="ct">Cancellation token</param>
-    Task<RestCallResult<BinanceListRecords<BinanceAutoInvestTransaction>>> GetSubscriptionHistoryAsync(long? planId = null, DateTime? startTime = null, DateTime? endTime = null, string? targetAsset = null, BinanceAutoInvestPlanType? planType = null, int? page = null, int? pageSize = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceListTotalResponse<BinanceAutoInvestTransaction>>> GetSubscriptionHistoryAsync(long? planId = null, DateTime? startTime = null, DateTime? endTime = null, string? targetAsset = null, BinanceAutoInvestPlanType? planType = null, int? page = null, int? pageSize = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get one time transaction status

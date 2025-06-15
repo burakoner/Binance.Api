@@ -3,7 +3,7 @@
 /// <summary>
 /// Rewards history container
 /// </summary>
-public record BinanceEthStakingWbEthRewards: BinanceQueryRecords<BinanceEthStakingWbEthReward>
+public record BinanceEthStakingWbEthRewards: BinanceRowsResult<BinanceEthStakingWbEthReward>
 {
     /// <summary>
     /// Estimated Rewards in ETH

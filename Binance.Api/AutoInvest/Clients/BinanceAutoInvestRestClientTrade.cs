@@ -59,7 +59,7 @@ internal partial class BinanceAutoInvestRestClient
         return RequestAsync<BinanceAutoInvestRedemptionResult>(GetUrl(sapi, v1, "lending/auto-invest/redeem"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceListRecords<BinanceAutoInvestTransaction>>> GetSubscriptionHistoryAsync(long? planId = null, DateTime? startTime = null, DateTime? endTime = null, string? targetAsset = null, BinanceAutoInvestPlanType? planType = null, int? page = null, int? pageSize = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceListTotalResponse<BinanceAutoInvestTransaction>>> GetSubscriptionHistoryAsync(long? planId = null, DateTime? startTime = null, DateTime? endTime = null, string? targetAsset = null, BinanceAutoInvestPlanType? planType = null, int? page = null, int? pageSize = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("planId", planId);
@@ -70,7 +70,7 @@ internal partial class BinanceAutoInvestRestClient
         parameters.AddOptional("current", page);
         parameters.AddOptional("size", pageSize);
 
-        return RequestAsync<BinanceListRecords<BinanceAutoInvestTransaction>>(GetUrl(sapi, v1, "lending/auto-invest/history/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceListTotalResponse<BinanceAutoInvestTransaction>>(GetUrl(sapi, v1, "lending/auto-invest/history/list"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceAutoInvestOneTimeTransaction>> GetOneTimeTransactionAsync(long transactionId, string requestId, CancellationToken ct = default)

@@ -76,7 +76,7 @@ internal partial class BinanceWalletRestClient
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceResult<BinanceWalletTradingStatus>>(GetUrl(sapi, v1, "account/apiTradingStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse<BinanceWalletTradingStatus>>(GetUrl(sapi, v1, "account/apiTradingStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result) return result.As<BinanceWalletTradingStatus>(default!);
         return !string.IsNullOrEmpty(result.Data.Message) ? result.AsError<BinanceWalletTradingStatus>(new ServerError(result.Data.Message!)) : result.As(result.Data.Data);
     }

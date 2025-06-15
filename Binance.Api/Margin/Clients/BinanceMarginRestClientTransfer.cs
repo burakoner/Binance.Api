@@ -2,7 +2,7 @@
 
 internal partial class BinanceMarginRestClient
 {
-    public Task<RestCallResult<BinanceQueryRecords<BinanceMarginTransferHistory>>> GetMarginTransfersAsync(BinanceMarginTransferDirection direction, int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceMarginTransferHistory>>> GetMarginTransfersAsync(BinanceMarginTransferDirection direction, int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 100);
 
@@ -15,7 +15,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceQueryRecords<BinanceMarginTransferHistory>>(GetUrl(sapi, v1, "margin/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceRowsResult<BinanceMarginTransferHistory>>(GetUrl(sapi, v1, "margin/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public async Task<RestCallResult<decimal>> GetMarginMaxTransferAmountAsync(string asset, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
