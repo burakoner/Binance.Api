@@ -66,7 +66,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Binance Pay|✅|-|-|
 |Binance Connect|⏹|-|-|
 
-⏹Planned ⌛In Progress ✅Done (-) Not Supported
+⏹Planned ⌛In Progress ✅Done [-] Not Supported
 
 ## Installation
 
