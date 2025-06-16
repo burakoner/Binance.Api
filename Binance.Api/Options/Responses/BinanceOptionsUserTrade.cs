@@ -64,7 +64,7 @@ public record BinanceOptionsUserTrade
     /// <summary>
     /// Liquidity
     /// </summary>
-    public string Liquidity { get; set; } = "";
+    public BinanceOptionsLiquidity Liquidity { get; set; }
 
     /// <summary>
     /// Timestamp of the trade

@@ -1,5 +1,9 @@
 ## Change Log & Release Notes
 
+* Version 5.6.17 - 17 Jun 2025
+  * Implemented "European Options -> User Data Stream" Section
+  * Implemented "European Options -> Market Maker" Section
+
 * Version 5.6.15 - 15 Jun 2025
   * Refactored base response models
   * Implemented "C2C" Section
