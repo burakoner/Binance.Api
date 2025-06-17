@@ -3,7 +3,7 @@
 /// <summary>
 /// Binance Options Open Interest
 /// </summary>
-public class BinanceOptionsOpenInterest
+public record BinanceOptionsOpenInterest
 {
     /// <summary>
     /// The symbol the price is for

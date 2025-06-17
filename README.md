@@ -40,7 +40,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Margin Trading|✅|✅|✅|
 |Coin-M Futures|✅|✅|✅|
 |USDⓈ-M Futures|✅|✅|✅|
-|European Options|✅|-|⌛|
+|European Options|✅|-|✅|
 |Portfolio Margin|⏹|-|⏹|
 |Portfolio Margin Pro|⏹|-|⏹|
 |Algo Trading|✅|-|-|
@@ -1025,4 +1025,33 @@ var futures_534 = await ws.UsdFutures.SubscribeToUserDataStreamAsync("-----LISTE
     onListenKeyExpired: (data) => { },
     onConditionalOrderTriggerRejectUpdate: (data) => { }
     );
+
+// European Options Web Socket Stream -> Market Data Methods (PUBLIC)
+var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });
+var options_102 = await ws.Options.SubscribeToOpenInterestAsync("---ASSET---", DateTime.UtcNow, (data) => { });
+var options_103 = await ws.Options.SubscribeToOpenInterestAsync([], (data) => { });
+var options_104 = await ws.Options.SubscribeToMarkPriceAsync("---ASSET---", (data) => { });
+var options_105 = await ws.Options.SubscribeToMarkPriceAsync([], (data) => { });
+var options_106 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay, (data) => { });
+var options_107 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", [], (data) => { });
+var options_108 = await ws.Options.SubscribeToKlinesAsync([], BinanceKlineInterval.OneDay, (data) => { });
+var options_109 = await ws.Options.SubscribeToKlinesAsync([], [], (data) => { });
+var options_110 = await ws.Options.SubscribeToTickersAsync("---ASSET---", DateTime.UtcNow, (data) => { });
+var options_111 = await ws.Options.SubscribeToTickersAsync(tuples: [], (data) => { });
+var options_112 = await ws.Options.SubscribeToIndexPricesAsync("---SYMBOL---", (data) => { });
+var options_113 = await ws.Options.SubscribeToIndexPricesAsync([], (data) => { });
+var options_114 = await ws.Options.SubscribeToTickersAsync("---SYMBOL---", (data) => { });
+var options_115 = await ws.Options.SubscribeToTickersAsync(symbols: [], (data) => { });
+var options_116 = await ws.Options.SubscribeToTradesAsync("---SYMBOL---", (data) => { });
+var options_117 = await ws.Options.SubscribeToTradesAsync([], (data) => { });
+var options_118 = await ws.Options.SubscribeToPartialOrderBooksAsync("---SYMBOL---", 10, null, (data) => { });
+var options_119 = await ws.Options.SubscribeToPartialOrderBooksAsync([], 10, null, (data) => { });
+
+// European Options Web Socket Stream -> User Data Stream Methods (PRIVATE)
+var options_201 = await ws.Options.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
+    onAccountUpdated: (data) => { },
+    onOrderUpdated: (data) => { },
+    onRiskLevelUpdated: (data) => { }
+    );
+
 ```

@@ -3,7 +3,7 @@
 /// <summary>
 /// Wrapper for kline information for a symbol
 /// </summary>
-public record BinanceSpotStreamKlineData : BinanceSpotStreamEvent
+internal record BinanceSpotStreamKlineWrapper : BinanceSocketStreamEvent
 {
     /// <summary>
     /// The symbol the data is for
@@ -15,7 +15,7 @@ public record BinanceSpotStreamKlineData : BinanceSpotStreamEvent
     /// The data
     /// </summary>
     [JsonProperty("k")]
-    public BinanceSpotStreamKline Data { get; set; } = default!;
+    public BinanceSpotStreamKline Kline { get; set; } = default!;
 }
 
 /// <summary>

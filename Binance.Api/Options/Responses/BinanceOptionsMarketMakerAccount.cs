@@ -9,7 +9,7 @@ public record BinanceOptionsMarketMakerAccount
     /// Asset information for the account
     /// </summary>
     [JsonProperty("asset")]
-    public List<BinanceOptionsAccountAsset> Asset { get; set; } = [];
+    public List<BinanceOptionsMarketMakerAccountBalance> Balances { get; set; } = [];
 
     /// <summary>
     /// Greek information for the account
@@ -27,7 +27,7 @@ public record BinanceOptionsMarketMakerAccount
 /// <summary>
 /// Binance Options Market Maker Account Asset
 /// </summary>
-public record BinanceOptionsMarketMakerAccountAsset
+public record BinanceOptionsMarketMakerAccountBalance
 {
     /// <summary>
     /// Asset type

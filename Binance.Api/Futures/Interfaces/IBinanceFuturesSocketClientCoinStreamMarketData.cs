@@ -156,7 +156,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(string pair, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamIndexKlineData>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(string pair, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the index candlestick update stream for the provided pairs
@@ -167,7 +167,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(IEnumerable<string> pairs, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceStreamIndexKlineData>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(IEnumerable<string> pairs, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the mark price candlestick update stream for the provided symbol

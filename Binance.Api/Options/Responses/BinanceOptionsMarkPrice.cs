@@ -3,7 +3,7 @@
 /// <summary>
 /// Options Mark Price
 /// </summary>
-public class BinanceOptionsMarkPrice
+public record BinanceOptionsMarkPrice
 {
     /// <summary>
     /// Symbol

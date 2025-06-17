@@ -61,7 +61,7 @@ public record BinanceOptionsMarketMakerBlockTradeLeg
     /// <summary>
     /// Order Type
     /// </summary>
-    public string OrderType { get; set; }
+    public string OrderType { get; set; } = "";
 
     /// <summary>
     /// Order Side

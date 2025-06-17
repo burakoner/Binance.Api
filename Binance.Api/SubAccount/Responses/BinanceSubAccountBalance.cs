@@ -3,7 +3,7 @@
 /// <summary>
 /// Information about an asset balance
 /// </summary>
-public class BinanceSubAccountBalance
+public record BinanceSubAccountBalance
 {
     /// <summary>
     /// The asset this balance is for

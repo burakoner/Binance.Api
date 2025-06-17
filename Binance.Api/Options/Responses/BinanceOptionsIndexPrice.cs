@@ -3,7 +3,7 @@
 /// <summary>
 /// Options Index Price
 /// </summary>
-public class BinanceOptionsIndexPrice
+public record BinanceOptionsIndexPrice
 {
     /// <summary>
     /// Time

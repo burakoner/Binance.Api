@@ -3,7 +3,7 @@
 /// <summary>
 /// Positions update
 /// </summary>
-public record BinanceSpotStreamPositionsUpdate : BinanceSpotStreamEvent
+public record BinanceSpotStreamPositionsUpdate : BinanceSocketStreamEvent
 {
     /// <summary>
     /// Time of last account update

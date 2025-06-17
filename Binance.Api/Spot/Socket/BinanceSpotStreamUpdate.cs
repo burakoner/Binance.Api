@@ -3,7 +3,7 @@
 /// <summary>
 /// User data stream event
 /// </summary>
-public record BinanceSpotStreamUpdate : BinanceSpotStreamEvent
+public record BinanceSpotStreamUpdate : BinanceSocketStreamEvent
 {
     /// <summary>
     /// The listen key the update was for

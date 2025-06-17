@@ -1,15 +1,19 @@
 ﻿namespace Binance.Api.Options;
 
-internal partial class BinanceOptionsSocketClient //: WebSocketApiClient, IBinanceOptionsSocketClient
+internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinanceOptionsSocketClient
 {
-    /*
     // Internal
     internal ILogger Logger { get => _logger; }
-    internal TimeSyncState TimeSyncState { get; } = new("Binance Spot WS");
+    internal TimeSyncState TimeSyncState { get; } = new("Binance Options WS");
     internal CallResult<T> Deserializer<T>(string data, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(data, serializer, requestId);
     internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(obj, serializer, requestId);
 
-    protected Task<CallResult<DateTime>> GetServerTimestampAsync() => GetTimeAsync();
+    protected async Task<CallResult<DateTime>> GetServerTimestampAsync()
+    {
+        var result = await _.RestApiClient.Options.GetTimeAsync();
+        if (!result.Success) return result.AsError<DateTime>(result.Error!);
+        return result.As(result.Data);
+    }
     protected TimeSyncInfo GetTimeSyncInfo() => new(Logger, SocketOptions.AutoTimestamp, SocketOptions.TimestampRecalculationInterval, TimeSyncState);
     protected TimeSpan GetTimeOffset() => TimeSyncState.TimeOffset;
 
@@ -27,23 +31,6 @@ internal partial class BinanceOptionsSocketClient //: WebSocketApiClient, IBinan
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
-    }
-
-    internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
-    {
-        if (SocketOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
-            return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
-
-        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > SocketOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
-            await GetExchangeInfoAsync(ct).ConfigureAwait(false);
-
-        if (ExchangeInfo == null)
-            return BinanceTradeRuleResult.CreateFailed("Unable to retrieve trading rules, validation failed");
-
-        var symbolInfo = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase));
-        if (symbolInfo == null) return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Symbol {symbol} not found");
-
-        return BinanceHelpers.ValidateSpotTradingRules(Logger, SocketOptions.SpotOptions.TradeRulesBehavior, symbolInfo, type, quantity, quoteQuantity, price, stopPrice);
     }
 
     #region Overrided Methods
@@ -206,7 +193,7 @@ internal partial class BinanceOptionsSocketClient //: WebSocketApiClient, IBinan
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
+        return SubscribeAsync(BinanceAddress.Default.OptionsSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
     }
 
     internal async Task<CallResult<bool>> SyncTimeAsync()
@@ -222,7 +209,7 @@ internal partial class BinanceOptionsSocketClient //: WebSocketApiClient, IBinan
 
             var sw = Stopwatch.StartNew();
             var localTime = DateTime.UtcNow;
-            var result = await GetTimeAsync().ConfigureAwait(false);
+            var result = await GetServerTimestampAsync().ConfigureAwait(false);
             sw.Stop();
             if (!result)
             {
@@ -237,60 +224,6 @@ internal partial class BinanceOptionsSocketClient //: WebSocketApiClient, IBinan
         }
 
         return new CallResult<bool>(true);
-    }
-
-    internal async Task<CallResult<T>> RequestAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
-    {
-        if (authenticated)
-        {
-            if (AuthenticationProvider == null)
-                throw new InvalidOperationException("No credentials provided for authenticated endpoint");
-
-            var syncTask = SyncTimeAsync();
-            var timeSyncInfo = GetTimeSyncInfo();
-            if (timeSyncInfo.TimeSyncState.LastSyncTime == default)
-            {
-                // Initially with first request we'll need to wait for the time syncing, if it's not the first request we can just continue
-                var syncTimeResult = await syncTask.ConfigureAwait(false);
-                if (!syncTimeResult)
-                {
-                    //_logger.Log(LogLevel.Debug, $"[{requestId}] Failed to sync time, aborting request: " + syncTimeResult.Error);
-                    //return syncTimeResult.As<IRequest>(default);
-                }
-            }
-
-            var authProvider = (BinanceAuthentication)AuthenticationProvider;
-            var timestamp = DateTime.UtcNow.Add(GetTimeOffset()).ConvertToMilliseconds();
-            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters, timestamp);
-            else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
-        }
-
-        var request = new BinanceSocketQuery
-        {
-            Method = method,
-            Params = parameters,
-            Id = ExchangeHelpers.NextId()
-        };
-
-        var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url);
-        var result = await base.QueryAsync<BinanceResponse<T>>(address, request, sign).ConfigureAwait(false);
-        if (!result.Success)
-        {
-            if (result.Error is BinanceRateLimitError rle)
-            {
-                /*
-                if (rle.RetryAfter != null && RateLimiter != null && ClientOptions.RateLimiterEnabled)
-                {
-                    _logger.LogWarning("Ratelimit error from server, pausing requests until {Until}", rle.RetryAfter.Value);
-                    await RateLimiter.SetRetryAfterGuardAsync(rle.RetryAfter.Value).ConfigureAwait(false);
-                }
-                * /
-            }
-
-            else return result.AsError<T>(result.Error!);
-        }
-
-        return result.As(result.Data.Result);
     }
 
     public async Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default)
@@ -316,13 +249,4 @@ internal partial class BinanceOptionsSocketClient //: WebSocketApiClient, IBinan
     {
         return base.UnsubscribeAllAsync();
     }
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, Action<WebSocketDataEvent<T>> onData, CancellationToken ct = default)
-    {
-        return SubscribeAsync(topics, true, onData, ct);
-    }
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct = default)
-    {
-        return SubscribeAsync<T>(topics, authenticated, onData, ct);
-    }
-    */
 }

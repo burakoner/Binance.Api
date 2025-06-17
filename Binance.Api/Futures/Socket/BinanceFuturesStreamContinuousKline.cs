@@ -3,7 +3,7 @@
 /// <summary>
 /// Wrapper for continuous kline information for a symbol
 /// </summary>
-public record BinanceStreamContinuousKlineData: BinanceFuturesStreamEvent
+internal record BinanceStreamContinuousKlineWrapper: BinanceFuturesStreamEvent
 {
     /// <summary>
     /// The symbol the data is for
@@ -21,5 +21,5 @@ public record BinanceStreamContinuousKlineData: BinanceFuturesStreamEvent
     /// The data
     /// </summary>
     [JsonProperty("k")]
-    public BinanceFuturesStreamKline Data { get; set; } = default!;
+    public BinanceFuturesStreamKline Kline { get; set; } = default!;
 }

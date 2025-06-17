@@ -1,9 +1,9 @@
-﻿namespace Binance.Api.Spot;
+﻿namespace Binance.Api.Shared;
 
 /// <summary>
 /// A event received by a Binance websocket
 /// </summary>
-public record BinanceSpotStreamEvent
+public record BinanceSocketStreamEvent
 {
     /// <summary>
     /// The type of the event

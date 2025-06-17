@@ -5,7 +5,7 @@
 /// Binance Result with Rate Limits
 /// </summary>
 /// <typeparam name="T">Type of the data</typeparam>
-public class BinanceResultWithRateLimits<T>
+public record BinanceResultWithRateLimits<T>
 {
     /// <summary>
     /// Identifier
@@ -41,7 +41,7 @@ public class BinanceResultWithRateLimits<T>
 /// <summary>
 /// Binance error response
 /// </summary>
-public class BinanceResultError
+public record BinanceResultError
 {
     /// <summary>
     /// Error code
@@ -65,7 +65,7 @@ public class BinanceResultError
 /// <summary>
 /// Error data
 /// </summary>
-public class BinanceResultErrorData 
+public record BinanceResultErrorData 
 {
     /// <summary>
     /// Server time
@@ -117,7 +117,7 @@ internal record BinanceResponse<T> : BinanceResponse
 /// <summary>
 /// Binance error response
 /// </summary>
-internal class BinanceDataResponse<T>
+internal record BinanceDataResponse<T>
 {
     /// <summary>
     /// Error code

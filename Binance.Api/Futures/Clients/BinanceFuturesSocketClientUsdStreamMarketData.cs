@@ -93,9 +93,9 @@ internal partial class BinanceFuturesSocketClientUsd
         CancellationToken ct = default)
     {
         symbols.ValidateNotNull(nameof(symbols));
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamKlineData>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamKlineWrapper>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Data));
+            onMessage(data.As(data.Data.Data.Kline));
         });
         symbols = symbols.SelectMany(a => intervals.Select(i => (premiumIndex ? "p" + a.ToUpper(BinanceConstants.CI) : a.ToLower(BinanceConstants.CI)) + "@kline_" + MapConverter.GetString(i))).ToArray();
         return SubscribeAsync(symbols, false, handler, ct);
@@ -115,9 +115,9 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default)
     {
         pairs.ValidateNotNull(nameof(pairs));
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceStreamContinuousKlineData>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceStreamContinuousKlineWrapper>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Data));
+            onMessage(data.As(data.Data.Data.Kline));
         });
         pairs = pairs.Select(a => a.ToLower(BinanceConstants.CI) + "_" + MapConverter.GetString(contractType)!.ToLower() + "@continuousKline_" + MapConverter.GetString(interval)).ToArray();
         return SubscribeAsync(pairs, false, handler, ct);

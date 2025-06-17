@@ -89,7 +89,7 @@ public record BinanceOptionsPosition
     /// Option Side
     /// </summary>
     [JsonProperty("optionSide")]
-    public BinanceOptionsSide OptionSide { get; set; }
+    public BinanceOptionsSide OptionsSide { get; set; }
 
     /// <summary>
     /// Quote Asset

@@ -3,7 +3,7 @@
 /// <summary>
 /// Order list info
 /// </summary>
-public record BinanceSpotStreamOrderListUpdate: BinanceSpotStreamEvent
+public record BinanceSpotStreamOrderListUpdate: BinanceSocketStreamEvent
 {
     /// <summary>
     /// The id of the order list

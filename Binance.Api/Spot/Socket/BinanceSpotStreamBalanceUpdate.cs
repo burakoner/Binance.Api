@@ -3,7 +3,7 @@
 /// <summary>
 /// Update when asset is withdrawn/deposited 
 /// </summary>
-public record BinanceSpotStreamBalanceUpdate: BinanceSpotStreamEvent
+public record BinanceSpotStreamBalanceUpdate: BinanceSocketStreamEvent
 {
     /// <summary>
     /// The asset which changed

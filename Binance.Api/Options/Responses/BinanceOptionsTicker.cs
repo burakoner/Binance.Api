@@ -3,7 +3,7 @@
 /// <summary>
 /// Price statistics of the last 24 hours
 /// </summary>
-public class BinanceOptionsTicker
+public record BinanceOptionsTicker
 {
     /// <summary>
     /// The symbol the price is for

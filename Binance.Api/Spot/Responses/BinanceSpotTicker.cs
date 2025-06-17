@@ -3,7 +3,7 @@
 /// <summary>
 /// Price statistics of the last 24 hours
 /// </summary>
-public class BinanceSpotTicker : BinanceSpotMiniTicker
+public record BinanceSpotTicker : BinanceSpotMiniTicker
 {
     /// <summary>
     /// The actual price change in the last 24 hours
@@ -61,7 +61,7 @@ public class BinanceSpotTicker : BinanceSpotMiniTicker
 /// <summary>
 /// Price statistics of the last 24 hours
 /// </summary>
-public class BinanceSpotMiniTicker
+public record BinanceSpotMiniTicker
 {
     /// <summary>
     /// The symbol the price is for

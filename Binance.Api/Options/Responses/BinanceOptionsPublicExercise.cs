@@ -3,7 +3,7 @@
 /// <summary>
 /// Binance Options Exercise History Record
 /// </summary>
-public class BinanceOptionsPublicExercise
+public record BinanceOptionsPublicExercise
 {
     /// <summary>
     /// The symbol the price is for

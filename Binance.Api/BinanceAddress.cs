@@ -196,21 +196,21 @@ public class BinanceAddress
     public static BinanceAddress Default { get; } = new BinanceAddress
     {
         SpotRestApiAddress = "https://api.binance.com",
-        SpotSocketApiQueryAddress = "wss://ws-api.binance.com:443/",
-        SpotSocketApiStreamAddress = "wss://stream.binance.com:9443/",
+        SpotSocketApiQueryAddress = "wss://ws-api.binance.com:443",
+        SpotSocketApiStreamAddress = "wss://stream.binance.com:9443",
 
         CoinFuturesRestApiAddress = "https://dapi.binance.com",
-        CoinFuturesSocketApiQueryAddress = "wss://ws-dapi.binance.com/",
-        CoinFuturesSocketApiStreamAddress = "wss://dstream.binance.com/",
+        CoinFuturesSocketApiQueryAddress = "wss://ws-dapi.binance.com",
+        CoinFuturesSocketApiStreamAddress = "wss://dstream.binance.com",
 
         UsdFuturesRestApiAddress = "https://fapi.binance.com",
-        UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com/",
-        UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com/",
+        UsdFuturesSocketApiQueryAddress = "wss://ws-fapi.binance.com",
+        UsdFuturesSocketApiStreamAddress = "wss://fstream.binance.com",
 
         FuturesDataRestApiAddress = "https://api.binance.com",
 
         OptionsRestApiAddress = "https://eapi.binance.com",
-        OptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions/",
+        OptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions",
 
         ExchangeLinkRestApiAddress = "https://api.binance.com",
         LinkAndTradeFastApiRestApiAddress = "https://api.binance.com",

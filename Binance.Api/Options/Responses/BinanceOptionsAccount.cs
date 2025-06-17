@@ -9,7 +9,7 @@ public record BinanceOptionsAccount
     /// Asset information for the account
     /// </summary>
     [JsonProperty("asset")]
-    public List<BinanceOptionsAccountAsset> Asset { get; set; } = [];
+    public List<BinanceOptionsAccountBalance> Balances { get; set; } = [];
 
     /// <summary>
     /// Greek information for the account
@@ -32,7 +32,7 @@ public record BinanceOptionsAccount
 /// <summary>
 /// Options account asset information
 /// </summary>
-public record BinanceOptionsAccountAsset
+public record BinanceOptionsAccountBalance
 {
     /// <summary>
     /// Asset type

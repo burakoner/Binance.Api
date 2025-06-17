@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Futures;
+using Binance.Api.Options;
 using Binance.Api.Spot;
 
 namespace Binance.Api;
@@ -16,7 +17,7 @@ public class BinanceSocketApiClient
     internal BinanceRestApiClient RestApiClient { get; }
 
     /// <summary>
-    /// Spot WebSocket API Client
+    /// Binance Spot WebSocket API Client
     /// </summary>
     public IBinanceSpotSocketClient Spot { get; }
 
@@ -29,6 +30,11 @@ public class BinanceSocketApiClient
     /// Binance Coin Futures Rest API Client
     /// </summary>
     public IBinanceFuturesSocketClientCoin CoinFutures { get => Futures.Coin; }
+
+    /// <summary>
+    /// Binance European Options WebSocket API Client
+    /// </summary>
+    public IBinanceOptionsSocketClient Options { get; }
 
     /// <summary>
     /// Binance WebSocket API Client Constructor
@@ -66,6 +72,7 @@ public class BinanceSocketApiClient
 
         Spot = new BinanceSpotSocketClient(this);
         Futures = new BinanceFuturesSocketClient(this);
+        Options = new BinanceOptionsSocketClient(this);
     }
 
     internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (ApiOptions.ReceiveWindow != null ? System.Convert.ToInt32(ApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
