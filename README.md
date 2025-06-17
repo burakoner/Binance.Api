@@ -56,7 +56,7 @@ The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for op
 |Dual Investment|✅|-|-|
 |Mining|✅|-|-|
 |Crypto Loan|✅|-|-|
-|VIP Loan|⏹|-|-|
+|VIP Loan|✅|-|-|
 |C2C|✅|-|-|
 |Fiat|✅|-|-|
 |NFT|✅|-|-|

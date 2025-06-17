@@ -1,5 +1,8 @@
 ## Change Log & Release Notes
 
+* Version 5.6.19 - 17 Jun 2025
+  * Implemented "Vip Loan" Section
+
 * Version 5.6.18 - 17 Jun 2025
   * Updated to ApiSharp 3.8.2
   * Implemented "European Options -> WebSocket Market Streams" Section
