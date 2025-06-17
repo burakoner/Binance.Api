@@ -31,7 +31,7 @@ public interface IBinanceCryptoLoanRestClientStableTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableOpenOrder>>> GetOpenBorrowOrdersAsync(long? orderId = null, string? loanAsset = null, string? collateralAsset = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableOngoingOrder>>> GetOngoingOrdersAsync(long? orderId = null, string? loanAsset = null, string? collateralAsset = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Repay a loan
@@ -67,7 +67,7 @@ public interface IBinanceCryptoLoanRestClientStableTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableAsset>>> GetLoanableAssetsAsync(string? loanAsset = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableLoanableAsset>>> GetLoanableAssetsAsync(string? loanAsset = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get LTV information and collateral limit of collateral assets. The collateral limit is shown in USD value.

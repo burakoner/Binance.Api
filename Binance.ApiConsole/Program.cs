@@ -513,7 +513,7 @@ internal class Program
         var loan_301 = await api.CryptoLoan.Flexible.GetAdjustmentHistoryAsync();
         var loan_302 = await api.CryptoLoan.Flexible.GetCollateralRepayRateAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---");
         var loan_303 = await api.CryptoLoan.Flexible.GetBorrowHistoryAsync();
-        var loan_304 = await api.CryptoLoan.Flexible.GetOpenBorrowOrdersAsync();
+        var loan_304 = await api.CryptoLoan.Flexible.GetOngoingOrdersAsync();
         var loan_305 = await api.CryptoLoan.Flexible.GetLiquidationHistoryAsync();
         var loan_306 = await api.CryptoLoan.Flexible.GetRepayHistoryAsync();
 
@@ -531,9 +531,27 @@ internal class Program
         var loan_601 = await api.CryptoLoan.Stable.GetAdjustmentHistoryAsync();
         var loan_602 = await api.CryptoLoan.Stable.GetCollateralRepayRateAsync("---LOAN-ASSET---", "---COLLATERAL-ASSET---", 100.0m);
         var loan_603 = await api.CryptoLoan.Stable.GetBorrowHistoryAsync();
-        var loan_604 = await api.CryptoLoan.Stable.GetOpenBorrowOrdersAsync();
+        var loan_604 = await api.CryptoLoan.Stable.GetOngoingOrdersAsync();
         var loan_605 = await api.CryptoLoan.Stable.GetRepayHistoryAsync();
         var loan_606 = await api.CryptoLoan.Stable.CustomizeMarginCallAsync(100.0m);
+
+        // Vip Loan -> Market Data Methods (PRIVATE)
+        var viploan_101 = await api.VipLoan.GetInterestRateAsync("---ASSET---");
+        var viploan_102 = await api.VipLoan.GetInterestRateHistoryAsync("---ASSET---");
+        var viploan_103 = await api.VipLoan.GetLoanableAssetsAsync();
+        var viploan_104 = await api.VipLoan.GetCollateralAssetsAsync("---ASSET---");
+
+        // Vip Loan -> Trade Methods (PRIVATE)
+        var viploan_201 = await api.VipLoan.BorrowAsync(1_000_000, "---LOAN-ASSET---", 100.0m, 1_000_000,"---COLLATERAL-ASSET---", true);
+        var viploan_202 = await api.VipLoan.RepayAsync("---ORDER-ID---", 100.0m);
+        var viploan_203 = await api.VipLoan.RenewAsync("---ORDER-ID---", 30);
+
+        // Vip Loan -> User Information Methods (PRIVATE)
+        var viploan_301 = await api.VipLoan.GetOngoingOrdersAsync();
+        var viploan_302 = await api.VipLoan.GetRepayHistoryAsync();
+        var viploan_303 = await api.VipLoan.GetAccruedInterestAsync();
+        var viploan_304 = await api.VipLoan.CheckCollateralAccountAsync();
+        var viploan_305 = await api.VipLoan.GetApplicationStatusAsync();
 
         // C2C Methods (PRIVATE)
         var c2c_101 = await api.C2C.GetHistoryAsync();

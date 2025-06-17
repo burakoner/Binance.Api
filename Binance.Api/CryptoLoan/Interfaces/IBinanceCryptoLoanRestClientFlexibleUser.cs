@@ -58,7 +58,7 @@ public interface IBinanceCryptoLoanRestClientFlexibleUser
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleOpenOrder>>> GetOpenBorrowOrdersAsync(string? loanAsset = null, string? collateralAsset = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleOngoingOrder>>> GetOngoingOrdersAsync(string? loanAsset = null, string? collateralAsset = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get Flexible Loan Liquidation History

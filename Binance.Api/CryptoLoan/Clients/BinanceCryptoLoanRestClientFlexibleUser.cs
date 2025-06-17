@@ -40,7 +40,7 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleBorrowHistory>>(GetUrl(sapi, v2, "loan/flexible/borrow/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 
-    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleOpenOrder>>> GetOpenBorrowOrdersAsync(string? loanAsset = null, string? collateralAsset = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleOngoingOrder>>> GetOngoingOrdersAsync(string? loanAsset = null, string? collateralAsset = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("loanCoin", loanAsset);
@@ -49,7 +49,7 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleOpenOrder>>(GetUrl(sapi, v2, "loan/flexible/ongoing/orders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 300);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleOngoingOrder>>(GetUrl(sapi, v2, "loan/flexible/ongoing/orders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 300);
     }
 
     public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleLiquidationRecord>>> GetLiquidationHistoryAsync(string? loanAsset = null, string? collateralAsset = null, DateTime? startTime = null, DateTime? endTime = null, int? current = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)

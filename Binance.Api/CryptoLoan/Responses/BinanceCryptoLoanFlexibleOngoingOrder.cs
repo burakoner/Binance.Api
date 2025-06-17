@@ -3,7 +3,7 @@
 /// <summary>
 /// Flexible Loan Ongoing Order
 /// </summary>
-public record BinanceCryptoLoanFlexibleOpenOrder
+public record BinanceCryptoLoanFlexibleOngoingOrder
 {
     /// <summary>
     /// The loaning asset

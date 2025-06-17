@@ -26,12 +26,12 @@ internal partial class BinanceCryptoLoanRestClientFlexible
         return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleInterestRate>>(GetUrl(sapi, v2, "loan/interestRateHistory"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 
-    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>> GetLoanableAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleLoanableAsset>>> GetLoanableAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("collateralCoin", asset);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>(GetUrl(sapi, v2, "loan/flexible/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanFlexibleLoanableAsset>>(GetUrl(sapi, v2, "loan/flexible/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 }

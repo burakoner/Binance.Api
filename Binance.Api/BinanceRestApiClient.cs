@@ -20,6 +20,7 @@ using Binance.Api.Pay;
 using Binance.Api.C2C;
 using Binance.Api.Fiat;
 using Binance.Api.DualInvestment;
+using Binance.Api.VipLoan;
 
 namespace Binance.Api;
 
@@ -131,7 +132,10 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     public IBinanceCryptoLoanRestClient CryptoLoan { get; }
 
-    // TODO: VIP Loan
+    /// <summary>
+    /// Binance VIP Loan Rest API Client
+    /// </summary>
+    public IBinanceVipLoanRestClient VipLoan { get; }
 
     /// <summary>
     /// Binance C2C Rest API Client
@@ -216,6 +220,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         DualInvestment = new BinanceDualInvestmentRestClient(this);
         Mining = new BinanceMiningRestClient(this);
         CryptoLoan = new BinanceCryptoLoanRestClient(this);
+        VipLoan = new BinanceVipLoanRestClient(this);
         C2C = new BinanceC2CRestClient(this);
         Fiat = new BinanceFiatRestClient(this);
         NFT = new BinanceNftRestClient(this);

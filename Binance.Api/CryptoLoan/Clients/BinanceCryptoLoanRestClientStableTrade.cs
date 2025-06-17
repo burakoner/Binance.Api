@@ -17,7 +17,7 @@ internal partial class BinanceCryptoLoanRestClientStable
         return RequestAsync<BinanceCryptoLoanStableBorrow>(GetUrl(sapi, v1, "loan/borrow"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 36000);
     }
 
-    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableOpenOrder>>> GetOpenBorrowOrdersAsync(long? orderId = null, string? loanAsset = null, string? collateralAsset = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableOngoingOrder>>> GetOngoingOrdersAsync(long? orderId = null, string? loanAsset = null, string? collateralAsset = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("orderId", orderId);
@@ -27,7 +27,7 @@ internal partial class BinanceCryptoLoanRestClientStable
         parameters.AddOptional("limit", limit?.ToString(CultureInfo.InvariantCulture));
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanStableOpenOrder>>(GetUrl(sapi, v1, "loan/ongoing/orders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 300);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanStableOngoingOrder>>(GetUrl(sapi, v1, "loan/ongoing/orders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 300);
     }
 
     public Task<RestCallResult<BinanceCryptoLoanStableRepay>> RepayAsync(long orderId, decimal quantity, bool? repayWithBorrowedAsset = null, bool? collateralReturn = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -57,14 +57,14 @@ internal partial class BinanceCryptoLoanRestClientStable
         return RequestAsync<BinanceCryptoLoanStableAdjustment>(GetUrl(sapi, v1, "loan/adjust/ltv"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6000);
     }
 
-    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableAsset>>> GetLoanableAssetsAsync(string? loanAsset = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableLoanableAsset>>> GetLoanableAssetsAsync(string? loanAsset = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("vipLevel", vipLevel);
         parameters.AddOptional("loanAsset", loanAsset);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanStableAsset>>(GetUrl(sapi, v1, "loan/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
+        return RequestAsync<BinanceRowsResult<BinanceCryptoLoanStableLoanableAsset>>(GetUrl(sapi, v1, "loan/loanable/data"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 400);
     }
 
     public Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanStableCollateralAsset>>> GetCollateralAssetsAsync(string? collateralAsset = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default)

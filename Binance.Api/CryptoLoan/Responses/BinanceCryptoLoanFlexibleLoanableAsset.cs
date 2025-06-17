@@ -3,7 +3,7 @@
 /// <summary>
 /// Loanable asset info
 /// </summary>
-public record BinanceCryptoLoanFlexibleAsset
+public record BinanceCryptoLoanFlexibleLoanableAsset
 {
     /// <summary>
     /// Loan asset

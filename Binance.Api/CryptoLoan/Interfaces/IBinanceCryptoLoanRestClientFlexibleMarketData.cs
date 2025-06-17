@@ -36,5 +36,5 @@ public interface IBinanceCryptoLoanRestClientFlexibleMarketData
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleAsset>>> GetLoanableAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceRowsResult<BinanceCryptoLoanFlexibleLoanableAsset>>> GetLoanableAssetsAsync(string asset, int? receiveWindow = null, CancellationToken ct = default);
 }

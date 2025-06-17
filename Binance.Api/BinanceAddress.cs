@@ -181,6 +181,11 @@ public class BinanceAddress
     public string CryptoLoanRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance VIP Loan Rest API Address
+    /// </summary>
+    public string VipLoanRestApiAddress { get; set; } = "";
+
+    /// <summary>
     /// Binance C2C Rest API Address
     /// </summary>
     public string C2CRestApiAddress { get; set; } = "";
@@ -233,6 +238,7 @@ public class BinanceAddress
         AlgoTradingRestApiAddress = "https://api.binance.com",
         CopyTradingRestApiAddress = "https://api.binance.com",
         CryptoLoanRestApiAddress = "https://api.binance.com",
+        VipLoanRestApiAddress = "https://api.binance.com",
         C2CRestApiAddress = "https://api.binance.com",
         FiatRestApiAddress = "https://api.binance.com",
     };
@@ -278,6 +284,7 @@ public class BinanceAddress
         AlgoTradingRestApiAddress = "https://testnet.binance.vision",
         CopyTradingRestApiAddress = "https://testnet.binance.vision",
         CryptoLoanRestApiAddress = "https://testnet.binance.vision",
+        VipLoanRestApiAddress = "https://testnet.binance.vision",
         C2CRestApiAddress = "https://testnet.binance.vision",
         FiatRestApiAddress = "https://testnet.binance.vision",
     };
