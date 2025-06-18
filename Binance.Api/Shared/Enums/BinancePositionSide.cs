@@ -6,6 +6,12 @@
 public enum BinancePositionSide : byte
 {
     /// <summary>
+    /// Hedge
+    /// </summary>
+    [Map("HEDGE")]
+    Hedge = 0,
+
+    /// <summary>
     /// Short
     /// </summary>
     [Map("SHORT")]

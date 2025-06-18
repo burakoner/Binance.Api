@@ -21,6 +21,7 @@ using Binance.Api.C2C;
 using Binance.Api.Fiat;
 using Binance.Api.DualInvestment;
 using Binance.Api.VipLoan;
+using Binance.Api.PortfolioMargin;
 
 namespace Binance.Api;
 
@@ -63,6 +64,8 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// Binance Options Rest API Client
     /// </summary>
     public IBinanceOptionsRestClient Options { get; }
+
+    internal IBinancePortfolioMarginRestClient PortfolioMargin { get; }
 
     // TODO: Portfolio Margin
     // TODO: Portfolio Margin Pro
@@ -207,6 +210,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         Spot = new BinanceSpotRestClient(this);
         Futures = new BinanceFuturesRestClient(this);
         Options = new BinanceOptionsRestClient(this);
+        PortfolioMargin = new BinancePortfolioMarginRestClient(this);
         Margin = new BinanceMarginRestClient(this);
         Algo = new BinanceAlgoRestClient(this);
         Wallet = new BinanceWalletRestClient(this);

@@ -37,7 +37,7 @@ internal partial class BinanceOptionsRestClient : IBinanceOptionsRestClient
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {
-        var url = BinanceAddress.Default.OptionsRestApiAddress;
+        var url = BinanceAddress.Default.EuropeanOptionsRestApiAddress;
         if (!string.IsNullOrEmpty(api)) url = url.AppendPath($"{api}");
         if (!string.IsNullOrEmpty(version)) url = url.AppendPath($"v{version}");
         if (!string.IsNullOrEmpty(endpoint)) url = url.AppendPath($"{endpoint}");

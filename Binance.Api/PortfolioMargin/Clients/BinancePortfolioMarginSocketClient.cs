@@ -1,16 +1,16 @@
-﻿namespace Binance.Api.Options;
+﻿namespace Binance.Api.PortfolioMargin;
 
-internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinanceOptionsSocketClient
+internal partial class BinancePortfolioMarginSocketClient : WebSocketApiClient, IBinancePortfolioMarginSocketClient
 {
     // Internal
     internal ILogger Logger { get => _logger; }
-    internal TimeSyncState TimeSyncState { get; } = new("Binance Options WS");
+    internal TimeSyncState TimeSyncState { get; } = new("Binance Spot WS");
     internal CallResult<T> Deserializer<T>(string data, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(data, serializer, requestId);
     internal CallResult<T> Deserializer<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null) => Deserialize<T>(obj, serializer, requestId);
-
+    
     protected async Task<CallResult<DateTime>> GetServerTimestampAsync()
     {
-        var result = await _.RestApiClient.Options.GetTimeAsync();
+        var result = await _.RestApiClient.PortfolioMargin.GetTimeAsync();
         if (!result.Success) return result.AsError<DateTime>(result.Error!);
         return result.As(result.Data);
     }
@@ -22,12 +22,18 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
 
     // Internal
     internal BinanceSocketApiClientOptions SocketOptions => _.ApiOptions;
-    internal DateTime? LastExchangeInfoUpdate { get; private set; }
-    internal BinanceOptionsExchangeInfo? ExchangeInfo { get; private set; }
 
-    internal BinanceOptionsSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ApiOptions)
+    // Interface Properties
+    public IBinancePortfolioMarginSocketClientCrossMargin CrossMargin { get; }
+    public IBinancePortfolioMarginSocketClientCoinFutures CoinFutures { get; }
+    public IBinancePortfolioMarginSocketClientUsdFutures UsdFutures { get; }
+
+    internal BinancePortfolioMarginSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ApiOptions)
     {
         _ = root;
+        CrossMargin = new BinancePortfolioMarginSocketClientCrossMargin(this);
+        CoinFutures = new BinancePortfolioMarginSocketClientCoinFutures(this);
+        UsdFutures = new BinancePortfolioMarginSocketClientUsdFutures(this);
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
@@ -193,7 +199,7 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.EuropeanOptionsSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
+        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
     }
 
     internal async Task<CallResult<bool>> SyncTimeAsync()
@@ -209,7 +215,7 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
 
             var sw = Stopwatch.StartNew();
             var localTime = DateTime.UtcNow;
-            var result = await GetServerTimestampAsync().ConfigureAwait(false);
+            var result = await _.RestApiClient.PortfolioMargin.GetTimeAsync().ConfigureAwait(false);
             sw.Stop();
             if (!result)
             {
@@ -224,6 +230,60 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
         }
 
         return new CallResult<bool>(true);
+    }
+
+    internal async Task<CallResult<T>> RequestAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
+    {
+        if (authenticated)
+        {
+            if (AuthenticationProvider == null)
+                throw new InvalidOperationException("No credentials provided for authenticated endpoint");
+
+            var syncTask = SyncTimeAsync();
+            var timeSyncInfo = GetTimeSyncInfo();
+            if (timeSyncInfo.TimeSyncState.LastSyncTime == default)
+            {
+                // Initially with first request we'll need to wait for the time syncing, if it's not the first request we can just continue
+                var syncTimeResult = await syncTask.ConfigureAwait(false);
+                if (!syncTimeResult)
+                {
+                    //_logger.Log(LogLevel.Debug, $"[{requestId}] Failed to sync time, aborting request: " + syncTimeResult.Error);
+                    //return syncTimeResult.As<IRequest>(default);
+                }
+            }
+
+            var authProvider = (BinanceAuthentication)AuthenticationProvider;
+            var timestamp = DateTime.UtcNow.Add(GetTimeOffset()).ConvertToMilliseconds();
+            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters, timestamp);
+            else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
+        }
+
+        var request = new BinanceSocketQuery
+        {
+            Method = method,
+            Params = parameters,
+            Id = ExchangeHelpers.NextId()
+        };
+
+        var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url);
+        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, sign).ConfigureAwait(false);
+        if (!result.Success)
+        {
+            if (result.Error is BinanceRateLimitError rle)
+            {
+                /*
+                if (rle.RetryAfter != null && RateLimiter != null && ClientOptions.RateLimiterEnabled)
+                {
+                    _logger.LogWarning("Ratelimit error from server, pausing requests until {Until}", rle.RetryAfter.Value);
+                    await RateLimiter.SetRetryAfterGuardAsync(rle.RetryAfter.Value).ConfigureAwait(false);
+                }
+                */
+            }
+
+            else return result.AsError<T>(result.Error!);
+        }
+
+        return result.As(result.Data.Result);
     }
 
     public async Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default)

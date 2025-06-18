@@ -1,5 +1,17 @@
 ﻿namespace Binance.Api.Shared;
 
+/// <summary>
+/// Binance Message
+/// </summary>
+internal record BinanceMessage
+{
+    /// <summary>
+    /// Message
+    /// </summary>
+    [JsonProperty("msg")]
+    public string Message { get; set; } = string.Empty;
+}
+
 #region Binance Result
 /// <summary>
 /// Binance Result with Rate Limits

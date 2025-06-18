@@ -63,14 +63,26 @@ public class BinanceAddress
 
     #region European Options
     /// <summary>
-    /// Binance Options Rest API Address
+    /// Binance European Options Rest API Address
     /// </summary>
-    public string OptionsRestApiAddress { get; set; } = "";
+    public string EuropeanOptionsRestApiAddress { get; set; } = "";
 
     /// <summary>
-    /// Binance Options WebSocket API Stream Address
+    /// Binance European Options WebSocket API Stream Address
     /// </summary>
-    public string OptionsSocketApiStreamAddress { get; set; } = "";
+    public string EuropeanOptionsSocketApiStreamAddress { get; set; } = "";
+    #endregion
+
+    #region Portfolio Margin
+    /// <summary>
+    /// Binance Portfolio Margin Rest API Address
+    /// </summary>
+    public string PortfolioMarginRestApiAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance Portfolio Margin WebSocket API Stream Address
+    /// </summary>
+    public string PortfolioMarginSocketApiStreamAddress { get; set; } = "";
     #endregion
 
     #region Binance Link
@@ -214,8 +226,11 @@ public class BinanceAddress
 
         FuturesDataRestApiAddress = "https://api.binance.com",
 
-        OptionsRestApiAddress = "https://eapi.binance.com",
-        OptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions",
+        EuropeanOptionsRestApiAddress = "https://eapi.binance.com",
+        EuropeanOptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions",
+
+        PortfolioMarginRestApiAddress = "https://papi.binance.com",
+        PortfolioMarginSocketApiStreamAddress = "wss://fstream.binance.com/pm",
 
         ExchangeLinkRestApiAddress = "https://api.binance.com",
         LinkAndTradeFastApiRestApiAddress = "https://api.binance.com",
@@ -260,8 +275,8 @@ public class BinanceAddress
         UsdFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
 
-        OptionsRestApiAddress = "",
-        OptionsSocketApiStreamAddress = "",
+        EuropeanOptionsRestApiAddress = "",
+        EuropeanOptionsSocketApiStreamAddress = "",
 
         ExchangeLinkRestApiAddress = "https://testnet.binance.vision",
         LinkAndTradeFastApiRestApiAddress = "https://testnet.binance.vision",
