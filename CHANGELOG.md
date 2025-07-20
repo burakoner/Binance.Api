@@ -1,5 +1,7 @@
 ## Change Log & Release Notes
 
+* Version 5.7.21 - 21 Jul 2025
+
 * Version 5.6.19 - 17 Jun 2025
   * Implemented "Vip Loan" Section
 
