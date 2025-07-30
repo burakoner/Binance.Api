@@ -42,10 +42,16 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
             var signature = SignHMACSHA256(signbody).ToLowerInvariant();
             query.Add("signature", signature);
         }
-        else
+        else if (Credentials.Type == ApiCredentialsType.RsaXml || Credentials.Type == ApiCredentialsType.RsaXml)
         {
             var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
             var signature = SignRSASHA256(Encoding.ASCII.GetBytes(signbody), SignatureOutputType.Base64);
+            query.Add("signature", signature);
+        }
+        else if (Credentials.Type == ApiCredentialsType.Ed25519)
+        {
+            var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
+            var signature = SignEd25519(Encoding.ASCII.GetBytes(signbody), SignatureOutputType.Base64);
             query.Add("signature", signature);
         }
     }
