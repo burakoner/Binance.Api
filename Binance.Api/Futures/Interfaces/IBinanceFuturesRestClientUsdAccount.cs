@@ -14,7 +14,14 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <returns>The account information</returns>
     Task<RestCallResult<List<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Account Information V3(USER_DATA)
+    /// <summary>
+    /// Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in response section for detail.
+    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Account-Information-V3" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceFuturesAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get account information, including position and balances
@@ -23,7 +30,8 @@ public interface IBinanceFuturesRestClientUsdAccount
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceFuturesAccountInfo>> GetAccountInfoV2Async(int? receiveWindow = null, CancellationToken ct = default);
+    [Obsolete("Please use GetAccountInfoAsync (v3) instead")]
+    Task<RestCallResult<BinanceFuturesAccountInfoV2>> GetAccountInfoV2Async(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets account commission rates

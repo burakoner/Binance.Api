@@ -66,8 +66,4 @@ internal partial class BinanceSpotSocketClient
 
         return RequestAsync<List<BinanceSpotPreventedTrade>>("ws-api/v3", $"myPreventedMatches", parameters, true, true, weight: weight, ct: ct);
     }
-
-    // TODO: Account allocations (USER_DATA)
-    // TODO: Account Commission Rates (USER_DATA
-    // TODO: Query Order Amendments (USER_DATA)
 }

@@ -157,9 +157,87 @@ internal partial class BinanceFuturesRestClientCoin
         return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
     }
 
-    // TODO: Modify Order (TRADE)
-    // TODO: Modify Multiple Orders(TRADE)
-    // TODO: Get Order Modify History (USER_DATA)
+    public Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
+        string symbol,
+        BinanceOrderSide side,
+        long? orderId = null,
+        string? origClientOrderId = null,
+        decimal? quantity = null,
+        decimal? price = null,
+        BinanceFuturesPriceMatch? priceMatch = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
+            throw new ArgumentException("Either orderId or origClientOrderId must be sent");
+
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol }
+        };
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("origClientOrderId", origClientOrderId);
+        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
+        parameters.AddOptionalEnum("origClientOrderId", priceMatch);
+        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "order"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 1);
+    }
+
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        var parameterOrders = new List<Dictionary<string, object>>();
+        int i = 0;
+        foreach (var order in orders)
+        {
+            var orderParameters = new ParameterCollection()
+            {
+                { "symbol", order.Symbol },
+                { "quantity", order.Quantity.ToString(BinanceConstants.CI) },
+            };
+            orderParameters.AddEnum("side", order.Side);
+            orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
+            orderParameters.AddOptionalEnum("priceMatch", order.PriceMatch);
+            orderParameters.AddOptional("orderId", order.OrderId?.ToString(BinanceConstants.CI));
+            orderParameters.AddOptional("origClientOrderId", order.ClientOrderId);
+            parameterOrders.Add(orderParameters);
+            i++;
+        }
+
+        parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default!);
+
+        var result = new List<CallResult<BinanceFuturesOrder>>();
+        foreach (var item in response.Data)
+        {
+            result.Add(item.Code != 0
+                ? new CallResult<BinanceFuturesOrder>(new ServerError(item.Code, item.Message))
+                : new CallResult<BinanceFuturesOrder>(item));
+        }
+
+        return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
+    }
+
+    public Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol }
+        };
+        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("origClientOrderId", clientOrderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+
+        return RequestAsync<List<BinanceFuturesOrderModifyHistory>>(GetUrl(dapi, v1, "orderAmendment"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+    }
 
     public async Task<RestCallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
@@ -358,7 +436,7 @@ internal partial class BinanceFuturesRestClientCoin
         };
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        var result = await  RequestAsync<BinanceResponse>(GetUrl(dapi, v1, "positionSide/dual"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceResponse>(GetUrl(dapi, v1, "positionSide/dual"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         return result.As(result.Success);
     }
 

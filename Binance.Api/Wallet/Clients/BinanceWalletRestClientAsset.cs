@@ -153,11 +153,31 @@ internal partial class BinanceWalletRestClient
         return RequestAsync<BinanceRowsResult<BinanceWalletCloudMiningHistory>>(GetUrl(sapi, v1, "asset/ledger-transfer/cloud-mining/queryByPage"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 600);
     }
 
+    public Task<RestCallResult<BinanceRowsResult<BinanceWalletDelegationHistory>>> GetDelegationHistoryAsync(string email, DateTime startTime, DateTime endTime, BinanceWalletDelegationTransferType? type = null, string? asset = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("email", email);
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptionalEnum("type", type);
+        parameters.AddOptional("asset", asset);
+        parameters.AddOptional("current", page);
+        parameters.AddOptional("size", pageSize);
+        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceRowsResult<BinanceWalletDelegationHistory>>(GetUrl(sapi, v1, "asset/custody/transfer-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 60);
+    }
+
     public Task<RestCallResult<List<BinanceWalletDelistSchedule>>> GetDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceWalletDelistSchedule>>(GetUrl(sapi, v1, "spot/delist-schedule"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+    }
+
+    public Task<RestCallResult<List<BinanceWalletListSchedule>>> GetListScheduleAsync(CancellationToken ct = default)
+    {
+        return RequestAsync<List<BinanceWalletListSchedule>>(GetUrl(sapi, v1, "spot/open-symbol-list"), HttpMethod.Get, ct, false, requestWeight: 100);
     }
 }

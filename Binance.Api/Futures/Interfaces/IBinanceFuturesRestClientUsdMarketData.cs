@@ -228,6 +228,15 @@ public interface IBinanceFuturesRestClientUsdMarketData
     Task<RestCallResult<List<BinanceFuturesBookTicker>>> GetBookPricesAsync(CancellationToken ct = default);
 
     /// <summary>
+    /// Latest price for a symbol or symbols.
+    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Delivery-Price" /></para>
+    /// </summary>
+    /// <param name="pair">Pair</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<List<BinanceFuturesDeliveryPrice>>> GetDeliveryPricesAsync(string pair, CancellationToken ct = default);
+
+    /// <summary>
     /// Get present open interest of a specific symbol.
     /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest" /></para>
     /// </summary>
@@ -340,6 +349,21 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// <returns></returns>
     Task<RestCallResult<List<BinanceFuturesAssetIndex>>> GetAssetIndexesAsync(CancellationToken ct = default);
 
-    // TODO: Query Index Price Constituents
-    // TODO: Query Insurance Fund Balance Snapshot
+    /// <summary>
+    /// Query index price constituents
+    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Constituents" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceFuturesIndexPriceConstituents>> GetIndexPriceConstituentsAsync(string symbol, CancellationToken ct = default);
+
+    /// <summary>
+    /// Query Insurance Fund Balance Snapshot
+    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Insurance-Fund-Balance" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceFuturesInsuranceFundBalances>> GetInsuranceBalancesAsync(string? symbol = null, CancellationToken ct = default);
 }

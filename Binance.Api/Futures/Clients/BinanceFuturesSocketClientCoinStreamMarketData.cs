@@ -151,7 +151,20 @@ internal partial class BinanceFuturesSocketClientCoin
         return SubscribeAsync(topics, false, handler, ct);
     }
 
-    // TODO: Mark Price of All Symbols of a Pair
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesOfAllSymbolsOfPairAsync(
+        string pair,
+        int? updateInterval,
+        Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage,
+        CancellationToken ct = default)
+    {
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
+
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesCoinStreamMarkPrice>>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data));
+        });
+        return SubscribeAsync([pair + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")], false, handler, ct);
+    }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(
         string pair,

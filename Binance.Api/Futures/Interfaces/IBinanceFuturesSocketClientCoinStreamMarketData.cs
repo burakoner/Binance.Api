@@ -159,6 +159,17 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(string pair, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
+    /// Mark Price of All Symbols of a Pair
+    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-of-All-Symbols-of-a-Pair" /></para>
+    /// </summary>
+    /// <param name="pair">Pair</param>
+    /// <param name="onMessage">The event handler for the received data</param>
+    /// <param name="updateInterval">Update Speed</param>
+    /// <param name="ct">Cancellation token for closing this subscription</param>
+    /// <returns></returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesOfAllSymbolsOfPairAsync(string pair, int? updateInterval, Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
     /// Subscribes to the index candlestick update stream for the provided pairs
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Index-Kline-Candlestick-Streams" /></para>
     /// </summary>

@@ -1,4 +1,6 @@
-﻿namespace Binance.Api.Futures;
+﻿using System;
+
+namespace Binance.Api.Futures;
 
 internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUsd
 {
@@ -230,7 +232,13 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         return RequestAsync<List<BinanceFuturesBookTicker>>(GetUrl(fapi, v1, "ticker/bookTicker"), HttpMethod.Get, ct, requestWeight: 5);
     }
 
-    // TODO: Quarterly Contract Settlement Price
+    public Task<RestCallResult<List<BinanceFuturesDeliveryPrice>>> GetDeliveryPricesAsync(string pair, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("pair", pair);
+
+        return RequestAsync<List<BinanceFuturesDeliveryPrice>>(GetUrl("", "", "futures/data/delivery-price"), HttpMethod.Get, ct, requestWeight: 0);
+    }
 
     public Task<RestCallResult<BinanceFuturesOpenInterest>> GetOpenInterestAsync(string symbol, CancellationToken ct = default)
     {
@@ -359,5 +367,23 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
     public Task<RestCallResult<List<BinanceFuturesAssetIndex>>> GetAssetIndexesAsync(CancellationToken ct = default)
     {
         return RequestAsync<List<BinanceFuturesAssetIndex>>(GetUrl(fapi, v1, "assetIndex"), HttpMethod.Get, ct, requestWeight: 1);
+    }
+
+    public Task<RestCallResult<BinanceFuturesIndexPriceConstituents>> GetIndexPriceConstituentsAsync(string symbol, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol }
+        };
+
+        return RequestAsync<BinanceFuturesIndexPriceConstituents>(GetUrl(fapi, v1, "constituents"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+    }
+
+    public Task<RestCallResult<BinanceFuturesInsuranceFundBalances>> GetInsuranceBalancesAsync(string? symbol = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("symbol", symbol);
+
+        return RequestAsync<BinanceFuturesInsuranceFundBalances>(GetUrl(fapi, v1, "insuranceBalance"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 }

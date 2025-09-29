@@ -10,14 +10,20 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<List<BinanceFuturesUsdAccountBalance>>(GetUrl(fapi, v3, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    // TODO: Account Information V3(USER_DATA)
-
-    public Task<RestCallResult<BinanceFuturesAccountInfo>> GetAccountInfoV2Async(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesAccountInfo>(GetUrl(fapi, v2, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<BinanceFuturesAccountInfo>(GetUrl(fapi, v3, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+    }
+
+    public Task<RestCallResult<BinanceFuturesAccountInfoV2>> GetAccountInfoV2Async(int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesAccountInfoV2>(GetUrl(fapi, v2, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
     public Task<RestCallResult<BinanceFuturesAccountUserCommissionRate>> GetUserCommissionRateAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)

@@ -77,7 +77,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchOrderModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get order edit history
@@ -92,7 +92,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceFuturesOrderEditHistory>>> GetOrderEditHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending order
@@ -313,6 +313,32 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of all margin changes for the symbol</returns>
     Task<RestCallResult<List<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
-    
-    // TODO: Test Order(TRADE)
+
+    /// <summary>
+    /// Testing order request, this order will not be submitted to matching engine
+    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Order-Test" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
+    /// <param name="side">The order side (buy/sell)</param>
+    /// <param name="type">The order type</param>
+    /// <param name="timeInForce">Lifetime of the order (GoodTillCancel/ImmediateOrCancel/FillOrKill)</param>
+    /// <param name="quantity">The quantity of the base symbol</param>
+    /// <param name="positionSide">The position side</param>
+    /// <param name="reduceOnly">Specify as true if the order is intended to only reduce the position</param>
+    /// <param name="price">The price to use</param>
+    /// <param name="newClientOrderId">Unique id for order</param>
+    /// <param name="stopPrice">Used for stop orders</param>
+    /// <param name="activationPrice">Used with TRAILING_STOP_MARKET orders, default as the latest price（supporting different workingType)</param>
+    /// <param name="callbackRate">Used with TRAILING_STOP_MARKET orders</param>
+    /// <param name="workingType">stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE"</param>
+    /// <param name="closePosition">Close-All，used with STOP_MARKET or TAKE_PROFIT_MARKET.</param>
+    /// <param name="orderResponseType">The response type. Default Acknowledge</param>
+    /// <param name="priceProtect">If true when price reaches stopPrice, difference between "MARK_PRICE" and "CONTRACT_PRICE" cannot be larger than "triggerProtect" of the symbol.</param>
+    /// <param name="priceMatch">Only available for Limit/Stop/TakeProfit order</param>
+    /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
+    /// <param name="goodTillDate">Order cancel time for timeInForce GoodTillDate</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Id's for the placed order</returns>
+    Task<RestCallResult<BinanceFuturesOrder>> PlaceTestOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesOrderType type, decimal? quantity, decimal? price = null, decimal? stopPrice = null, string? newClientOrderId = null, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceFuturesPriceMatch? priceMatch = null, BinanceFuturesWorkingType? workingType = null, bool? reduceOnly = null, bool? closePosition = null, bool? priceProtect = null, decimal? activationPrice = null, decimal? callbackRate = null, DateTime? goodTillDate = null, int? receiveWindow = null, CancellationToken ct = default);
 }

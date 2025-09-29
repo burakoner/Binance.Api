@@ -245,7 +245,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<List<BinanceFuturesCoinOpenInterestHistory>>(GetUrl(dapi, "", "futures/data/openInterestHist"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesCoinOpenInterestHistory>>(GetUrl("", "", "futures/data/openInterestHist"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<List<BinanceFuturesLongShortRatio>>> GetTopLongShortPositionRatioAsync(string symbolPair, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
@@ -262,7 +262,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<List<BinanceFuturesLongShortRatio>>(GetUrl(dapi, "", "futures/data/topLongShortPositionRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesLongShortRatio>>(GetUrl("", "", "futures/data/topLongShortPositionRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<List<BinanceFuturesLongShortRatio>>> GetTopLongShortAccountRatioAsync(string symbolPair, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
@@ -278,7 +278,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<List<BinanceFuturesLongShortRatio>>(GetUrl(dapi, "", "futures/data/topLongShortAccountRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesLongShortRatio>>(GetUrl("", "", "futures/data/topLongShortAccountRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<List<BinanceFuturesLongShortRatio>>> GetGlobalLongShortAccountRatioAsync(string symbolPair, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
@@ -295,7 +295,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<List<BinanceFuturesLongShortRatio>>(GetUrl(dapi, "", "futures/data/globalLongShortAccountRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesLongShortRatio>>(GetUrl("", "", "futures/data/globalLongShortAccountRatio"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<List<BinanceFuturesCoinBuySellVolumeRatio>>> GetTakerBuySellVolumeRatioAsync(string pair, BinanceFuturesContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
@@ -313,7 +313,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<List<BinanceFuturesCoinBuySellVolumeRatio>>(GetUrl(dapi, "", "futures/data/takerBuySellVol"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesCoinBuySellVolumeRatio>>(GetUrl("", "", "futures/data/takerBuySellVol"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<List<BinanceFuturesBasis>>> GetBasisAsync(string pair, BinanceFuturesContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
@@ -331,8 +331,16 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        return RequestAsync<List<BinanceFuturesBasis>>(GetUrl(dapi, "", "futures/data/basis"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesBasis>>(GetUrl("", "", "futures/data/basis"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
     }
 
-    // TODO: Query Index Price Constituents
+    public Task<RestCallResult<BinanceFuturesIndexPriceConstituents>> GetIndexPriceConstituentsAsync(string symbol, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol }
+        };
+
+        return RequestAsync<BinanceFuturesIndexPriceConstituents>(GetUrl(dapi, v1, "constituents"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+    }
 }

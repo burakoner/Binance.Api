@@ -1,5 +1,40 @@
 ## Change Log & Release Notes
 
+* Version 5.9.29 - 29 Sep 2025
+  * Fixed minor bugs
+  * Added missing endpoints as below
+    * IBinanceFuturesRestClientCoinMarketData
+      - GetIndexPriceConstituentsAsync
+
+    * IBinanceFuturesRestClientCoinPortfolioMargin
+      - GetPortfolioMarginAccountInfoAsync
+
+    * IBinanceFuturesRestClientCoinTrade
+      - ModifyOrderAsync
+      - ModifyOrdersAsync
+      - GetOrderModifyHistoryAsync
+
+    * IBinanceFuturesRestClientUsdAccount
+      - GetAccountInfoAsync
+
+    * IBinanceFuturesRestClientUsdMarketData
+      - GetDeliveryPricesAsync
+      - GetIndexPriceConstituentsAsync
+      - GetInsuranceBalancesAsync
+
+    * IBinanceFuturesRestClientUsdPortfolioMargin
+      - GetPortfolioMarginAccountInfoAsync
+
+    * IBinanceFuturesRestClientUsdTrade
+      - PlaceTestOrderAsync
+
+    * IBinanceFuturesSocketClientCoinStreamMarketData
+      - SubscribeToAllMarkPriceUpdatesOfAllSymbolsOfPairAsync
+
+    * IBinanceWalletRestClientAsset
+      - GetDelegationHistoryAsync
+      - GetListScheduleAsync
+
 * Version 5.7.21 - 21 Jul 2025
 
 * Version 5.6.19 - 17 Jun 2025

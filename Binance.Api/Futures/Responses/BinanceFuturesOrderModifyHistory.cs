@@ -3,7 +3,7 @@
 /// <summary>
 /// The history of order edits
 /// </summary>
-public record BinanceFuturesOrderEditHistory
+public record BinanceFuturesOrderModifyHistory
 {
     /// <summary>
     /// The symbol the order is for

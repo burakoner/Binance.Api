@@ -38,8 +38,6 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<List<BinanceFuturesSymbolBracket>>(GetUrl(dapi, v2, "leverageBracket"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    // TODO: Notional Bracket for Pair(USER_DATA)
-
     public Task<RestCallResult<BinanceFuturesPositionMode>> GetPositionModeAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();

@@ -289,5 +289,12 @@ public interface IBinanceFuturesRestClientCoinMarketData
     /// <returns>Basis</returns>
     Task<RestCallResult<List<BinanceFuturesBasis>>> GetBasisAsync(string pair, BinanceFuturesContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
-    // TODO: Query Index Price Constituents
+    /// <summary>
+    /// Query index price constituents
+    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Constituents" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceFuturesIndexPriceConstituents>> GetIndexPriceConstituentsAsync(string symbol, CancellationToken ct = default);
 }

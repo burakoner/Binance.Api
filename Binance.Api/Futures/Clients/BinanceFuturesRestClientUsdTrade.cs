@@ -176,7 +176,7 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesOrder>(GetUrl(fapi, v1, "order"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchOrderModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         var parameterOrders = new List<Dictionary<string, object>>();
@@ -214,7 +214,7 @@ internal partial class BinanceFuturesRestClientUsd
         return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesOrderEditHistory>>> GetOrderEditHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
@@ -227,7 +227,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
-        return RequestAsync<List<BinanceFuturesOrderEditHistory>>(GetUrl(fapi, v1, "orderAmendment"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesOrderModifyHistory>>(GetUrl(fapi, v1, "orderAmendment"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public async Task<RestCallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
@@ -518,5 +518,78 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<List<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(fapi, v3, "positionMargin/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    // TODO: Test Order(TRADE)
+    public async Task<RestCallResult<BinanceFuturesOrder>> PlaceTestOrderAsync(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceFuturesOrderType type,
+        decimal? quantity,
+        decimal? price = null,
+        decimal? stopPrice = null,
+        string? newClientOrderId = null,
+        BinancePositionSide? positionSide = null,
+        BinanceTimeInForce? timeInForce = null,
+        BinanceOrderResponseType? orderResponseType = null,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
+        BinanceFuturesPriceMatch? priceMatch = null,
+        BinanceFuturesWorkingType? workingType = null,
+        bool? reduceOnly = null,
+        bool? closePosition = null,
+        bool? priceProtect = null,
+        decimal? activationPrice = null,
+        decimal? callbackRate = null,
+        DateTime? goodTillDate = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        if (closePosition == true && positionSide != null)
+        {
+            if (positionSide == BinancePositionSide.Short && side == BinanceOrderSide.Sell)
+                throw new ArgumentException("Can't close short position with order side sell");
+            if (positionSide == BinancePositionSide.Long && side == BinanceOrderSide.Buy)
+                throw new ArgumentException("Can't close long position with order side buy");
+        }
+
+        if (orderResponseType == BinanceOrderResponseType.Full)
+            throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
+
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
+        if (!rulesCheck.Passed)
+        {
+            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            return new RestCallResult<BinanceFuturesOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
+        }
+
+        quantity = rulesCheck.Quantity;
+        price = rulesCheck.Price;
+        stopPrice = rulesCheck.StopPrice;
+
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
+
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddEnum("side", side);
+        parameters.AddEnum("type", type);
+        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("newClientOrderId", clientOrderId);
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
+        parameters.AddOptionalEnum("timeInForce", timeInForce);
+        parameters.AddOptionalEnum("positionSide", positionSide);
+        parameters.AddOptional("stopPrice", stopPrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("activationPrice", activationPrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("callbackRate", callbackRate?.ToString(BinanceConstants.CI));
+        parameters.AddOptionalEnum("workingType", workingType);
+        parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLower());
+        parameters.AddOptional("closePosition", closePosition?.ToString().ToLower());
+        parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("priceProtect", priceProtect?.ToString().ToUpper());
+        parameters.AddOptionalEnum("priceMatch", priceMatch);
+        parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
+        parameters.AddOptionalMilliseconds("goodTillDate", goodTillDate);
+
+        var result = await RequestAsync<BinanceFuturesOrder>(GetUrl(fapi, v1, "order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 0).ConfigureAwait(false);
+        if (result) InvokeOrderPlaced(result.Data.Id);
+
+        return result;
+    }
 }

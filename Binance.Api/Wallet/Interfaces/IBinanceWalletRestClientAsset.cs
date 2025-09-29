@@ -157,7 +157,21 @@ public interface IBinanceWalletRestClientAsset
     /// <returns></returns>
     Task<RestCallResult<BinanceRowsResult<BinanceWalletCloudMiningHistory>>> GetCloudMiningHistoryAsync(DateTime startTime, DateTime endTime, long? transferId = null, string? clientTransferId = null, string? asset = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Query User Delegation History(For Master Account)(USER_DATA)
+    /// <summary>
+    /// Query User Delegation History
+    /// <para><a href="https://developers.binance.com/docs/wallet/asset/query-user-delegation" /></para>
+    /// </summary>
+    /// <param name="email">Email</param>
+    /// <param name="startTime">Filter by start time</param>
+    /// <param name="endTime">Filter by end time</param>
+    /// <param name="type">Transfer Type</param>
+    /// <param name="asset">Asset</param>
+    /// <param name="page">Page</param>
+    /// <param name="pageSize">Page size</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceRowsResult<BinanceWalletDelegationHistory>>> GetDelegationHistoryAsync(string email, DateTime startTime, DateTime endTime, BinanceWalletDelegationTransferType? type = null, string? asset = null, int? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get spot symbols delist schedule
@@ -168,5 +182,10 @@ public interface IBinanceWalletRestClientAsset
     /// <returns></returns>
     Task<RestCallResult<List<BinanceWalletDelistSchedule>>> GetDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Get Open Symbol List (MARKET_DATA)
+    /// <summary>
+    /// Get the list of symbols that are scheduled to be opened for trading in the market.
+    /// </summary>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<List<BinanceWalletListSchedule>>> GetListScheduleAsync(CancellationToken ct = default);
 }

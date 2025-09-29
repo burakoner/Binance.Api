@@ -269,7 +269,7 @@ internal class Program
         var futures_202 = await api.UsdFutures.PlaceOrdersAsync([]);
         var futures_203 = await api.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
         var futures_204 = await api.UsdFutures.ModifyOrdersAsync([]);
-        var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("---SYMBOL---");
+        var futures_205 = await api.UsdFutures.GetOrderModifyHistoryAsync("---SYMBOL---");
         var futures_206 = await api.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
         var futures_207 = await api.UsdFutures.CancelOrdersAsync("---SYMBOL---", [1_000_000L]);
         var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("---SYMBOL---");

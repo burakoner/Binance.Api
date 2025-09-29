@@ -72,9 +72,55 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <returns>Returns a list of call results, one for each order. The order the results are in is the order the orders were sent</returns>
     Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Modify Order (TRADE)
-    // TODO: Modify Multiple Orders(TRADE)
-    // TODO: Get Order Modify History (USER_DATA)
+    /// <summary>
+    /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
+    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
+    /// <param name="side">The order side (buy/sell)</param>
+    /// <param name="orderId">The order id of the order</param>
+    /// <param name="origClientOrderId">The client order id of the order</param>
+    /// <param name="quantity">Order quantity, cannot be sent with closePosition=true</param>
+    /// <param name="price">Order Price</param>
+    /// <param name="priceMatch">Price Match</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
+        string symbol,
+        BinanceOrderSide side,
+        long? orderId = null,
+        string? origClientOrderId = null,
+        decimal? quantity = null,
+        decimal? price = null,
+        BinanceFuturesPriceMatch? priceMatch = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Modify Multiple Orders
+    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Multiple-Orders" /></para>
+    /// </summary>
+    /// <param name="orders">Orders Payload</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Get order edit history
+    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Order-Modify-History" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol to get orders for, for example `ETHUSDT`</param>
+    /// <param name="orderId">Filter by order id</param>
+    /// <param name="clientOrderId">Filter by client order id</param>
+    /// <param name="startTime">If set, only orders edited after this time will be returned</param>
+    /// <param name="endTime">If set, only orders edited before this time will be returned</param>
+    /// <param name="limit">Max number of results</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    public Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending order

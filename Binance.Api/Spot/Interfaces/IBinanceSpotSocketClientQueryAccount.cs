@@ -74,4 +74,8 @@ public interface IBinanceSpotSocketClientQueryAccount
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<CallResult<List<BinanceSpotPreventedTrade>>> GetPreventedTradesAsync(string symbol, long? preventedTradeId = null, long? orderId = null, long? fromPreventedTradeId = null, int? limit = null, CancellationToken ct = default);
+
+    // TODO: Account allocations (USER_DATA)
+    // TODO: Account Commission Rates (USER_DATA
+    // TODO: Query Order Amendments (USER_DATA)
 }
