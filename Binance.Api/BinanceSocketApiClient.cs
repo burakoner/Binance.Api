@@ -82,11 +82,11 @@ public class BinanceSocketApiClient
     /// </summary>
     /// <param name="apikey"></param>
     /// <param name="secret"></param>
-    public void SetApiCredentials(string apikey, string secret)
+    /// <param name="type"></param>
+    public void SetApiCredentials(string apikey, string secret, ApiCredentialsType type = ApiCredentialsType.HMAC)
     {
-        ((BinanceSpotSocketClient)Spot).SetApiCredentials(new ApiCredentials(apikey, secret));
-        ((BinanceFuturesSocketClientUsd)Futures.USD).SetApiCredentials(new ApiCredentials(apikey, secret));
-        ((BinanceFuturesSocketClientCoin)Futures.Coin).SetApiCredentials(new ApiCredentials(apikey, secret));
+        ((BinanceSpotSocketClient)Spot).SetApiCredentials(new ApiCredentials(apikey, secret, type));
+        ((BinanceFuturesSocketClientUsd)Futures.USD).SetApiCredentials(new ApiCredentials(apikey, secret, type));
+        ((BinanceFuturesSocketClientCoin)Futures.Coin).SetApiCredentials(new ApiCredentials(apikey, secret, type));
     }
-
 }

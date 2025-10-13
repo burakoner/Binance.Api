@@ -1,5 +1,8 @@
 ## Change Log & Release Notes
 
+* Version 5.10.13 - 13 Oct 2025
+  * Added new SetApiCredentials method override
+
 * Version 5.9.29 - 29 Sep 2025
   * Fixed minor bugs
   * Added missing endpoints as below

@@ -239,7 +239,8 @@ public sealed class BinanceRestApiClient : RestApiClient
     /// </summary>
     /// <param name="apikey">API Key</param>
     /// <param name="secret">API Secret</param>
-    public void SetApiCredentials(string apikey, string secret) => SetApiCredentials(new ApiCredentials(apikey, secret));
+    /// <param name="type">API Credentials Type</param>
+    public void SetApiCredentials(string apikey, string secret, ApiCredentialsType type = ApiCredentialsType.HMAC) => SetApiCredentials(new ApiCredentials(apikey, secret, type));
     #endregion
 
     #region Overrided Methods

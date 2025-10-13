@@ -10,6 +10,8 @@ internal partial class BinanceOptionsRestClient
         return RequestAsync<BinanceOptionsAccount>(GetUrl(eapi, v1, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
+    // TODO: Option Margin Account Information (USER_DATA)
+
     public Task<RestCallResult<List<BinanceOptionsAccountFundingFlow>>> GetAccountFundingFlowAsync(string currency, long? recordId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
