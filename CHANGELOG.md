@@ -1,5 +1,8 @@
 ## Change Log & Release Notes
 
+* Version 5.10.19 - 19 Oct 2025
+  * Updated to ApiSharp 4.1.0
+
 * Version 5.10.13 - 13 Oct 2025
   * Added new SetApiCredentials method override
 
