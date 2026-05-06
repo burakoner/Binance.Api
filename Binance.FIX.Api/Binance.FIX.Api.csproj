@@ -36,8 +36,8 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="QuickFIXn.Core" Version="1.13.1" />
-    <PackageReference Include="QuickFIXn.FIX4.4" Version="1.13.0" />
+    <PackageReference Include="QuickFIXn.Core" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX44" Version="1.14.0" />
   </ItemGroup>
 
 </Project>
