@@ -62,3 +62,19 @@ public record BinanceMarginForcedLiquidation
     /// </summary>
     public bool IsIsolated { get; set; }
 }
+
+/// <summary>
+/// Paginated forced-liquidation history.
+/// </summary>
+public record BinanceMarginForcedLiquidationResult
+{
+    /// <summary>
+    /// Forced-liquidation records.
+    /// </summary>
+    public List<BinanceMarginForcedLiquidation> Rows { get; set; } = [];
+
+    /// <summary>
+    /// Total number of records.
+    /// </summary>
+    public long Total { get; set; }
+}

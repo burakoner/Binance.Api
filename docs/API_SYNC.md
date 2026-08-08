@@ -181,13 +181,16 @@ Slice 28 audits both current Margin Transfer routes. Transfer history now expose
 
 The transfer-history response now has a route-specific `int64` total rather than using the shared `int32` envelope. Transaction identifiers are `int64` instead of decimal. Binance documents the response `timestamp` only as an integer and shows a 10-digit value without defining the unit, so the wrapper preserves it as raw `int64`; the previous millisecond converter produced a false 1970 date, while silently assuming seconds would be undocumented. Three deterministic groups raise the suite to 110 tests. A forced full solution rebuild succeeds on every declared target with the same three known warnings. No authenticated production transfer history or account data was requested. Route inventory is unchanged at 65 official routes, 59 wrapper routes, 59 exact matches, six official-only Special Key routes, and no wrapper-only routes.
 
+Slice 29 audits all 11 read-only operations in the current Margin Trade catalog. Forced-liquidation history now sends the documented `current` field instead of the invalid `page` field, and both it and small-liability history use route-specific `int64` totals and pagination. Small-liability history always sends its formally required `current` and `size` fields with the documented defaults. The misleading `GetMarginRateLimitsAsync` name is replaced by `GetMarginOrderCountUsageAsync` without a historical alias; the operation exposes the missing Cross/Isolated scope fields and uses a Margin-specific model whose interval, limit, and count fields are `int64`.
+
+All OCO, order, open-order, and user-trade queries now encode `isIsolated` as the documented uppercase `TRUE`/`FALSE`, validate required or unsupported symbols by account scope, enforce parameter limits and the 60000-millisecond receive window, and reject explicit all-order or trade-list periods of 24 hours or more. Query operations preserve caller-supplied `origClientOrderId` values exactly; the previous broker-prefix transformation could silently search for a different order. The Margin trade response drops undocumented `orderListId` and `quoteQty` fields and models the documented `isIsolated` boolean as required. Six deterministic groups exercise every successful read-only route plus invalid request shapes, raising the suite to 116 tests. A forced full solution rebuild succeeds on every declared target with the same three known warnings. No authenticated production liquidation, liability, order, or trade data was requested. Route inventory is unchanged at 65 official routes, 59 wrapper routes, 59 exact matches, six official-only Special Key routes, and no wrapper-only routes.
+
 ### Revised next order
 
-1. Audit the untouched read-only Margin Trade queries before adding new security-sensitive operations.
-2. Handle all six Margin Special Key routes as one coherent, separately reviewed slice; creation, deletion, IP editing, exit mode, and key queries must not be mixed with ordinary account-query work.
-3. Perform Backward Review 7 after the Transfer, read-only Trade, and Special Key slices; revise the remaining Margin scope from its findings.
-4. Audit server-side 418/429 backoff propagation per transport while reviewing each product's error contract; do not treat the removed static limiter as retry protection.
-5. Move to Convert, Algo Trading, USDⓈ-M, COIN-M, and Options only after the Margin matched-route audit is complete.
+1. Handle all six Margin Special Key routes as one coherent, separately reviewed slice; creation, deletion, IP editing, exit mode, and key queries must not be mixed with ordinary account-query work.
+2. Perform Backward Review 7 across slices 26-30; recheck the complete Market Data, Account, Transfer, read-only Trade, and Special Key changes and revise the remaining Margin scope from its findings.
+3. Audit server-side 418/429 backoff propagation per transport while reviewing each product's error contract; do not treat the removed static limiter as retry protection.
+4. Move to Convert, Algo Trading, USDⓈ-M, COIN-M, and Options only after the Margin matched-route audit is complete.
 
 ## Review log
 
@@ -227,3 +230,4 @@ The transfer-history response now has a route-specific `int64` total rather than
 | 26 | Complete | Complete current Margin Market Data surface | Live canonical Market Data catalog, current generated connector, documented MARKET_DATA timestamp conflicts, signed USER_DATA corrections, raw-time/model/name alignment, 104 deterministic tests, forced full multi-target rebuild |
 | 27 | Complete | Complete current Margin Account surface | Live canonical Account catalog, 2023-11-17 leverage changelog, current generated connector, request/body/query/weight/constraint/model tests, 107 deterministic tests |
 | 28 | Complete | Complete current Margin Transfer surface | Live canonical Transfer catalog, current generated connector, filter/range/pagination/weight/model tests, 110 deterministic tests |
+| 29 | Complete | Complete current read-only Margin Trade surface | Live canonical Trade catalog, current generated connector, query/weight/scope/range/pagination/model tests across all 11 operations, 116 deterministic tests |

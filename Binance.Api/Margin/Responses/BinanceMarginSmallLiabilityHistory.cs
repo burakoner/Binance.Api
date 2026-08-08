@@ -38,3 +38,19 @@ public record BinanceMarginSmallLiabilityHistory
     [JsonConverter(typeof(DateTimeConverter))]
     public DateTime Timestamp { get; set; }
 }
+
+/// <summary>
+/// Paginated small-liability exchange history.
+/// </summary>
+public record BinanceMarginSmallLiabilityHistoryResult
+{
+    /// <summary>
+    /// Small-liability exchange records.
+    /// </summary>
+    public List<BinanceMarginSmallLiabilityHistory> Rows { get; set; } = [];
+
+    /// <summary>
+    /// Total number of records.
+    /// </summary>
+    public long Total { get; set; }
+}

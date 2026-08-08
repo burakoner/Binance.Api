@@ -21,11 +21,6 @@ public record BinanceMarginTrade
     public long OrderId { get; set; }
 
     /// <summary>
-    /// Id of the order list this order belongs to
-    /// </summary>
-    public long? OrderListId { get; set; }
-
-    /// <summary>
     /// The price of the trade
     /// </summary>
     public decimal Price { get; set; }
@@ -35,12 +30,6 @@ public record BinanceMarginTrade
     /// </summary>
     [JsonProperty("qty")]
     public decimal Quantity { get; set; }
-
-    /// <summary>
-    /// The quote quantity of the trade
-    /// </summary>
-    [JsonProperty("quoteQty")]
-    public decimal QuoteQuantity { get; set; }
 
     /// <summary>
     /// The fee paid for the trade
@@ -78,5 +67,5 @@ public record BinanceMarginTrade
     /// <summary>
     /// If isolated margin (for margin account orders)
     /// </summary>
-    public bool? IsIsolated { get; set; }
+    public bool IsIsolated { get; set; }
 }

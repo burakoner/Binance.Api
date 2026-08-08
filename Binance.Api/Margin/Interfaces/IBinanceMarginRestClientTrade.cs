@@ -19,40 +19,50 @@ public interface IBinanceMarginRestClientTrade
     event Action<long>? OnOrderCanceled;
 
     /// <summary>
-    /// Get history of forced liquidations
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade" /></para>
+    /// Gets forced-liquidation records in descending update-time order.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#get-force-liquidation-record" /></para>
     /// </summary>
-    /// <param name="page">Results page</param>
-    /// <param name="startTime">Filter by startTime from</param>
-    /// <param name="endTime">Filter by endTime from</param>
-    /// <param name="isolatedSymbol">Filter by isolated symbol</param>
-    /// <param name="limit">Limit of the amount of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>List of forced liquidations</returns>
-    Task<RestCallResult<BinanceRowsResult<BinanceMarginForcedLiquidation>>> GetMarginForcedLiquidationHistoryAsync(int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <param name="startTime">Optional inclusive start time.</param>
+    /// <param name="endTime">Optional inclusive end time.</param>
+    /// <param name="isolatedSymbol">Optional Isolated Margin symbol filter.</param>
+    /// <param name="current">Page number, minimum 1.</param>
+    /// <param name="size">Records per page, between 1 and 100.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginForcedLiquidationResult>> GetMarginForcedLiquidationHistoryAsync(
+        DateTime? startTime = null,
+        DateTime? endTime = null,
+        string? isolatedSymbol = null,
+        long? current = null,
+        long? size = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
 
     /// <summary>
-    /// Query the coins which can be small liability exchange
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-Coin-List" /></para>
+    /// Gets assets eligible for Cross Margin small-liability exchange.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#get-small-liability-exchange-coin-list" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
     Task<RestCallResult<List<BinanceMarginSmallLiabilityAsset>>> GetSmallLiabilityExchangeAssetsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Get Small liability Exchange History
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-History" /></para>
+    /// Gets Cross Margin small-liability exchange history.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#get-small-liability-exchange-history" /></para>
     /// </summary>
-    /// <param name="startTime">Filter by startTime</param>
-    /// <param name="endTime">Filter by endTime</param>
-    /// <param name="page">The page</param>
-    /// <param name="limit">Results per page</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<RestCallResult<BinanceRowsResult<BinanceMarginSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <param name="current">Page number, minimum 1. Binance requires the field; defaults to 1.</param>
+    /// <param name="size">Records per page, between 1 and 100. Binance requires the field; defaults to 10.</param>
+    /// <param name="startTime">Optional inclusive start time. Binance defaults to 30 days before the request.</param>
+    /// <param name="endTime">Optional inclusive end time. Binance defaults to the request time.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginSmallLiabilityHistoryResult>> GetSmallLiabilityExchangeHistoryAsync(
+        long current = 1,
+        long size = 10,
+        DateTime? startTime = null,
+        DateTime? endTime = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
 
     /// <summary>
     /// Manually liquidates a Cross or supported Isolated Margin account.
@@ -203,107 +213,108 @@ public interface IBinanceMarginRestClientTrade
     Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, string? newClientOrderId = null, decimal? price = null, BinanceTimeInForce? timeInForce = null, decimal? stopPrice = null, decimal? icebergQuantity = null, BinanceMarginSideEffectType? sideEffectType = null, bool? isIsolated = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, bool? autoRepayAtCancel = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Get isolated margin order rate limits
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Current-Margin-Order-Count-Usage" /></para>
+    /// Gets current Margin order-count usage.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-current-margin-order-count-usage" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<RestCallResult<List<BinanceCurrentRateLimit>>> GetMarginRateLimitsAsync(int? receiveWindow = null, CancellationToken ct = default);
+    /// <param name="isIsolated">Whether to query Isolated Margin; defaults to Cross Margin.</param>
+    /// <param name="symbol">Required when <paramref name="isIsolated" /> is true.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<List<BinanceMarginCurrentOrderCountUsage>>> GetMarginOrderCountUsageAsync(bool? isIsolated = null, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Retrieves a list of margin oco orders matching the parameters
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-OCO" /></para>
+    /// Retrieves Margin OCO order lists matching the parameters.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-all-oco" /></para>
     /// </summary>
     /// <param name="symbol">Mandatory for isolated margin, not supported for cross margin, for example `ETHUSDT`</param>
     /// <param name="isIsolated">For isolated margin or not</param>
     /// <param name="fromId">Only return oco orders with id higher than this</param>
     /// <param name="startTime">Only return oco orders placed later than this. Only valid if fromId isn't provided</param>
     /// <param name="endTime">Only return oco orders placed before this. Only valid if fromId isn't provided</param>
-    /// <param name="limit">Max number of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>Order lists matching the parameters</returns>
-    Task<RestCallResult<List<BinanceMarginOrderOcoList>>> GetMarginOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <param name="limit">Maximum results, between 1 and 1000; defaults to 500.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>Order lists matching the parameters.</returns>
+    Task<RestCallResult<List<BinanceMarginOrderOcoList>>> GetMarginOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets all margin account orders for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-all-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get orders for, for example `ETHUSDT`</param>
     /// <param name="isIsolated">For isolated margin or not</param>
     /// <param name="orderId">If set, only orders with an order id higher than the provided will be returned</param>
-    /// <param name="startTime">If set, only orders placed after this time will be returned</param>
-    /// <param name="endTime">If set, only orders placed before this time will be returned</param>
-    /// <param name="limit">Max number of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>List of margin account orders</returns>
-    Task<RestCallResult<List<BinanceMarginOrder>>> GetMarginOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <param name="startTime">Optional start time. Together with <paramref name="endTime" />, the range must be less than 24 hours.</param>
+    /// <param name="endTime">Optional end time. Together with <paramref name="startTime" />, the range must be less than 24 hours.</param>
+    /// <param name="limit">Maximum results, between 1 and 500.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>List of Margin account orders.</returns>
+    Task<RestCallResult<List<BinanceMarginOrder>>> GetMarginOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Retrieves data for a specific margin oco order. Either orderListId or listClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-OCO" /></para>
+    /// Retrieves one Margin OCO order list. Either orderListId or origClientOrderId must be provided.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-oco" /></para>
     /// </summary>
     /// <param name="symbol">Mandatory for isolated margin, not supported for cross margin, for example `ETHUSDT`</param>
-    /// <param name="isIsolated">For isolated margin or not</param>
+    /// <param name="isIsolated">Whether to query Isolated Margin; defaults to Cross Margin.</param>
     /// <param name="orderListId">The list order id of the order</param>
-    /// <param name="origClientOrderId">Either orderListId or listClientOrderId must be provided</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>The specific order list</returns>
+    /// <param name="origClientOrderId">Original client order-list identifier. Either this or <paramref name="orderListId" /> must be provided.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The specific order list.</returns>
     Task<RestCallResult<BinanceMarginOrderOcoList>> GetMarginOcoOrderAsync(string? symbol = null, bool? isIsolated = null, long? orderListId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Retrieves a list of open margin oco orders
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-OCO" /></para>
+    /// Retrieves open Margin OCO order lists.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-open-oco" /></para>
     /// </summary>
     /// <param name="symbol">Mandatory for isolated margin, not supported for cross margin, for example `ETHUSDT`</param>
-    /// <param name="isIsolated">For isolated margin or not</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>Open order lists</returns>
+    /// <param name="isIsolated">Whether to query Isolated Margin; defaults to Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>Open order lists.</returns>
     Task<RestCallResult<List<BinanceMarginOrderOcoList>>> GetMarginOpenOcoOrdersAsync(string? symbol = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets a list of open margin account orders
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-Orders" /></para>
+    /// Gets open Margin account orders.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-open-orders" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get open orders for, for example `ETHUSDT`</param>
-    /// <param name="isIsolated">For isolated margin or not</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>List of open margin account orders</returns>
+    /// <param name="symbol">Optional symbol filter for Cross Margin; required for Isolated Margin.</param>
+    /// <param name="isIsolated">Whether to query Isolated Margin; defaults to Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>List of open Margin account orders.</returns>
     Task<RestCallResult<List<BinanceMarginOrder>>> GetOpenMarginOrdersAsync(string? symbol = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Retrieves data for a specific margin account order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Order" /></para>
+    /// Retrieves one Margin account order. Either orderId or origClientOrderId must be provided.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
-    /// <param name="isIsolated">For isolated margin or not</param>
+    /// <param name="isIsolated">Whether to query Isolated Margin; defaults to Cross Margin.</param>
     /// <param name="orderId">The order id of the order</param>
     /// <param name="origClientOrderId">The client order id of the order</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>The specific margin account order</returns>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The specific Margin account order.</returns>
     Task<RestCallResult<BinanceMarginOrder>> GetMarginOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets all user margin account trades for provided symbol
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Trade-List" /></para>
+    /// Gets Margin account trades for a symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-trade-list" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get trades for, for example `ETHUSDT`</param>
     /// <param name="orderId">Trades associated with orderId</param>
-    /// <param name="startTime">Orders newer than this date will be retrieved</param>
-    /// <param name="endTime">Orders older than this date will be retrieved</param>
-    /// <param name="limit">The max number of results</param>
+    /// <param name="startTime">Optional start time. Together with <paramref name="endTime" />, the range must be less than 24 hours.</param>
+    /// <param name="endTime">Optional end time. Together with <paramref name="startTime" />, the range must be less than 24 hours.</param>
+    /// <param name="limit">Maximum results, between 1 and 1000; defaults to 500.</param>
     /// <param name="fromId">TradeId to fetch from. Default gets most recent trades</param>
-    /// <param name="isIsolated">For isolated margin or not</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns>List of margin account trades</returns>
-    Task<RestCallResult<List<BinanceMarginTrade>>> GetMarginUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <param name="isIsolated">Whether to query Isolated Margin; defaults to Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>List of Margin account trades.</returns>
+    Task<RestCallResult<List<BinanceMarginTrade>>> GetMarginUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? fromId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Queries prevented Margin matches for one symbol. Binance returns at most 500 matches per request.
