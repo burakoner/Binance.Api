@@ -5,6 +5,17 @@ namespace Binance.Api.Tests.Infrastructure;
 public class BinanceRateLimiterTests
 {
     [Fact]
+    public void DefaultOptions_DoNotInstallStaleStaticLimiters()
+    {
+        var options = new BinanceRestApiClientOptions("api-key", "api-secret");
+
+#pragma warning disable CS0612
+        Assert.Empty(options.RateLimiters);
+#pragma warning restore CS0612
+        Assert.True(options.RateLimiterEnabled);
+    }
+
+    [Fact]
     public async Task DisabledRateLimiter_DoesNotApplyConfiguredLimiters()
     {
         var handler = new RecordingHttpMessageHandler("[]");

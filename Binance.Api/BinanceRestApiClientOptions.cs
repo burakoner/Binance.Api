@@ -3,6 +3,11 @@
 /// <summary>
 /// Binance Rest API Client Options
 /// </summary>
+/// <remarks>
+/// No static rate limiter is installed by default. Binance publishes multiple dynamic, product-specific
+/// limits, while the underlying transport limiter accepts only one request-weight dimension. Configure a
+/// custom limiter only when its counter semantics and scope match the Binance product being called.
+/// </remarks>
 public class BinanceRestApiClientOptions : RestApiClientOptions
 {
     /// <summary>
@@ -79,15 +84,6 @@ public class BinanceRestApiClientOptions : RestApiClientOptions
     {
         // API Credentials
         ApiCredentials = credentials;
-
-        // Rate Limiters
-        RateLimiters =
-        [
-            new RateLimiter()
-                .AddPartialEndpointLimit("/api/", 1200, TimeSpan.FromMinutes(1))
-                .AddPartialEndpointLimit("/sapi/", 12000, TimeSpan.FromMinutes(1))
-                .AddEndpointLimit("/api/v3/order", 50, TimeSpan.FromSeconds(10), HttpMethod.Post, true)
-        ];
     }
 }
 
