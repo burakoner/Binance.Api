@@ -8,7 +8,7 @@
  * USER_DATA	    Endpoint requires sending a valid API-Key and signature.
  * USER_STREAM	    Endpoint requires sending a valid API-Key.
  * 
- * https://developers.binance.com/docs/binance-spot-api-docs/rest-api/endpoint-security-type
+ * https://developers.binance.com/en/docs/products/spot/rest-api
  */
 internal class BinanceAuthentication(ApiCredentials credentials) : AuthenticationProvider(credentials)
 {
@@ -29,29 +29,29 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
 
         // Timestamp
         var timestamp = GetMillisecondTimestamp(apiClient);
-        if (method == HttpMethod.Get) query.Add("timestamp", timestamp);
+        if (method == HttpMethod.Get || body.Count == 0) query.Add("timestamp", timestamp);
         else body.Add("timestamp", timestamp);
 
         // Set Uri Parameters
         uri = uri.SetParameters(query, serialization);
 
         // Signature
+        var queryString = uri.Query.TrimStart('?');
+        var bodyString = body.Count > 0 ? body.ToFormData() : string.Empty;
+        var signaturePayload = queryString + bodyString;
         if (Credentials.Type == ApiCredentialsType.HMAC)
         {
-            var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
-            var signature = SignHMACSHA256(signbody).ToLowerInvariant();
+            var signature = SignHMACSHA256(signaturePayload).ToLowerInvariant();
             query.Add("signature", signature);
         }
-        else if (Credentials.Type == ApiCredentialsType.RsaXml || Credentials.Type == ApiCredentialsType.RsaXml)
+        else if (Credentials.Type == ApiCredentialsType.RsaXml || Credentials.Type == ApiCredentialsType.RsaPem)
         {
-            var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
-            var signature = SignRSASHA256(Encoding.ASCII.GetBytes(signbody), SignatureOutputType.Base64);
+            var signature = SignRSASHA256(Encoding.ASCII.GetBytes(signaturePayload), SignatureOutputType.Base64);
             query.Add("signature", signature);
         }
         else if (Credentials.Type == ApiCredentialsType.Ed25519)
         {
-            var signbody = body != null && body.Count > 0 ? body.ToFormData() : uri.Query.Replace("?", "");
-            var signature = SignEd25519(Encoding.ASCII.GetBytes(signbody), SignatureOutputType.Base64);
+            var signature = SignEd25519Base64(Encoding.ASCII.GetBytes(signaturePayload));
             query.Add("signature", signature);
         }
     }
@@ -65,19 +65,46 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
         };
         var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + System.Convert.ToString(p.Value, BinanceConstants.CI)));
 
+        string signature;
         if (Credentials.Type == ApiCredentialsType.HMAC)
         {
-            var sign = SignHMACSHA256(paramString);
-            var result = sortedParameters.ToDictionary(p => p.Key, p => p.Value);
-            result.Add("signature", sign);
-            return result;
+            signature = SignHMACSHA256(paramString);
+        }
+        else if (Credentials.Type == ApiCredentialsType.RsaXml || Credentials.Type == ApiCredentialsType.RsaPem)
+        {
+            signature = SignRSASHA256(Encoding.UTF8.GetBytes(paramString), SignatureOutputType.Base64);
+        }
+        else if (Credentials.Type == ApiCredentialsType.Ed25519)
+        {
+            signature = SignEd25519Base64(Encoding.UTF8.GetBytes(paramString));
         }
         else
         {
-            var sign = SignRSASHA256(Encoding.ASCII.GetBytes(paramString), SignatureOutputType.Base64);
-            var result = sortedParameters.ToDictionary(p => p.Key, p => p.Value);
-            result.Add("signature", sign);
-            return result;
+            throw new NotSupportedException($"Unsupported credential type: {Credentials.Type}");
         }
+
+        var result = sortedParameters.ToDictionary(p => p.Key, p => p.Value);
+        result.Add("signature", signature);
+        return result;
+    }
+
+    private string SignEd25519Base64(byte[] payload)
+    {
+#if NET8_0_OR_GREATER
+        var secret = Credentials.Secret.GetString().Trim();
+        if (!secret.Contains("-----BEGIN PRIVATE KEY-----", StringComparison.Ordinal))
+        {
+            secret = $"-----BEGIN PRIVATE KEY-----\r\n{secret}\r\n-----END PRIVATE KEY-----\r\n";
+        }
+
+        var algorithm = NSec.Cryptography.SignatureAlgorithm.Ed25519;
+        using var key = NSec.Cryptography.Key.Import(
+            algorithm,
+            Encoding.ASCII.GetBytes(secret),
+            NSec.Cryptography.KeyBlobFormat.PkixPrivateKeyText);
+        return System.Convert.ToBase64String(algorithm.Sign(key, payload));
+#else
+        throw new NotSupportedException("Ed25519 Algorithm is supported only .Net 8.0 or greater.");
+#endif
     }
 }
