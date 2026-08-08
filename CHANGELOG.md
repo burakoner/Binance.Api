@@ -8,6 +8,7 @@
   * Fixed six USDⓈ-M futures-data methods using an invalid `/fapi/futures/data` path, corrected their request weights, and added the missing CoinMarketCap circulating-supply field
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
+  * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport
   * Added a request-level test project for endpoint contract regression coverage
 
 * Version 5.10.19 - 19 Oct 2025

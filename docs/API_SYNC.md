@@ -42,7 +42,8 @@ The official documentation is a moving target. The baseline date must be advance
 - USDⓈ-M `GET /fapi/v1/adlQuantile` sent signed parameters in a GET body and expected an object when `symbol` was supplied, although the current endpoint always accepts query parameters and returns an array. Both mismatches are corrected and request/response behavior is covered by a regression test.
 - Six USDⓈ-M futures-data methods generated `/fapi/futures/data/...` instead of `/futures/data/...`. Three also treated the separate 1,000 requests/5 minutes quota as endpoint request weight 1,000 even though the documented IP weight is 0. Paths and weights are corrected, basis constraints are enforced, and the missing `CMCCirculatingSupply` response field is modeled.
 - USDⓈ-M position-margin-change history used undocumented `GET /fapi/v3/positionMargin/history`. It now uses the current v1 route, validates the required symbol and documented maximum 30-day query range, and has request/response regression coverage.
-- The current ApiSharp rate-limiter configuration API is obsolete and emits build warnings on every main-library target. Rate-limit behavior must be revalidated during the shared transport audit rather than treated as a cosmetic warning.
+- ApiSharp 4.5.1 does not read its own `RateLimiterEnabled` option in the active request path. Binance.Api now explicitly bypasses configured limiters when the option is false, with regression coverage.
+- The remaining default limiter configuration is not a reliable model of current Binance limits: it covers only `/api/` and `/sapi/`, omits derivatives product buckets, and receives one integer that cannot distinguish IP request weight, UID weight, order counters, and separate fixed-window quotas. Numeric rules will be corrected only from verified product contracts; the obsolete ApiSharp configuration warning is not treated as cosmetic.
 
 ## REST route inventory baseline
 
@@ -71,7 +72,7 @@ The official compact inventory currently lists `GET /dapi/v1/leverageBracket`, w
 
 ### Revised next order
 
-1. Revalidate shared rate-limit accounting before trusting bulk endpoint weights; distinguish IP request weight, UID/order counters, and separate fixed-window quotas.
+1. Replace the incomplete single-weight default rate-limit model as verified endpoint audits identify IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
 2. Implement the Spot WebSocket API user-data replacement, then remove retired Spot and Margin listen-key REST operations and update examples.
 3. Continue product-family audits using the route candidates only as discovery input: Spot, Margin, Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
 
@@ -86,3 +87,4 @@ The official compact inventory currently lists `GET /dapi/v1/leverageBracket`, w
 | Review 1 | Complete | Backward code/test/documentation review and execution-order revision | `8eefadc..32f0ba8` diff review, 17 request/authentication tests, full solution build, signed-GET parameter scan, canonical route and retirement verification |
 | 5 | Complete | USDⓈ-M position-margin-change history | Official USDⓈ-M Trade reference and generated official connector, v1 request contract and response test, 30-day range constraint test |
 | 6 | Complete | Retired Cross Margin Pro leverage-bracket operation | Official Margin changelog effective 2026-04-13, repository-wide call-site scan, README/console example cleanup, solution build |
+| 7 | Complete | Rate-limiter enable/disable transport contract | ApiSharp 4.5.1 source audit and disabled-limiter regression test |
