@@ -6,6 +6,41 @@ namespace Binance.Api.Spot;
 public interface IBinanceSpotSocketClientQueryUserDataStream
 {
     /// <summary>
+    /// Lists all user data stream subscriptions active on a WebSocket API session.
+    /// </summary>
+    /// <param name="session">Connection-scoped session to query</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Active server subscription identifiers</returns>
+    /// <remarks><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/user-data-stream#session-subscriptions" /></remarks>
+    Task<CallResult<List<BinanceSpotUserDataStreamSubscriptionStatus>>> GetUserDataStreamSubscriptionsAsync(
+        BinanceSpotWebSocketSession session,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Subscribes to the API key authenticated on an Ed25519 WebSocket API session.
+    /// The session is authenticated again before subscriptions are restored after a reconnect.
+    /// </summary>
+    /// <param name="session">Authenticated Ed25519 WebSocket API session</param>
+    /// <param name="onOrderUpdated">Handler for order execution updates</param>
+    /// <param name="onOrderListUpdated">Handler for order-list updates</param>
+    /// <param name="onAccountUpdated">Handler for account position updates</param>
+    /// <param name="onBalanceUpdated">Handler for balance updates</param>
+    /// <param name="onBalanceLockUpdated">Handler for external balance lock updates</param>
+    /// <param name="onUserDataStreamTerminated">Handler invoked when the stream is terminated</param>
+    /// <param name="ct">Cancellation token for closing this subscription</param>
+    /// <returns>The confirmed subscription, including Binance's server subscription identifier</returns>
+    /// <remarks><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/user-data-stream#user-data-stream-subscribe" /></remarks>
+    Task<CallResult<BinanceSpotUserDataStreamSubscription>> SubscribeToUserDataStreamWithSessionAsync(
+        BinanceSpotWebSocketSession session,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderUpdate>>? onOrderUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderListUpdate>>? onOrderListUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamPositionsUpdate>>? onAccountUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamExternalLockUpdate>>? onBalanceLockUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onUserDataStreamTerminated = null,
+        CancellationToken ct = default);
+
+    /// <summary>
     /// Subscribes to the current account's user data stream through a signed WebSocket API request.
     /// </summary>
     /// <param name="onOrderUpdated">Handler for order execution updates</param>

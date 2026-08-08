@@ -9,5 +9,5 @@ public record BinanceSpotUserDataStreamEvent : BinanceSocketStreamEvent
     /// Server-assigned identifier of the user data stream subscription.
     /// </summary>
     [JsonIgnore]
-    public int SubscriptionId { get; internal set; }
+    public long SubscriptionId { get; internal set; }
 }

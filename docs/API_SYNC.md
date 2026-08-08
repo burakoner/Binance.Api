@@ -104,13 +104,14 @@ Slice 8 completed that replacement and removed all three Spot wrapper-only REST 
 
 Slice 14 implements all three current Spot WebSocket API authentication methods. The public session handle owns the exact connection because Binance authentication state is connection-scoped; `session.status`, repeated `session.logon`, and `session.logout` therefore cannot silently move to another socket. Only Ed25519 credentials are accepted, matching the canonical contract. The slice also corrects a transport-state defect: ordinary signed WebSocket API requests authenticate only themselves and no longer mark their socket as session-authenticated through ApiSharp's connection hook. Logout leaves the connection open as Binance specifies. Authenticated production credentials were not available, so live logon was not attempted; deterministic Ed25519 payload/signature and response-model tests plus the full multi-target build are the verification boundary.
 
+Slice 15 completes the current JSON Spot WebSocket API user-data method family. It adds `session.subscriptions` and the Ed25519 session-authenticated `userDataStream.subscribe` variant while retaining the existing all-key-type signed variant. The two subscription modes remain distinct because `session.logout` terminates only the session-authenticated stream. A local session lifecycle lease keeps the connection open after logout, disables automatic reauthentication while logged out, and reauthenticates before restoring session subscriptions after a transport reconnect. Subscription identifiers are now `int64` through request state, public handles, event routing, list responses, and unsubscribe requests, matching the canonical schemas. Deterministic coverage reaches 61 tests; authenticated live subscription behavior remains untested because production credentials are unavailable.
+
 ### Revised next order
 
-1. Complete the Spot WebSocket API user-data family by adding the Ed25519 session-based `userDataStream.subscribe` path and `session.subscriptions`, while preserving correct reauthentication and subscription-ID state across reconnects.
-2. Complete Spot Trade in two bounded slices: first core order placement/query/cancel/replace plus amend and SOR; then the complete order-list family after resolving current versus deprecated OCO routes from canonical endpoint pages and changelog evidence.
-3. Replace the incomplete single-weight default rate-limit model once the audited Spot contracts define its IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
-4. Implement the missing current Margin risk-data stream and continue the remaining Margin route/contract audit after the critical Spot pass.
-5. Continue product-family audits using the route candidates only as discovery input: Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
+1. Complete Spot Trade in two bounded slices: first core order placement/query/cancel/replace plus amend and SOR; then the complete order-list family after resolving current versus deprecated OCO routes from canonical endpoint pages and changelog evidence.
+2. Replace the incomplete single-weight default rate-limit model once the audited Spot contracts define its IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
+3. Implement the missing current Margin risk-data stream and continue the remaining Margin route/contract audit after the critical Spot pass.
+4. Continue product-family audits using the route candidates only as discovery input: Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
 
 ## Review log
 
@@ -133,3 +134,4 @@ Slice 14 implements all three current Spot WebSocket API authentication methods.
 | 13 | Complete | Spot Account REST and WebSocket API queries and response contracts | Live canonical Account catalogs, main Spot changelog/reference, current generated connector, route/weight/parameter/model tests, 54 deterministic tests |
 | Review 3 | Complete | Backward review of Spot General, Market Data queries/streams, Account, documentation, and execution order | `3dca3ec..038bc37` diff review, canonical-link scan and correction, regenerated 48/38/38/10/0 route comparison, 54 tests, forced full multi-target rebuild |
 | 14 | Complete | Spot WebSocket API session authentication | Live canonical Authentication catalog and generated connector, connection-scoped `session.logon/status/logout`, Ed25519-only signing verification, current session-state model, signed-query connection-state correction, 58 deterministic tests, full multi-target solution build |
+| 15 | Complete | Spot WebSocket API session and signed user-data subscriptions | Live canonical User Data Stream catalog, main Spot changelog and generated connector, subscription-mode/logout/reconnect lifecycle separation, `int64` subscription IDs, request/list/model tests, 61 deterministic tests, full multi-target solution build |

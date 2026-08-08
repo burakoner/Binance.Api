@@ -20,7 +20,32 @@ internal partial class BinanceSpotSocketClient
         if (!statusResult)
             return statusResult.As<BinanceSpotWebSocketSession>(null);
 
-        return statusResult.As(new BinanceSpotWebSocketSession(connectionResult.Data, statusResult.Data));
+        if (sessions.TryGetValue(connectionResult.Data.Id, out var existingSession))
+        {
+            existingSession.LastStatus = statusResult.Data;
+            existingSession.ReceiveWindow = receiveWindow;
+            existingSession.LifecycleSubscription.Authenticated = true;
+            return statusResult.As(existingSession);
+        }
+
+        var lifecycleSubscription = AddSubscription<string>(
+            null!,
+            $"spot-session-{connectionResult.Data.Id}",
+            true,
+            connectionResult.Data,
+            _ => { },
+            true);
+        if (lifecycleSubscription == null)
+            return new CallResult<BinanceSpotWebSocketSession>(new InvalidOperationError("Unable to register the WebSocket session lifecycle."));
+
+        var session = new BinanceSpotWebSocketSession(
+            connectionResult.Data,
+            lifecycleSubscription,
+            statusResult.Data,
+            receiveWindow);
+        sessions[connectionResult.Data.Id] = session;
+        connectionResult.Data.ConnectionClosed += () => sessions.TryRemove(connectionResult.Data.Id, out var removedSession);
+        return statusResult.As(session);
     }
 
     public async Task<CallResult<BinanceSpotWebSocketSessionStatus>> LogonAsync(
@@ -39,7 +64,11 @@ internal partial class BinanceSpotSocketClient
 
         var result = await SendSessionLogonAsync(session.Connection, receiveWindow).ConfigureAwait(false);
         if (result)
+        {
             session.LastStatus = result.Data;
+            session.ReceiveWindow = receiveWindow;
+            session.LifecycleSubscription.Authenticated = true;
+        }
         return result;
     }
 
@@ -51,7 +80,7 @@ internal partial class BinanceSpotSocketClient
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceSpotWebSocketSessionStatus>(new CancellationRequestedError());
 
-        var result = await SendSessionRequestAsync(
+        var result = await SendSessionRequestAsync<BinanceSpotWebSocketSessionStatus>(
             session.Connection,
             CreateSessionRequest("session.status")).ConfigureAwait(false);
         if (result)
@@ -67,11 +96,15 @@ internal partial class BinanceSpotSocketClient
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceSpotWebSocketSessionStatus>(new CancellationRequestedError());
 
-        var result = await SendSessionRequestAsync(
+        var result = await SendSessionRequestAsync<BinanceSpotWebSocketSessionStatus>(
             session.Connection,
             CreateSessionRequest("session.logout")).ConfigureAwait(false);
         if (result)
+        {
             session.LastStatus = result.Data;
+            session.LifecycleSubscription.Authenticated = false;
+            await CloseSessionAuthenticatedUserDataStreamsAsync(session.Connection).ConfigureAwait(false);
+        }
         return result;
     }
 
@@ -131,24 +164,26 @@ internal partial class BinanceSpotSocketClient
         decimal? receiveWindow)
     {
         var timestamp = DateTime.UtcNow.Add(GetTimeOffset()).ConvertToMilliseconds();
-        return SendSessionRequestAsync(connection, CreateSessionLogonRequest(receiveWindow, timestamp));
+        return SendSessionRequestAsync<BinanceSpotWebSocketSessionStatus>(
+            connection,
+            CreateSessionLogonRequest(receiveWindow, timestamp));
     }
 
-    private async Task<CallResult<BinanceSpotWebSocketSessionStatus>> SendSessionRequestAsync(
+    private async Task<CallResult<T>> SendSessionRequestAsync<T>(
         WebSocketConnection connection,
         BinanceSocketQuery request)
     {
         if (!connection.Connected)
-            return new CallResult<BinanceSpotWebSocketSessionStatus>(new WebError("WebSocket session connection is not open"));
+            return new CallResult<T>(new WebError("WebSocket session connection is not open"));
         if (connection.PausedActivity)
-            return new CallResult<BinanceSpotWebSocketSessionStatus>(new ServerError("WebSocket is paused"));
+            return new CallResult<T>(new ServerError("WebSocket is paused"));
 
-        var result = await QueryAndWaitAsync<BinanceResultWithRateLimits<BinanceSpotWebSocketSessionStatus>>(
+        var result = await QueryAndWaitAsync<BinanceResultWithRateLimits<T>>(
             connection,
             request).ConfigureAwait(false);
         return result
             ? result.As(result.Data.Result)
-            : result.As<BinanceSpotWebSocketSessionStatus>(null);
+            : result.As<T>(default);
     }
 
     private void ValidateSessionCredentials(decimal? receiveWindow)
@@ -166,5 +201,16 @@ internal partial class BinanceSpotSocketClient
             throw new ArgumentNullException(nameof(session));
         if (!ReferenceEquals(session.Connection.ApiClient, this))
             throw new ArgumentException("The session belongs to a different Spot WebSocket API client.", nameof(session));
+    }
+
+    private static async Task CloseSessionAuthenticatedUserDataStreamsAsync(WebSocketConnection connection)
+    {
+        foreach (var localSubscription in connection.Subscriptions
+            .Where(item => item.Request is BinanceSpotUserDataStreamRequest { UsesSessionAuthentication: true })
+            .ToArray())
+        {
+            localSubscription.Confirmed = false;
+            await connection.CloseAsync(localSubscription).ConfigureAwait(false);
+        }
     }
 }

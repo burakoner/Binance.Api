@@ -6,5 +6,8 @@ internal sealed class BinanceSpotUserDataStreamRequest : BinanceSocketQuery
     public decimal? ReceiveWindow { get; set; }
 
     [JsonIgnore]
-    public int? SubscriptionId { get; set; }
+    public long? SubscriptionId { get; set; }
+
+    [JsonIgnore]
+    public bool UsesSessionAuthentication { get; set; }
 }

@@ -36,7 +36,7 @@ public record BinanceSpotWebSocketSessionStatus
     public DateTime ServerTime { get; set; }
 
     /// <summary>
-    /// Whether a session-authenticated user data stream is active on this connection.
+    /// Whether at least one user data stream subscription is active on this connection.
     /// </summary>
     [JsonProperty("userDataStream")]
     public bool UserDataStream { get; set; }

@@ -2,6 +2,53 @@ namespace Binance.Api.Spot;
 
 internal partial class BinanceSpotSocketClient
 {
+    public Task<CallResult<List<BinanceSpotUserDataStreamSubscriptionStatus>>> GetUserDataStreamSubscriptionsAsync(
+        BinanceSpotWebSocketSession session,
+        CancellationToken ct = default)
+    {
+        ValidateSession(session);
+        if (ct.IsCancellationRequested)
+            return Task.FromResult(new CallResult<List<BinanceSpotUserDataStreamSubscriptionStatus>>(new CancellationRequestedError()));
+
+        return SendSessionRequestAsync<List<BinanceSpotUserDataStreamSubscriptionStatus>>(
+            session.Connection,
+            CreateSessionRequest("session.subscriptions"));
+    }
+
+    public async Task<CallResult<BinanceSpotUserDataStreamSubscription>> SubscribeToUserDataStreamWithSessionAsync(
+        BinanceSpotWebSocketSession session,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderUpdate>>? onOrderUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderListUpdate>>? onOrderListUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamPositionsUpdate>>? onAccountUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamExternalLockUpdate>>? onBalanceLockUpdated = null,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onUserDataStreamTerminated = null,
+        CancellationToken ct = default)
+    {
+        ValidateSession(session);
+        if (session.LastStatus.ApiKey == null)
+            throw new InvalidOperationException("The WebSocket API session is not authenticated.");
+        if (ct.IsCancellationRequested)
+            return new CallResult<BinanceSpotUserDataStreamSubscription>(new CancellationRequestedError());
+
+        var request = CreateSessionUserDataStreamRequest();
+        var handler = CreateUserDataStreamHandler(
+            onOrderUpdated,
+            onOrderListUpdated,
+            onAccountUpdated,
+            onBalanceUpdated,
+            onBalanceLockUpdated,
+            onUserDataStreamTerminated);
+        var result = await SubscribeToUserDataStreamOnSessionAsync(
+            session.Connection,
+            request,
+            handler,
+            ct).ConfigureAwait(false);
+        return result
+            ? result.As(new BinanceSpotUserDataStreamSubscription(request, result.Data))
+            : result.As<BinanceSpotUserDataStreamSubscription>(null);
+    }
+
     public async Task<CallResult<BinanceSpotUserDataStreamSubscription>> SubscribeToUserDataStreamAsync(
         Action<WebSocketDataEvent<BinanceSpotStreamOrderUpdate>>? onOrderUpdated = null,
         Action<WebSocketDataEvent<BinanceSpotStreamOrderListUpdate>>? onOrderListUpdated = null,
@@ -26,14 +73,13 @@ internal partial class BinanceSpotSocketClient
         if (!refreshResult)
             return refreshResult.As<BinanceSpotUserDataStreamSubscription>(null);
 
-        var handler = new Action<WebSocketDataEvent<string>>(data => HandleUserDataStreamEvent(
-            data,
+        var handler = CreateUserDataStreamHandler(
             onOrderUpdated,
             onOrderListUpdated,
             onAccountUpdated,
             onBalanceUpdated,
             onBalanceLockUpdated,
-            onUserDataStreamTerminated));
+            onUserDataStreamTerminated);
 
         var result = await base.SubscribeAsync<string>(
             BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath("ws-api/v3"),
@@ -105,7 +151,25 @@ internal partial class BinanceSpotSocketClient
         return request;
     }
 
-    internal static BinanceSocketQuery CreateUserDataStreamUnsubscribeRequest(int? subscriptionId)
+    internal static BinanceSpotUserDataStreamRequest CreateSessionUserDataStreamRequest()
+    {
+        var request = new BinanceSpotUserDataStreamRequest
+        {
+            Method = "userDataStream.subscribe",
+            UsesSessionAuthentication = true
+        };
+        RefreshSessionUserDataStreamRequest(request);
+        return request;
+    }
+
+    internal static void RefreshSessionUserDataStreamRequest(BinanceSpotUserDataStreamRequest request)
+    {
+        request.Id = ExchangeHelpers.NextId();
+        request.Params = [];
+        request.SubscriptionId = null;
+    }
+
+    internal static BinanceSocketQuery CreateUserDataStreamUnsubscribeRequest(long? subscriptionId)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("subscriptionId", subscriptionId);
@@ -117,17 +181,17 @@ internal partial class BinanceSpotSocketClient
         };
     }
 
-    internal static CallResult<int> ParseUserDataStreamSubscriptionResponse(JToken message)
+    internal static CallResult<long> ParseUserDataStreamSubscriptionResponse(JToken message)
     {
         var status = message["status"]?.Value<int>();
-        var subscriptionId = message["result"]?["subscriptionId"]?.Value<int>();
+        var subscriptionId = message["result"]?["subscriptionId"]?.Value<long>();
         if (status == 200 && subscriptionId.HasValue)
-            return new CallResult<int>(subscriptionId.Value);
+            return new CallResult<long>(subscriptionId.Value);
 
         var errorCode = message["error"]?["code"]?.Value<int>() ?? status ?? 0;
         var errorMessage = message["error"]?["msg"]?.Value<string>()
             ?? (status == 200 ? "User data subscription response did not contain subscriptionId" : "Undefined error");
-        return new CallResult<int>(new ServerError(errorCode, errorMessage));
+        return new CallResult<long>(new ServerError(errorCode, errorMessage));
     }
 
     internal static void ValidateUserDataStreamReceiveWindow(decimal? receiveWindow)
@@ -143,7 +207,7 @@ internal partial class BinanceSpotSocketClient
         Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onUserDataStreamTerminated)
     {
         var envelope = JToken.Parse(data.Data);
-        var subscriptionId = envelope["subscriptionId"]?.Value<int>();
+        var subscriptionId = envelope["subscriptionId"]?.Value<long>();
         var eventToken = envelope["event"];
         var eventType = eventToken?["e"]?.Value<string>();
         if (subscriptionId == null || eventToken == null || eventType == null)
@@ -201,7 +265,7 @@ internal partial class BinanceSpotSocketClient
 
     private void DispatchUserDataEvent<T>(
         JToken eventToken,
-        int subscriptionId,
+        long subscriptionId,
         WebSocketDataEvent<string> source,
         Action<WebSocketDataEvent<T>>? handler,
         string eventName,
@@ -222,7 +286,56 @@ internal partial class BinanceSpotSocketClient
         handler(topic == null ? source.As(result.Data) : source.As(result.Data, topic(result.Data)));
     }
 
-    private async Task<CallResult<bool>> SendUserDataStreamUnsubscribeAsync(WebSocketConnection connection, int? subscriptionId)
+    private Action<WebSocketDataEvent<string>> CreateUserDataStreamHandler(
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderUpdate>>? onOrderUpdated,
+        Action<WebSocketDataEvent<BinanceSpotStreamOrderListUpdate>>? onOrderListUpdated,
+        Action<WebSocketDataEvent<BinanceSpotStreamPositionsUpdate>>? onAccountUpdated,
+        Action<WebSocketDataEvent<BinanceSpotStreamBalanceUpdate>>? onBalanceUpdated,
+        Action<WebSocketDataEvent<BinanceSpotStreamExternalLockUpdate>>? onBalanceLockUpdated,
+        Action<WebSocketDataEvent<BinanceSpotStreamUpdate>>? onUserDataStreamTerminated)
+        => data => HandleUserDataStreamEvent(
+            data,
+            onOrderUpdated,
+            onOrderListUpdated,
+            onAccountUpdated,
+            onBalanceUpdated,
+            onBalanceLockUpdated,
+            onUserDataStreamTerminated);
+
+    private async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUserDataStreamOnSessionAsync(
+        WebSocketConnection connection,
+        BinanceSpotUserDataStreamRequest request,
+        Action<WebSocketDataEvent<string>> handler,
+        CancellationToken ct)
+    {
+        if (!connection.Connected)
+            return new CallResult<WebSocketUpdateSubscription>(new WebError("WebSocket session connection is not open"));
+        if (connection.PausedActivity)
+            return new CallResult<WebSocketUpdateSubscription>(new ServerError("WebSocket is paused"));
+
+        var subscription = AddSubscription(request, string.Empty, true, connection, handler, true);
+        if (subscription == null)
+            return new CallResult<WebSocketUpdateSubscription>(new InvalidOperationError("Unable to register the user data stream subscription."));
+
+        var subscribeResult = await SubscribeAndWaitAsync(connection, request, subscription).ConfigureAwait(false);
+        if (!subscribeResult)
+        {
+            await connection.CloseAsync(subscription).ConfigureAwait(false);
+            return new CallResult<WebSocketUpdateSubscription>(subscribeResult.Error!);
+        }
+
+        if (ct != default)
+        {
+            subscription.CancellationTokenRegistration = ct.Register(async () =>
+            {
+                await connection.CloseAsync(subscription).ConfigureAwait(false);
+            }, false);
+        }
+
+        return new CallResult<WebSocketUpdateSubscription>(new WebSocketUpdateSubscription(connection, subscription));
+    }
+
+    private async Task<CallResult<bool>> SendUserDataStreamUnsubscribeAsync(WebSocketConnection connection, long? subscriptionId)
     {
         if (!connection.Connected)
             return new CallResult<bool>(true);

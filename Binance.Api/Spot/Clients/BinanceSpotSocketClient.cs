@@ -5,6 +5,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     private const string ServerShutdownHandler = "spot-server-shutdown";
     private ApiCredentialsType? apiCredentialsType;
     private bool hasApiCredentials;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<int, BinanceSpotWebSocketSession> sessions = new();
 
     /// <inheritdoc />
     public event Action<WebSocketDataEvent<BinanceSpotServerShutdown>>? ServerShutdown;
@@ -180,7 +181,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
         if (request is BinanceSpotUserDataStreamRequest userDataRequest)
             return userDataRequest.SubscriptionId.HasValue
-                && message["subscriptionId"]?.Value<int>() == userDataRequest.SubscriptionId.Value
+                && message["subscriptionId"]?.Value<long>() == userDataRequest.SubscriptionId.Value
                 && message["event"] != null;
 
         if (request is not BinanceSocketRequest bRequest)
@@ -232,9 +233,32 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             : null;
     }
 
-    protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
-        => Task.FromResult(new CallResult<bool>(new InvalidOperationError(
-            "Spot WebSocket API connection authentication requires an explicit session.logon request.")));
+    protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+    {
+        if (!sessions.TryGetValue(connection.Id, out var session))
+            return new CallResult<bool>(new InvalidOperationError("No Spot WebSocket API session is registered for this connection."));
+
+        var syncResult = await SyncTimeAsync().ConfigureAwait(false);
+        if (!syncResult)
+            return syncResult;
+
+        CallResult<BinanceSpotWebSocketSessionStatus> result;
+        try
+        {
+            result = await SendSessionLogonAsync(connection, session.ReceiveWindow).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is ArgumentException
+            || exception is InvalidOperationException
+            || exception is NotSupportedException)
+        {
+            return new CallResult<bool>(new InvalidOperationError(exception.Message));
+        }
+        if (!result)
+            return result.As(false);
+
+        session.LastStatus = result.Data;
+        return result.As(true);
+    }
 
     protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
     {
@@ -279,6 +303,12 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     {
         if (request is not BinanceSpotUserDataStreamRequest userDataRequest)
             return await base.RevitalizeRequestAsync(request).ConfigureAwait(false);
+
+        if (userDataRequest.UsesSessionAuthentication)
+        {
+            RefreshSessionUserDataStreamRequest(userDataRequest);
+            return new CallResult<object>(request);
+        }
 
         var result = await RefreshUserDataStreamRequestAsync(userDataRequest).ConfigureAwait(false);
         return result ? new CallResult<object>(request) : result.As<object>(null);

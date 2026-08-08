@@ -44,12 +44,29 @@ public sealed class BinanceSpotWebSocketSession
         remove => connection.ConnectionClosed -= value;
     }
 
-    internal WebSocketConnection Connection => connection;
+    /// <summary>
+    /// Raised after the connection is restored and the session is authenticated again.
+    /// </summary>
+    public event Action<TimeSpan> ConnectionRestored
+    {
+        add => connection.ConnectionRestored += value;
+        remove => connection.ConnectionRestored -= value;
+    }
 
-    internal BinanceSpotWebSocketSession(WebSocketConnection connection, BinanceSpotWebSocketSessionStatus status)
+    internal WebSocketConnection Connection => connection;
+    internal WebSocketSubscription LifecycleSubscription { get; }
+    internal decimal? ReceiveWindow { get; set; }
+
+    internal BinanceSpotWebSocketSession(
+        WebSocketConnection connection,
+        WebSocketSubscription lifecycleSubscription,
+        BinanceSpotWebSocketSessionStatus status,
+        decimal? receiveWindow)
     {
         this.connection = connection;
+        LifecycleSubscription = lifecycleSubscription;
         LastStatus = status;
+        ReceiveWindow = receiveWindow;
     }
 
     /// <summary>

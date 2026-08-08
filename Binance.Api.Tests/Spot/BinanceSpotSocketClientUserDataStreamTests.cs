@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using ApiSharp.Authentication;
 using ApiSharp.WebSocket;
+using Binance.Api.Shared;
 using Binance.Api.Spot;
 using Newtonsoft.Json.Linq;
 
@@ -28,6 +29,57 @@ public class BinanceSpotSocketClientUserDataStreamTests
         var expectedSignature = System.Convert.ToHexString(
             HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), Encoding.UTF8.GetBytes(payload)));
         Assert.Equal(expectedSignature, request.Params["signature"]);
+        Assert.False(request.UsesSessionAuthentication);
+    }
+
+    [Fact]
+    public void SessionSubscriptionRequest_UsesAuthenticatedConnectionWithoutRequestCredentials()
+    {
+        var request = BinanceSpotSocketClient.CreateSessionUserDataStreamRequest();
+
+        Assert.Equal("userDataStream.subscribe", request.Method);
+        Assert.True(request.UsesSessionAuthentication);
+        Assert.Empty(request.Params);
+        Assert.Null(request.SubscriptionId);
+    }
+
+    [Fact]
+    public async Task SessionReconnectRefresh_ReplacesRequestAndSubscriptionIdsWithoutAddingCredentials()
+    {
+        var root = new BinanceSocketApiClient();
+        var client = Assert.IsType<BinanceSpotSocketClient>(root.Spot);
+        var request = BinanceSpotSocketClient.CreateSessionUserDataStreamRequest();
+        var originalRequestId = request.Id;
+        request.SubscriptionId = 42;
+
+        var result = await client.RevitalizeRequestAsync(request);
+
+        Assert.True(result.Success);
+        Assert.NotEqual(originalRequestId, request.Id);
+        Assert.Null(request.SubscriptionId);
+        Assert.Empty(request.Params);
+        Assert.Equal("userDataStream.subscribe", request.Method);
+    }
+
+    [Fact]
+    public void SessionSubscriptionsResponse_MapsAllServerIdentifiers()
+    {
+        var root = new BinanceSocketApiClient();
+        var client = Assert.IsType<BinanceSpotSocketClient>(root.Spot);
+        var response = client.Deserializer<BinanceResultWithRateLimits<List<BinanceSpotUserDataStreamSubscriptionStatus>>>(
+            JToken.Parse("""
+                {
+                  "id": 1,
+                  "status": 200,
+                  "result": [
+                    { "subscriptionId": 0 },
+                    { "subscriptionId": 4294967296 }
+                  ]
+                }
+                """));
+
+        Assert.True(response.Success);
+        Assert.Equal([0L, 4_294_967_296L], response.Data.Result.Select(item => item.SubscriptionId));
     }
 
     [Fact]
@@ -71,7 +123,7 @@ public class BinanceSpotSocketClientUserDataStreamTests
         var all = BinanceSpotSocketClient.CreateUserDataStreamUnsubscribeRequest(null);
 
         Assert.Equal("userDataStream.unsubscribe", one.Method);
-        Assert.Equal(42, one.Params["subscriptionId"]);
+        Assert.Equal(42L, one.Params["subscriptionId"]);
         Assert.Equal("userDataStream.unsubscribe", all.Method);
         Assert.Empty(all.Params);
     }
@@ -80,14 +132,14 @@ public class BinanceSpotSocketClientUserDataStreamTests
     public void SubscriptionResponse_RequiresServerSubscriptionId()
     {
         var success = BinanceSpotSocketClient.ParseUserDataStreamSubscriptionResponse(
-            JToken.Parse("""{"status":200,"result":{"subscriptionId":42}}"""));
+            JToken.Parse("""{"status":200,"result":{"subscriptionId":4294967296}}"""));
         var missingId = BinanceSpotSocketClient.ParseUserDataStreamSubscriptionResponse(
             JToken.Parse("""{"status":200,"result":{}}"""));
         var serverError = BinanceSpotSocketClient.ParseUserDataStreamSubscriptionResponse(
             JToken.Parse("""{"status":400,"error":{"code":-1102,"msg":"Missing parameter"}}"""));
 
         Assert.True(success.Success);
-        Assert.Equal(42, success.Data);
+        Assert.Equal(4_294_967_296L, success.Data);
         Assert.False(missingId.Success);
         Assert.Contains("subscriptionId", missingId.Error!.Message);
         Assert.False(serverError.Success);
@@ -166,7 +218,7 @@ public class BinanceSpotSocketClientUserDataStreamTests
             null);
 
         Assert.NotNull(update);
-        Assert.Equal(42, update.SubscriptionId);
+        Assert.Equal(42L, update.SubscriptionId);
         Assert.Equal(8_641_984, update.ExecutionId);
         Assert.Null(update.FeeAsset);
         Assert.Equal(1, update.StrategyId);
@@ -214,7 +266,7 @@ public class BinanceSpotSocketClientUserDataStreamTests
             null);
 
         Assert.NotNull(update);
-        Assert.Equal(7, update.SubscriptionId);
+        Assert.Equal(7L, update.SubscriptionId);
         Assert.Equal("NEO", update.Asset);
         Assert.Equal(10m, update.Delta);
         Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1_581_557_507_268).UtcDateTime, update.TransactionTime);

@@ -66,11 +66,14 @@ public class BinanceSpotSocketClientAuthenticationTests
     {
         var status = BinanceSpotSocketClient.CreateSessionRequest("session.status");
         var logout = BinanceSpotSocketClient.CreateSessionRequest("session.logout");
+        var subscriptions = BinanceSpotSocketClient.CreateSessionRequest("session.subscriptions");
 
         Assert.Equal("session.status", status.Method);
         Assert.Empty(status.Params);
         Assert.Equal("session.logout", logout.Method);
         Assert.Empty(logout.Params);
+        Assert.Equal("session.subscriptions", subscriptions.Method);
+        Assert.Empty(subscriptions.Params);
     }
 
     [Fact]
