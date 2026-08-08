@@ -265,7 +265,7 @@ public class BinanceAddress
     {
         SpotRestApiAddress = "https://testnet.binance.vision",
         SpotSocketApiQueryAddress = "wss://ws-api.testnet.binance.vision/",
-        SpotSocketApiStreamAddress = "wss://testnet.binance.vision",
+        SpotSocketApiStreamAddress = "wss://stream.testnet.binance.vision",
 
         CoinFuturesRestApiAddress = "https://testnet.binancefuture.com",
         CoinFuturesSocketApiQueryAddress = "wss://testnet.binancefuture.com/",

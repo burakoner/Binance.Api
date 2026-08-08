@@ -2,20 +2,33 @@
 
 internal partial class BinanceSpotSocketClient
 {
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToReferencePriceAsync(string symbol, Action<WebSocketDataEvent<BinanceSpotStreamReferencePrice>> onMessage, CancellationToken ct = default)
+        => SubscribeToReferencePriceAsync([symbol], onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToReferencePriceAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamReferencePrice>> onMessage, CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamReferencePrice>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
+        });
+
+        var topics = BinanceSpotMarketDataValidation.SymbolStreamTopics(symbols, "@referencePrice");
+        return SubscribeAsync(topics, false, handler, ct);
+    }
+
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(string symbol, Action<WebSocketDataEvent<BinanceSpotStreamAggregatedTrade>> onMessage, CancellationToken ct = default)
         => SubscribeToAggregatedTradesAsync([symbol], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamAggregatedTrade>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamAggregatedTrade>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@aggTrade").ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@aggTrade");
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -24,15 +37,28 @@ internal partial class BinanceSpotSocketClient
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamTrade>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamTrade>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@trade").ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@trade");
+        return SubscribeAsync(topics, false, handler, ct);
+    }
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBlockTradesAsync(string symbol, Action<WebSocketDataEvent<BinanceSpotStreamBlockTrade>> onMessage, CancellationToken ct = default)
+        => SubscribeToBlockTradesAsync([symbol], onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBlockTradesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamBlockTrade>> onMessage, CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamBlockTrade>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
+        });
+
+        var topics = BinanceSpotMarketDataValidation.SymbolStreamTopics(symbols, "@blockTrade");
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -46,36 +72,49 @@ internal partial class BinanceSpotSocketClient
         => SubscribeToKlinesAsync(symbols, [interval], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceSpotStreamKline>> onMessage, CancellationToken ct = default)
-    {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
+        => SubscribeToKlinesAsync(symbols, intervals, utc8: false, onMessage, ct);
 
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUtc8KlinesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceSpotStreamKline>> onMessage, CancellationToken ct = default)
+        => SubscribeToKlinesAsync([symbol], [interval], utc8: true, onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUtc8KlinesAsync(string symbol, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceSpotStreamKline>> onMessage, CancellationToken ct = default)
+        => SubscribeToKlinesAsync([symbol], intervals, utc8: true, onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUtc8KlinesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceSpotStreamKline>> onMessage, CancellationToken ct = default)
+        => SubscribeToKlinesAsync(symbols, [interval], utc8: true, onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToUtc8KlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceSpotStreamKline>> onMessage, CancellationToken ct = default)
+        => SubscribeToKlinesAsync(symbols, intervals, utc8: true, onMessage, ct);
+
+    private Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
+        IEnumerable<string> symbols,
+        IEnumerable<BinanceKlineInterval> intervals,
+        bool utc8,
+        Action<WebSocketDataEvent<BinanceSpotStreamKline>> onMessage,
+        CancellationToken ct)
+    {
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamKlineWrapper>>>(data =>
         {
             onMessage(data.As(data.Data.Data.Kline, data.Data.Data.Symbol));
-        }
-        );
+        });
 
-        var topics = symbols.SelectMany(a => intervals.Select(i => a.ToLower(BinanceConstants.CI) + "@kline" + "_" + MapConverter.GetString(i))).ToArray();
+        var topics = BinanceSpotMarketDataValidation.KlineStreamTopics(symbols, intervals, utc8);
         return SubscribeAsync(topics, false, handler, ct);
     }
-
-    // TODO: Kline/Candlestick Streams with timezone offset
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceSpotStreamMiniTick>> onMessage, CancellationToken ct = default)
         => SubscribeToMiniTickersAsync([symbol], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamMiniTick>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamMiniTick>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI  ) + "@miniTicker").ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@miniTicker");
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -94,48 +133,38 @@ internal partial class BinanceSpotSocketClient
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamTick>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamTick>>>(data =>
         {
             onMessage(data.As<BinanceSpotStreamTick>(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker").ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker");
         return SubscribeAsync(topics, false, handler, ct);
-    }
-
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(Action<WebSocketDataEvent<IEnumerable<BinanceSpotStreamTick>>> onMessage, CancellationToken ct = default)
-    {
-        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<IEnumerable<BinanceSpotStreamTick>>>>(data =>
-        {
-            onMessage(data.As(data.Data.Data, data.Data.Stream ?? ""));
-        });
-
-        return SubscribeAsync(["!ticker@arr"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRollingWindowTickersAsync(string symbol, TimeSpan windowSize, Action<WebSocketDataEvent<BinanceSpotStreamRollingWindowTick>> onMessage, CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamRollingWindowTick>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Stream ?? ""));
         });
 
-        var windowString = windowSize < TimeSpan.FromDays(1) ? windowSize.TotalHours + "h" : windowSize.TotalDays + "d";
+        var windowString = BinanceSpotMarketDataValidation.RollingStreamWindow(windowSize);
         return SubscribeAsync([$"{symbol.ToLowerInvariant()}@ticker_{windowString}"], false, handler, ct);
     }
 
-    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRollingWindowTickersAsync(TimeSpan windowSize, Action<WebSocketDataEvent<IEnumerable<BinanceSpotStreamRollingWindowTick>>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRollingWindowTickersAsync(TimeSpan windowSize, Action<WebSocketDataEvent<IEnumerable<BinanceSpotStreamRollingWindowTick>>> onMessage, CancellationToken ct = default)
     {
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<IEnumerable<BinanceSpotStreamRollingWindowTick>>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Stream ?? ""));
         });
 
-        var windowString = windowSize < TimeSpan.FromDays(1) ? windowSize.TotalHours + "h" : windowSize.TotalDays + "d";
-        return await SubscribeAsync([$"!ticker_{windowString}@arr"], false, handler, ct).ConfigureAwait(false);
+        var windowString = BinanceSpotMarketDataValidation.RollingStreamWindow(windowSize);
+        return SubscribeAsync([$"!ticker_{windowString}@arr"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceSpotStreamBookPrice>> onMessage, CancellationToken ct = default)
@@ -143,15 +172,28 @@ internal partial class BinanceSpotSocketClient
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamBookPrice>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamBookPrice>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@bookTicker").ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@bookTicker");
+        return SubscribeAsync(topics, false, handler, ct);
+    }
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAveragePriceAsync(string symbol, Action<WebSocketDataEvent<BinanceSpotStreamAveragePrice>> onMessage, CancellationToken ct = default)
+        => SubscribeToAveragePriceAsync([symbol], onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAveragePriceAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceSpotStreamAveragePrice>> onMessage, CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamAveragePrice>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
+        });
+
+        var topics = BinanceSpotMarketDataValidation.SymbolStreamTopics(symbols, "@avgPrice");
         return SubscribeAsync(topics, false, handler, ct);
     }
 
@@ -160,19 +202,18 @@ internal partial class BinanceSpotSocketClient
 
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceSpotOrderBook>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
         levels.ValidateIntValues(nameof(levels), 5, 10, 20);
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
 
         updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 1000);
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotOrderBook>>>(data =>
         {
-            data.Data.Data.Symbol = data.Data.Stream?.Split('@')[0] ?? "";
+            data.Data.Data.Symbol = data.Data.Stream?.Split('@')[0].ToUpperInvariant() ?? "";
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : ""));
         return await SubscribeAsync(topics, false, handler, ct).ConfigureAwait(false);
     }
 
@@ -181,16 +222,15 @@ internal partial class BinanceSpotSocketClient
 
     public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(IEnumerable<string> symbols, int? updateInterval, Action<WebSocketDataEvent<BinanceSpotStreamOrderBook>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
+        var symbolList = BinanceSpotMarketDataValidation.Symbols(symbols, 1024);
         updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 1000);
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
 
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceSpotStreamOrderBook>>>(data =>
         {
             onMessage(data.As<BinanceSpotStreamOrderBook>(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
+        var topics = symbolList.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : ""));
         return await SubscribeAsync(topics, false, handler, ct);
     }
 }

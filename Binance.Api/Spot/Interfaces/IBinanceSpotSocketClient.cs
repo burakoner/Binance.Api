@@ -13,6 +13,12 @@ public interface IBinanceSpotSocketClient :
     IBinanceSpotSocketClientStreamMarketData
 {
     /// <summary>
+    /// Raised when a Spot WebSocket Streams or WebSocket API server announces an imminent shutdown.
+    /// Reconnect as soon as possible to avoid interruption.
+    /// </summary>
+    event Action<WebSocketDataEvent<BinanceSpotServerShutdown>>? ServerShutdown;
+
+    /// <summary>
     /// Unsubscribes from a stream. This will close the socket connection and unsubscribe from the stream.
     /// </summary>
     /// <param name="subscription">WebSocket Update Subscription</param>

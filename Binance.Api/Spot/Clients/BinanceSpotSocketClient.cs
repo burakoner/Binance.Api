@@ -2,6 +2,11 @@
 
 internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpotSocketClient
 {
+    private const string ServerShutdownHandler = "spot-server-shutdown";
+
+    /// <inheritdoc />
+    public event Action<WebSocketDataEvent<BinanceSpotServerShutdown>>? ServerShutdown;
+
     // Internal
     internal ILogger Logger { get => _logger; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance Spot WS");
@@ -26,6 +31,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
+        AddGenericHandler(ServerShutdownHandler, HandleServerShutdown);
     }
 
     internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
@@ -177,7 +183,42 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
     protected override bool MessageMatchesHandler(WebSocketConnection connection, JToken message, string identifier)
     {
-        return true;
+        return identifier == ServerShutdownHandler && GetServerShutdownPayload(message) != null;
+    }
+
+    private void HandleServerShutdown(WebSocketMessageEvent message)
+        => HandleServerShutdown(message.JsonData, message.ReceivedTimestamp, message.Raw);
+
+    internal void HandleServerShutdown(JToken message, DateTime receivedTimestamp, string? raw = null)
+    {
+        var payload = GetServerShutdownPayload(message);
+        if (payload == null)
+            return;
+
+        var result = Deserialize<BinanceSpotServerShutdown>(payload);
+        if (!result)
+        {
+            Logger.Log(LogLevel.Warning, $"Failed to deserialize Spot serverShutdown event: {result.Error}");
+            return;
+        }
+
+        ServerShutdown?.Invoke(new WebSocketDataEvent<BinanceSpotServerShutdown>(result.Data, receivedTimestamp)
+        {
+            Topic = "!serverShutdown",
+            Raw = raw
+        });
+    }
+
+    internal static JToken? GetServerShutdownPayload(JToken message)
+    {
+        if (message.Type != JTokenType.Object)
+            return null;
+
+        var payload = message["data"] ?? message["event"] ?? message;
+        return payload.Type == JTokenType.Object
+            && string.Equals(payload["e"]?.Value<string>(), "serverShutdown", StringComparison.Ordinal)
+            ? payload
+            : null;
     }
 
     protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
@@ -245,7 +286,15 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
+        return SubscribeAsync(GetMarketStreamAddress(), request, "", authenticated, onData, ct);
+    }
+
+    internal string GetMarketStreamAddress()
+    {
+        var address = BinanceAddress.Default.SpotSocketApiStreamAddress.AppendPath("stream");
+        return SocketOptions.SpotOptions.UseMicrosecondStreamTimestamps
+            ? address + "?timeUnit=MICROSECOND"
+            : address;
     }
 
     internal async Task<CallResult<bool>> SyncTimeAsync()

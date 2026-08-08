@@ -14,6 +14,9 @@
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters
   * Aligned Spot Market Data REST and WebSocket API query contracts, including block trades, reference prices, status filters, current weights and limits, kline timezones, rolling-window models, and required trading-day symbols
   * Added the Spot `CANCEL_ONLY` response status and separated response statuses from the narrower request-filter enum
+  * Aligned Spot market streams with reference-price, block-trade, average-price, UTC+8 kline, microsecond timestamp, stream-limit, testnet-host, and server-shutdown contracts
+  * Removed retired buyer/seller order IDs from Spot trade stream events and mapped the remaining ignored field correctly
+  * Removed the retired Spot all-market ticker stream (`!ticker@arr`) overload and examples
   * Added a request-level test project for endpoint contract regression coverage
 
 * Version 5.10.19 - 19 Oct 2025

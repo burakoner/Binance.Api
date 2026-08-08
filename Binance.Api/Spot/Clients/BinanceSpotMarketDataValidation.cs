@@ -90,4 +90,44 @@ internal static class BinanceSpotMarketDataValidation
 
         return ((int)value.TotalMinutes).ToString(CultureInfo.InvariantCulture) + "m";
     }
+
+    public static BinanceKlineInterval[] KlineIntervals(IEnumerable<BinanceKlineInterval> intervals)
+    {
+        if (intervals == null)
+            throw new ArgumentNullException(nameof(intervals));
+
+        var result = intervals.ToArray();
+        if (result.Length == 0)
+            throw new ArgumentException("At least one kline interval is required.", nameof(intervals));
+        if (result.Any(interval => MapConverter.GetString(interval) == null))
+            throw new ArgumentOutOfRangeException(nameof(intervals), "An unsupported kline interval was provided.");
+
+        return result;
+    }
+
+    public static string RollingStreamWindow(TimeSpan windowSize)
+        => windowSize == TimeSpan.FromHours(1) ? "1h"
+            : windowSize == TimeSpan.FromHours(4) ? "4h"
+            : windowSize == TimeSpan.FromDays(1) ? "1d"
+            : throw new ArgumentOutOfRangeException(nameof(windowSize), "Rolling-window streams support only 1h, 4h, or 1d.");
+
+    public static string[] SymbolStreamTopics(IEnumerable<string> symbols, string suffix)
+        => Symbols(symbols, 1024)
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + suffix)
+            .ToArray();
+
+    public static string[] KlineStreamTopics(
+        IEnumerable<string> symbols,
+        IEnumerable<BinanceKlineInterval> intervals,
+        bool utc8)
+    {
+        var symbolList = Symbols(symbols);
+        var intervalList = KlineIntervals(intervals);
+        var offset = utc8 ? "@+08:00" : string.Empty;
+        var topics = symbolList.SelectMany(symbol => intervalList.Select(interval =>
+            symbol.ToLower(BinanceConstants.CI) + "@kline_" + MapConverter.GetString(interval) + offset)).ToArray();
+        if (topics.Length > 1024)
+            throw new ArgumentException("A single connection can listen to at most 1024 streams.", nameof(symbols));
+        return topics;
+    }
 }

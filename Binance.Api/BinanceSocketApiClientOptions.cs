@@ -62,6 +62,11 @@ public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
 public class BinanceSocketApiClientSpotOptions
 {
     /// <summary>
+    /// Whether Spot market stream timestamps should be requested in microseconds instead of the default milliseconds.
+    /// </summary>
+    public bool UseMicrosecondStreamTimestamps { get; set; }
+
+    /// <summary>
     /// Trade Rules Behavior
     /// </summary>
     public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;

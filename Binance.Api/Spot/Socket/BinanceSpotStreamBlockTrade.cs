@@ -1,49 +1,43 @@
-﻿namespace Binance.Api.Spot;
+namespace Binance.Api.Spot;
 
 /// <summary>
-/// Aggregated information about trades for a symbol
+/// Block-trade stream update.
 /// </summary>
-public record BinanceSpotStreamTrade : BinanceSocketStreamEvent
+public record BinanceSpotStreamBlockTrade : BinanceSocketStreamEvent
 {
     /// <summary>
-    /// The symbol the trade was for
+    /// Symbol.
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; } = "";
+    public string Symbol { get; set; } = string.Empty;
 
     /// <summary>
-    /// The id of this trade
+    /// Block trade ID.
     /// </summary>
     [JsonProperty("t")]
-    public long Id { get; set; }
+    public long TradeId { get; set; }
 
     /// <summary>
-    /// The price of the trades
+    /// Trade price.
     /// </summary>
     [JsonProperty("p")]
     public decimal Price { get; set; }
 
     /// <summary>
-    /// The quantity of the trade
+    /// Base asset quantity.
     /// </summary>
     [JsonProperty("q")]
     public decimal Quantity { get; set; }
 
     /// <summary>
-    /// The time of the trade
+    /// Trade time.
     /// </summary>
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime TradeTime { get; set; }
 
     /// <summary>
-    /// Whether the buyer was the maker
+    /// Whether the buyer was the maker.
     /// </summary>
     [JsonProperty("m")]
     public bool BuyerIsMaker { get; set; }
-
-    /// <summary>
-    /// Unused
-    /// </summary>
-    [JsonProperty("M")]
-    public bool Ignore { get; set; }
 }

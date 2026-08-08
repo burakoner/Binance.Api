@@ -771,6 +771,7 @@ internal class Program
         // WebSocket API Client
         var ws = new BinanceSocketApiClient();
         ws.SetApiCredentials("XXXXXXXX-API-KEY-XXXXXXXX", "XXXXXXXX-API-SECRET-XXXXXXXX");
+        ws.Spot.ServerShutdown += (data) => Console.WriteLine($"Spot WebSocket server shutdown at {data.Data.EventTime:O}");
 
         // Spot Web Socket API > General Methods (PUBLIC)
         var spot_101 = await ws.Spot.PingAsync();
@@ -871,6 +872,7 @@ internal class Program
         // WebSocket API Client
         var ws = new BinanceSocketApiClient();
         ws.SetApiCredentials("XXXXXXXX-API-KEY-XXXXXXXX", "XXXXXXXX-API-SECRET-XXXXXXXX");
+        ws.Spot.ServerShutdown += (data) => Console.WriteLine($"Spot WebSocket server shutdown at {data.Data.EventTime:O}");
 
         // Subscription Samples
         var sub01 = await ws.Spot.SubscribeToAggregatedTradesAsync("BTCUSDT", (data) =>
@@ -889,24 +891,27 @@ internal class Program
         await ws.Spot.UnsubscribeAllAsync();
 
         // Spot Web Socket Stream > Market Data Subscriptions (PUBLIC)
+        await ws.Spot.SubscribeToReferencePriceAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToAggregatedTradesAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToAggregatedTradesAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
         await ws.Spot.SubscribeToTradesAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToTradesAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToBlockTradesAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToKlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay, (data) => { });
         await ws.Spot.SubscribeToKlinesAsync(["ETHUSDT", "XRPUSDT"], BinanceKlineInterval.OneDay, (data) => { });
         await ws.Spot.SubscribeToKlinesAsync("BTCUSDT", [BinanceKlineInterval.OneDay, BinanceKlineInterval.FourHours,], (data) => { });
         await ws.Spot.SubscribeToKlinesAsync(["ETHUSDT", "XRPUSDT"], [BinanceKlineInterval.OneDay, BinanceKlineInterval.FourHours,], (data) => { });
+        await ws.Spot.SubscribeToUtc8KlinesAsync("BTCUSDT", BinanceKlineInterval.OneDay, (data) => { });
         await ws.Spot.SubscribeToMiniTickersAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToMiniTickersAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
         await ws.Spot.SubscribeToMiniTickersAsync((data) => { });
         await ws.Spot.SubscribeToTickersAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToTickersAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
-        await ws.Spot.SubscribeToTickersAsync((data) => { });
         await ws.Spot.SubscribeToRollingWindowTickersAsync("BTCUSDT", TimeSpan.FromMinutes(60), (data) => { });
         await ws.Spot.SubscribeToRollingWindowTickersAsync(TimeSpan.FromMinutes(60), (data) => { });
         await ws.Spot.SubscribeToBookTickersAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToBookTickersAsync(["ETHUSDT", "XRPUSDT"], (data) => { });
+        await ws.Spot.SubscribeToAveragePriceAsync("BTCUSDT", (data) => { });
         await ws.Spot.SubscribeToPartialOrderBooksAsync("BTCUSDT", 20, null, (data) => { });
         await ws.Spot.SubscribeToPartialOrderBooksAsync("BTCUSDT", 20, 100, (data) => { });
         await ws.Spot.SubscribeToPartialOrderBooksAsync("BTCUSDT", 20, 1000, (data) => { });
