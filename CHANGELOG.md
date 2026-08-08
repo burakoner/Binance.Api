@@ -20,6 +20,7 @@
   * Aligned Spot Account REST and WebSocket API queries with the current routes, request weights, fractional receive windows, parameter constraints, order-list, allocation, commission, amendment, account-filter, and conditional order response contracts
   * Aligned core Spot Trade REST and WebSocket API operations with current pegged-order, fractional receive-window, cancel-replace, amend-keep-priority, SOR, commission, and response contracts
   * Added current Spot REST and WebSocket API order-list cancellation and OCO, OPO, OPOCO, OTO, and OTOCO placement contracts without adding the deprecated OCO operations
+  * Fixed Spot cancel-order and cancel-all DELETE requests sending endpoint parameters in form bodies instead of signed query strings
   * Fixed broker client-order ID cleanup removing valid leading characters when an ID did not start with the exact Binance broker prefix
   * Added a request-level test project for endpoint contract regression coverage
 

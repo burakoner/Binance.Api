@@ -180,7 +180,7 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptionalEnum("cancelRestrictions", cancelRestriction);
         parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
-        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (result) InvokeOrderCanceled(result.Data.Id);
         return result;
     }
@@ -196,7 +196,7 @@ internal partial class BinanceSpotRestClient
         };
         parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
-        var result = await RequestAsync<List<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
+        var result = await RequestAsync<List<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, queryParameters: parameters).ConfigureAwait(false);
         if (result) foreach (var order in result.Data) InvokeOrderCanceled(order.Id);
         return result;
     }

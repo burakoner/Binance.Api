@@ -53,11 +53,28 @@ public class BinanceSpotTradeTests
                 receiveWindow: 5_000.125m);
 
             Assert.True(cancel.Success);
-            var body = Uri.UnescapeDataString(cancelHandler.Body!);
-            Assert.Contains("orderId=1", body);
-            Assert.Contains("origClientOrderId=original", body);
-            Assert.Contains("cancelRestrictions=ONLY_NEW", body);
-            Assert.Contains("recvWindow=5000.125", body);
+            Assert.Equal(HttpMethod.Delete, cancelHandler.Method);
+            Assert.Equal("/api/v3/order", cancelHandler.RequestUri!.AbsolutePath);
+            Assert.Null(cancelHandler.Body);
+            var query = Uri.UnescapeDataString(cancelHandler.RequestUri.Query);
+            Assert.Contains("orderId=1", query);
+            Assert.Contains("origClientOrderId=original", query);
+            Assert.Contains("cancelRestrictions=ONLY_NEW", query);
+            Assert.Contains("recvWindow=5000.125", query);
+        }
+
+        var cancelAllHandler = new RecordingHttpMessageHandler("[]");
+        using (var client = CreateClient(cancelAllHandler))
+        {
+            var cancelAll = await client.Spot.CancelOrdersAsync("BTCUSDT", 5_000.125m);
+
+            Assert.True(cancelAll.Success);
+            Assert.Equal(HttpMethod.Delete, cancelAllHandler.Method);
+            Assert.Equal("/api/v3/openOrders", cancelAllHandler.RequestUri!.AbsolutePath);
+            Assert.Null(cancelAllHandler.Body);
+            var query = Uri.UnescapeDataString(cancelAllHandler.RequestUri.Query);
+            Assert.Contains("symbol=BTCUSDT", query);
+            Assert.Contains("recvWindow=5000.125", query);
         }
 
         var replaceHandler = new RecordingHttpMessageHandler("""

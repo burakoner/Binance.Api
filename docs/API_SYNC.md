@@ -110,12 +110,20 @@ Slice 16 synchronizes the non-list Spot Trade operations against the live REST a
 
 Slice 17 completes the current Spot Trade order-list family in both REST and WebSocket API. It adds list cancellation plus OCO, OPO, OPOCO, OTO, and OTOCO placement using endpoint-specific request models so that OPO/OPOCO do not accidentally send the pending quantity required only by OTO/OTOCO. Shared working, pending, and OCO-leg components cover every current documented strategy, trailing, iceberg, pegged-order, STP, response-type, client-ID, and fractional receive-window field while preserving JSON numbers for WebSocket requests. Placement and cancellation responses now expose `orderReports`. The 2024-04-02 changelog and current catalogs both mark `POST /api/v3/order/oco` and `orderList.place` deprecated in favor of the current OCO operations; those historical contracts were intentionally not added. Spot therefore has 47 exact REST route matches, with only the deprecated REST OCO route remaining as an official-catalog-only candidate. No live order-list mutation was performed; verification is 70 deterministic tests and multi-target builds.
 
+## Backward review 4 (after slices 14-17)
+
+- Re-read the complete `5d4ebbc..034a240` change set covering Spot WebSocket session authentication, both current user-data subscription modes, core Trade operations, and order lists. One endpoint-contract defect was found: REST cancel-order and cancel-all used form bodies even though their current endpoint pages define query parameters. Both DELETE operations now use signed query parameters, and the request test covers both paths, fractional receive windows, and the absence of request bodies.
+- Session state, logout behavior, reconnect reauthentication, signed-request isolation, subscription-ID width, and session-authenticated versus signature-authenticated stream lifecycles were rechecked together. No additional implementation defect was found. Repository scans also confirm that retired Spot listen-key routes, deprecated `POST /api/v3/order/oco`, and deprecated WebSocket `orderList.place` are absent.
+- The current OPOCO/OTOCO catalog is internally inconsistent: its formal `pendingBelowType` enum excludes `LIMIT_MAKER`, while a later conditional-parameter table still mentions `pendingBelowType=LIMIT_MAKER`. The wrapper follows the formal request schema and the current generated connector rather than guessing that the contradictory table expands the accepted enum. This remains a documentation ambiguity to recheck at the next baseline refresh.
+- All 70 deterministic tests pass. A forced full solution rebuild succeeds on every declared target. Eight known warnings remain: five obsolete ApiSharp limiter warnings across library targets, two missing-XML warnings from the placeholder FIX project, and one obsolete USD-M v2 account example. None originates from slices 14-17.
+- The Spot route inventory remains 48 official REST routes, 47 wrapper routes, 47 exact matches, one official-only deprecated route, and no wrapper-only route. This count does not represent WebSocket API completeness or parameter/response compatibility.
+- No authenticated production-account session or live order mutation was used. Review evidence is the refreshed live catalogs, current generated connector, deterministic signing/request/lifecycle/model tests, repository scans, and multi-target builds.
+
 ### Revised next order
 
-1. Perform the required backward review of Spot slices 14-17 before starting another implementation chain.
-2. Replace the incomplete single-weight default rate-limit model once the audited Spot contracts define its IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
-3. Implement the missing current Margin risk-data stream and continue the remaining Margin route/contract audit after the critical Spot pass.
-4. Continue product-family audits using the route candidates only as discovery input: Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
+1. Replace the incomplete single-weight default rate-limit model now that the Spot IP-weight, order-count, and connection-attempt contracts have been audited; keep UID and product-specific fixed windows separate rather than coercing them into one counter.
+2. Implement the missing current Margin risk-data stream and continue the remaining Margin route/contract audit after the critical Spot pass.
+3. Continue product-family audits using the route candidates only as discovery input: Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
 
 ## Review log
 
@@ -141,3 +149,4 @@ Slice 17 completes the current Spot Trade order-list family in both REST and Web
 | 15 | Complete | Spot WebSocket API session and signed user-data subscriptions | Live canonical User Data Stream catalog, main Spot changelog and generated connector, subscription-mode/logout/reconnect lifecycle separation, `int64` subscription IDs, request/list/model tests, 61 deterministic tests, full multi-target solution build |
 | 16 | Complete | Spot Trade core order, cancel, amend, and SOR contracts | Live canonical REST and WebSocket API Trade catalogs refreshed 2026-08-09, main Spot changelog, generated connector, 67 request/signature/validation/model tests, full multi-target solution build |
 | 17 | Complete | Spot Trade REST and WebSocket API order-list contracts | Live canonical Trade catalogs, 2024-04-02 deprecation notice, 2025-12-18 OPO announcement, current generated connector, six current REST routes and six WebSocket methods, 70 deterministic request/model/validation tests, multi-target builds |
+| Review 4 | Complete | Backward review of Spot session authentication, user-data subscriptions, core Trade, order lists, documentation, and execution order | `5d4ebbc..034a240` diff review, DELETE parameter-location correction, retired-contract scans, confirmed 48/47/47/1/0 route comparison, 70 tests, forced full multi-target rebuild |
