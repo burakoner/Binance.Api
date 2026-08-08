@@ -14,6 +14,7 @@
   * Replaced the removed Margin listen-key documentation contract with API-key-issued listen tokens, WebSocket API subscriptions, replacement-token extension, and current Margin event models
   * Added the separate current Cross Margin risk-data listen-key lifecycle and `margin-stream.binance.com` margin-level/liability event stream
   * Aligned Margin order placement and cancellation contracts, including query-based DELETE requests, previously omitted order fields, side-effect-dependent weights, and complete OTO/OTOCO support
+  * Added the current Margin manual-liquidation and liquidation-loan query, repayment, and repayment-history contracts
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters
   * Aligned Spot Market Data REST and WebSocket API query contracts, including block trades, reference prices, status filters, current weights and limits, kline timezones, rolling-window models, and required trading-day symbols
   * Added the Spot `CANCEL_ONLY` response status and separated response statuses from the narrower request-filter enum

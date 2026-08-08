@@ -239,6 +239,10 @@ var marginOtocoRequest = new BinanceMarginOtocoOrderListRequest(
     PendingBelowPrice = 50_000m
 };
 var margin_319 = await api.Margin.PlaceMarginOtocoOrderAsync(marginOtocoRequest);
+var margin_320 = await api.Margin.LiquidateMarginAccountAsync(BinanceMarginLiquidationType.CrossMargin);
+var margin_321 = await api.Margin.GetLiquidationLoanAsync();
+var margin_322 = await api.Margin.RepayLiquidationLoanAsync("---ASSET---", 100.0m);
+var margin_323 = await api.Margin.GetLiquidationLoanRepaymentHistoryAsync();
 
 // Margin > General Transfer Methods (PRIVATE)
 var margin_401 = await api.Margin.GetMarginTransfersAsync(BinanceMarginTransferDirection.RollIn);

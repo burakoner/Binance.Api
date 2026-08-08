@@ -55,6 +55,48 @@ public interface IBinanceMarginRestClientTrade
     Task<RestCallResult<BinanceRowsResult<BinanceMarginSmallLiabilityHistory>>> GetSmallLiabilityExchangeHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Manually liquidates a Cross or supported Isolated Margin account.
+    /// Cross Margin Classic and Pro are supported; Isolated Margin is available only in restricted regions.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-manual-liquidation" /></para>
+    /// </summary>
+    /// <param name="type">Account scope to liquidate.</param>
+    /// <param name="symbol">Required when liquidating an Isolated Margin account.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginManualLiquidation>> LiquidateMarginAccountAsync(BinanceMarginLiquidationType type, string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the current Cross Margin liquidation-loan balance.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-liquidation-loan" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginLiquidationLoan>> GetLiquidationLoanAsync(int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Repays a Cross Margin liquidation loan from the Spot wallet.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#liquidation-loan-repay" /></para>
+    /// </summary>
+    /// <param name="asset">Asset used for repayment.</param>
+    /// <param name="amount">Amount to repay; must be greater than zero and cannot exceed the outstanding balance.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginLiquidationLoanRepayment>> RepayLiquidationLoanAsync(string asset, decimal amount, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets Cross Margin liquidation-loan repayment history. Binance returns only SUCCESS and PENDING records
+    /// and limits the available history to the most recent 90 days.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-liquidation-loan-repay-history" /></para>
+    /// </summary>
+    /// <param name="startTime">Start time; defaults to seven days ago.</param>
+    /// <param name="endTime">End time; defaults to now.</param>
+    /// <param name="current">Page number; server default is 1.</param>
+    /// <param name="size">Page size; server default is 50.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginLiquidationLoanRepaymentHistory>> GetLiquidationLoanRepaymentHistoryAsync(DateTime? startTime = null, DateTime? endTime = null, long? current = null, long? size = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Cancel all active orders for a symbol
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-all-open-orders-on-a-symbol-trade" /></para>
     /// </summary>
@@ -273,7 +315,6 @@ public interface IBinanceMarginRestClientTrade
     /// <returns></returns>
     Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Margin Manual Liquidation(MARGIN)
     // TODO: Create Special Key(Low-Latency Trading)(TRADE)
     // TODO: Delete Special Key(Low-Latency Trading)(TRADE)
     // TODO: Edit ip for Special Key(Low-Latency Trading)(TRADE)

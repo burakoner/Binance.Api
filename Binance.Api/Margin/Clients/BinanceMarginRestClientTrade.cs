@@ -45,6 +45,94 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceRowsResult<BinanceMarginSmallLiabilityHistory>>(GetUrl(sapi, v1, "margin/exchange-small-liability-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
+    public Task<RestCallResult<BinanceMarginManualLiquidation>> LiquidateMarginAccountAsync(
+        BinanceMarginLiquidationType type,
+        string? symbol = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        if (type == BinanceMarginLiquidationType.IsolatedMargin && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol is required for isolated Margin liquidation", nameof(symbol));
+        if (symbol != null)
+        {
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+            symbol.ValidateBinanceSymbol();
+        }
+
+        var normalizedReceiveWindow = ValidateMarginReceiveWindow(receiveWindow);
+        var parameters = new ParameterCollection();
+        parameters.AddEnum("type", type);
+        parameters.AddOptional("symbol", symbol);
+        parameters.AddOptional("recvWindow", normalizedReceiveWindow);
+
+        return RequestAsync<BinanceMarginManualLiquidation>(GetUrl(sapi, v1, "margin/manual-liquidation"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3_000);
+    }
+
+    public Task<RestCallResult<BinanceMarginLiquidationLoan>> GetLiquidationLoanAsync(int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceMarginLiquidationLoan>(GetUrl(sapi, v1, "margin/liquidation-loan"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+    }
+
+    public Task<RestCallResult<BinanceMarginLiquidationLoanRepayment>> RepayLiquidationLoanAsync(
+        string asset,
+        decimal amount,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(asset))
+            throw new ArgumentException("asset is required", nameof(asset));
+        if (amount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(amount), "amount must be greater than zero");
+
+        var parameters = new ParameterCollection
+        {
+            { "asset", asset },
+            { "amount", amount.ToString(BinanceConstants.CI) }
+        };
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceMarginLiquidationLoanRepayment>(GetUrl(sapi, v1, "margin/liquidation-loan/repay"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 100);
+    }
+
+    public Task<RestCallResult<BinanceMarginLiquidationLoanRepaymentHistory>> GetLiquidationLoanRepaymentHistoryAsync(
+        DateTime? startTime = null,
+        DateTime? endTime = null,
+        long? current = null,
+        long? size = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        if (startTime > endTime)
+            throw new ArgumentException("startTime cannot be later than endTime", nameof(startTime));
+        if (startTime.HasValue && endTime.HasValue && endTime.Value - startTime.Value > TimeSpan.FromDays(90))
+            throw new ArgumentException("The explicit liquidation-loan repayment history range cannot exceed 90 days", nameof(endTime));
+        if (current is <= 0)
+            throw new ArgumentOutOfRangeException(nameof(current), "current must be greater than zero when provided");
+        if (size is <= 0)
+            throw new ArgumentOutOfRangeException(nameof(size), "size must be greater than zero when provided");
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptional("current", current);
+        parameters.AddOptional("size", size);
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceMarginLiquidationLoanRepaymentHistory>(GetUrl(sapi, v1, "margin/liquidation-loan/repay-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+    }
+
+    private int? ValidateMarginReceiveWindow(int? receiveWindow)
+    {
+        var normalizedReceiveWindow = _.ReceiveWindow(receiveWindow);
+        if (normalizedReceiveWindow > 60_000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), "receiveWindow cannot exceed 60000 milliseconds");
+        return normalizedReceiveWindow;
+    }
+
     public Task<RestCallResult<List<BinanceMarginCanceledOrder>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
