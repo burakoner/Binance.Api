@@ -4,6 +4,8 @@ using ApiSharp;
 using ApiSharp.Authentication;
 using ApiSharp.Enums;
 using ApiSharp.Extensions;
+using Binance.Api.Shared;
+using Binance.Api.Spot;
 using NSec.Cryptography;
 
 namespace Binance.Api.Tests.Authentication;
@@ -55,10 +57,15 @@ public class BinanceAuthenticationTests
         using var httpClient = new HttpClient(handler);
         using var client = CreateClient(new ApiCredentials("api-key", secret), httpClient);
 
-        var result = await client.Margin.CancelMarginOrderAsync("１２３４５６", orderId: 28);
+        var result = await client.Margin.PlaceMarginOrderAsync(
+            "BTCUSDT",
+            BinanceOrderSide.Buy,
+            BinanceSpotOrderType.Market,
+            quantity: 1,
+            newClientOrderId: "１２３４５６");
 
         Assert.True(result.Success);
-        Assert.Contains("symbol=%ef%bc%91%ef%bc%92%ef%bc%93%ef%bc%94%ef%bc%95%ef%bc%96", handler.Body);
+        Assert.Contains("newClientOrderId=%ef%bc%91%ef%bc%92%ef%bc%93%ef%bc%94%ef%bc%95%ef%bc%96", handler.Body);
 
         var expectedSignature = System.Convert.ToHexString(
             HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), Encoding.UTF8.GetBytes(handler.Body!)))
@@ -75,7 +82,11 @@ public class BinanceAuthenticationTests
         using var httpClient = new HttpClient(handler);
         using var client = CreateClient(credentials, httpClient);
 
-        var result = await client.Margin.CancelMarginOrderAsync("BTCUSDT", orderId: 28);
+        var result = await client.Margin.PlaceMarginOrderAsync(
+            "BTCUSDT",
+            BinanceOrderSide.Buy,
+            BinanceSpotOrderType.Market,
+            quantity: 1);
 
         Assert.True(result.Success);
         var signature = System.Convert.FromBase64String(GetQueryValue(handler.RequestUri!, "signature"));

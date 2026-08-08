@@ -45,20 +45,22 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceRowsResult<BinanceMarginSmallLiabilityHistory>>(GetUrl(sapi, v1, "margin/exchange-small-liability-history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
-    public Task<RestCallResult<List<BinanceSpotOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceMarginCanceledOrder>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
         var parameters = new ParameterCollection
             {
                 { "symbol", symbol }
             };
-        parameters.AddOptional("isIsolated", isIsolated);
+        parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceSpotOrderBase>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceMarginCanceledOrder>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceMarginOrderOcoList>> CancelMarginOcoOrderAsync(string symbol, bool? isIsolated = null, long? orderListId = null, string? listClientOrderId = null, string? newClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
         if (!orderListId.HasValue && string.IsNullOrEmpty(listClientOrderId))
             throw new ArgumentException("Either orderListId or listClientOrderId must be sent");
 
@@ -72,17 +74,18 @@ internal partial class BinanceMarginRestClient
             {
                 { "symbol", symbol }
             };
-        parameters.AddOptional("isIsolated", isIsolated?.ToString());
+        parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
         parameters.AddOptional("orderListId", orderListId);
         parameters.AddOptional("listClientOrderId", listClientOrderId);
         parameters.AddOptional("newClientOrderId", newClientOrderId);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/orderList"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/orderList"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public async Task<RestCallResult<BinanceSpotOrderBase>> CancelMarginOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
         if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
 
@@ -98,12 +101,12 @@ internal partial class BinanceMarginRestClient
         };
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("isIsolated", isIsolated);
+        parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
         parameters.AddOptional("newClientOrderId", newClientOrderId);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
 
-        var result = await RequestAsync<BinanceSpotOrderBase>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceSpotOrderBase>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
         if (result) InvokeOrderCanceled(result.Data.Id);
         return result;
     }
@@ -128,6 +131,10 @@ internal partial class BinanceMarginRestClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
+        if (stopLimitPrice.HasValue && !stopLimitTimeInForce.HasValue)
+            throw new ArgumentException("stopLimitTimeInForce is required when stopLimitPrice is provided", nameof(stopLimitTimeInForce));
+
         var rulesCheck = await ((BinanceSpotRestClient)_.Spot).CheckTradingRulesAsync(symbol, null, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
@@ -151,7 +158,7 @@ internal partial class BinanceMarginRestClient
         };
         parameters.AddEnum("side", side);
         parameters.AddOptional("stopLimitPrice", stopLimitPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("isIsolated", isIsolated?.ToString());
+        parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
         parameters.AddOptionalEnum("sideEffectType", sideEffectType);
         parameters.AddOptional("listClientOrderId", listClientOrderId);
         parameters.AddOptional("limitClientOrderId", limitClientOrderId);
@@ -164,7 +171,51 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return await RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/order/oco"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6).ConfigureAwait(false);
+        return await RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/order/oco"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: BinanceMarginOrderListRequestBuilder.RequestWeight(sideEffectType)).ConfigureAwait(false);
+    }
+
+    public async Task<RestCallResult<BinanceMarginOrderList>> PlaceMarginOtoOrderAsync(BinanceMarginOtoOrderListRequest request, CancellationToken ct = default)
+    {
+        string? ApplyClientOrderId(string? clientOrderId)
+            => BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
+
+        var parameters = BinanceMarginOrderListRequestBuilder.Oto(request, ApplyClientOrderId);
+        var result = await RequestAsync<BinanceMarginOrderList>(
+            GetUrl(sapi, v1, "margin/order/oto"),
+            HttpMethod.Post,
+            ct,
+            true,
+            bodyParameters: parameters,
+            requestWeight: BinanceMarginOrderListRequestBuilder.RequestWeight(request.SideEffectType)).ConfigureAwait(false);
+        if (result)
+        {
+            foreach (var order in result.Data.Orders)
+                InvokeOrderPlaced(order.OrderId);
+        }
+
+        return result;
+    }
+
+    public async Task<RestCallResult<BinanceMarginOrderList>> PlaceMarginOtocoOrderAsync(BinanceMarginOtocoOrderListRequest request, CancellationToken ct = default)
+    {
+        string? ApplyClientOrderId(string? clientOrderId)
+            => BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
+
+        var parameters = BinanceMarginOrderListRequestBuilder.Otoco(request, ApplyClientOrderId);
+        var result = await RequestAsync<BinanceMarginOrderList>(
+            GetUrl(sapi, v1, "margin/order/otoco"),
+            HttpMethod.Post,
+            ct,
+            true,
+            bodyParameters: parameters,
+            requestWeight: BinanceMarginOrderListRequestBuilder.RequestWeight(request.SideEffectType)).ConfigureAwait(false);
+        if (result)
+        {
+            foreach (var order in result.Data.Orders)
+                InvokeOrderPlaced(order.OrderId);
+        }
+
+        return result;
     }
 
     public async Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol,
@@ -181,10 +232,12 @@ internal partial class BinanceMarginRestClient
         bool? isIsolated = null,
         BinanceOrderResponseType? orderResponseType = null,
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
+        long? trailingDelta = null,
         bool? autoRepayAtCancel = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
@@ -218,10 +271,14 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("newClientOrderId", clientOrderId);
         parameters.AddOptionalEnum("timeInForce", timeInForce);
         parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
+        parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
+        parameters.AddOptionalEnum("sideEffectType", sideEffectType);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
+        parameters.AddOptional("trailingDelta", trailingDelta);
+        parameters.AddOptional("autoRepayAtCancel", autoRepayAtCancel);
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinancePlacedOrder>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 6).ConfigureAwait(false);
+        var result = await RequestAsync<BinancePlacedOrder>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: BinanceMarginOrderListRequestBuilder.RequestWeight(sideEffectType)).ConfigureAwait(false);
         if (result) InvokeOrderPlaced(result.Data.Id);
 
         return result;

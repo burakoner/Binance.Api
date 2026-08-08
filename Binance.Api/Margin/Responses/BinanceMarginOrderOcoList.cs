@@ -1,9 +1,9 @@
 ﻿namespace Binance.Api.Margin;
 
 /// <summary>
-/// Oco info
+/// Margin order-list information.
 /// </summary>
-public record BinanceMarginOrderOcoList : BinanceOrderOcoList
+public record BinanceMarginOrderList : BinanceOrderOcoList
 {
     /// <summary>
     /// Margin buy borrow quantity
@@ -20,4 +20,11 @@ public record BinanceMarginOrderOcoList : BinanceOrderOcoList
     /// Is isolated margin
     /// </summary>
     public bool IsIsolated { get; set; }
+}
+
+/// <summary>
+/// Margin OCO information.
+/// </summary>
+public record BinanceMarginOrderOcoList : BinanceMarginOrderList
+{
 }

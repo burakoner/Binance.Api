@@ -208,6 +208,37 @@ var margin_314 = await api.Margin.GetOpenMarginOrdersAsync();
 var margin_315 = await api.Margin.GetMarginOrderAsync("---SYMBOL---");
 var margin_316 = await api.Margin.GetMarginUserTradesAsync("---SYMBOL---");
 var margin_317 = await api.Margin.SmallLiabilityExchangeAsync(["---ASSET---"]);
+var marginOtoRequest = new BinanceMarginOtoOrderListRequest(
+    "BTCUSDT",
+    BinanceSpotOrderType.Limit,
+    BinanceOrderSide.Sell,
+    60_000m,
+    0.2m,
+    0.05m,
+    BinanceSpotOrderType.Limit,
+    BinanceOrderSide.Buy,
+    0.2m)
+{
+    WorkingTimeInForce = BinanceTimeInForce.GoodTillCanceled,
+    PendingPrice = 55_000m,
+    PendingTimeInForce = BinanceTimeInForce.GoodTillCanceled
+};
+var margin_318 = await api.Margin.PlaceMarginOtoOrderAsync(marginOtoRequest);
+var marginOtocoRequest = new BinanceMarginOtocoOrderListRequest(
+    "BTCUSDT",
+    BinanceSpotOrderType.LimitMaker,
+    BinanceOrderSide.Sell,
+    60_000m,
+    0.2m,
+    BinanceOrderSide.Buy,
+    0.2m,
+    BinanceSpotOrderType.StopLoss)
+{
+    PendingAboveStopPrice = 55_000m,
+    PendingBelowType = BinanceSpotOrderType.LimitMaker,
+    PendingBelowPrice = 50_000m
+};
+var margin_319 = await api.Margin.PlaceMarginOtocoOrderAsync(marginOtocoRequest);
 
 // Margin > General Transfer Methods (PRIVATE)
 var margin_401 = await api.Margin.GetMarginTransfersAsync(BinanceMarginTransferDirection.RollIn);

@@ -56,18 +56,18 @@ public interface IBinanceMarginRestClientTrade
 
     /// <summary>
     /// Cancel all active orders for a symbol
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-All-Open-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-all-open-orders-on-a-symbol-trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the to cancel orders for, for example `ETHUSDT`</param>
     /// <param name="isIsolated">For isolated margin or not</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for canceled order</returns>
-    Task<RestCallResult<List<BinanceSpotOrderBase>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceMarginCanceledOrder>>> CancelAllMarginOrdersAsync(string symbol, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending margin oco order
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-OCO" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-oco-trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="isIsolated">For isolated margin or not</param>
@@ -95,7 +95,7 @@ public interface IBinanceMarginRestClientTrade
 
     /// <summary>
     /// Places a new margin OCO(One cancels other) order
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OCO" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-oco" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>
@@ -120,8 +120,24 @@ public interface IBinanceMarginRestClientTrade
     Task<RestCallResult<BinanceMarginOrderOcoList>> PlaceMarginOCOOrderAsync(string symbol, BinanceOrderSide side, decimal price, decimal stopPrice, decimal quantity, decimal? stopLimitPrice = null, BinanceTimeInForce? stopLimitTimeInForce = null, decimal? stopIcebergQuantity = null, decimal? limitIcebergQuantity = null, BinanceMarginSideEffectType? sideEffectType = null, bool? isIsolated = null, string? listClientOrderId = null, string? limitClientOrderId = null, string? stopClientOrderId = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, bool? autoRepayAtCancel = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Places a Margin one-triggers-the-other order list.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-oto" /></para>
+    /// </summary>
+    /// <param name="request">Current OTO request contract.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginOrderList>> PlaceMarginOtoOrderAsync(BinanceMarginOtoOrderListRequest request, CancellationToken ct = default);
+
+    /// <summary>
+    /// Places a Margin one-triggers-one-cancels-the-other order list.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-otoco" /></para>
+    /// </summary>
+    /// <param name="request">Current OTOCO request contract.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginOrderList>> PlaceMarginOtocoOrderAsync(BinanceMarginOtocoOrderListRequest request, CancellationToken ct = default);
+
+    /// <summary>
     /// Margin account new order
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>
@@ -137,11 +153,12 @@ public interface IBinanceMarginRestClientTrade
     /// <param name="isIsolated">For isolated margin or not</param>
     /// <param name="orderResponseType">Used for the response JSON</param>
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
+    /// <param name="trailingDelta">Trailing delta used by supported stop and take-profit orders</param>
     /// <param name="autoRepayAtCancel">Only when MARGIN_BUY or AUTO_BORROW_REPAY order takes effect, true means that the debt generated by the order needs to be repay after the order is cancelled. The default is true</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for the placed order</returns>
-    Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, string? newClientOrderId = null, decimal? price = null, BinanceTimeInForce? timeInForce = null, decimal? stopPrice = null, decimal? icebergQuantity = null, BinanceMarginSideEffectType? sideEffectType = null, bool? isIsolated = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, bool? autoRepayAtCancel = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinancePlacedOrder>> PlaceMarginOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, string? newClientOrderId = null, decimal? price = null, BinanceTimeInForce? timeInForce = null, decimal? stopPrice = null, decimal? icebergQuantity = null, BinanceMarginSideEffectType? sideEffectType = null, bool? isIsolated = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, bool? autoRepayAtCancel = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get isolated margin order rate limits
@@ -257,8 +274,6 @@ public interface IBinanceMarginRestClientTrade
     Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default);
 
     // TODO: Margin Manual Liquidation(MARGIN)
-    // TODO: Margin Account New OTO(TRADE)
-    // TODO: Margin Account New OTOCO (TRADE)
     // TODO: Create Special Key(Low-Latency Trading)(TRADE)
     // TODO: Delete Special Key(Low-Latency Trading)(TRADE)
     // TODO: Edit ip for Special Key(Low-Latency Trading)(TRADE)
