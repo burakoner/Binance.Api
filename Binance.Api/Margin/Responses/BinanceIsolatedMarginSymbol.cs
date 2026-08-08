@@ -13,12 +13,14 @@ public record BinanceIsolatedMarginSymbol
     /// <summary>
     /// Base asset
     /// </summary>
-    public string Base { get; set; } = "";
+    [JsonProperty("base")]
+    public string BaseAsset { get; set; } = "";
 
     /// <summary>
     /// Quote asset
     /// </summary>
-    public string Quote { get; set; } = "";
+    [JsonProperty("quote")]
+    public string QuoteAsset { get; set; } = "";
 
     /// <summary>
     /// Margin trade
@@ -35,9 +37,4 @@ public record BinanceIsolatedMarginSymbol
     /// </summary>
     public bool IsSellAllowed { get; set; }
 
-    /// <summary>
-    /// Time at which the symbol gets delisted
-    /// </summary>
-    [JsonProperty("delistTime"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? DelistTime { get; set; }
 }

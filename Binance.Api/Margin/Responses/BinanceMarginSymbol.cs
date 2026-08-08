@@ -43,8 +43,7 @@ public record BinanceMarginSymbol
     public string Symbol { get; set; } = "";
 
     /// <summary>
-    /// Time at which the symbol gets delisted
+    /// Raw delist timestamp reported by Binance. The current schema does not define its unit.
     /// </summary>
-    [JsonProperty("delistTime"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? DelistTime { get; set; }
+    public long? DelistTime { get; set; }
 }

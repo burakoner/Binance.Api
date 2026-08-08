@@ -37,11 +37,10 @@ public record BinanceMarginAsset
     /// Minimal quantity which can be repaid
     /// </summary>
     [JsonProperty("userMinRepay")]
-    public decimal MinimalRepayQuanitty { get; set; }
+    public decimal MinimalRepayQuantity { get; set; }
 
     /// <summary>
-    /// Time at which the asset gets delisted
+    /// Raw delist timestamp reported by Binance. The current schema does not define its unit.
     /// </summary>
-    [JsonProperty("delistTime"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? DelistTime { get; set; }
+    public long? DelistTime { get; set; }
 }

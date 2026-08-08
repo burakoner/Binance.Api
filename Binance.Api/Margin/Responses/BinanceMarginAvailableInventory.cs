@@ -11,7 +11,7 @@ public record BinanceMarginAvailableInventory
     public Dictionary<string, string> Assets { get; set; } = [];
 
     /// <summary>
-    /// Update time
+    /// Raw update timestamp reported by Binance. The current schema does not define its unit.
     /// </summary>
-    public DateTime UpdateTime { get; set; }
+    public long UpdateTime { get; set; }
 }

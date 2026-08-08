@@ -13,7 +13,7 @@ public record BinanceIsolatedMarginTier
     /// <summary>
     /// Tier
     /// </summary>
-    public int Tier { get; set; }
+    public long Tier { get; set; }
 
     /// <summary>
     /// Effective multiple

@@ -20,6 +20,7 @@
   * Added the current Cross and Isolated Margin capital-flow query with seven-day range validation, all documented flow types, and institutional-loan notes
   * Added current Margin limit-price pairs, listing schedule, risk-based liquidation ratios, and restricted-assets market-data queries
   * Added the current Margin prevented-matches query with its documented identifier combinations, pagination cursor, and response schema
+  * Aligned the complete Margin Market Data surface, including signed USER_DATA queries, current parameters, canonical links, 64-bit fields, raw undefined-unit timestamps, and corrected public names
   * Fixed Isolated Margin account disable requests sending signed DELETE parameters in a form body instead of the documented query string
   * Enforced the documented 90-day availability window for explicit Margin capital-flow time filters
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters
