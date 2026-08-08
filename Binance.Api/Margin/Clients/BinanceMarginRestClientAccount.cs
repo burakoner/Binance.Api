@@ -55,6 +55,36 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceMarginLevel>(GetUrl(sapi, v1, "margin/tradeCoeff"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
+    public Task<RestCallResult<List<BinanceMarginCapitalFlow>>> GetMarginCapitalFlowAsync(
+        string? asset = null,
+        string? symbol = null,
+        BinanceMarginCapitalFlowType? type = null,
+        DateTime? startTime = null,
+        DateTime? endTime = null,
+        long? fromId = null,
+        long? limit = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        ValidateOptionalMarginAsset(asset, nameof(asset));
+        ValidateOptionalMarginSymbol(symbol, nameof(symbol));
+        ValidateMarginDateRange(startTime, endTime, 7, "capital-flow");
+        if (limit > 1_000)
+            throw new ArgumentOutOfRangeException(nameof(limit), "limit cannot exceed 1000");
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("asset", asset);
+        parameters.AddOptional("symbol", symbol);
+        parameters.AddOptionalEnum("type", type);
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptional("fromId", fromId);
+        parameters.AddOptional("limit", limit);
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
+
+        return RequestAsync<List<BinanceMarginCapitalFlow>>(GetUrl(sapi, v1, "margin/capital-flow"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
+    }
+
     public Task<RestCallResult<BinanceMarginAccount>> GetMarginAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();

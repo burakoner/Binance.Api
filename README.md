@@ -259,6 +259,7 @@ var margin_507 = await api.Margin.GetInterestMarginDataAsync();
 var margin_508 = await api.Margin.GetEnabledIsolatedMarginAccountLimitAsync();
 var margin_509 = await api.Margin.GetIsolatedMarginAccountAsync();
 var margin_510 = await api.Margin.GetIsolatedMarginFeeDataAsync();
+var margin_511 = await api.Margin.GetMarginCapitalFlowAsync();
 
 // Margin > Listen Token Data Stream Methods (PRIVATE)
 var margin_601 = await api.Margin.CreateUserDataStreamAsync();

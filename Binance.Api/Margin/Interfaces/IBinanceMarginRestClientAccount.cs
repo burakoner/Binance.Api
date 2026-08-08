@@ -56,6 +56,30 @@ public interface IBinanceMarginRestClientAccount
     Task<RestCallResult<BinanceMarginLevel>> GetMarginLevelInformationAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Query Cross or Isolated Margin capital flow.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-cross-isolated-margin-capital-flow" /></para>
+    /// </summary>
+    /// <param name="asset">Filter by asset.</param>
+    /// <param name="symbol">Isolated Margin symbol. Required when querying isolated data.</param>
+    /// <param name="type">Filter by flow type.</param>
+    /// <param name="startTime">Start of the requested period. Only data from the last 90 days is available.</param>
+    /// <param name="endTime">End of the requested period. An explicit range cannot exceed seven days.</param>
+    /// <param name="fromId">Return records with an id greater than this value.</param>
+    /// <param name="limit">Maximum records to return. The documented maximum is 1000 and the server default is 500.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The maximum is 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<List<BinanceMarginCapitalFlow>>> GetMarginCapitalFlowAsync(
+        string? asset = null,
+        string? symbol = null,
+        BinanceMarginCapitalFlowType? type = null,
+        DateTime? startTime = null,
+        DateTime? endTime = null,
+        long? fromId = null,
+        long? limit = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
     /// Query margin account details
     /// <para><a href="https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Account-Details" /></para>
     /// </summary>
@@ -103,6 +127,4 @@ public interface IBinanceMarginRestClientAccount
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceIsolatedMarginFee>>> GetIsolatedMarginFeeDataAsync(string? symbol = null, int? vipLevel = null, int? receiveWindow = null, CancellationToken ct = default);
-    
-    // TODO: Query Cross Isolated Margin Capital Flow (USER_DATA)
 }

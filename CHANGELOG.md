@@ -17,6 +17,7 @@
   * Enforced the documented GTC requirement for every Margin OTO/OTOCO iceberg leg
   * Added the current Margin manual-liquidation and liquidation-loan query, repayment, and repayment-history contracts
   * Aligned Margin borrow/repay contracts with the current combined operation, both history types, current request weights and ranges, and current response schemas; removed obsolete archived and limit parameters
+  * Added the current Cross and Isolated Margin capital-flow query with seven-day range validation, all documented flow types, and institutional-loan notes
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters
   * Aligned Spot Market Data REST and WebSocket API query contracts, including block trades, reference prices, status filters, current weights and limits, kline timezones, rolling-window models, and required trading-day symbols
   * Added the Spot `CANCEL_ONLY` response status and separated response statuses from the narrower request-filter enum
