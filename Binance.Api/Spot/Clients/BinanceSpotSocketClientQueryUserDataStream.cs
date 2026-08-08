@@ -131,12 +131,7 @@ internal partial class BinanceSpotSocketClient
     }
 
     internal static void ValidateUserDataStreamReceiveWindow(decimal? receiveWindow)
-    {
-        if (receiveWindow > 60_000m)
-            throw new ArgumentOutOfRangeException(nameof(receiveWindow), "Receive window cannot exceed 60000 milliseconds.");
-        if (receiveWindow.HasValue && (decimal.GetBits(receiveWindow.Value)[3] >> 16 & 0xFF) > 3)
-            throw new ArgumentException("Receive window supports at most three decimal places.", nameof(receiveWindow));
-    }
+        => BinanceSpotAccountValidation.ReceiveWindow(receiveWindow);
 
     internal void HandleUserDataStreamEvent(
         WebSocketDataEvent<string> data,

@@ -3,6 +3,8 @@
 internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpotSocketClient
 {
     private const string ServerShutdownHandler = "spot-server-shutdown";
+    private ApiCredentialsType? apiCredentialsType;
+    private bool hasApiCredentials;
 
     /// <inheritdoc />
     public event Action<WebSocketDataEvent<BinanceSpotServerShutdown>>? ServerShutdown;
@@ -28,10 +30,19 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     internal BinanceSpotSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ApiOptions)
     {
         _ = root;
+        apiCredentialsType = root.ApiOptions.ApiCredentials?.Type;
+        hasApiCredentials = HasUsableCredentials(root.ApiOptions.ApiCredentials);
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
         AddGenericHandler(ServerShutdownHandler, HandleServerShutdown);
+    }
+
+    internal new void SetApiCredentials(ApiCredentials credentials)
+    {
+        apiCredentialsType = credentials.Type;
+        hasApiCredentials = HasUsableCredentials(credentials);
+        base.SetApiCredentials(credentials);
     }
 
     internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, BinanceSpotOrderType? type, CancellationToken ct)
@@ -221,12 +232,9 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             : null;
     }
 
-    protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
-    {
-        await Task.CompletedTask;
-        return new CallResult<bool>(true);
-        throw new NotImplementedException();
-    }
+    protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+        => Task.FromResult(new CallResult<bool>(new InvalidOperationError(
+            "Spot WebSocket API connection authentication requires an explicit session.logon request.")));
 
     protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
     {
@@ -361,7 +369,9 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         };
 
         var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.SpotSocketApiQueryAddress.AppendPath(url);
-        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, sign).ConfigureAwait(false);
+        // Signed Binance WebSocket API requests authenticate the individual request. They do not
+        // authenticate the underlying connection; only session.logon does that.
+        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, false).ConfigureAwait(false);
         if (!result.Success)
         {
             if (result.Error is BinanceRateLimitError rle)
@@ -380,6 +390,11 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
         return result.As(result.Data.Result);
     }
+
+    private static bool HasUsableCredentials(ApiCredentials? credentials)
+        => credentials != null
+            && !string.IsNullOrWhiteSpace(credentials.Key.GetString())
+            && !string.IsNullOrWhiteSpace(credentials.Secret.GetString());
 
     public async Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default)
     {

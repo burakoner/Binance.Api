@@ -53,12 +53,15 @@ public class BinanceSpotSocketClientUserDataStreamTests
     public void ReceiveWindow_RejectsUndocumentedRangeAndPrecision()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
+            BinanceSpotSocketClient.ValidateUserDataStreamReceiveWindow(-0.001m));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             BinanceSpotSocketClient.ValidateUserDataStreamReceiveWindow(60_000.001m));
         Assert.Throws<ArgumentException>(() =>
             BinanceSpotSocketClient.ValidateUserDataStreamReceiveWindow(5_000.0001m));
 
         BinanceSpotSocketClient.ValidateUserDataStreamReceiveWindow(60_000m);
         BinanceSpotSocketClient.ValidateUserDataStreamReceiveWindow(5_000.123m);
+        BinanceSpotSocketClient.ValidateUserDataStreamReceiveWindow(5_000.1000m);
     }
 
     [Fact]
