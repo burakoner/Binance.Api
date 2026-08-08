@@ -186,7 +186,7 @@ var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["---ASSET---
 var margin_202 = await api.Margin.GetMarginInterestHistoryAsync();
 var margin_203 = await api.Margin.BorrowAsync("---ASSET---", 100.0m);
 var margin_204 = await api.Margin.RepayAsync("---ASSET---", 95.0m);
-var margin_205 = await api.Margin.GetMarginLoansAsync("---ASSET---");
+var margin_205 = await api.Margin.GetMarginBorrowRepayHistoryAsync(BinanceMarginBorrowRepayType.Borrow, "---ASSET---");
 var margin_206 = await api.Margin.GetMarginInterestRateHistoryAsync("---ASSET---");
 var margin_207 = await api.Margin.GetMarginMaxBorrowAmountAsync("---ASSET---");
 

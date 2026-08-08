@@ -25,5 +25,5 @@ public record BinanceMarginInterestRateHistory
     /// <summary>
     /// Vip level
     /// </summary>
-    public string VipLevel { get; set; } = "";
+    public long VipLevel { get; set; }
 }

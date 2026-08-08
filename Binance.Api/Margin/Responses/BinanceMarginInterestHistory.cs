@@ -14,7 +14,7 @@ public record BinanceMarginInterestHistory
     /// <summary>
     /// Isolated symbol
     /// </summary>
-    public string IsolatedSymbol { get; set; } = "";
+    public string? IsolatedSymbol { get; set; }
 
     /// <summary>
     /// The asset
@@ -35,8 +35,9 @@ public record BinanceMarginInterestHistory
     /// <summary>
     /// Timestamp
     /// </summary>
+    [JsonProperty("interestAccuredTime")]
     [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime InterestAccuredTime { get; set; }
+    public DateTime InterestAccruedTime { get; set; }
 
     /// <summary>
     /// Interest rate
@@ -51,5 +52,16 @@ public record BinanceMarginInterestHistory
     /// <summary>
     /// Type of interest
     /// </summary>
-    public string Type { get; set; } = "";
+    [JsonConverter(typeof(MapConverter))]
+    public BinanceMarginInterestType Type { get; set; }
+}
+
+/// <summary>Paginated Margin interest history.</summary>
+public record BinanceMarginInterestHistoryResult
+{
+    /// <summary>Interest records.</summary>
+    public List<BinanceMarginInterestHistory> Rows { get; set; } = [];
+
+    /// <summary>Total number of records.</summary>
+    public long Total { get; set; }
 }
