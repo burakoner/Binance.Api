@@ -346,10 +346,95 @@ public interface IBinanceMarginRestClientTrade
     /// <returns></returns>
     Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Create Special Key(Low-Latency Trading)(TRADE)
-    // TODO: Delete Special Key(Low-Latency Trading)(TRADE)
-    // TODO: Edit ip for Special Key(Low-Latency Trading)(TRADE)
-    // TODO: Exit Special Key Mode(TRADE)
-    // TODO: Query Special key List(Low Latency Trading)(TRADE)
-    // TODO: Query Special key(Low Latency Trading)(TRADE)
+    /// <summary>
+    /// Creates a low-latency Margin Special Key. Binance currently limits general eligibility to VIP
+    /// level 7 or higher and requires acceptance of the Supplemental Product Terms. Cross Margin,
+    /// Isolated Margin, and Portfolio Margin Pro are supported; Portfolio Margin is not.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#create-special-key" /></para>
+    /// </summary>
+    /// <param name="apiName">Required name for the new key.</param>
+    /// <param name="symbol">Isolated Margin symbol. Omit for Cross Margin.</param>
+    /// <param name="ipAddresses">Optional IP restrictions, between 1 and 30 entries.</param>
+    /// <param name="publicKey">Optional RSA or Ed25519 public key. The wrapper form-encodes the value.</param>
+    /// <param name="permissionMode">Optional Ed25519 permission mode; Binance defaults to Trade.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The newly issued API key and any server-issued secret.</returns>
+    Task<RestCallResult<BinanceMarginSpecialKeyCreateResult>> CreateMarginSpecialKeyAsync(
+        string apiName,
+        string? symbol = null,
+        IEnumerable<string>? ipAddresses = null,
+        string? publicKey = null,
+        BinanceMarginSpecialKeyPermissionMode? permissionMode = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Deletes a Margin Special Key by API key or every matching key by API name. When both are
+    /// supplied, Binance ignores the API name. Deleting a key does not exit Special Key Mode.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#delete-special-key" /></para>
+    /// </summary>
+    /// <param name="apiKey">Specific Special Key to delete.</param>
+    /// <param name="apiName">Name whose matching Special Keys should be deleted.</param>
+    /// <param name="symbol">Isolated Margin symbol. Omit for Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<bool>> DeleteMarginSpecialKeyAsync(
+        string? apiKey = null,
+        string? apiName = null,
+        string? symbol = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Replaces the IP restrictions for one Margin Special Key.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#edit-ip-for-special-key" /></para>
+    /// </summary>
+    /// <param name="apiKey">Special Key whose restrictions should be replaced.</param>
+    /// <param name="ipAddresses">Required IP restrictions, between 1 and 30 entries.</param>
+    /// <param name="symbol">Isolated Margin symbol. Omit for Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<bool>> UpdateMarginSpecialKeyIpAsync(
+        string apiKey,
+        IEnumerable<string> ipAddresses,
+        string? symbol = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Exits Special Key Mode for a Cross Margin Classic account. On success Binance atomically
+    /// deletes all existing Margin Special Keys, restores standard pre-execution checks, and starts a
+    /// cooldown period. The account must not be in liquidation and must have no outstanding liability.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#exit-special-key-mode" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<bool>> ExitMarginSpecialKeyModeAsync(int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets one Margin Special Key by its API key.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-special-key" /></para>
+    /// </summary>
+    /// <param name="apiKey">Required Special Key identifier.</param>
+    /// <param name="symbol">Isolated Margin symbol. Omit for Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginSpecialKey>> GetMarginSpecialKeyAsync(
+        string apiKey,
+        string? symbol = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the Margin Special Keys for the selected Cross or Isolated Margin scope.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-special-key-list" /></para>
+    /// </summary>
+    /// <param name="symbol">Isolated Margin symbol. Omit for Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<List<BinanceMarginSpecialKey>>> GetMarginSpecialKeysAsync(
+        string? symbol = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
 }

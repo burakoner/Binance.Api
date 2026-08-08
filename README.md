@@ -248,6 +248,10 @@ var margin_321 = await api.Margin.GetLiquidationLoanAsync();
 var margin_322 = await api.Margin.RepayLiquidationLoanAsync("---ASSET---", 100.0m);
 var margin_323 = await api.Margin.GetLiquidationLoanRepaymentHistoryAsync();
 var margin_324 = await api.Margin.GetMarginPreventedMatchesAsync("---SYMBOL---", orderId: 100000001);
+var margin_325 = await api.Margin.GetMarginSpecialKeyAsync("---SPECIAL-API-KEY---");
+var margin_326 = await api.Margin.GetMarginSpecialKeysAsync();
+// Special Key creation, deletion, IP replacement, and mode exit are intentionally omitted here;
+// they create or destroy credentials or change the account's liquidation framework.
 
 // Margin > General Transfer Methods (PRIVATE)
 var margin_401 = await api.Margin.GetMarginTransfersAsync(BinanceMarginTransferDirection.RollIn);
