@@ -72,9 +72,4 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<BinanceMarginAvailableInventory>(GetUrl(sapi, v1, "margin/available-inventory"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 50);
     }
 
-    public Task<RestCallResult<List<BinanceCrossMarginProLiabilityCoinLeverageBracket>>> GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync(CancellationToken ct = default)
-    {
-        return RequestAsync<List<BinanceCrossMarginProLiabilityCoinLeverageBracket>>(GetUrl(sapi, v1, "margin/leverageBracket"), HttpMethod.Get, ct, false, requestWeight: 1);
-    }
-
 }

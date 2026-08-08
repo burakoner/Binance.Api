@@ -80,11 +80,4 @@ public interface IBinanceMarginRestClientMarketData
     /// <returns></returns>
     Task<RestCallResult<BinanceMarginAvailableInventory>> GetMarginAvaliableInventoryAsync(BinanceMarginInventoryType type, CancellationToken ct = default);
 
-    /// <summary>
-    /// Get Liability Coin Leverage Bracket in Cross Margin Pro Mode
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/market-data/Query-Liability-Coin-Leverage-Bracket-in-Cross-Margin-Pro-Mode" /></para>
-    /// </summary>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<RestCallResult<List<BinanceCrossMarginProLiabilityCoinLeverageBracket>>> GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync(CancellationToken ct = default);
 }

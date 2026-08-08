@@ -109,7 +109,6 @@ internal class Program
         var margin_106 = await api.Margin.GetIsolatedMarginTierDataAsync("---SYMBOL---");
         var margin_107 = await api.Margin.GetMarginPriceIndexAsync("---SYMBOL---");
         var margin_108 = await api.Margin.GetMarginAvaliableInventoryAsync(BinanceMarginInventoryType.Margin);
-        var margin_109 = await api.Margin.GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync();
 
         // Margin > General Borrow and Repay Methods (PRIVATE)
         var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["---ASSET---"], true);
