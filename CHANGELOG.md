@@ -18,6 +18,7 @@
   * Removed retired buyer/seller order IDs from Spot trade stream events and mapped the remaining ignored field correctly
   * Removed the retired Spot all-market ticker stream (`!ticker@arr`) overload and examples
   * Aligned Spot Account REST and WebSocket API queries with the current routes, request weights, fractional receive windows, parameter constraints, order-list, allocation, commission, amendment, account-filter, and conditional order response contracts
+  * Aligned core Spot Trade REST and WebSocket API operations with current pegged-order, fractional receive-window, cancel-replace, amend-keep-priority, SOR, commission, and response contracts
   * Fixed broker client-order ID cleanup removing valid leading characters when an ID did not start with the exact Binance broker prefix
   * Added a request-level test project for endpoint contract regression coverage
 

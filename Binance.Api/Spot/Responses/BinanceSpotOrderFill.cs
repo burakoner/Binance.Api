@@ -6,6 +6,11 @@
 public record BinanceSpotOrderFill
 {
     /// <summary>
+    /// Match type for a Smart Order Routing allocation
+    /// </summary>
+    public string? MatchType { get; set; }
+
+    /// <summary>
     /// Price of the trade
     /// </summary>
     public decimal Price { get; set; }
@@ -32,4 +37,10 @@ public record BinanceSpotOrderFill
     /// The id of the trade
     /// </summary>
     public long TradeId { get; set; }
+
+    /// <summary>
+    /// Allocation id for a Smart Order Routing fill
+    /// </summary>
+    [JsonProperty("allocId")]
+    public long? AllocationId { get; set; }
 }

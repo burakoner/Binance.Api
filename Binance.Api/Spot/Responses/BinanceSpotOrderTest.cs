@@ -12,6 +12,12 @@ public record BinanceSpotOrderTest
     public BinanceFee? StandardFeeForOrder { get; set; }
 
     /// <summary>
+    /// Special fee rates on trades from the order
+    /// </summary>
+    [JsonProperty("specialCommissionForOrder")]
+    public BinanceFee? SpecialFeeForOrder { get; set; }
+
+    /// <summary>
     /// Tax fee rates on trades from the order
     /// </summary>
     [JsonProperty("taxCommissionForOrder")]

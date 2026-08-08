@@ -105,6 +105,24 @@ public class BinanceAuthenticationTests
             RSASignaturePadding.Pkcs1));
     }
 
+    [Fact]
+    public void SignedSocketRequest_BooleanParametersUseLowercaseSignatureValues()
+    {
+        const string secret = "test-secret";
+        var authentication = new BinanceAuthentication(new ApiCredentials("api-key", secret));
+
+        var parameters = authentication.AuthenticateSocketParameters(
+            new Dictionary<string, object> { { "computeCommissionRates", true } },
+            1_650_000_000_123);
+
+        var expectedPayload = "apiKey=api-key&computeCommissionRates=true&timestamp=1650000000123";
+        var expectedSignature = System.Convert.ToHexString(
+            HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), Encoding.UTF8.GetBytes(expectedPayload)))
+            .ToLowerInvariant();
+        Assert.Equal(expectedSignature, parameters["signature"]);
+        Assert.IsType<bool>(parameters["computeCommissionRates"]);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

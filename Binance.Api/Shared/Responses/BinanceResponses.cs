@@ -23,7 +23,7 @@ public record BinanceResultWithRateLimits<T>
     /// Identifier
     /// </summary>
     [JsonProperty("id")]
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// Result status

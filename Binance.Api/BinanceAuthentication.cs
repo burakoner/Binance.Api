@@ -63,12 +63,12 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
             { "apiKey", Credentials.Key.GetString() },
             { "timestamp", timestamp },
         };
-        var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + System.Convert.ToString(p.Value, BinanceConstants.CI)));
+        var paramString = string.Join("&", sortedParameters.Select(p => p.Key + "=" + FormatSocketParameter(p.Value)));
 
         string signature;
         if (Credentials.Type == ApiCredentialsType.HMAC)
         {
-            signature = SignHMACSHA256(paramString);
+            signature = SignHMACSHA256(paramString).ToLowerInvariant();
         }
         else if (Credentials.Type == ApiCredentialsType.RsaXml || Credentials.Type == ApiCredentialsType.RsaPem)
         {
@@ -87,6 +87,11 @@ internal class BinanceAuthentication(ApiCredentials credentials) : Authenticatio
         result.Add("signature", signature);
         return result;
     }
+
+    private static string? FormatSocketParameter(object value)
+        => value is bool boolean
+            ? boolean.ToString().ToLowerInvariant()
+            : System.Convert.ToString(value, BinanceConstants.CI);
 
     private string SignEd25519Base64(byte[] payload)
     {

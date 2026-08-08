@@ -23,10 +23,17 @@ internal partial class BinanceSpotRestClient
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         long? trailingDelta = null,
         long? strategyId = null,
-        int? strategyType = null,
-        int? receiveWindow = null,
+        long? strategyType = null,
+        BinanceSpotPegPriceType? pegPriceType = null,
+        int? pegOffsetValue = null,
+        BinanceSpotPegOffsetType? pegOffsetType = null,
+        decimal? receiveWindow = null,
         CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.StrategyType(strategyType);
+        BinanceSpotTradeValidation.Peg(type, pegPriceType, pegOffsetValue, pegOffsetType);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
@@ -62,7 +69,10 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptionalEnum("pegPriceType", pegPriceType);
+        parameters.AddOptional("pegOffsetValue", pegOffsetValue);
+        parameters.AddOptionalEnum("pegOffsetType", pegOffsetType);
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (result) InvokeOrderPlaced(result.Data.Id);
@@ -85,11 +95,18 @@ internal partial class BinanceSpotRestClient
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         long? trailingDelta = null,
         long? strategyId = null,
-        int? strategyType = null,
-        int? receiveWindow = null,
+        long? strategyType = null,
+        BinanceSpotPegPriceType? pegPriceType = null,
+        int? pegOffsetValue = null,
+        BinanceSpotPegOffsetType? pegOffsetType = null,
+        decimal? receiveWindow = null,
         bool? computeFeeRates = null,
         CancellationToken ct = default)
     {
+        symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.StrategyType(strategyType);
+        BinanceSpotTradeValidation.Peg(type, pegPriceType, pegOffsetValue, pegOffsetType);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
@@ -123,9 +140,12 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
+        parameters.AddOptionalEnum("pegPriceType", pegPriceType);
+        parameters.AddOptional("pegOffsetValue", pegOffsetValue);
+        parameters.AddOptionalEnum("pegOffsetType", pegOffsetType);
         parameters.AddOptional("computeCommissionRates", computeFeeRates?.ToString(BinanceConstants.CI).ToLowerInvariant());
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         var weight = computeFeeRates == true ? 20 : 1;
         return await RequestAsync<BinanceSpotOrderTest>(GetUrl(api, v3, "order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
@@ -146,11 +166,11 @@ internal partial class BinanceSpotRestClient
         return RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 4);
     }
 
-    public async Task<RestCallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, decimal? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
-        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
-            throw new ArgumentException("Either orderId or origClientOrderId must be sent");
+        BinanceSpotTradeValidation.OrderIdentifiers(orderId, origClientOrderId);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -158,22 +178,23 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("newClientOrderId", newClientOrderId);
         parameters.AddOptionalEnum("cancelRestrictions", cancelRestriction);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "order"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) InvokeOrderCanceled(result.Data.Id);
         return result;
     }
     
-    public async Task<RestCallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, decimal? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
 
         var parameters = new ParameterCollection
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         var result = await RequestAsync<List<BinanceSpotOrder>>(GetUrl(api, v3, "openOrders"), HttpMethod.Delete, ct, true, bodyParameters: parameters).ConfigureAwait(false);
         if (result) foreach (var order in result.Data) InvokeOrderCanceled(order.Id);
@@ -200,12 +221,19 @@ internal partial class BinanceSpotRestClient
         BinanceSpotOrderCancelRestriction? cancelRestriction = null,
         long? trailingDelta = null,
         long? strategyId = null,
-        int? strategyType = null,
-        int? receiveWindow = null,
+        long? strategyType = null,
+        BinanceSpotOrderRateLimitExceededMode? orderRateLimitExceededMode = null,
+        BinanceSpotPegPriceType? pegPriceType = null,
+        int? pegOffsetValue = null,
+        BinanceSpotPegOffsetType? pegOffsetType = null,
+        decimal? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (cancelOrderId == null && cancelClientOrderId == null || cancelOrderId != null && cancelClientOrderId != null)
-            throw new ArgumentException("1 of either should be specified, cancelOrderId or cancelClientOrderId");
+        symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.OrderIdentifiers(cancelOrderId, cancelClientOrderId);
+        BinanceSpotTradeValidation.StrategyType(strategyType);
+        BinanceSpotTradeValidation.Peg(type, pegPriceType, pegOffsetValue, pegOffsetType);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
 
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
@@ -246,7 +274,11 @@ internal partial class BinanceSpotRestClient
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("strategyId", strategyId);
         parameters.AddOptional("strategyType", strategyType);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptionalEnum("orderRateLimitExceededMode", orderRateLimitExceededMode);
+        parameters.AddOptionalEnum("pegPriceType", pegPriceType);
+        parameters.AddOptional("pegOffsetValue", pegOffsetValue);
+        parameters.AddOptionalEnum("pegOffsetType", pegOffsetType);
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         var result = await RequestAsync<BinanceSpotReplaceOrderResult>(GetUrl(api, v3, "order/cancelReplace"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
         if (!result && result.Raw != null)
@@ -269,6 +301,139 @@ internal partial class BinanceSpotRestClient
             InvokeOrderPlaced(result.Data.NewOrderResponse!.Id);
 
         return result;
+    }
+
+    public Task<RestCallResult<BinanceSpotOrderAmendResult>> AmendOrderAsync(
+        string symbol,
+        decimal newQuantity,
+        long? orderId = null,
+        string? originalClientOrderId = null,
+        string? newClientOrderId = null,
+        decimal? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.Amend(newQuantity, orderId, originalClientOrderId);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
+
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+            { "newQty", newQuantity.ToString(BinanceConstants.CI) }
+        };
+        parameters.AddOptional("orderId", orderId);
+        parameters.AddOptional("origClientOrderId", originalClientOrderId);
+        parameters.AddOptional("newClientOrderId", newClientOrderId);
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
+
+        return RequestAsync<BinanceSpotOrderAmendResult>(GetUrl(api, v3, "order/amend/keepPriority"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 4);
+    }
+
+    public async Task<RestCallResult<BinanceSpotOrder>> PlaceSorOrderAsync(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceSpotOrderType type,
+        decimal quantity,
+        decimal? price = null,
+        string? newClientOrderId = null,
+        BinanceTimeInForce? timeInForce = null,
+        BinanceOrderResponseType? orderResponseType = null,
+        decimal? icebergQuantity = null,
+        long? strategyId = null,
+        long? strategyType = null,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
+        decimal? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.SmartOrderRouting(type, quantity, strategyType);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
+
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, null, ct).ConfigureAwait(false);
+        if (!rulesCheck.Passed)
+        {
+            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            return new RestCallResult<BinanceSpotOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
+        }
+
+        quantity = rulesCheck.Quantity!.Value;
+        price = rulesCheck.Price;
+        var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
+        var parameters = CreateSorOrderParameters(symbol, side, type, quantity, price, clientOrderId, timeInForce, orderResponseType, icebergQuantity, strategyId, strategyType, selfTradePreventionMode, receiveWindow, null);
+
+        var result = await RequestAsync<BinanceSpotOrder>(GetUrl(api, v3, "sor/order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1).ConfigureAwait(false);
+        if (result)
+            InvokeOrderPlaced(result.Data.Id);
+        return result;
+    }
+
+    public async Task<RestCallResult<BinanceSpotOrderTest>> PlaceSorTestOrderAsync(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceSpotOrderType type,
+        decimal quantity,
+        decimal? price = null,
+        string? newClientOrderId = null,
+        BinanceTimeInForce? timeInForce = null,
+        BinanceOrderResponseType? orderResponseType = null,
+        decimal? icebergQuantity = null,
+        long? strategyId = null,
+        long? strategyType = null,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
+        decimal? receiveWindow = null,
+        bool? computeFeeRates = null,
+        CancellationToken ct = default)
+    {
+        symbol.ValidateBinanceSymbol();
+        BinanceSpotTradeValidation.SmartOrderRouting(type, quantity, strategyType);
+        BinanceSpotTradeValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow));
+
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, null, ct).ConfigureAwait(false);
+        if (!rulesCheck.Passed)
+        {
+            Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
+            return new RestCallResult<BinanceSpotOrderTest>(new ArgumentError(rulesCheck.ErrorMessage!));
+        }
+
+        quantity = rulesCheck.Quantity!.Value;
+        price = rulesCheck.Price;
+        var parameters = CreateSorOrderParameters(symbol, side, type, quantity, price, newClientOrderId, timeInForce, orderResponseType, icebergQuantity, strategyId, strategyType, selfTradePreventionMode, receiveWindow, computeFeeRates);
+        var weight = computeFeeRates == true ? 20 : 1;
+        return await RequestAsync<BinanceSpotOrderTest>(GetUrl(api, v3, "sor/order/test"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: weight).ConfigureAwait(false);
+    }
+
+    private ParameterCollection CreateSorOrderParameters(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceSpotOrderType type,
+        decimal quantity,
+        decimal? price,
+        string? newClientOrderId,
+        BinanceTimeInForce? timeInForce,
+        BinanceOrderResponseType? orderResponseType,
+        decimal? icebergQuantity,
+        long? strategyId,
+        long? strategyType,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode,
+        decimal? receiveWindow,
+        bool? computeFeeRates)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddParameter("symbol", symbol);
+        parameters.AddEnum("side", side);
+        parameters.AddEnum("type", type);
+        parameters.AddParameter("quantity", quantity.ToString(BinanceConstants.CI));
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("newClientOrderId", newClientOrderId);
+        parameters.AddOptionalEnum("timeInForce", timeInForce);
+        parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
+        parameters.AddOptional("icebergQty", icebergQuantity?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("strategyId", strategyId);
+        parameters.AddOptional("strategyType", strategyType);
+        parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
+        parameters.AddOptional("computeCommissionRates", computeFeeRates?.ToString(BinanceConstants.CI).ToLowerInvariant());
+        return parameters;
     }
 
     public async Task<RestCallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, decimal? receiveWindow = null, CancellationToken ct = default)

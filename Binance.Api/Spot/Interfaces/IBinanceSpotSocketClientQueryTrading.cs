@@ -7,7 +7,7 @@ public interface IBinanceSpotSocketClientQueryTrading
 {
     /// <summary>
     /// Places a new order
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#place-new-order-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>
@@ -24,13 +24,17 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="strategyId">Strategy id</param>
     /// <param name="strategyType">Strategy type</param>
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
+    /// <param name="pegPriceType">Reference side used to determine a pegged price</param>
+    /// <param name="pegOffsetValue">Price level offset for a pegged order; maximum 100</param>
+    /// <param name="pegOffsetType">Unit used for the pegged-price offset</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for the placed order</returns>
-    Task<CallResult<BinanceSpotOrder>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, long? strategyId = null, int? strategyType = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotOrder>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, long? strategyId = null, long? strategyType = null, BinanceSpotPegPriceType? pegPriceType = null, int? pegOffsetValue = null, BinanceSpotPegOffsetType? pegOffsetType = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Places a new test order. Test orders are not actually being executed and just test the functionality.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#test-new-order-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>
@@ -47,10 +51,14 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="strategyId">Strategy id</param>
     /// <param name="strategyType">Strategy type</param>
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
+    /// <param name="pegPriceType">Reference side used to determine a pegged price</param>
+    /// <param name="pegOffsetValue">Price level offset for a pegged order; maximum 100</param>
+    /// <param name="pegOffsetType">Unit used for the pegged-price offset</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="computeFeeRates">Compute fee rates</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for the placed test order</returns>
-    Task<CallResult<BinanceSpotOrderTest>> PlaceTestOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, long? strategyId = null, int? strategyType = null, bool? computeFeeRates = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotOrderTest>> PlaceTestOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, long? trailingDelta = null, long? strategyId = null, long? strategyType = null, BinanceSpotPegPriceType? pegPriceType = null, int? pegOffsetValue = null, BinanceSpotPegOffsetType? pegOffsetType = null, decimal? receiveWindow = null, bool? computeFeeRates = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get order by either orderId or clientOrderId
@@ -66,20 +74,21 @@ public interface IBinanceSpotSocketClientQueryTrading
 
     /// <summary>
     /// Cancel an order by either orderId or clientOrderId
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#cancel-order-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="orderId">Order id</param>
     /// <param name="origClientOrderId">Client order id</param>
     /// <param name="newClientOrderId">New client order id for the order</param>
     /// <param name="cancelRestriction">Cancel restriction</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel an existing order and place a new order on the same symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#cancel-and-replace-order-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>
@@ -101,9 +110,18 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <param name="trailingDelta">Trailing delta value for order in BIPS. A value of 1 means 0.01% trailing delta.</param>
     /// <param name="strategyId">Strategy id</param>
     /// <param name="strategyType">Strategy type</param>
+    /// <param name="orderRateLimitExceededMode">Behavior when the unfilled-order rate limit is exceeded</param>
+    /// <param name="pegPriceType">Reference side used to determine a pegged price</param>
+    /// <param name="pegOffsetValue">Price level offset for a pegged order; maximum 100</param>
+    /// <param name="pegOffsetType">Unit used for the pegged-price offset</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotReplaceOrderResult>> ReplaceOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, BinanceSpotOrderCancelReplaceMode mode, long? cancelOrderId = null, string? cancelClientOrderId = null, string? newClientOrderId = null, string? newCancelClientOrderId = null, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, long? trailingDelta = null, long? strategyId = null, int? strategyType = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotReplaceOrderResult>> ReplaceOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, BinanceSpotOrderCancelReplaceMode mode, long? cancelOrderId = null, string? cancelClientOrderId = null, string? newClientOrderId = null, string? newCancelClientOrderId = null, decimal? quantity = null, decimal? quoteQuantity = null, decimal? price = null, decimal? stopPrice = null, decimal? icebergQuantity = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceSpotOrderCancelRestriction? cancelRestriction = null, long? trailingDelta = null, long? strategyId = null, long? strategyType = null, BinanceSpotOrderRateLimitExceededMode? orderRateLimitExceededMode = null, BinanceSpotPegPriceType? pegPriceType = null, int? pegOffsetValue = null, BinanceSpotPegOffsetType? pegOffsetType = null, decimal? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>Reduces an order's quantity without losing its order-book priority.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderAmendResult>> AmendOrderAsync(string symbol, decimal newQuantity, long? orderId = null, string? originalClientOrderId = null, string? newClientOrderId = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get open orders
@@ -117,10 +135,19 @@ public interface IBinanceSpotSocketClientQueryTrading
 
     /// <summary>
     /// Cancel all open orders for the symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#cancel-open-orders-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, decimal? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>Places a new order using Smart Order Routing.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<List<BinanceSpotOrder>>> PlaceSorOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal quantity, decimal? price = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, decimal? icebergQuantity = null, long? strategyId = null, long? strategyType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, decimal? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>Tests a Smart Order Routing order without sending it to the matching engine.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderTest>> PlaceSorTestOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal quantity, decimal? price = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, decimal? icebergQuantity = null, long? strategyId = null, long? strategyType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, decimal? receiveWindow = null, bool? computeFeeRates = null, CancellationToken ct = default);
 }

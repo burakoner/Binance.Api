@@ -66,7 +66,7 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Algo Trading | 11 | 11 | 11 | 0 | 0 |
 | Convert | 9 | 9 | 9 | 0 | 0 |
 | Margin | 65 | 44 | 44 | 21 | 0 |
-| Spot | 48 | 38 | 38 | 10 | 0 |
+| Spot | 48 | 41 | 41 | 7 | 0 |
 | USDⓈ-M Futures | 95 | 83 | 83 | 12 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 45 | 41 | 3 | 4 |
@@ -106,9 +106,11 @@ Slice 14 implements all three current Spot WebSocket API authentication methods.
 
 Slice 15 completes the current JSON Spot WebSocket API user-data method family. It adds `session.subscriptions` and the Ed25519 session-authenticated `userDataStream.subscribe` variant while retaining the existing all-key-type signed variant. The two subscription modes remain distinct because `session.logout` terminates only the session-authenticated stream. A local session lifecycle lease keeps the connection open after logout, disables automatic reauthentication while logged out, and reauthenticates before restoring session subscriptions after a transport reconnect. Subscription identifiers are now `int64` through request state, public handles, event routing, list responses, and unsubscribe requests, matching the canonical schemas. Deterministic coverage reaches 61 tests; authenticated live subscription behavior remains untested because production credentials are unavailable.
 
+Slice 16 synchronizes the non-list Spot Trade operations against the live REST and WebSocket API Trade catalogs as refreshed on 2026-08-09. Existing order, test, cancel, cancel-all, and cancel-replace methods now support fractional `recvWindow`, pegged pricing, current strategy-type width and bounds, cancel restrictions, and `orderRateLimitExceededMode`. Cancel-replace now permits both cancellation identifiers because Binance validates them together when both are sent. Missing amend-keep-priority and SOR order/test operations are implemented with their current routes, methods, weights, parameter restrictions, and response fields. The official WebSocket SOR placement response is an array even though the REST response is one object; the public contracts preserve that documented difference. WebSocket numeric and boolean parameters remain JSON numbers/booleans while their signature representation is invariant and lowercase for booleans. Spot now has 41 exact REST route matches and 7 official-only order-list candidates. No live order was submitted or canceled; verification is 67 deterministic request, signature, validation, and response-model tests plus the full multi-target solution build.
+
 ### Revised next order
 
-1. Complete Spot Trade in two bounded slices: first core order placement/query/cancel/replace plus amend and SOR; then the complete order-list family after resolving current versus deprecated OCO routes from canonical endpoint pages and changelog evidence.
+1. Complete the remaining Spot Trade order-list family after resolving current versus deprecated OCO routes from canonical endpoint pages and changelog evidence. The non-list Trade core is complete.
 2. Replace the incomplete single-weight default rate-limit model once the audited Spot contracts define its IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
 3. Implement the missing current Margin risk-data stream and continue the remaining Margin route/contract audit after the critical Spot pass.
 4. Continue product-family audits using the route candidates only as discovery input: Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
@@ -135,3 +137,4 @@ Slice 15 completes the current JSON Spot WebSocket API user-data method family. 
 | Review 3 | Complete | Backward review of Spot General, Market Data queries/streams, Account, documentation, and execution order | `3dca3ec..038bc37` diff review, canonical-link scan and correction, regenerated 48/38/38/10/0 route comparison, 54 tests, forced full multi-target rebuild |
 | 14 | Complete | Spot WebSocket API session authentication | Live canonical Authentication catalog and generated connector, connection-scoped `session.logon/status/logout`, Ed25519-only signing verification, current session-state model, signed-query connection-state correction, 58 deterministic tests, full multi-target solution build |
 | 15 | Complete | Spot WebSocket API session and signed user-data subscriptions | Live canonical User Data Stream catalog, main Spot changelog and generated connector, subscription-mode/logout/reconnect lifecycle separation, `int64` subscription IDs, request/list/model tests, 61 deterministic tests, full multi-target solution build |
+| 16 | Complete | Spot Trade core order, cancel, amend, and SOR contracts | Live canonical REST and WebSocket API Trade catalogs refreshed 2026-08-09, main Spot changelog, generated connector, 67 request/signature/validation/model tests, full multi-target solution build |

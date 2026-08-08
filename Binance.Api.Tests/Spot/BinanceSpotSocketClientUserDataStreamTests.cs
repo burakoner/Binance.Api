@@ -27,7 +27,8 @@ public class BinanceSpotSocketClientUserDataStreamTests
         Assert.Equal(timestamp, request.Params["timestamp"]);
         var payload = "apiKey=api-key&recvWindow=6000.346&timestamp=1650000000123";
         var expectedSignature = System.Convert.ToHexString(
-            HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), Encoding.UTF8.GetBytes(payload)));
+            HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), Encoding.UTF8.GetBytes(payload)))
+            .ToLowerInvariant();
         Assert.Equal(expectedSignature, request.Params["signature"]);
         Assert.False(request.UsesSessionAuthentication);
     }
