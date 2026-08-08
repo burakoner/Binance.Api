@@ -143,6 +143,30 @@ public interface IBinanceSpotSocketClientQueryTrading
     /// <returns></returns>
     Task<CallResult<List<BinanceSpotOrder>>> CancelOrdersAsync(string symbol, decimal? receiveWindow = null, CancellationToken ct = default);
 
+    /// <summary>Cancels an entire order list.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderList>> CancelOrderListAsync(string symbol, long? orderListId = null, string? listClientOrderId = null, string? newClientOrderId = null, decimal? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>Places a one-cancels-the-other order list.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderList>> PlaceOcoOrderListAsync(BinanceSpotOcoOrderListRequest request, CancellationToken ct = default);
+
+    /// <summary>Places a one-pays-the-other order list.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderList>> PlaceOpoOrderListAsync(BinanceSpotOpoOrderListRequest request, CancellationToken ct = default);
+
+    /// <summary>Places a one-pays-one-cancels-the-other order list.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderList>> PlaceOpocoOrderListAsync(BinanceSpotOpocoOrderListRequest request, CancellationToken ct = default);
+
+    /// <summary>Places a one-triggers-the-other order list.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderList>> PlaceOtoOrderListAsync(BinanceSpotOtoOrderListRequest request, CancellationToken ct = default);
+
+    /// <summary>Places a one-triggers-one-cancels-the-other order list.</summary>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
+    Task<CallResult<BinanceSpotOrderList>> PlaceOtocoOrderListAsync(BinanceSpotOtocoOrderListRequest request, CancellationToken ct = default);
+
     /// <summary>Places a new order using Smart Order Routing.</summary>
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade" /></para>
     Task<CallResult<List<BinanceSpotOrder>>> PlaceSorOrderAsync(string symbol, BinanceOrderSide side, BinanceSpotOrderType type, decimal quantity, decimal? price = null, string? newClientOrderId = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, decimal? icebergQuantity = null, long? strategyId = null, long? strategyType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, decimal? receiveWindow = null, CancellationToken ct = default);

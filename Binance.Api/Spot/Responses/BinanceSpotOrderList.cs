@@ -31,4 +31,7 @@ public record BinanceSpotOrderList
 
     /// <summary>The orders belonging to the list.</summary>
     public List<BinanceOrderId> Orders { get; set; } = [];
+
+    /// <summary>Detailed order results returned by placement and cancellation operations.</summary>
+    public List<BinanceSpotOrder> OrderReports { get; set; } = [];
 }

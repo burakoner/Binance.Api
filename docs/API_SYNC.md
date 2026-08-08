@@ -66,7 +66,7 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Algo Trading | 11 | 11 | 11 | 0 | 0 |
 | Convert | 9 | 9 | 9 | 0 | 0 |
 | Margin | 65 | 44 | 44 | 21 | 0 |
-| Spot | 48 | 41 | 41 | 7 | 0 |
+| Spot | 48 | 47 | 47 | 1 | 0 |
 | USDⓈ-M Futures | 95 | 83 | 83 | 12 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 45 | 41 | 3 | 4 |
@@ -108,9 +108,11 @@ Slice 15 completes the current JSON Spot WebSocket API user-data method family. 
 
 Slice 16 synchronizes the non-list Spot Trade operations against the live REST and WebSocket API Trade catalogs as refreshed on 2026-08-09. Existing order, test, cancel, cancel-all, and cancel-replace methods now support fractional `recvWindow`, pegged pricing, current strategy-type width and bounds, cancel restrictions, and `orderRateLimitExceededMode`. Cancel-replace now permits both cancellation identifiers because Binance validates them together when both are sent. Missing amend-keep-priority and SOR order/test operations are implemented with their current routes, methods, weights, parameter restrictions, and response fields. The official WebSocket SOR placement response is an array even though the REST response is one object; the public contracts preserve that documented difference. WebSocket numeric and boolean parameters remain JSON numbers/booleans while their signature representation is invariant and lowercase for booleans. Spot now has 41 exact REST route matches and 7 official-only order-list candidates. No live order was submitted or canceled; verification is 67 deterministic request, signature, validation, and response-model tests plus the full multi-target solution build.
 
+Slice 17 completes the current Spot Trade order-list family in both REST and WebSocket API. It adds list cancellation plus OCO, OPO, OPOCO, OTO, and OTOCO placement using endpoint-specific request models so that OPO/OPOCO do not accidentally send the pending quantity required only by OTO/OTOCO. Shared working, pending, and OCO-leg components cover every current documented strategy, trailing, iceberg, pegged-order, STP, response-type, client-ID, and fractional receive-window field while preserving JSON numbers for WebSocket requests. Placement and cancellation responses now expose `orderReports`. The 2024-04-02 changelog and current catalogs both mark `POST /api/v3/order/oco` and `orderList.place` deprecated in favor of the current OCO operations; those historical contracts were intentionally not added. Spot therefore has 47 exact REST route matches, with only the deprecated REST OCO route remaining as an official-catalog-only candidate. No live order-list mutation was performed; verification is 70 deterministic tests and multi-target builds.
+
 ### Revised next order
 
-1. Complete the remaining Spot Trade order-list family after resolving current versus deprecated OCO routes from canonical endpoint pages and changelog evidence. The non-list Trade core is complete.
+1. Perform the required backward review of Spot slices 14-17 before starting another implementation chain.
 2. Replace the incomplete single-weight default rate-limit model once the audited Spot contracts define its IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
 3. Implement the missing current Margin risk-data stream and continue the remaining Margin route/contract audit after the critical Spot pass.
 4. Continue product-family audits using the route candidates only as discovery input: Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
@@ -138,3 +140,4 @@ Slice 16 synchronizes the non-list Spot Trade operations against the live REST a
 | 14 | Complete | Spot WebSocket API session authentication | Live canonical Authentication catalog and generated connector, connection-scoped `session.logon/status/logout`, Ed25519-only signing verification, current session-state model, signed-query connection-state correction, 58 deterministic tests, full multi-target solution build |
 | 15 | Complete | Spot WebSocket API session and signed user-data subscriptions | Live canonical User Data Stream catalog, main Spot changelog and generated connector, subscription-mode/logout/reconnect lifecycle separation, `int64` subscription IDs, request/list/model tests, 61 deterministic tests, full multi-target solution build |
 | 16 | Complete | Spot Trade core order, cancel, amend, and SOR contracts | Live canonical REST and WebSocket API Trade catalogs refreshed 2026-08-09, main Spot changelog, generated connector, 67 request/signature/validation/model tests, full multi-target solution build |
+| 17 | Complete | Spot Trade REST and WebSocket API order-list contracts | Live canonical Trade catalogs, 2024-04-02 deprecation notice, 2025-12-18 OPO announcement, current generated connector, six current REST routes and six WebSocket methods, 70 deterministic request/model/validation tests, multi-target builds |

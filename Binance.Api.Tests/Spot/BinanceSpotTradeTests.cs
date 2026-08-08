@@ -230,6 +230,207 @@ public class BinanceSpotTradeTests
         Assert.True(Assert.Single(sorResponse.Data.Result).UsedSmartOrderRouting);
     }
 
+    [Fact]
+    public async Task OrderListOcoAndCancel_UseCurrentRoutesParametersAndResponse()
+    {
+        var response = """
+            {
+              "orderListId":7,
+              "contingencyType":"OCO",
+              "listStatusType":"EXEC_STARTED",
+              "listOrderStatus":"EXECUTING",
+              "listClientOrderId":"list-1",
+              "transactionTime":1712289389158,
+              "symbol":"BTCUSDT",
+              "orders":[{"symbol":"BTCUSDT","orderId":11,"clientOrderId":"above-1"}],
+              "orderReports":[{"symbol":"BTCUSDT","orderId":11,"orderListId":7,"clientOrderId":"above-1","price":"110","origQty":"2","status":"NEW","type":"LIMIT_MAKER","side":"SELL","expiryReason":"INSUFFICIENT_LIQUIDITY"}]
+            }
+            """;
+        var placeHandler = new RecordingHttpMessageHandler(response);
+        using (var client = CreateClient(placeHandler))
+        {
+            var request = new BinanceSpotOcoOrderListRequest(
+                "BTCUSDT",
+                BinanceOrderSide.Sell,
+                2m,
+                new BinanceSpotOrderListOcoLegRequest(BinanceSpotOrderType.LimitMaker)
+                {
+                    ClientOrderId = "above-1",
+                    Price = 110m,
+                    StrategyType = 1_000_000,
+                    PegPriceType = BinanceSpotPegPriceType.Primary,
+                    PegOffsetType = BinanceSpotPegOffsetType.PriceLevel,
+                    PegOffsetValue = 2
+                },
+                new BinanceSpotOrderListOcoLegRequest(BinanceSpotOrderType.StopLossLimit)
+                {
+                    ClientOrderId = "below-1",
+                    Price = 90m,
+                    StopPrice = 95m,
+                    TrailingDelta = 10m,
+                    TimeInForce = BinanceTimeInForce.GoodTillCanceled
+                })
+            {
+                ListClientOrderId = "list-1",
+                OrderResponseType = BinanceOrderResponseType.Full,
+                SelfTradePreventionMode = BinanceSelfTradePreventionMode.Transfer,
+                ReceiveWindow = 6_000.346m
+            };
+
+            var result = await client.Spot.PlaceOcoOrderListAsync(request);
+
+            Assert.True(result.Success);
+            Assert.Equal(HttpMethod.Post, placeHandler.Method);
+            Assert.Equal("/api/v3/orderList/oco", placeHandler.RequestUri!.AbsolutePath);
+            var body = Uri.UnescapeDataString(placeHandler.Body!);
+            Assert.Contains("aboveType=LIMIT_MAKER", body);
+            Assert.Contains("abovePegPriceType=PRIMARY_PEG", body);
+            Assert.Contains("abovePegOffsetType=PRICE_LEVEL", body);
+            Assert.Contains("belowType=STOP_LOSS_LIMIT", body);
+            Assert.Contains("belowTrailingDelta=10", body);
+            Assert.Contains("newOrderRespType=FULL", body);
+            Assert.Contains("selfTradePreventionMode=TRANSFER", body);
+            Assert.Contains("recvWindow=6000.346", body);
+            Assert.Equal(BinanceSpotOrderExpiryReason.InsufficientLiquidity, Assert.Single(result.Data.OrderReports).ExpiryReason);
+        }
+
+        var cancelHandler = new RecordingHttpMessageHandler(response);
+        using (var client = CreateClient(cancelHandler))
+        {
+            var result = await client.Spot.CancelOrderListAsync(
+                "BTCUSDT",
+                orderListId: 7,
+                listClientOrderId: "list-1",
+                newClientOrderId: "cancel-1",
+                receiveWindow: 5_000.125m);
+
+            Assert.True(result.Success);
+            Assert.Equal(HttpMethod.Delete, cancelHandler.Method);
+            Assert.Equal("/api/v3/orderList", cancelHandler.RequestUri!.AbsolutePath);
+            Assert.Null(cancelHandler.Body);
+            var query = Uri.UnescapeDataString(cancelHandler.RequestUri.Query);
+            Assert.Contains("orderListId=7", query);
+            Assert.Contains("listClientOrderId=list-1", query);
+            Assert.Contains("newClientOrderId=cancel-1", query);
+            Assert.Contains("recvWindow=5000.125", query);
+        }
+    }
+
+    [Fact]
+    public async Task OpoOpoCoOtoAndOtoCo_UseDistinctCurrentContracts()
+    {
+        var working = new BinanceSpotOrderListWorkingOrderRequest(BinanceSpotOrderType.Limit, BinanceOrderSide.Buy, 100m, 2m)
+        {
+            ClientOrderId = "working-1",
+            TimeInForce = BinanceTimeInForce.GoodTillCanceled,
+            StrategyType = 1_000_000
+        };
+        var pending = new BinanceSpotOrderListPendingOrderRequest(BinanceSpotOrderType.TakeProfit, BinanceOrderSide.Sell)
+        {
+            ClientOrderId = "pending-1",
+            StopPrice = 110m,
+            TrailingDelta = 5m
+        };
+        var pendingAbove = new BinanceSpotOrderListOcoLegRequest(BinanceSpotOrderType.LimitMaker) { Price = 110m };
+        var pendingBelow = new BinanceSpotOrderListOcoLegRequest(BinanceSpotOrderType.StopLoss) { StopPrice = 90m };
+
+        var opoHandler = new RecordingHttpMessageHandler("""{"orderListId":1,"orders":[],"orderReports":[]}""");
+        using (var client = CreateClient(opoHandler))
+        {
+            var result = await client.Spot.PlaceOpoOrderListAsync(new BinanceSpotOpoOrderListRequest("BTCUSDT", working, pending));
+            Assert.True(result.Success);
+            Assert.Equal("/api/v3/orderList/opo", opoHandler.RequestUri!.AbsolutePath);
+            var body = Uri.UnescapeDataString(opoHandler.Body!);
+            Assert.Contains("workingQuantity=2", body);
+            Assert.Contains("pendingType=TAKE_PROFIT", body);
+            Assert.DoesNotContain("pendingQuantity", body);
+        }
+
+        var opocoHandler = new RecordingHttpMessageHandler("""{"orderListId":2,"orders":[],"orderReports":[]}""");
+        using (var client = CreateClient(opocoHandler))
+        {
+            var request = new BinanceSpotOpocoOrderListRequest("BTCUSDT", working, BinanceOrderSide.Sell, pendingAbove)
+            {
+                PendingBelowOrder = pendingBelow
+            };
+            var result = await client.Spot.PlaceOpocoOrderListAsync(request);
+            Assert.True(result.Success);
+            Assert.Equal("/api/v3/orderList/opoco", opocoHandler.RequestUri!.AbsolutePath);
+            var body = Uri.UnescapeDataString(opocoHandler.Body!);
+            Assert.Contains("pendingAboveType=LIMIT_MAKER", body);
+            Assert.Contains("pendingBelowType=STOP_LOSS", body);
+            Assert.DoesNotContain("pendingQuantity", body);
+        }
+
+        var otoHandler = new RecordingHttpMessageHandler("""{"orderListId":3,"orders":[],"orderReports":[]}""");
+        using (var client = CreateClient(otoHandler))
+        {
+            var result = await client.Spot.PlaceOtoOrderListAsync(new BinanceSpotOtoOrderListRequest("BTCUSDT", working, pending, 1.5m));
+            Assert.True(result.Success);
+            Assert.Equal("/api/v3/orderList/oto", otoHandler.RequestUri!.AbsolutePath);
+            Assert.Contains("pendingQuantity=1.5", Uri.UnescapeDataString(otoHandler.Body!));
+        }
+
+        var otocoHandler = new RecordingHttpMessageHandler("""{"orderListId":4,"orders":[],"orderReports":[]}""");
+        using (var client = CreateClient(otocoHandler))
+        {
+            var request = new BinanceSpotOtocoOrderListRequest("BTCUSDT", working, BinanceOrderSide.Sell, 1.25m, pendingAbove)
+            {
+                PendingBelowOrder = pendingBelow,
+                ReceiveWindow = 5_000.25m
+            };
+            var result = await client.Spot.PlaceOtocoOrderListAsync(request);
+            Assert.True(result.Success);
+            Assert.Equal("/api/v3/orderList/otoco", otocoHandler.RequestUri!.AbsolutePath);
+            var body = Uri.UnescapeDataString(otocoHandler.Body!);
+            Assert.Contains("pendingQuantity=1.25", body);
+            Assert.Contains("pendingBelowStopPrice=90", body);
+            Assert.Contains("recvWindow=5000.25", body);
+        }
+    }
+
+    [Fact]
+    public void OrderListBuilders_PreserveSocketNumbersAndRejectInvalidStructures()
+    {
+        var working = new BinanceSpotOrderListWorkingOrderRequest(BinanceSpotOrderType.Limit, BinanceOrderSide.Buy, 100.5m, 2.25m)
+        {
+            TimeInForce = BinanceTimeInForce.GoodTillCanceled
+        };
+        var pending = new BinanceSpotOrderListPendingOrderRequest(BinanceSpotOrderType.Market, BinanceOrderSide.Sell);
+        var request = new BinanceSpotOtoOrderListRequest("BTCUSDT", working, pending, 1.5m) { ReceiveWindow = 5_000.125m };
+        var parameters = BinanceSpotOrderListRequestBuilder.Oto(request, value => value, request.ReceiveWindow, false);
+
+        Assert.IsType<decimal>(parameters["workingPrice"]);
+        Assert.IsType<decimal>(parameters["workingQuantity"]);
+        Assert.IsType<decimal>(parameters["pendingQuantity"]);
+        Assert.IsType<decimal>(parameters["recvWindow"]);
+
+        Assert.Throws<ArgumentException>(() => BinanceSpotOrderListRequestBuilder.Cancel("BTCUSDT", null, null, null, null, false));
+        Assert.Throws<ArgumentException>(() => BinanceSpotOrderListRequestBuilder.Opo(
+            new BinanceSpotOpoOrderListRequest(
+                "BTCUSDT",
+                new BinanceSpotOrderListWorkingOrderRequest(BinanceSpotOrderType.Market, BinanceOrderSide.Buy, 1, 1),
+                pending),
+            value => value,
+            null,
+            false));
+        Assert.Throws<ArgumentException>(() => BinanceSpotOrderListRequestBuilder.Oco(
+            new BinanceSpotOcoOrderListRequest(
+                "BTCUSDT",
+                BinanceOrderSide.Sell,
+                1,
+                new BinanceSpotOrderListOcoLegRequest(BinanceSpotOrderType.StopLoss) { StopPrice = 2 },
+                new BinanceSpotOrderListOcoLegRequest(BinanceSpotOrderType.StopLossLimit) { Price = 1, StopPrice = 2 }),
+            value => value,
+            null,
+            false));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BinanceSpotOrderListRequestBuilder.Oto(
+            new BinanceSpotOtoOrderListRequest("BTCUSDT", working, pending, 0),
+            value => value,
+            null,
+            false));
+    }
+
     private static BinanceRestApiClient CreateClient(RecordingHttpMessageHandler handler, IRateLimiter? limiter = null)
     {
         var options = new BinanceRestApiClientOptions(new ApiCredentials("api-key", "secret"))
