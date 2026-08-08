@@ -215,13 +215,9 @@ var margin_508 = await api.Margin.GetEnabledIsolatedMarginAccountLimitAsync();
 var margin_509 = await api.Margin.GetIsolatedMarginAccountAsync();
 var margin_510 = await api.Margin.GetIsolatedMarginFeeDataAsync();
 
-// Margin > General Trade Data Stream Methods (PRIVATE)
-var margin_601 = await api.Margin.StartMarginUserStreamAsync();
-var margin_602 = await api.Margin.KeepAliveMarginUserStreamAsync("---LISTEN-KEY---");
-var margin_603 = await api.Margin.StopMarginUserStreamAsync("---LISTEN-KEY---");
-var margin_604 = await api.Margin.StartIsolatedMarginUserStreamAsync("---SYMBOL---");
-var margin_605 = await api.Margin.KeepAliveIsolatedMarginUserStreamAsync("---SYMBOL---", "---LISTEN-KEY---");
-var margin_606 = await api.Margin.CloseIsolatedMarginUserStreamAsync("---SYMBOL---", "---LISTEN-KEY---");
+// Margin > Listen Token Data Stream Methods (PRIVATE)
+var margin_601 = await api.Margin.CreateUserDataStreamAsync();
+var margin_602 = await api.Margin.CreateUserDataStreamAsync("---SYMBOL---", isIsolated: true);
 
 // TODO: Margin > General Risk Data Stream Methods (PRIVATE)
 
@@ -990,6 +986,26 @@ var spotUserData = await ws.Spot.SubscribeToUserDataStreamAsync(
 
 if (spotUserData.Success)
     await ws.Spot.UnsubscribeFromUserDataStreamAsync(spotUserData.Data);
+
+// Margin WebSocket API > Listen Token User Data Subscription (PRIVATE)
+var marginApi = new BinanceRestApiClient();
+marginApi.SetApiCredentials("XXXXXXXX-API-KEY-XXXXXXXX", "XXXXXXXX-API-SECRET-XXXXXXXX");
+var marginToken = await marginApi.Margin.CreateUserDataStreamAsync();
+if (marginToken.Success)
+{
+    var marginUserData = await ws.Margin.SubscribeToUserDataStreamAsync(
+        marginToken.Data.Token,
+        onOrderUpdated: (data) => { },
+        onOrderListUpdated: (data) => { },
+        onAccountUpdated: (data) => { },
+        onBalanceUpdated: (data) => { },
+        onUserDataStreamTerminated: (data) => { });
+
+    // Before expiry, issue a replacement token and extend the same socket subscription.
+    var replacementToken = await marginApi.Margin.CreateUserDataStreamAsync();
+    if (marginUserData.Success && replacementToken.Success)
+        await ws.Margin.ExtendUserDataStreamAsync(marginUserData.Data, replacementToken.Data.Token);
+}
 
 // USDⓈ-M Futures Web Socket Stream -> Market Data Methods (PUBLIC)
 var futures_501 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync("---SYMBOL---", (data) => { });

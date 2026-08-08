@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Futures;
+using Binance.Api.Margin;
 using Binance.Api.Options;
 using Binance.Api.Spot;
 
@@ -20,6 +21,11 @@ public class BinanceSocketApiClient
     /// Binance Spot WebSocket API Client
     /// </summary>
     public IBinanceSpotSocketClient Spot { get; }
+
+    /// <summary>
+    /// Binance Margin WebSocket API Client
+    /// </summary>
+    public IBinanceMarginSocketClient Margin { get; }
 
     /// <summary>
     /// Binance USDⓈ Futures Socket API Client
@@ -71,6 +77,7 @@ public class BinanceSocketApiClient
         RestApiClient = new(Logger, new());
 
         Spot = new BinanceSpotSocketClient(this);
+        Margin = new BinanceMarginSocketClient(this);
         Futures = new BinanceFuturesSocketClient(this);
         Options = new BinanceOptionsSocketClient(this);
     }

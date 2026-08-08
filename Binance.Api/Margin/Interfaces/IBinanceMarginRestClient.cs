@@ -9,5 +9,5 @@ public interface IBinanceMarginRestClient :
     IBinanceMarginRestClientMarketData,
     IBinanceMarginRestClientRiskDataStream,
     IBinanceMarginRestClientTrade,
-    IBinanceMarginRestClientTradeDataStream,
+    IBinanceMarginRestClientUserDataStream,
     IBinanceMarginRestClientTransfer;
