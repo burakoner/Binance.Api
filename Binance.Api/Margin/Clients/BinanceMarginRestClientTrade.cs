@@ -103,7 +103,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
 
-        var result = await RequestAsync<BinanceSpotOrderBase>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Get, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceSpotOrderBase>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 10).ConfigureAwait(false);
         if (result) InvokeOrderCanceled(result.Data.Id);
         return result;
     }

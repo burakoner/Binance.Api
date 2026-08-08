@@ -81,7 +81,7 @@ public interface IBinanceMarginRestClientTrade
 
     /// <summary>
     /// Cancel an active order for margin account
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-order-trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="orderId">The order id of the order</param>

@@ -1,5 +1,9 @@
 ## Change Log & Release Notes
 
+* Unreleased
+  * Fixed `CancelMarginOrderAsync` sending a GET request instead of the documented DELETE request
+  * Added a request-level test project for endpoint contract regression coverage
+
 * Version 5.10.19 - 19 Oct 2025
   * Updated to ApiSharp 4.1.0
 
