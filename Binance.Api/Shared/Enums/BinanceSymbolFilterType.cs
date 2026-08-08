@@ -84,10 +84,22 @@ public enum BinanceSymbolFilterType : byte
     Notional,
 
     /// <summary>
-    /// Max Iceberg Orders filter
+    /// Max iceberg orders filter
     /// </summary>
-    [Map("EXCHANGE_MAX_NUM_ICEBERG_ORDERS")]
+    [Map("MAX_NUM_ICEBERG_ORDERS")]
     IcebergOrders,
+
+    /// <summary>
+    /// Max order amendments filter
+    /// </summary>
+    [Map("MAX_NUM_ORDER_AMENDS")]
+    MaxNumberOrderAmends,
+
+    /// <summary>
+    /// Max order lists filter
+    /// </summary>
+    [Map("MAX_NUM_ORDER_LISTS")]
+    MaxNumberOrderLists,
 
     /// <summary>
     /// Position Risk Control Filter

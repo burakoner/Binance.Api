@@ -13,7 +13,7 @@ public record BinanceSpotSymbol
     /// <summary>
     /// The status of the symbol
     /// </summary>
-    public BinanceSymbolStatus Status { get; set; }
+    public BinanceSpotSymbolStatus Status { get; set; }
 
     /// <summary>
     /// The base asset
@@ -31,9 +31,15 @@ public record BinanceSpotSymbol
     public string QuoteAsset { get; set; } = "";
 
     /// <summary>
-    /// The precision of the quote asset
+    /// Legacy quote precision field. Binance plans to remove this field in a future API version.
     /// </summary>
     [JsonProperty("quotePrecision")]
+    public int QuotePrecision { get; set; }
+
+    /// <summary>
+    /// The precision of the quote asset.
+    /// </summary>
+    [JsonProperty("quoteAssetPrecision")]
     public int QuoteAssetPrecision { get; set; }
 
     /// <summary>
@@ -69,12 +75,30 @@ public record BinanceSpotSymbol
     /// <summary>
     /// If OCO(One Cancels Other) orders are allowed
     /// </summary>
+    [JsonProperty("ocoAllowed")]
     public bool OCOAllowed { get; set; }
 
     /// <summary>
     /// If OTO(One Triggers Other) orders are allowed
     /// </summary>
+    [JsonProperty("otoAllowed")]
     public bool OTOAllowed { get; set; }
+
+    /// <summary>
+    /// If OPO (One Pays the Other) orders are allowed.
+    /// </summary>
+    [JsonProperty("opoAllowed")]
+    public bool OPOAllowed { get; set; }
+
+    /// <summary>
+    /// If order amend keep-priority requests are allowed.
+    /// </summary>
+    public bool AmendAllowed { get; set; }
+
+    /// <summary>
+    /// If pegged-order instructions are allowed.
+    /// </summary>
+    public bool PegInstructionsAllowed { get; set; }
 
     /// <summary>
     /// Whether or not it is allowed to specify the quantity of a market order in the quote asset
@@ -200,4 +224,16 @@ public record BinanceSpotSymbol
     /// </summary>
     [JsonIgnore]
     public BinanceMaxNumberOfIcebergOrdersFilter? MaxNumberOfIcebergOrdersFilter => Filters.OfType<BinanceMaxNumberOfIcebergOrdersFilter>().FirstOrDefault();
+
+    /// <summary>
+    /// Filter for the maximum number of amendments on one order.
+    /// </summary>
+    [JsonIgnore]
+    public BinanceSymbolMaxOrderAmendsFilter? MaxOrderAmendsFilter => Filters.OfType<BinanceSymbolMaxOrderAmendsFilter>().FirstOrDefault();
+
+    /// <summary>
+    /// Filter for the maximum number of open order lists.
+    /// </summary>
+    [JsonIgnore]
+    public BinanceSymbolMaxOrderListsFilter? MaxOrderListsFilter => Filters.OfType<BinanceSymbolMaxOrderListsFilter>().FirstOrDefault();
 }

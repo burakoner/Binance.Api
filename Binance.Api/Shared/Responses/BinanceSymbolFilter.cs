@@ -259,3 +259,25 @@ public record BinanceMaxNumberOfIcebergOrdersFilter : BinanceSymbolFilter
     /// </summary>
     public int MaxNumIcebergOrders { get; set; }
 }
+
+/// <summary>
+/// Maximum amendments allowed for one order on a symbol.
+/// </summary>
+public record BinanceSymbolMaxOrderAmendsFilter : BinanceSymbolFilter
+{
+    /// <summary>
+    /// Maximum number of amendments.
+    /// </summary>
+    public int MaxNumOrderAmends { get; set; }
+}
+
+/// <summary>
+/// Maximum open order lists allowed on a symbol.
+/// </summary>
+public record BinanceSymbolMaxOrderListsFilter : BinanceSymbolFilter
+{
+    /// <summary>
+    /// Maximum number of open order lists.
+    /// </summary>
+    public int MaxNumOrderLists { get; set; }
+}

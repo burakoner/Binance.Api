@@ -44,7 +44,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <param name="status">Status</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
@@ -65,5 +65,36 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <param name="showPermissionSets">Show Permission Sets</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSymbolStatus? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSpotSymbolStatus? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets execution rules for all Spot symbols.
+    /// </summary>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Execution rules grouped by symbol</returns>
+    Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets execution rules for one Spot symbol.
+    /// </summary>
+    /// <param name="symbol">Symbol to query</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Execution rules grouped by symbol</returns>
+    Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(string symbol, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets execution rules for multiple Spot symbols.
+    /// </summary>
+    /// <param name="symbols">Symbols to query</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Execution rules grouped by symbol</returns>
+    Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(IEnumerable<string> symbols, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets execution rules for all symbols with the supplied status.
+    /// </summary>
+    /// <param name="status">Current Spot symbol status</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Execution rules grouped by symbol</returns>
+    Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default);
 }

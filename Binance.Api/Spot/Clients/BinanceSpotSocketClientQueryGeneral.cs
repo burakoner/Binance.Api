@@ -28,7 +28,7 @@ internal partial class BinanceSpotSocketClient
     public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [symbol], ct: ct);
 
-    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSymbolStatus status, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: status, ct: ct);
 
     public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
@@ -36,37 +36,42 @@ internal partial class BinanceSpotSocketClient
 
     public async Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(
         IEnumerable<string> symbols,
-        BinanceSymbolStatus? status = null,
+        BinanceSpotSymbolStatus? status = null,
         IEnumerable<BinancePermissionType>? permissions = null,
         bool? showPermissionSets = null,
         CancellationToken ct = default)
     {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+        var symbolList = symbols.ToArray();
+        foreach (var symbol in symbolList)
+            symbol.ValidateBinanceSymbol();
+        var permissionList = permissions?.ToArray();
+        if (symbolList.Length > 0 && status.HasValue)
+            throw new ArgumentException("symbolStatus cannot be combined with symbol or symbols.", nameof(status));
+        if (symbolList.Length > 0 && permissionList?.Length > 0)
+            throw new ArgumentException("permissions cannot be combined with symbol or symbols.", nameof(permissions));
+
         var parameters = new ParameterCollection();
 
         // Symbol(s)
-        if (symbols.Count() > 1)
+        if (symbolList.Length > 1)
         {
-            parameters.Add("symbols", JsonConvert.SerializeObject(symbols));
+            parameters.Add("symbols", JsonConvert.SerializeObject(symbolList));
         }
-        else if (symbols.Any())
+        else if (symbolList.Length == 1)
         {
-            parameters.Add("symbol", symbols.First());
+            parameters.Add("symbol", symbolList[0]);
         }
 
         // Permissions
-        if (permissions != null && permissions?.Count() > 1)
+        if (permissionList?.Length > 1)
         {
-            var list = new List<string>();
-            foreach (var permission in permissions)
-            {
-                list.Add(permission.ToString().ToUpper());
-            }
-
-            parameters.Add("permissions", JsonConvert.SerializeObject(list));
+            parameters.Add("permissions", JsonConvert.SerializeObject(permissionList.Select(MapConverter.GetString)));
         }
-        else if (permissions != null && permissions.Any())
+        else if (permissionList?.Length == 1)
         {
-            parameters.Add("permissions", permissions.First().ToString().ToUpper());
+            parameters.Add("permissions", MapConverter.GetString(permissionList[0])!);
         }
 
         // Permission Sets
@@ -80,5 +85,39 @@ internal partial class BinanceSpotSocketClient
         LastExchangeInfoUpdate = DateTime.UtcNow;
         _logger.Log(LogLevel.Information, "Trade rules updated");
         return result;
+    }
+
+    public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(CancellationToken ct = default)
+        => GetExecutionRulesAsync([], null, ct);
+
+    public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(string symbol, CancellationToken ct = default)
+        => GetExecutionRulesAsync([symbol], null, ct);
+
+    public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(IEnumerable<string> symbols, CancellationToken ct = default)
+        => GetExecutionRulesAsync(symbols, null, ct);
+
+    public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default)
+        => GetExecutionRulesAsync([], status, ct);
+
+    private Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(
+        IEnumerable<string> symbols,
+        BinanceSpotSymbolStatus? status,
+        CancellationToken ct)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+        var symbolList = symbols.ToArray();
+        foreach (var symbol in symbolList)
+            symbol.ValidateBinanceSymbol();
+
+        var parameters = new ParameterCollection();
+        if (symbolList.Length > 1)
+            parameters.Add("symbols", JsonConvert.SerializeObject(symbolList));
+        else if (symbolList.Length == 1)
+            parameters.Add("symbol", symbolList[0]);
+        parameters.AddOptionalEnum("symbolStatus", status);
+
+        var weight = symbolList.Length == 0 ? 40 : Math.Min(symbolList.Length * 2, 40);
+        return RequestAsync<BinanceSpotExecutionRules>("ws-api/v3", "executionRules", parameters, weight: weight, ct: ct);
     }
 }

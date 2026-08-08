@@ -30,4 +30,9 @@ public record BinanceSpotExchangeInfo
     /// All symbols supported
     /// </summary>
     public List<BinanceSpotSymbol> Symbols { get; set; } = [];
+
+    /// <summary>
+    /// Smart Order Routing groups, when SOR is available.
+    /// </summary>
+    public List<BinanceSpotSor> Sors { get; set; } = [];
 }

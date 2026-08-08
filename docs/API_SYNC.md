@@ -49,6 +49,8 @@ The official documentation is a moving target. The baseline date must be advance
 - Margin's six legacy cross/isolated listen-key operations were removed from the current documentation on 2025-11-10. They are replaced by API-key-only `POST /sapi/v1/userListenToken` and the unauthenticated-session `userDataStream.subscribe.listenToken` WebSocket API method. The wrapper now implements cross and isolated token creation, the documented 24-hour maximum validity, server subscription-ID routing, replacement-token extension on the same connection, reconnect state, single/all unsubscribe, and the current trade-data event envelope.
 - The Margin REST token response documents millisecond timestamps, but the WebSocket subscription example returns a 16-digit `expirationTime` without defining its unit. The REST value is mapped to UTC `DateTime`; the WebSocket value is intentionally exposed as `long` until Binance defines the unit. No authenticated live Binance account was used. An unauthenticated production probe only confirmed that the REST operation requires an API key; behavioral coverage remains deterministic.
 - Margin risk-data streams are a separate current contract using `/sapi/v1/margin/listen-key`. They remain an explicit coverage gap and are not conflated with listen-token trade-data events.
+- Spot General REST and WebSocket API contracts now include `executionRules`, current Spot-only symbol statuses, parameter-combination validation, mapped permission values, and documented request weights. Exchange-info models now distinguish `quotePrecision` from `quoteAssetPrecision` and expose OPO, amend, pegged-instruction, SOR, current self-trade-prevention, and current symbol-filter data.
+- The detailed Spot REST material embedded in `llms-full.txt` under `/products/spot/testnet/rest-api` is a testnet contract, not an acceptable standalone source for mainnet changes. Mainnet endpoint changes are cross-checked against the current generated official Spot connector, the main Spot changelog, and the main product reference; testnet text is corroborating evidence only when those sources agree.
 
 ## REST route inventory
 
@@ -59,7 +61,7 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Algo Trading | 11 | 11 | 11 | 0 | 0 |
 | Convert | 9 | 9 | 9 | 0 | 0 |
 | Margin | 65 | 44 | 44 | 21 | 0 |
-| Spot | 48 | 27 | 27 | 21 | 0 |
+| Spot | 48 | 28 | 28 | 20 | 0 |
 | USDⓈ-M Futures | 95 | 83 | 83 | 12 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 45 | 41 | 3 | 4 |
@@ -75,7 +77,7 @@ The raw generated Margin catalog contains 65 routes, including the retired `GET 
 - `GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync` exposed `GET /sapi/v1/margin/leverageBracket`, which the official Margin changelog says was retired on 2026-04-13 with Cross Margin Pro Mode. Slice 6 removed the operation, its two orphaned public response types, and the two repository-owned example calls.
 - Spot listen-key REST operations were retired, but removal is intentionally ordered behind a complete WebSocket API user-data replacement. The replacement must implement authenticated session or signed subscription, subscription-ID lifecycle, the current event envelope, reconnect behavior, and tests in one coherent slice; removing only the old operations would strand users without account events.
 
-Slice 8 completed that replacement and removed all three Spot wrapper-only REST routes. The current Spot REST route state is therefore 27 wrapper routes, 27 exact route matches, 21 official-only candidates, and no wrapper-only candidates. Slice 9 removed six legacy Margin method-and-path pairs, added the current listen-token route, and followed slice 6's retired leverage-bracket removal. The corrected current Margin state is 44 wrapper routes, 44 exact matches, 21 official-only candidates, and no wrapper-only candidates. These route counts still say nothing about parameter or response compatibility for matched routes.
+Slice 8 completed that replacement and removed all three Spot wrapper-only REST routes, leaving 27 wrapper routes at that point. Slice 10 added the current `GET /api/v3/executionRules` contract, bringing Spot to 28 wrapper routes, 28 exact route matches, 20 official-only candidates, and no wrapper-only candidates. Slice 9 removed six legacy Margin method-and-path pairs, added the current listen-token route, and followed slice 6's retired leverage-bracket removal. The corrected current Margin state is 44 wrapper routes, 44 exact matches, 21 official-only candidates, and no wrapper-only candidates. These route counts still say nothing about parameter or response compatibility for matched routes.
 
 ## Backward review 2 (after slices 5-9)
 
@@ -108,3 +110,4 @@ Slice 8 completed that replacement and removed all three Spot wrapper-only REST 
 | 8 | Complete | Spot WebSocket API signed user data stream and retired listen-key removal | Official Spot WebSocket API and User Data Stream references, generated official connector, 28 unit/request/model tests, full multi-target solution build |
 | 9 | Complete | Margin REST listen-token and WebSocket API user data stream replacement | Official Margin Listen Token Data Stream and Trade Data Stream Events references, API-key-only request tests, subscription lifecycle and event-model tests, 35 unit/request/model tests |
 | Review 2 | Complete | Backward code/test/documentation review and route-inventory correction | `134ccc8..ed85f56` diff review, retired-contract and GET-body scans, 35 tests, full multi-target solution build, regenerated method-and-path comparison |
+| 10 | Complete | Spot General REST and WebSocket API contracts | Current official Spot connector plus main product changelog/reference, execution-rules request/response tests, exchange-info parameter/model and filter-serialization tests, 40 deterministic tests |

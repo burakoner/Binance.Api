@@ -49,6 +49,7 @@ internal class Program
         var spot_101 = await api.Spot.PingAsync();
         var spot_102 = await api.Spot.GetTimeAsync();
         var spot_103 = await api.Spot.GetExchangeInfoAsync();
+        var spot_104 = await api.Spot.GetExecutionRulesAsync("BTCUSDT");
 
         // Spot > Market Data Methods (PUBLIC)
         var spot_201 = await api.Spot.GetOrderBookAsync("BTCUSDT");
@@ -773,6 +774,7 @@ internal class Program
         var spot_101 = await ws.Spot.PingAsync();
         var spot_102 = await ws.Spot.GetTimeAsync();
         var spot_103 = await ws.Spot.GetExchangeInfoAsync();
+        var spot_104 = await ws.Spot.GetExecutionRulesAsync("BTCUSDT");
 
         // Spot Web Socket API > Market Data Query Methods (PUBLIC)
         var spot_201 = await ws.Spot.GetOrderBookAsync("BTCUSDT");

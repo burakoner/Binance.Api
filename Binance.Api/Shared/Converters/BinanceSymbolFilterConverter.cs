@@ -114,6 +114,18 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                     MaxNumIcebergOrders = obj.ContainsKey("maxNumIcebergOrders") ? (int)obj["maxNumIcebergOrders"] : 0
                 };
                 break;
+            case BinanceSymbolFilterType.MaxNumberOrderAmends:
+                result = new BinanceSymbolMaxOrderAmendsFilter
+                {
+                    MaxNumOrderAmends = (int)obj["maxNumOrderAmends"]
+                };
+                break;
+            case BinanceSymbolFilterType.MaxNumberOrderLists:
+                result = new BinanceSymbolMaxOrderListsFilter
+                {
+                    MaxNumOrderLists = (int)obj["maxNumOrderLists"]
+                };
+                break;
             default:
                 Trace.WriteLine($"{DateTime.Now:yyyy/MM/dd HH:mm:ss:fff} | Warning | Can't parse symbol filter of type: " + obj["filterType"]);
                 result = new BinanceSymbolFilter();
@@ -211,9 +223,19 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 writer.WriteValue(TrailingDelta.MinTrailingBelowDelta);
                 break;
             case BinanceSymbolFilterType.IcebergOrders:
-                var MaxNumIcebergOrders = (BinanceMaxNumberOfIcebergOrdersFilter)filter;
+                var maxNumIcebergOrders = (BinanceMaxNumberOfIcebergOrdersFilter)filter;
                 writer.WritePropertyName("maxNumIcebergOrders");
-                writer.WriteValue(MaxNumIcebergOrders.MaxNumIcebergOrders);
+                writer.WriteValue(maxNumIcebergOrders.MaxNumIcebergOrders);
+                break;
+            case BinanceSymbolFilterType.MaxNumberOrderAmends:
+                var maxOrderAmends = (BinanceSymbolMaxOrderAmendsFilter)filter;
+                writer.WritePropertyName("maxNumOrderAmends");
+                writer.WriteValue(maxOrderAmends.MaxNumOrderAmends);
+                break;
+            case BinanceSymbolFilterType.MaxNumberOrderLists:
+                var maxOrderLists = (BinanceSymbolMaxOrderListsFilter)filter;
+                writer.WritePropertyName("maxNumOrderLists");
+                writer.WriteValue(maxOrderLists.MaxNumOrderLists);
                 break;
             case BinanceSymbolFilterType.PercentagePriceBySide:
                 var pricePercentSideBySideFilter = (BinanceSymbolPercentPriceBySideFilter)filter;
@@ -234,9 +256,9 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 writer.WriteValue(notionalFilter.MinNotional);
                 writer.WritePropertyName("maxNotional");
                 writer.WriteValue(notionalFilter.MaxNotional);
-                writer.WritePropertyName("applyMinToMarketOrders");
+                writer.WritePropertyName("applyMinToMarket");
                 writer.WriteValue(notionalFilter.ApplyMinToMarketOrders);
-                writer.WritePropertyName("applyMaxToMarketOrders");
+                writer.WritePropertyName("applyMaxToMarket");
                 writer.WriteValue(notionalFilter.ApplyMaxToMarketOrders);
                 writer.WritePropertyName("avgPriceMins");
                 writer.WriteValue(notionalFilter.AveragePriceMinutes);

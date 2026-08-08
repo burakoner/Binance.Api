@@ -11,6 +11,7 @@
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport
   * Replaced retired Spot listen-key REST and stream operations with signed WebSocket API user data subscriptions, subscription-ID routing, reconnect-safe signing, and current event models
   * Replaced the removed Margin listen-key documentation contract with API-key-issued listen tokens, WebSocket API subscriptions, replacement-token extension, and current Margin event models
+  * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters
   * Added a request-level test project for endpoint contract regression coverage
 
 * Version 5.10.19 - 19 Oct 2025
