@@ -52,6 +52,35 @@ public interface IBinanceMarginRestClientMarketData
     Task<RestCallResult<List<BinanceMarginDelistSchedule>>> GetMarginDelistScheduleAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Get Cross Margin symbols subject to the current index-price limit-order restriction.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-limit-price-pairs" /></para>
+    /// </summary>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginLimitPricePairs>> GetMarginLimitPricePairsAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Get the upcoming Cross and Isolated Margin listing schedule.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-list-schedule" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">Optional receive window in milliseconds. The maximum is 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<List<BinanceMarginListSchedule>>> GetMarginListScheduleAsync(int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Get asset-specific risk-based liquidation ratios.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-margin-asset-risk-based-liquidation-ratio" /></para>
+    /// </summary>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<List<BinanceMarginRiskBasedLiquidationRatio>>> GetMarginRiskBasedLiquidationRatiosAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Get assets restricted from opening long positions or exceeding maximum collateral.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-margin-restricted-assets" /></para>
+    /// </summary>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<BinanceMarginRestrictedAssets>> GetMarginRestrictedAssetsAsync(CancellationToken ct = default);
+
+    /// <summary>
     /// Get Isolated Margin Tier Data
     /// <para><a href="https://developers.binance.com/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data" /></para>
     /// </summary>

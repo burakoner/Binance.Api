@@ -44,6 +44,25 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<List<BinanceMarginDelistSchedule>>(GetUrl(sapi, v1, "margin/delist-schedule"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 100);
     }
 
+    public Task<RestCallResult<BinanceMarginLimitPricePairs>> GetMarginLimitPricePairsAsync(CancellationToken ct = default)
+        => RequestAsync<BinanceMarginLimitPricePairs>(GetUrl(sapi, v1, "margin/limit-price-pairs"), HttpMethod.Get, ct, false, requestWeight: 1);
+
+    public Task<RestCallResult<List<BinanceMarginListSchedule>>> GetMarginListScheduleAsync(
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
+
+        return RequestAsync<List<BinanceMarginListSchedule>>(GetUrl(sapi, v1, "margin/list-schedule"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 100);
+    }
+
+    public Task<RestCallResult<List<BinanceMarginRiskBasedLiquidationRatio>>> GetMarginRiskBasedLiquidationRatiosAsync(CancellationToken ct = default)
+        => RequestAsync<List<BinanceMarginRiskBasedLiquidationRatio>>(GetUrl(sapi, v1, "margin/risk-based-liquidation-ratio"), HttpMethod.Get, ct, false, requestWeight: 1);
+
+    public Task<RestCallResult<BinanceMarginRestrictedAssets>> GetMarginRestrictedAssetsAsync(CancellationToken ct = default)
+        => RequestAsync<BinanceMarginRestrictedAssets>(GetUrl(sapi, v1, "margin/restricted-asset"), HttpMethod.Get, ct, false, requestWeight: 1);
+
     public Task<RestCallResult<List<BinanceIsolatedMarginTier>>> GetIsolatedMarginTierDataAsync(string symbol, int? tier = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();

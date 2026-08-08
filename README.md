@@ -180,6 +180,10 @@ var margin_105 = await api.Margin.GetMarginDelistScheduleAsync();
 var margin_106 = await api.Margin.GetIsolatedMarginTierDataAsync("---SYMBOL---");
 var margin_107 = await api.Margin.GetMarginPriceIndexAsync("---SYMBOL---");
 var margin_108 = await api.Margin.GetMarginAvaliableInventoryAsync(BinanceMarginInventoryType.Margin);
+var margin_109 = await api.Margin.GetMarginLimitPricePairsAsync();
+var margin_110 = await api.Margin.GetMarginListScheduleAsync();
+var margin_111 = await api.Margin.GetMarginRiskBasedLiquidationRatiosAsync();
+var margin_112 = await api.Margin.GetMarginRestrictedAssetsAsync();
 
 // Margin > General Borrow and Repay Methods (PRIVATE)
 var margin_201 = await api.Margin.GetFutureHourlyInterestRateAsync(["---ASSET---"], true);
