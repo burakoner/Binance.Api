@@ -10,8 +10,7 @@ public interface IBinanceSpotSocketClient :
     IBinanceSpotSocketClientQueryMarketData,
     IBinanceSpotSocketClientQueryTrading,
     IBinanceSpotSocketClientQueryUserDataStream,
-    IBinanceSpotSocketClientStreamMarketData,
-    IBinanceSpotSocketClientStreamUserDataStream
+    IBinanceSpotSocketClientStreamMarketData
 {
     /// <summary>
     /// Unsubscribes from a stream. This will close the socket connection and unsubscribe from the stream.

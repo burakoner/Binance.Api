@@ -96,9 +96,6 @@ internal class Program
         var spot_402 = await api.Spot.GetUserTradesAsync("BTCUSDT");
         var spot_403 = await api.Spot.GetRateLimitsAsync();
         var spot_404 = await api.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
-        var spot_405 = await api.Spot.StartUserStreamAsync();
-        var spot_406 = await api.Spot.KeepAliveUserStreamAsync("---LISTEN-KEY---");
-        var spot_407 = await api.Spot.StopUserStreamAsync("---LISTEN-KEY---");
 
         // Margin > General Market Data Methods (PUBLIC)
         var margin_101 = await api.Margin.GetCrossMarginCollateralRatioAsync();
@@ -429,9 +426,6 @@ internal class Program
         var options_412 = await api.Options.GetUserTradesAsync();
 
         // TODO: European Options -> User Data Stream Methods (PRIVATE)
-        var options_501 = await api.Spot.StartUserStreamAsync();
-        var options_502 = await api.Spot.KeepAliveUserStreamAsync("---LISTEN-KEY---");
-        var options_503 = await api.Spot.StopUserStreamAsync("---LISTEN-KEY---");
 
         // TODO: European Options -> Market Maker -> Account Methods (PRIVATE)
         var options_601 = await api.Options.MarketMaker.GetAccountAsync();
@@ -918,15 +912,17 @@ internal class Program
         await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 100, (data) => { });
         await ws.Spot.SubscribeToOrderBooksAsync("BTCUSDT", 1000, (data) => { });
 
-        // Spot Web Socket Stream > User Data Subscriptions (PRIVATE)
-        await ws.Spot.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
-            onOrderUpdateMessage: (data) => { },
-            onOcoOrderUpdateMessage: (data) => { },
-            onAccountPositionMessage: (data) => { },
-            onAccountBalanceUpdate: (data) => { },
-            onBalanceLockUpdate: (data) => { },
-            onUserDataStreamTerminated: (data) => { },
-            onListenKeyExpired: (data) => { });
+        // Spot WebSocket API > Signed User Data Subscription (PRIVATE)
+        var spotUserData = await ws.Spot.SubscribeToUserDataStreamAsync(
+            onOrderUpdated: (data) => { },
+            onOrderListUpdated: (data) => { },
+            onAccountUpdated: (data) => { },
+            onBalanceUpdated: (data) => { },
+            onBalanceLockUpdated: (data) => { },
+            onUserDataStreamTerminated: (data) => { });
+
+        if (spotUserData.Success)
+            await ws.Spot.UnsubscribeFromUserDataStreamAsync(spotUserData.Data);
 
         // USDⓈ-M Futures Web Socket Stream -> Market Data Methods (PUBLIC)
         var futures_501 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync("---SYMBOL---", (data) => { });

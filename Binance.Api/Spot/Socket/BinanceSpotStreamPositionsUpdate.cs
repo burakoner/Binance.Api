@@ -3,7 +3,7 @@
 /// <summary>
 /// Positions update
 /// </summary>
-public record BinanceSpotStreamPositionsUpdate : BinanceSocketStreamEvent
+public record BinanceSpotStreamPositionsUpdate : BinanceSpotUserDataStreamEvent
 {
     /// <summary>
     /// Time of last account update
@@ -17,9 +17,4 @@ public record BinanceSpotStreamPositionsUpdate : BinanceSocketStreamEvent
     [JsonProperty("B")]
     public List<BinanceSpotStreamBalance> Balances { get; set; } = [];
 
-    /// <summary>
-    /// The listen key the update was for
-    /// </summary>
-    [JsonIgnore]
-    public string ListenKey { get; set; } = string.Empty;
 }

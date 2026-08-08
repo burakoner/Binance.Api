@@ -42,12 +42,6 @@ public enum BinanceSpotOrderExecutionType : byte
     Expired,
 
     /// <summary>
-    /// Amendment
-    /// </summary>
-    [Map("AMENDMENT")]
-    Amendment,
-
-    /// <summary>
     /// Self trade prevented
     /// </summary>
     [Map("TRADE_PREVENTION")]

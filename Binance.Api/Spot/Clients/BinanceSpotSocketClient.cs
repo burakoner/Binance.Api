@@ -114,7 +114,26 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         if (id == null)
             return false;
 
-        var bRequest = (BinanceSocketRequest)request;
+        if (request is BinanceSpotUserDataStreamRequest userDataRequest)
+        {
+            if ((int)id != userDataRequest.Id)
+                return false;
+
+            var response = ParseUserDataStreamSubscriptionResponse(message);
+            if (response)
+            {
+                userDataRequest.SubscriptionId = response.Data;
+                Logger.Log(LogLevel.Trace, $"Socket {connection.Id} user data subscription {response.Data} completed");
+                callResult = new CallResult<object>(new object());
+                return true;
+            }
+
+            callResult = new CallResult<object>(response.Error!);
+            return true;
+        }
+
+        if (request is not BinanceSocketRequest bRequest)
+            return false;
         if ((int)id != bRequest.Id)
             return false;
 
@@ -142,7 +161,13 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
         if (message.Type != JTokenType.Object)
             return false;
 
-        var bRequest = (BinanceSocketRequest)request;
+        if (request is BinanceSpotUserDataStreamRequest userDataRequest)
+            return userDataRequest.SubscriptionId.HasValue
+                && message["subscriptionId"]?.Value<int>() == userDataRequest.SubscriptionId.Value
+                && message["event"] != null;
+
+        if (request is not BinanceSocketRequest bRequest)
+            return false;
         var stream = message["stream"];
         if (stream == null)
             return false;
@@ -164,6 +189,12 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
     protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
     {
+        if (subscription.Request is BinanceSpotUserDataStreamRequest userDataRequest)
+        {
+            var unsubscribeResult = await SendUserDataStreamUnsubscribeAsync(connection, userDataRequest.SubscriptionId).ConfigureAwait(false);
+            return unsubscribeResult.Success;
+        }
+
         var topics = ((BinanceSocketRequest)subscription.Request!).Params;
         var unsub = new BinanceSocketRequest { Method = "UNSUBSCRIBE", Params = topics, Id = NextId() };
         var result = false;
@@ -193,6 +224,15 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             return true;
         }).ConfigureAwait(false);
         return result;
+    }
+
+    public override async Task<CallResult<object>> RevitalizeRequestAsync(object request)
+    {
+        if (request is not BinanceSpotUserDataStreamRequest userDataRequest)
+            return await base.RevitalizeRequestAsync(request).ConfigureAwait(false);
+
+        var result = await RefreshUserDataStreamRequestAsync(userDataRequest).ConfigureAwait(false);
+        return result ? new CallResult<object>(request) : result.As<object>(null);
     }
     #endregion
 
@@ -294,16 +334,13 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
 
     public async Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default)
     {
-        // Soft Unsubscribe
-        var wsc = subscription.GetConnection();
-        var wss = subscription.GetSubscription();
-        await this.UnsubscribeAsync(wsc, wss).ConfigureAwait(false);
-
-        // Force Unsubscribe
         if (force)
         {
-            await base.UnsubscribeAsync(subscription).ConfigureAwait(false);
+            await subscription.GetConnection().CloseAsync().ConfigureAwait(false);
+            return;
         }
+
+        await base.UnsubscribeAsync(subscription).ConfigureAwait(false);
     }
 
     public Task UnsubscribeAsync(int subscriptionId, CancellationToken ct = default)

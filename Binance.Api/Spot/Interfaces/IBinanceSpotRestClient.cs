@@ -7,5 +7,4 @@ public interface IBinanceSpotRestClient :
     IBinanceSpotRestClientAccount,
     IBinanceSpotRestClientGeneral,
     IBinanceSpotRestClientMarketData,
-    IBinanceSpotRestClientTrading,
-    IBinanceSpotRestClientUserDataStream;
+    IBinanceSpotRestClientTrading;

@@ -12,62 +12,26 @@ public enum BinanceSpotOrderRejectReason : byte
     None = 1,
 
     /// <summary>
-    /// Unknown instrument
+    /// Insufficient balance
     /// </summary>
-    [Map("UNKNOWN_INSTRUMENT")]
-    UnknownInstrument,
-
-    /// <summary>
-    /// Closed market
-    /// </summary>
-    [Map("MARKET_CLOSED")]
-    MarketClosed,
-
-    /// <summary>
-    /// Quantity out of bounds
-    /// </summary>
-    [Map("PRICE_QTY_EXCEED_HARD_LIMITS")]
-    PriceQuantityExceedsHardLimits,
-
-    /// <summary>
-    /// Unknown order
-    /// </summary>
-    [Map("UNKNOWN_ORDER")]
-    UnknownOrder,
-
-    /// <summary>
-    /// Duplicate
-    /// </summary>
-    [Map("DUPLICATE_ORDER")]
-    DuplicateOrder,
-
-    /// <summary>
-    /// Unknown account
-    /// </summary>
-    [Map("UNKNOWN_ACCOUNT")]
-    UnknownAccount,
-
-    /// <summary>
-    /// Not enough balance
-    /// </summary>
-    [Map("INSUFFICIENT_BALANCE")]
-    InsufficientBalance,
-
-    /// <summary>
-    /// Account not active
-    /// </summary>
-    [Map("ACCOUNT_INACTIVE")]
-    AccountInactive,
-
-    /// <summary>
-    /// Cannot settle
-    /// </summary>
-    [Map("ACCOUNT_CANNOT_SETTLE")]
-    AccountCannotSettle,
+    [Map("INSUFFICIENT_BALANCES")]
+    InsufficientBalances,
 
     /// <summary>
     /// Stop price would trigger immediately
     /// </summary>
     [Map("STOP_PRICE_WOULD_TRIGGER_IMMEDIATELY")]
-    StopPriceWouldTrigger
+    StopPriceWouldTriggerImmediately,
+
+    /// <summary>
+    /// Order would match immediately
+    /// </summary>
+    [Map("WOULD_MATCH_IMMEDIATELY")]
+    WouldMatchImmediately,
+
+    /// <summary>
+    /// Invalid relationship between order-list prices
+    /// </summary>
+    [Map("OCO_BAD_PRICES")]
+    OcoBadPrices
 }

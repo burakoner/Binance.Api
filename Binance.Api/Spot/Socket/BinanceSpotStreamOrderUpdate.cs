@@ -3,7 +3,7 @@
 /// <summary>
 /// Update data about an order
 /// </summary>
-public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
+public record BinanceSpotStreamOrderUpdate: BinanceSpotUserDataStreamEvent
 {
     /// <summary>
     /// The id of the order as assigned by Binance
@@ -68,8 +68,8 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     /// <summary>
     /// Trailing Time; This is only visible if the trailing stop order has been activated.
     /// </summary>
-    [JsonProperty("D")]
-    public DateTime TrailingTime { get; set; }
+    [JsonProperty("D"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? TrailingTime { get; set; }
 
     /// <summary>
     /// The iceberg quantity of the order
@@ -128,7 +128,7 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     /// The asset the fee was taken from
     /// </summary>
     [JsonProperty("N")]
-    public string FeeAsset { get; set; } = string.Empty;
+    public string? FeeAsset { get; set; }
 
     /// <summary>
     /// The time of the update
@@ -184,18 +184,29 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     [JsonProperty("g")]
     public long OrderListId { get; set; }
 
-    // These are unused properties, but are mapped to prevent mapping error of lower/upper case
     /// <summary>
-    /// Unused
+    /// Execution identifier
     /// </summary>
     [JsonProperty("I")]
-    public long I { get; set; }
+    public long ExecutionId { get; set; }
 
     /// <summary>
-    /// Unused
+    /// Ignore
     /// </summary>
     [JsonProperty("M")]
-    public bool M { get; set; }
+    public bool Ignore { get; set; }
+
+    /// <summary>
+    /// Strategy identifier, when supplied during order placement
+    /// </summary>
+    [JsonProperty("j")]
+    public long? StrategyId { get; set; }
+
+    /// <summary>
+    /// Strategy type, when supplied during order placement
+    /// </summary>
+    [JsonProperty("J")]
+    public long? StrategyType { get; set; }
 
     /// <summary>
     /// Trade group id
@@ -204,7 +215,7 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     public long? TradeGroupId { get; set; }
 
     /// <summary>
-    /// Prevented match id
+    /// Self-trade prevention mode
     /// </summary>
     [JsonProperty("v")]
     public long? PreventedMatchId { get; set; }
@@ -214,6 +225,12 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     /// </summary>
     [JsonProperty("U")]
     public long? CounterOrderId { get; set; }
+
+    /// <summary>
+    /// Counter symbol for an order expired due to self-trade prevention
+    /// </summary>
+    [JsonProperty("Cs")]
+    public string? CounterSymbol { get; set; }
 
     /// <summary>
     /// Prevented quantity
@@ -226,6 +243,24 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     /// </summary>
     [JsonProperty("B")]
     public decimal? LastPreventedQuantity { get; set; }
+
+    /// <summary>
+    /// Prevented execution quantity
+    /// </summary>
+    [JsonProperty("pl")]
+    public decimal? PreventedExecutionQuantity { get; set; }
+
+    /// <summary>
+    /// Prevented execution price
+    /// </summary>
+    [JsonProperty("pL")]
+    public decimal? PreventedExecutionPrice { get; set; }
+
+    /// <summary>
+    /// Prevented execution quote quantity
+    /// </summary>
+    [JsonProperty("pY")]
+    public decimal? PreventedExecutionQuoteQuantity { get; set; }
 
     /// <summary>
     /// Prevented match id
@@ -241,8 +276,50 @@ public record BinanceSpotStreamOrderUpdate: BinanceSocketStreamEvent
     public DateTime? WorkingTime { get; set; }
 
     /// <summary>
-    /// The listen key the update was for
+    /// Match type for orders with allocations
     /// </summary>
-    [JsonIgnore]
-    public string ListenKey { get; set; } = string.Empty;
+    [JsonProperty("b")]
+    public string? MatchType { get; set; }
+
+    /// <summary>
+    /// Allocation identifier
+    /// </summary>
+    [JsonProperty("a")]
+    public long? AllocationId { get; set; }
+
+    /// <summary>
+    /// Working floor for an order that may have allocations
+    /// </summary>
+    [JsonProperty("k")]
+    public string? WorkingFloor { get; set; }
+
+    /// <summary>
+    /// Whether the order used Smart Order Routing
+    /// </summary>
+    [JsonProperty("uS")]
+    public bool? UsedSor { get; set; }
+
+    /// <summary>
+    /// Pegged price type
+    /// </summary>
+    [JsonProperty("gP")]
+    public string? PeggedPriceType { get; set; }
+
+    /// <summary>
+    /// Pegged offset type
+    /// </summary>
+    [JsonProperty("gOT")]
+    public string? PeggedOffsetType { get; set; }
+
+    /// <summary>
+    /// Pegged offset value
+    /// </summary>
+    [JsonProperty("gOV")]
+    public int? PeggedOffsetValue { get; set; }
+
+    /// <summary>
+    /// Current pegged price
+    /// </summary>
+    [JsonProperty("gp")]
+    public decimal? PeggedPrice { get; set; }
 }

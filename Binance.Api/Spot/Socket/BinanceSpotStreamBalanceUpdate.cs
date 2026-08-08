@@ -3,7 +3,7 @@
 /// <summary>
 /// Update when asset is withdrawn/deposited 
 /// </summary>
-public record BinanceSpotStreamBalanceUpdate: BinanceSocketStreamEvent
+public record BinanceSpotStreamBalanceUpdate: BinanceSpotUserDataStreamEvent
 {
     /// <summary>
     /// The asset which changed
@@ -23,9 +23,4 @@ public record BinanceSpotStreamBalanceUpdate: BinanceSocketStreamEvent
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime ClearTime { get; set; }
 
-    /// <summary>
-    /// The listen key the update was for
-    /// </summary>
-    [JsonIgnore]
-    public string ListenKey { get; set; } = string.Empty;
 }

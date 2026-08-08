@@ -44,6 +44,8 @@ The official documentation is a moving target. The baseline date must be advance
 - USDⓈ-M position-margin-change history used undocumented `GET /fapi/v3/positionMargin/history`. It now uses the current v1 route, validates the required symbol and documented maximum 30-day query range, and has request/response regression coverage.
 - ApiSharp 4.5.1 does not read its own `RateLimiterEnabled` option in the active request path. Binance.Api now explicitly bypasses configured limiters when the option is false, with regression coverage.
 - The remaining default limiter configuration is not a reliable model of current Binance limits: it covers only `/api/` and `/sapi/`, omits derivatives product buckets, and receives one integer that cannot distinguish IP request weight, UID weight, order counters, and separate fixed-window quotas. Numeric rules will be corrected only from verified product contracts; the obsolete ApiSharp configuration warning is not treated as cosmetic.
+- The retired Spot listen-key REST operations and legacy stream subscription have been replaced by the current `userDataStream.subscribe.signature` WebSocket API flow. The replacement signs HMAC, RSA, or Ed25519 requests, supports fractional `recvWindow`, tracks Binance's `subscriptionId`, routes the current event envelope, refreshes timestamp/signature/subscription state on reconnect, and implements both single and connection-wide unsubscribe behavior.
+- Spot user data event models now expose the server subscription ID and current execution-report conditional fields, including strategy, self-trade-prevention, allocation, SOR, and pegged-order data. The obsolete Spot listen-key identity and retired reject/execution enum values were removed. No authenticated live Binance account was used; coverage is deterministic request, response, reconnect-state, envelope, and model testing rather than a production connection test.
 
 ## REST route inventory baseline
 
@@ -70,10 +72,12 @@ The official compact inventory currently lists `GET /dapi/v1/leverageBracket`, w
 - `GetLiabilityCoinLeverageBracketInCrossMarginProModeAsync` exposed `GET /sapi/v1/margin/leverageBracket`, which the official Margin changelog says was retired on 2026-04-13 with Cross Margin Pro Mode. Slice 6 removed the operation, its two orphaned public response types, and the two repository-owned example calls.
 - Spot listen-key REST operations were retired, but removal is intentionally ordered behind a complete WebSocket API user-data replacement. The replacement must implement authenticated session or signed subscription, subscription-ID lifecycle, the current event envelope, reconnect behavior, and tests in one coherent slice; removing only the old operations would strand users without account events.
 
+Slice 8 completed that replacement and removed all three Spot wrapper-only REST routes. The current Spot REST route state is therefore 27 wrapper routes, 27 exact route matches, 21 official-only candidates, and no wrapper-only candidates. This route count still says nothing about parameter or response compatibility for the 27 matches.
+
 ### Revised next order
 
 1. Replace the incomplete single-weight default rate-limit model as verified endpoint audits identify IP, UID, order-count, and fixed-window dimensions; do not infer one dimension from another.
-2. Implement the Spot WebSocket API user-data replacement, then remove retired Spot and Margin listen-key REST operations and update examples.
+2. Replace the retired Margin listen-key operations with the current listen-token WebSocket API flow before removing the old REST contracts; Spot migration is complete.
 3. Continue product-family audits using the route candidates only as discovery input: Spot, Margin, Convert, Algo Trading, USDⓈ-M, COIN-M, then Options.
 
 ## Review log
@@ -88,3 +92,4 @@ The official compact inventory currently lists `GET /dapi/v1/leverageBracket`, w
 | 5 | Complete | USDⓈ-M position-margin-change history | Official USDⓈ-M Trade reference and generated official connector, v1 request contract and response test, 30-day range constraint test |
 | 6 | Complete | Retired Cross Margin Pro leverage-bracket operation | Official Margin changelog effective 2026-04-13, repository-wide call-site scan, README/console example cleanup, solution build |
 | 7 | Complete | Rate-limiter enable/disable transport contract | ApiSharp 4.5.1 source audit and disabled-limiter regression test |
+| 8 | Complete | Spot WebSocket API signed user data stream and retired listen-key removal | Official Spot WebSocket API and User Data Stream references, generated official connector, 28 unit/request/model tests, full multi-target solution build |

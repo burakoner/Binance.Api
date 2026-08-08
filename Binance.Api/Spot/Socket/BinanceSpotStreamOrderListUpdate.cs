@@ -3,7 +3,7 @@
 /// <summary>
 /// Order list info
 /// </summary>
-public record BinanceSpotStreamOrderListUpdate: BinanceSocketStreamEvent
+public record BinanceSpotStreamOrderListUpdate: BinanceSpotUserDataStreamEvent
 {
     /// <summary>
     /// The id of the order list
@@ -60,9 +60,4 @@ public record BinanceSpotStreamOrderListUpdate: BinanceSocketStreamEvent
     [JsonProperty("O")]
     public List<BinanceSpotStreamOrderId> Orders { get; set; } = [];
 
-    /// <summary>
-    /// The listen key the update was for
-    /// </summary>
-    [JsonIgnore]
-    public string ListenKey { get; set; } = string.Empty;
 }
