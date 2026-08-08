@@ -6,6 +6,22 @@ namespace Binance.Api.Margin;
 public interface IBinanceMarginSocketClient
 {
     /// <summary>
+    /// Subscribes to the Cross Margin risk data stream.
+    /// </summary>
+    /// <param name="listenKey">Listen key returned by <see cref="IBinanceMarginRestClientRiskDataStream.StartRiskDataStreamAsync"/></param>
+    /// <param name="onMarginLevelUpdated">Handler for margin-call status changes</param>
+    /// <param name="onLiabilityUpdated">Handler for liability changes</param>
+    /// <param name="ct">Cancellation token for closing the subscription</param>
+    /// <returns>The active stream subscription</returns>
+    /// <remarks>This stream supports Cross Margin accounts only.
+    /// <a href="https://developers.binance.com/en/docs/products/margin-trading/risk-data-stream" /></remarks>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRiskDataStreamAsync(
+        string listenKey,
+        Action<WebSocketDataEvent<BinanceMarginRiskLevelUpdate>>? onMarginLevelUpdated = null,
+        Action<WebSocketDataEvent<BinanceMarginLiabilityUpdate>>? onLiabilityUpdated = null,
+        CancellationToken ct = default);
+
+    /// <summary>
     /// Subscribes to a Margin user data stream using a REST-issued listen token.
     /// </summary>
     /// <param name="listenToken">Token returned by <see cref="IBinanceMarginRestClientUserDataStream.CreateUserDataStreamAsync"/></param>

@@ -229,7 +229,10 @@ var margin_510 = await api.Margin.GetIsolatedMarginFeeDataAsync();
 var margin_601 = await api.Margin.CreateUserDataStreamAsync();
 var margin_602 = await api.Margin.CreateUserDataStreamAsync("---SYMBOL---", isIsolated: true);
 
-// TODO: Margin > General Risk Data Stream Methods (PRIVATE)
+// Margin > Cross Margin Risk Data Stream Methods (PRIVATE)
+var margin_701 = await api.Margin.StartRiskDataStreamAsync();
+var margin_702 = await api.Margin.KeepAliveRiskDataStreamAsync("---LISTEN-KEY---");
+var margin_703 = await api.Margin.CloseRiskDataStreamAsync();
 
 // Wallet > Capital Methods (PRIVATE)
 var wallet_101 = await api.Wallet.GetUserAssetsAsync();
@@ -1029,6 +1032,16 @@ if (marginToken.Success)
     var replacementToken = await marginApi.Margin.CreateUserDataStreamAsync();
     if (marginUserData.Success && replacementToken.Success)
         await ws.Margin.ExtendUserDataStreamAsync(marginUserData.Data, replacementToken.Data.Token);
+}
+
+// Margin WebSocket Stream > Cross Margin Risk Data (PRIVATE)
+var marginRiskKey = await marginApi.Margin.StartRiskDataStreamAsync();
+if (marginRiskKey.Success)
+{
+    var marginRiskData = await ws.Margin.SubscribeToRiskDataStreamAsync(
+        marginRiskKey.Data,
+        onMarginLevelUpdated: (data) => { },
+        onLiabilityUpdated: (data) => { });
 }
 
 // USDⓈ-M Futures Web Socket Stream -> Market Data Methods (PUBLIC)

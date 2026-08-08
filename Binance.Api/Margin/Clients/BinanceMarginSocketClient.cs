@@ -2,12 +2,56 @@ namespace Binance.Api.Margin;
 
 internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSocketClient
 {
+    private const string RiskDataStreamIdentifierPrefix = "margin-risk:";
     private ILogger Logger => _logger;
 
     internal BinanceMarginSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ApiOptions)
     {
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter(data => string.Empty, null);
+    }
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRiskDataStreamAsync(
+        string listenKey,
+        Action<WebSocketDataEvent<BinanceMarginRiskLevelUpdate>>? onMarginLevelUpdated = null,
+        Action<WebSocketDataEvent<BinanceMarginLiabilityUpdate>>? onLiabilityUpdated = null,
+        CancellationToken ct = default)
+    {
+        listenKey.ValidateNotNull(nameof(listenKey));
+        var handler = new Action<WebSocketDataEvent<string>>(data => HandleRiskDataStreamEvent(
+            data,
+            onMarginLevelUpdated,
+            onLiabilityUpdated));
+        return base.SubscribeAsync(
+            GetRiskDataStreamAddress(listenKey),
+            null!,
+            RiskDataStreamIdentifierPrefix + listenKey,
+            false,
+            handler,
+            ct);
+    }
+
+    internal static string GetRiskDataStreamAddress(string listenKey)
+        => BinanceAddress.Default.MarginSocketApiStreamAddress.AppendPath("ws/" + listenKey);
+
+    internal void HandleRiskDataStreamEvent(
+        WebSocketDataEvent<string> data,
+        Action<WebSocketDataEvent<BinanceMarginRiskLevelUpdate>>? onMarginLevelUpdated,
+        Action<WebSocketDataEvent<BinanceMarginLiabilityUpdate>>? onLiabilityUpdated)
+    {
+        var eventToken = JToken.Parse(data.Data);
+        switch (eventToken["e"]?.Value<string>())
+        {
+            case "MARGIN_LEVEL_STATUS_CHANGE":
+                DispatchRiskEvent(eventToken, data, onMarginLevelUpdated, "margin level");
+                break;
+            case "USER_LIABILITY_CHANGE":
+                DispatchRiskEvent(eventToken, data, onLiabilityUpdated, "liability", result => result.Asset);
+                break;
+            default:
+                Logger.Log(LogLevel.Warning, "Received unknown Margin risk data event: " + data.Data);
+                break;
+        }
     }
 
     public async Task<CallResult<BinanceMarginUserDataStreamSubscription>> SubscribeToUserDataStreamAsync(
@@ -234,7 +278,10 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
             && message["event"] != null;
     }
 
-    protected override bool MessageMatchesHandler(WebSocketConnection connection, JToken message, string identifier) => false;
+    protected override bool MessageMatchesHandler(WebSocketConnection connection, JToken message, string identifier)
+        => identifier.StartsWith(RiskDataStreamIdentifierPrefix, StringComparison.Ordinal)
+            && message.Type == JTokenType.Object
+            && message["e"]?.Value<string>() is "MARGIN_LEVEL_STATUS_CHANGE" or "USER_LIABILITY_CHANGE";
 
     protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
         => Task.FromResult(new CallResult<bool>(true));
@@ -267,6 +314,26 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         }
 
         result.Data.SubscriptionId = subscriptionId;
+        handler(topic == null ? source.As(result.Data) : source.As(result.Data, topic(result.Data)));
+    }
+
+    private void DispatchRiskEvent<T>(
+        JToken eventToken,
+        WebSocketDataEvent<string> source,
+        Action<WebSocketDataEvent<T>>? handler,
+        string eventName,
+        Func<T, string>? topic = null)
+    {
+        if (handler == null)
+            return;
+
+        var result = Deserialize<T>(eventToken);
+        if (!result)
+        {
+            Logger.Log(LogLevel.Warning, $"Could not deserialize Margin risk data {eventName} event: {result.Error}");
+            return;
+        }
+
         handler(topic == null ? source.As(result.Data) : source.As(result.Data, topic(result.Data)));
     }
 

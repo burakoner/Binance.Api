@@ -143,6 +143,11 @@ public class BinanceAddress
     public string MarginRestApiAddress { get; set; } = "";
 
     /// <summary>
+    /// Binance Margin Risk Data WebSocket Stream Address
+    /// </summary>
+    public string MarginSocketApiStreamAddress { get; set; } = "";
+
+    /// <summary>
     /// Binance Wallet Rest API Address
     /// </summary>
     public string WalletRestApiAddress { get; set; } = "";
@@ -240,6 +245,7 @@ public class BinanceAddress
         ConvertRestApiAddress = "https://api.binance.com",
         InstitutionalLoanRestApiAddress = "https://api.binance.com",
         MarginRestApiAddress = "https://api.binance.com",
+        MarginSocketApiStreamAddress = "wss://margin-stream.binance.com",
         WalletRestApiAddress = "https://api.binance.com",
         SubAccountRestApiAddress = "https://api.binance.com",
         MiningRestApiAddress = "https://api.binance.com",
