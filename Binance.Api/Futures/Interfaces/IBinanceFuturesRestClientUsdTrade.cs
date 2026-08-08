@@ -292,10 +292,10 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Get position ADL quantile estimations
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Position-ADL-Quantile-Estimation" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#position-adl-quantile-estimation" /></para>
     /// </summary>
     /// <param name="symbol">Only get for this symbol, for example `ETHUSDT`</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. The maximum is 60000 milliseconds</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceFuturesQuantileEstimation>>> GetPositionAdlQuantileEstimationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);

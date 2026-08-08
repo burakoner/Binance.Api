@@ -486,21 +486,13 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<List<BinanceFuturesPositionV3>>(GetUrl(fapi, v3, "positionRisk"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public async Task<RestCallResult<List<BinanceFuturesQuantileEstimation>>> GetPositionAdlQuantileEstimationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesQuantileEstimation>>> GetPositionAdlQuantileEstimationAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
-        if (symbol == null)
-        {
-            return await RequestAsync<List<BinanceFuturesQuantileEstimation>>(GetUrl(fapi, v1, "adlQuantile"), HttpMethod.Get, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        }
-
-        var result = await RequestAsync<BinanceFuturesQuantileEstimation>(GetUrl(fapi, v1, "adlQuantile"), HttpMethod.Get, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        if (!result) return result.As<List<BinanceFuturesQuantileEstimation>>([]);
-
-        return result.As<List<BinanceFuturesQuantileEstimation>>([result.Data]);
+        return RequestAsync<List<BinanceFuturesQuantileEstimation>>(GetUrl(fapi, v1, "adlQuantile"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<List<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)

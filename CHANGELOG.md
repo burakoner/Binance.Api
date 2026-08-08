@@ -4,6 +4,7 @@
   * Fixed `CancelMarginOrderAsync` sending a GET request instead of the documented DELETE request
   * Fixed signed REST requests failing to generate a signature with RSA PEM credentials and omitting query parameters when a body is present
   * Fixed WebSocket API RSA and Ed25519 signatures, including UTF-8 parameter payloads
+  * Fixed USDⓈ-M position ADL quantile requests sending GET parameters in the body and deserializing symbol-filtered array responses as an object
   * Added a request-level test project for endpoint contract regression coverage
 
 * Version 5.10.19 - 19 Oct 2025

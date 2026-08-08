@@ -36,13 +36,13 @@ public record BinanceFuturesAdlQuantile
     public int Short { get; set; }
 
     /// <summary>
-    /// Hedge
+    /// Hedge-mode marker for cross-margined positions
     /// </summary>
     [JsonProperty("HEDGE")]
     public int Hedge { get; set; }
 
     /// <summary>
-    /// Hedge
+    /// Position quantile in one-way mode
     /// </summary>
     [JsonProperty("BOTH")]
     public int Both { get; set; }

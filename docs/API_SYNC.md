@@ -39,6 +39,7 @@ The official documentation is a moving target. The baseline date must be advance
 - REST signatures now use the exact percent-encoded query string followed by the form body, including mixed query/body requests. RSA PEM signing is covered by a cryptographic verification test.
 - WebSocket API signing now distinguishes HMAC, RSA, and Ed25519 credentials and signs UTF-8 payload bytes. RSA and Ed25519 behavior is covered by cryptographic verification tests with non-ASCII parameters.
 - ApiSharp 4.5.1 strips Ed25519 PEM markers before asking NSec to parse a PEM key. Binance.Api now imports the PKIX private key directly for .NET 8 and later and accepts both full PEM and its base64 body.
+- USDⓈ-M `GET /fapi/v1/adlQuantile` sent signed parameters in a GET body and expected an object when `symbol` was supplied, although the current endpoint always accepts query parameters and returns an array. Both mismatches are corrected and request/response behavior is covered by a regression test.
 - The current ApiSharp rate-limiter configuration API is obsolete and emits build warnings on every main-library target. Rate-limit behavior must be revalidated during the shared transport audit rather than treated as a cosmetic warning.
 
 ## Review log
@@ -47,3 +48,4 @@ The official documentation is a moving target. The baseline date must be advance
 | --- | --- | --- | --- |
 | 1 | Complete | Baseline inventory, test harness, Margin cancel-order defect | Official Margin REST Trade reference, solution build, request-level regression test |
 | 2 | Complete | REST and WebSocket API authentication compatibility | Official Spot signed-endpoint rules, mixed query/body and percent-encoding tests, RSA PEM and Ed25519 cryptographic verification tests |
+| 3 | Complete | USDⓈ-M position ADL quantile endpoint | Official USDⓈ-M Trade reference, request-level query placement and symbol-filtered array response test |
