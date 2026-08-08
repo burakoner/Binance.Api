@@ -499,6 +499,47 @@ internal partial class BinanceMarginRestClient
         return RequestAsync<List<BinanceMarginTrade>>(GetUrl(sapi, v1, "margin/myTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
     }
 
+    public Task<RestCallResult<List<BinanceMarginPreventedMatch>>> GetMarginPreventedMatchesAsync(
+        string symbol,
+        long? preventedMatchId = null,
+        long? orderId = null,
+        long? fromPreventedMatchId = null,
+        bool? isIsolated = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol is required", nameof(symbol));
+        symbol.ValidateBinanceSymbol();
+
+        var hasValidCombination =
+            preventedMatchId.HasValue && !orderId.HasValue && !fromPreventedMatchId.HasValue
+            || orderId.HasValue && !preventedMatchId.HasValue;
+        if (!hasValidCombination)
+        {
+            throw new ArgumentException(
+                "Use preventedMatchId alone, orderId alone, or orderId with fromPreventedMatchId.");
+        }
+
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol }
+        };
+        parameters.AddOptional("preventedMatchId", preventedMatchId);
+        parameters.AddOptional("orderId", orderId);
+        parameters.AddOptional("fromPreventedMatchId", fromPreventedMatchId);
+        parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
+
+        return RequestAsync<List<BinanceMarginPreventedMatch>>(
+            GetUrl(sapi, v1, "margin/myPreventedMatches"),
+            HttpMethod.Get,
+            ct,
+            true,
+            queryParameters: parameters,
+            requestWeight: 10);
+    }
+
     public async Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()

@@ -247,6 +247,7 @@ var margin_320 = await api.Margin.LiquidateMarginAccountAsync(BinanceMarginLiqui
 var margin_321 = await api.Margin.GetLiquidationLoanAsync();
 var margin_322 = await api.Margin.RepayLiquidationLoanAsync("---ASSET---", 100.0m);
 var margin_323 = await api.Margin.GetLiquidationLoanRepaymentHistoryAsync();
+var margin_324 = await api.Margin.GetMarginPreventedMatchesAsync("---SYMBOL---", orderId: 100000001);
 
 // Margin > General Transfer Methods (PRIVATE)
 var margin_401 = await api.Margin.GetMarginTransfersAsync(BinanceMarginTransferDirection.RollIn);

@@ -306,6 +306,26 @@ public interface IBinanceMarginRestClientTrade
     Task<RestCallResult<List<BinanceMarginTrade>>> GetMarginUserTradesAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Queries prevented Margin matches for one symbol. Binance returns at most 500 matches per request.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-prevented-matches" /></para>
+    /// </summary>
+    /// <param name="symbol">Trading symbol, for example <c>BTCUSDT</c>.</param>
+    /// <param name="preventedMatchId">A specific prevented-match identifier. Cannot be combined with order identifiers.</param>
+    /// <param name="orderId">Order identifier whose prevented matches should be returned.</param>
+    /// <param name="fromPreventedMatchId">Pagination cursor. Valid only together with <paramref name="orderId" />.</param>
+    /// <param name="isIsolated">Whether to query an Isolated Margin account; defaults to Cross Margin.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<RestCallResult<List<BinanceMarginPreventedMatch>>> GetMarginPreventedMatchesAsync(
+        string symbol,
+        long? preventedMatchId = null,
+        long? orderId = null,
+        long? fromPreventedMatchId = null,
+        bool? isIsolated = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default);
+
+    /// <summary>
     /// Cross Margin Small Liability Exchange
     /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Small-Liability-Exchange" /></para>
     /// </summary>

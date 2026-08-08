@@ -148,6 +148,7 @@ internal class Program
         var margin_315 = await api.Margin.GetMarginOrderAsync("---SYMBOL---");
         var margin_316 = await api.Margin.GetMarginUserTradesAsync("---SYMBOL---");
         var margin_317 = await api.Margin.SmallLiabilityExchangeAsync(["---ASSET---"]);
+        var margin_318 = await api.Margin.GetMarginPreventedMatchesAsync("---SYMBOL---", orderId: 100000001);
 
         // Margin > General Transfer Methods (PRIVATE)
         var margin_401 = await api.Margin.GetMarginTransfersAsync(BinanceMarginTransferDirection.RollIn);

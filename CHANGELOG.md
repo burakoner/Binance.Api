@@ -19,6 +19,7 @@
   * Aligned Margin borrow/repay contracts with the current combined operation, both history types, current request weights and ranges, and current response schemas; removed obsolete archived and limit parameters
   * Added the current Cross and Isolated Margin capital-flow query with seven-day range validation, all documented flow types, and institutional-loan notes
   * Added current Margin limit-price pairs, listing schedule, risk-based liquidation ratios, and restricted-assets market-data queries
+  * Added the current Margin prevented-matches query with its documented identifier combinations, pagination cursor, and response schema
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters
   * Aligned Spot Market Data REST and WebSocket API query contracts, including block trades, reference prices, status filters, current weights and limits, kline timezones, rolling-window models, and required trading-day symbols
   * Added the Spot `CANCEL_ONLY` response status and separated response statuses from the narrower request-filter enum
