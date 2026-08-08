@@ -60,11 +60,13 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
                 var errorMessage = data["error"]?["msg"]?.Value<string>() ?? "Undefined Error";
                 if (status == 418 || status == 429)
                 {
-                    // Rate limit error 
-                    return new CallResult<T>(new BinanceRateLimitError(errorCode, errorMessage, null)
+                    var retryAfter = BinanceServerRateLimitGuard.ParseWebSocketRetryAfter(data);
+                    _.ServerRateLimitGuard.Extend(retryAfter);
+                    callResult = new CallResult<T>(new BinanceRateLimitError(errorCode, errorMessage, data["error"]?["data"])
                     {
-                        // RetryAfter = data["error"]?["data"].Data.Error.Data!.RetryAfter
+                        RetryAfter = retryAfter
                     }, SocketOptions.RawResponse ? data.ToString() : null);
+                    return true;
                 }
 
                 callResult = new CallResult<T>(new ServerError(errorCode, errorMessage), SocketOptions.RawResponse ? data.ToString() : null);

@@ -16,6 +16,7 @@ public class BinanceSocketApiClient
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
     internal BinanceSocketApiClientOptions ApiOptions { get; }
     internal BinanceRestApiClient RestApiClient { get; }
+    internal BinanceServerRateLimitGuard ServerRateLimitGuard { get; } = new();
 
     /// <summary>
     /// Binance Spot WebSocket API Client

@@ -83,12 +83,14 @@ public record BinanceResultErrorData
     /// Server time
     /// </summary>
     [JsonProperty("serverTime")]
+    [JsonConverter(typeof(DateTimeConverter))]
     public DateTime? ServerTime { get; set; }
 
     /// <summary>
     /// Retry after time
     /// </summary>
     [JsonProperty("retryAfter")]
+    [JsonConverter(typeof(DateTimeConverter))]
     public DateTime? RetryAfter { get; set; }
 }
 #endregion

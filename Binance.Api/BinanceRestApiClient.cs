@@ -34,6 +34,7 @@ public sealed class BinanceRestApiClient : RestApiClient
     internal ILogger Logger => this._logger;
     internal TimeSyncState TimeSyncState { get; } = new("Binance");
     internal BinanceRestApiClientOptions ApiOptions => (BinanceRestApiClientOptions)ClientOptions;
+    internal BinanceServerRateLimitGuard ServerRateLimitGuard { get; } = new();
 
     /// <summary>
     /// Binance Spot Rest API Client
@@ -269,6 +270,54 @@ public sealed class BinanceRestApiClient : RestApiClient
             return new ServerError((string)error["msg"]!);
 
         return new ServerError((int)error["code"]!, (string)error["msg"]!);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task<RestCallResult<T>> SendRequestAsync<T>(
+        Uri uri,
+        HttpMethod method,
+        CancellationToken cancellationToken,
+        bool signed = false,
+        Dictionary<string, object>? queryParameters = null,
+        Dictionary<string, object>? bodyParameters = null,
+        Dictionary<string, string>? headerParameters = null,
+        ArraySerialization? serialization = null,
+        JsonSerializer? deserializer = null,
+        bool ignoreRatelimit = false,
+        int requestWeight = 1)
+    {
+        var guardResult = await ServerRateLimitGuard.WaitAsync(cancellationToken).ConfigureAwait(false);
+        if (!guardResult)
+            return new RestCallResult<T>(guardResult.Error!);
+
+        var result = await base.SendRequestAsync<T>(
+            uri,
+            method,
+            cancellationToken,
+            signed,
+            queryParameters,
+            bodyParameters,
+            headerParameters,
+            serialization,
+            deserializer,
+            ignoreRatelimit,
+            requestWeight).ConfigureAwait(false);
+
+        var statusCode = (int?)result.Response?.StatusCode;
+        if (statusCode is not (418 or 429))
+            return result;
+
+        var retryAfter = BinanceServerRateLimitGuard.ParseRestRetryAfter(result.Response!.Headers);
+        ServerRateLimitGuard.Extend(retryAfter);
+        var error = new BinanceRateLimitError(
+            result.Error?.Code ?? statusCode,
+            result.Error?.Message ?? $"HTTP {statusCode} rate limit response",
+            result.Error?.Data)
+        {
+            RetryAfter = retryAfter
+        };
+
+        return new RestCallResult<T>(result.Request, result.Response, result.Raw, error);
     }
     #endregion
 

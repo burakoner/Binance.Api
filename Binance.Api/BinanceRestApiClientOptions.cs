@@ -6,7 +6,10 @@
 /// <remarks>
 /// No static rate limiter is installed by default. Binance publishes multiple dynamic, product-specific
 /// limits, while the underlying transport limiter accepts only one request-weight dimension. Configure a
-/// custom limiter only when its counter semantics and scope match the Binance product being called.
+/// custom limiter only when its counter semantics and scope match the Binance product being called. Binance
+/// server responses with HTTP status 418 or 429 still guard subsequent requests until a valid Retry-After time,
+/// regardless of the RateLimiterEnabled setting; the failed request is never retried automatically. Applications
+/// using multiple client instances or processes must coordinate server-directed backoff at their own network scope.
 /// </remarks>
 public class BinanceRestApiClientOptions : RestApiClientOptions
 {

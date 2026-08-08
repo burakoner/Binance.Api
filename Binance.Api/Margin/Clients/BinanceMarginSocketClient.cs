@@ -4,9 +4,11 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
 {
     private const string RiskDataStreamIdentifierPrefix = "margin-risk:";
     private ILogger Logger => _logger;
+    private BinanceSocketApiClient Root { get; }
 
     internal BinanceMarginSocketClient(BinanceSocketApiClient root) : base(root.Logger, root.ApiOptions)
     {
+        Root = root;
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter(data => string.Empty, null);
     }
@@ -64,6 +66,10 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         CancellationToken ct = default)
     {
         listenToken.ValidateNotNull(nameof(listenToken));
+        var guardResult = await Root.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult.As<BinanceMarginUserDataStreamSubscription>(null);
+
         var request = CreateSubscriptionRequest(listenToken);
         var handler = new Action<WebSocketDataEvent<string>>(data => HandleUserDataStreamEvent(
             data,
@@ -102,7 +108,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
             return new CallResult<BinanceMarginUserDataStreamSubscription>(new WebError("WebSocket is not connected"));
 
         var replacementRequest = CreateSubscriptionRequest(listenToken);
-        var result = await SendSubscriptionRequestAsync(connection, replacementRequest).ConfigureAwait(false);
+        var result = await SendSubscriptionRequestAsync(connection, replacementRequest, ct).ConfigureAwait(false);
         if (!result)
             return result.As<BinanceMarginUserDataStreamSubscription>(null);
 
@@ -120,7 +126,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         var socketSubscription = subscription.SocketSubscription;
         var connection = socketSubscription.GetConnection();
         var localSubscription = socketSubscription.GetSubscription();
-        var result = await SendUnsubscribeRequestAsync(connection, subscription.SubscriptionId).ConfigureAwait(false);
+        var result = await SendUnsubscribeRequestAsync(connection, subscription.SubscriptionId, ct).ConfigureAwait(false);
         if (!result)
             return result;
 
@@ -137,7 +143,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
             return new CallResult<bool>(new CancellationRequestedError());
 
         var connection = sessionSubscription.SocketSubscription.GetConnection();
-        var result = await SendUnsubscribeRequestAsync(connection, null).ConfigureAwait(false);
+        var result = await SendUnsubscribeRequestAsync(connection, null, ct).ConfigureAwait(false);
         if (!result)
             return result;
 
@@ -181,6 +187,10 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         if (status == 200 && subscriptionId.HasValue && expirationTime.HasValue)
             return new CallResult<BinanceMarginUserDataStreamStatus>(
                 new BinanceMarginUserDataStreamStatus(subscriptionId.Value, expirationTime.Value));
+
+        var rateLimitError = BinanceServerRateLimitGuard.ParseWebSocketRateLimitError(message);
+        if (rateLimitError != null)
+            return new CallResult<BinanceMarginUserDataStreamStatus>(rateLimitError);
 
         var errorCode = message["error"]?["code"]?.Value<int>() ?? status ?? 0;
         var errorMessage = message["error"]?["msg"]?.Value<string>()
@@ -260,6 +270,8 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         var response = ParseSubscriptionResponse(data);
         if (!response)
         {
+            if (response.Error is BinanceRateLimitError rateLimitError)
+                Root.ServerRateLimitGuard.Extend(rateLimitError.RetryAfter);
             callResult = new CallResult<object>(response.Error!);
             return true;
         }
@@ -289,6 +301,8 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
     protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
     {
         if (subscription.Request is not BinanceMarginUserDataStreamRequest request)
+            return false;
+        if (Root.ServerRateLimitGuard.IsActive)
             return false;
         var result = await SendUnsubscribeRequestAsync(connection, request.SubscriptionId).ConfigureAwait(false);
         return result.Success;
@@ -337,21 +351,37 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         handler(topic == null ? source.As(result.Data) : source.As(result.Data, topic(result.Data)));
     }
 
-    private async Task<CallResult<BinanceMarginUserDataStreamStatus>> SendSubscriptionRequestAsync(WebSocketConnection connection, BinanceMarginUserDataStreamRequest request)
+    private async Task<CallResult<BinanceMarginUserDataStreamStatus>> SendSubscriptionRequestAsync(
+        WebSocketConnection connection,
+        BinanceMarginUserDataStreamRequest request,
+        CancellationToken ct = default)
     {
+        var guardResult = await Root.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult.As<BinanceMarginUserDataStreamStatus>(null);
+
         var response = new CallResult<BinanceMarginUserDataStreamStatus>(new ServerError("No response on Margin subscription request received"));
         await connection.SendAndWaitAsync(request, ClientOptions.ResponseTimeout, data =>
         {
             if (data.Type != JTokenType.Object || data["id"]?.Value<int>() != request.Id)
                 return false;
             response = ParseSubscriptionResponse(data);
+            if (response.Error is BinanceRateLimitError rateLimitError)
+                Root.ServerRateLimitGuard.Extend(rateLimitError.RetryAfter);
             return true;
         }).ConfigureAwait(false);
         return response;
     }
 
-    private async Task<CallResult<bool>> SendUnsubscribeRequestAsync(WebSocketConnection connection, int? subscriptionId)
+    private async Task<CallResult<bool>> SendUnsubscribeRequestAsync(
+        WebSocketConnection connection,
+        int? subscriptionId,
+        CancellationToken ct = default)
     {
+        var guardResult = await Root.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult;
+
         if (!connection.Connected)
             return new CallResult<bool>(true);
 
@@ -366,6 +396,14 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
             if (status == 200)
             {
                 response = new CallResult<bool>(true);
+                return true;
+            }
+
+            var rateLimitError = BinanceServerRateLimitGuard.ParseWebSocketRateLimitError(data);
+            if (rateLimitError != null)
+            {
+                Root.ServerRateLimitGuard.Extend(rateLimitError.RetryAfter);
+                response = new CallResult<bool>(rateLimitError);
                 return true;
             }
 

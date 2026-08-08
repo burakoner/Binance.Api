@@ -12,7 +12,8 @@ internal partial class BinanceSpotSocketClient
 
         return SendSessionRequestAsync<List<BinanceSpotUserDataStreamSubscriptionStatus>>(
             session.Connection,
-            CreateSessionRequest("session.subscriptions"));
+            CreateSessionRequest("session.subscriptions"),
+            ct);
     }
 
     public async Task<CallResult<BinanceSpotUserDataStreamSubscription>> SubscribeToUserDataStreamWithSessionAsync(
@@ -63,6 +64,10 @@ internal partial class BinanceSpotSocketClient
         if (AuthenticationProvider == null)
             throw new InvalidOperationException("No credentials provided for authenticated endpoint");
 
+        var guardResult = await _.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult.As<BinanceSpotUserDataStreamSubscription>(null);
+
         var request = new BinanceSpotUserDataStreamRequest
         {
             Method = "userDataStream.subscribe.signature",
@@ -105,7 +110,7 @@ internal partial class BinanceSpotSocketClient
         var socketSubscription = subscription.SocketSubscription;
         var connection = socketSubscription.GetConnection();
         var localSubscription = socketSubscription.GetSubscription();
-        var result = await SendUserDataStreamUnsubscribeAsync(connection, subscription.SubscriptionId).ConfigureAwait(false);
+        var result = await SendUserDataStreamUnsubscribeAsync(connection, subscription.SubscriptionId, ct).ConfigureAwait(false);
         if (!result)
             return result;
 
@@ -122,7 +127,7 @@ internal partial class BinanceSpotSocketClient
             return new CallResult<bool>(new CancellationRequestedError());
 
         var connection = sessionSubscription.SocketSubscription.GetConnection();
-        var result = await SendUserDataStreamUnsubscribeAsync(connection, null).ConfigureAwait(false);
+        var result = await SendUserDataStreamUnsubscribeAsync(connection, null, ct).ConfigureAwait(false);
         if (!result)
             return result;
 
@@ -187,6 +192,10 @@ internal partial class BinanceSpotSocketClient
         var subscriptionId = message["result"]?["subscriptionId"]?.Value<long>();
         if (status == 200 && subscriptionId.HasValue)
             return new CallResult<long>(subscriptionId.Value);
+
+        var rateLimitError = BinanceServerRateLimitGuard.ParseWebSocketRateLimitError(message);
+        if (rateLimitError != null)
+            return new CallResult<long>(rateLimitError);
 
         var errorCode = message["error"]?["code"]?.Value<int>() ?? status ?? 0;
         var errorMessage = message["error"]?["msg"]?.Value<string>()
@@ -308,6 +317,10 @@ internal partial class BinanceSpotSocketClient
         Action<WebSocketDataEvent<string>> handler,
         CancellationToken ct)
     {
+        var guardResult = await _.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult.As<WebSocketUpdateSubscription>(null);
+
         if (!connection.Connected)
             return new CallResult<WebSocketUpdateSubscription>(new WebError("WebSocket session connection is not open"));
         if (connection.PausedActivity)
@@ -335,8 +348,15 @@ internal partial class BinanceSpotSocketClient
         return new CallResult<WebSocketUpdateSubscription>(new WebSocketUpdateSubscription(connection, subscription));
     }
 
-    private async Task<CallResult<bool>> SendUserDataStreamUnsubscribeAsync(WebSocketConnection connection, long? subscriptionId)
+    private async Task<CallResult<bool>> SendUserDataStreamUnsubscribeAsync(
+        WebSocketConnection connection,
+        long? subscriptionId,
+        CancellationToken ct = default)
     {
+        var guardResult = await _.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult;
+
         if (!connection.Connected)
             return new CallResult<bool>(true);
 
@@ -351,6 +371,14 @@ internal partial class BinanceSpotSocketClient
             if (status == 200)
             {
                 response = new CallResult<bool>(true);
+                return true;
+            }
+
+            var rateLimitError = BinanceServerRateLimitGuard.ParseWebSocketRateLimitError(data);
+            if (rateLimitError != null)
+            {
+                _.ServerRateLimitGuard.Extend(rateLimitError.RetryAfter);
+                response = new CallResult<bool>(rateLimitError);
                 return true;
             }
 

@@ -55,11 +55,13 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
                 var errorMessage = data["error"]?["msg"]?.Value<string>() ?? "Undefined Error";
                 if (status == 418 || status == 429)
                 {
-                    // Rate limit error 
-                    return new CallResult<T>(new BinanceRateLimitError(errorCode, errorMessage, null)
+                    var retryAfter = BinanceServerRateLimitGuard.ParseWebSocketRetryAfter(data);
+                    __.ServerRateLimitGuard.Extend(retryAfter);
+                    callResult = new CallResult<T>(new BinanceRateLimitError(errorCode, errorMessage, data["error"]?["data"])
                     {
-                        // RetryAfter = data["error"]?["data"].Data.Error.Data!.RetryAfter
+                        RetryAfter = retryAfter
                     }, SocketOptions.RawResponse ? data.ToString() : null);
+                    return true;
                 }
 
                 callResult = new CallResult<T>(new ServerError(errorCode, errorMessage), SocketOptions.RawResponse ? data.ToString() : null);
@@ -223,6 +225,10 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
 
     internal async Task<CallResult<T>> RequestAsync<T>(string url, string method, Dictionary<string, object> parameters, bool authenticated = false, bool sign = false, int weight = 1, CancellationToken ct = default)
     {
+        var guardResult = await __.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);
+        if (!guardResult)
+            return new CallResult<T>(guardResult.Error!);
+
         if (authenticated)
         {
             if (AuthenticationProvider == null)
@@ -257,20 +263,7 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
         var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.UsdFuturesSocketApiQueryAddress.AppendPath(url);
         var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, sign).ConfigureAwait(false);
         if (!result.Success)
-        {
-            if (result.Error is BinanceRateLimitError rle)
-            {
-                /*
-                if (rle.RetryAfter != null && RateLimiter != null && ClientOptions.RateLimiterEnabled)
-                {
-                    _logger.LogWarning("Ratelimit error from server, pausing requests until {Until}", rle.RetryAfter.Value);
-                    await RateLimiter.SetRetryAfterGuardAsync(rle.RetryAfter.Value).ConfigureAwait(false);
-                }
-                */
-            }
-
-            else return result.AsError<T>(result.Error!);
-        }
+            return result.AsError<T>(result.Error!);
 
         return result.As(result.Data.Result);
     }

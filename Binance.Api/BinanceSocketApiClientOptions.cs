@@ -3,6 +3,11 @@
 /// <summary>
 /// Binance WebSocket API Client Options
 /// </summary>
+/// <remarks>
+/// WebSocket API status 418 and 429 responses guard subsequent API requests on the same root client until the
+/// server-provided retryAfter time. The failed request is never retried automatically. Applications using
+/// multiple client instances or processes must coordinate server-directed backoff at their own network scope.
+/// </remarks>
 public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
 {
     /// <summary>
