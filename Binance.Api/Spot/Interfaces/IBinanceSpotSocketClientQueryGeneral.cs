@@ -44,7 +44,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <param name="status">Status</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatusFilter status, CancellationToken ct = default);
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
@@ -65,7 +65,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <param name="showPermissionSets">Show Permission Sets</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSpotSymbolStatus? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(IEnumerable<string> symbols, BinanceSpotSymbolStatusFilter? status = null, IEnumerable<BinancePermissionType>? permissions = null, bool? showPermissionSets = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets execution rules for all Spot symbols.
@@ -96,5 +96,5 @@ public interface IBinanceSpotSocketClientQueryGeneral
     /// <param name="status">Current Spot symbol status</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Execution rules grouped by symbol</returns>
-    Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatusFilter status, CancellationToken ct = default);
 }

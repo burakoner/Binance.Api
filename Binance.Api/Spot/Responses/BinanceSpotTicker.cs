@@ -54,7 +54,7 @@ public record BinanceSpotTicker : BinanceSpotMiniTicker
     /// <summary>
     /// The quantity of the best ask price in the order book
     /// </summary>
-    [JsonProperty("AskQty")]
+    [JsonProperty("askQty")]
     public decimal BestAskQuantity { get; set; }
 }
 

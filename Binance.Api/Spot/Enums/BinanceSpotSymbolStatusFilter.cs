@@ -1,9 +1,9 @@
 namespace Binance.Api.Spot;
 
 /// <summary>
-/// Current Spot symbol trading status.
+/// Symbol statuses accepted by Spot request filters.
 /// </summary>
-public enum BinanceSpotSymbolStatus : byte
+public enum BinanceSpotSymbolStatusFilter : byte
 {
     /// <summary>
     /// Trading is active.
@@ -21,11 +21,5 @@ public enum BinanceSpotSymbolStatus : byte
     /// Trading is on break.
     /// </summary>
     [Map("BREAK")]
-    Break,
-
-    /// <summary>
-    /// New orders are disabled, but existing orders can be canceled or amended.
-    /// </summary>
-    [Map("CANCEL_ONLY")]
-    CancelOnly
+    Break
 }

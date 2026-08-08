@@ -28,7 +28,7 @@ internal partial class BinanceSpotRestClient
     public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [symbol], ct: ct);
 
-    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatusFilter status, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: status, ct: ct);
 
     public Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
@@ -36,7 +36,7 @@ internal partial class BinanceSpotRestClient
 
     public async Task<RestCallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(
         IEnumerable<string> symbols,
-        BinanceSpotSymbolStatus? status = null,
+        BinanceSpotSymbolStatusFilter? status = null,
         IEnumerable<BinancePermissionType>? permissions = null,
         bool? showPermissionSets = null,
         CancellationToken ct = default)
@@ -97,12 +97,12 @@ internal partial class BinanceSpotRestClient
     public Task<RestCallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(IEnumerable<string> symbols, CancellationToken ct = default)
         => GetExecutionRulesAsync(symbols, null, ct);
 
-    public Task<RestCallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatusFilter status, CancellationToken ct = default)
         => GetExecutionRulesAsync([], status, ct);
 
     private Task<RestCallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(
         IEnumerable<string> symbols,
-        BinanceSpotSymbolStatus? status,
+        BinanceSpotSymbolStatusFilter? status,
         CancellationToken ct)
     {
         if (symbols == null)

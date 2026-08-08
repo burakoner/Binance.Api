@@ -28,7 +28,7 @@ internal partial class BinanceSpotSocketClient
     public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(string symbol, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [symbol], ct: ct);
 
-    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinanceSpotSymbolStatusFilter status, CancellationToken ct = default)
          => GetExchangeInfoAsync(symbols: [], status: status, ct: ct);
 
     public Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(BinancePermissionType permission, CancellationToken ct = default)
@@ -36,7 +36,7 @@ internal partial class BinanceSpotSocketClient
 
     public async Task<CallResult<BinanceSpotExchangeInfo>> GetExchangeInfoAsync(
         IEnumerable<string> symbols,
-        BinanceSpotSymbolStatus? status = null,
+        BinanceSpotSymbolStatusFilter? status = null,
         IEnumerable<BinancePermissionType>? permissions = null,
         bool? showPermissionSets = null,
         CancellationToken ct = default)
@@ -96,12 +96,12 @@ internal partial class BinanceSpotSocketClient
     public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(IEnumerable<string> symbols, CancellationToken ct = default)
         => GetExecutionRulesAsync(symbols, null, ct);
 
-    public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatus status, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(BinanceSpotSymbolStatusFilter status, CancellationToken ct = default)
         => GetExecutionRulesAsync([], status, ct);
 
     private Task<CallResult<BinanceSpotExecutionRules>> GetExecutionRulesAsync(
         IEnumerable<string> symbols,
-        BinanceSpotSymbolStatus? status,
+        BinanceSpotSymbolStatusFilter? status,
         CancellationToken ct)
     {
         if (symbols == null)

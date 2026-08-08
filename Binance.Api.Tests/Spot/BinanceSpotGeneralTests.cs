@@ -57,13 +57,13 @@ public class BinanceSpotGeneralTests
             RateLimiterEnabled = false
         });
 
-        var result = await client.Spot.GetExecutionRulesAsync(BinanceSpotSymbolStatus.Halt);
+        var result = await client.Spot.GetExecutionRulesAsync(BinanceSpotSymbolStatusFilter.Halt);
 
         Assert.True(result.Success);
         Assert.Equal("?symbolStatus=HALT", handler.RequestUri!.Query);
         Assert.Equal(
             ["TRADING", "HALT", "BREAK"],
-            Enum.GetValues<BinanceSpotSymbolStatus>().Select(value => MapConverter.GetString(value)!).ToArray());
+            Enum.GetValues<BinanceSpotSymbolStatusFilter>().Select(value => MapConverter.GetString(value)!).ToArray());
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class BinanceSpotGeneralTests
         Assert.Equal("?permissions=TRD_GRP_004", handler.RequestUri!.Query);
         await Assert.ThrowsAsync<ArgumentException>(() => client.Spot.GetExchangeInfoAsync(
             ["BTCUSDT"],
-            status: BinanceSpotSymbolStatus.Trading));
+            status: BinanceSpotSymbolStatusFilter.Trading));
         await Assert.ThrowsAsync<ArgumentException>(() => client.Spot.GetExchangeInfoAsync(
             ["BTCUSDT"],
             permissions: [BinancePermissionType.Spot]));
@@ -102,7 +102,7 @@ public class BinanceSpotGeneralTests
               "exchangeFilters":[],
               "symbols":[{
                 "symbol":"BTCUSDT",
-                "status":"BREAK",
+                "status":"CANCEL_ONLY",
                 "baseAsset":"BTC",
                 "baseAssetPrecision":8,
                 "quoteAsset":"USDT",
@@ -147,7 +147,7 @@ public class BinanceSpotGeneralTests
 
         Assert.True(result.Success);
         var symbol = Assert.Single(result.Data.Symbols);
-        Assert.Equal(BinanceSpotSymbolStatus.Break, symbol.Status);
+        Assert.Equal(BinanceSpotSymbolStatus.CancelOnly, symbol.Status);
         Assert.Equal(7, symbol.QuotePrecision);
         Assert.Equal(10, symbol.QuoteAssetPrecision);
         Assert.True(symbol.OPOAllowed);
