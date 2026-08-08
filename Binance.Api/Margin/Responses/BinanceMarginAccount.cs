@@ -6,6 +6,11 @@
 public record BinanceMarginAccount
 {
     /// <summary>
+    /// Whether the Cross Margin account has been created
+    /// </summary>
+    public bool Created { get; set; }
+
+    /// <summary>
     /// Boolean indicating if this account can borrow
     /// </summary>
     public bool BorrowEnabled { get; set; }
@@ -16,9 +21,9 @@ public record BinanceMarginAccount
     public bool TradeEnabled { get; set; }
 
     /// <summary>
-    /// Boolean indicating if this account can transfer
+    /// Collateral margin level
     /// </summary>
-    public bool TransferEnabled { get; set; }
+    public decimal CollateralMarginLevel { get; set; }
 
     /// <summary>
     /// Aggregate level of margin
@@ -39,6 +44,28 @@ public record BinanceMarginAccount
     /// Aggregate total available net balance of BTC
     /// </summary>
     public decimal TotalNetAssetOfBtc { get; set; }
+
+    /// <summary>
+    /// Total collateral value in USDT
+    /// </summary>
+    [JsonProperty("TotalCollateralValueInUSDT")]
+    public decimal TotalCollateralValueInUsdt { get; set; }
+
+    /// <summary>
+    /// Total open-order loss in USDT
+    /// </summary>
+    [JsonProperty("totalOpenOrderLossInUSDT")]
+    public decimal TotalOpenOrderLossInUsdt { get; set; }
+
+    /// <summary>
+    /// Whether transfers into the account are enabled
+    /// </summary>
+    public bool TransferInEnabled { get; set; }
+
+    /// <summary>
+    /// Whether transfers out of the account are enabled
+    /// </summary>
+    public bool TransferOutEnabled { get; set; }
 
     /// <summary>
     /// Account type

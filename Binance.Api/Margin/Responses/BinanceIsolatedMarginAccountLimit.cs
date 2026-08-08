@@ -8,10 +8,10 @@ public record BinanceIsolatedMarginAccountLimit
     /// <summary>
     /// Current enabled accounts
     /// </summary>
-    public int EnabledAccount { get; set; }
+    public long EnabledAccount { get; set; }
 
     /// <summary>
     /// Max accounts
     /// </summary>
-    public int MaxAccount { get; set; }
+    public long MaxAccount { get; set; }
 }

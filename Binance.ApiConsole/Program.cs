@@ -155,15 +155,15 @@ internal class Program
         var margin_402 = await api.Margin.GetMarginMaxTransferAmountAsync("---ASSET---");
 
         // Margin > General Account Methods (PRIVATE)
-        var margin_501 = await api.Margin.AdjustMaximumLeverageAsync(20);
+        var margin_501 = await api.Margin.AdjustMaximumLeverageAsync(10);
         var margin_502 = await api.Margin.DisableIsolatedMarginAccountAsync("---SYMBOL---");
         var margin_503 = await api.Margin.EnableIsolatedMarginAccountAsync("---SYMBOL---");
         var margin_504 = await api.Margin.GetBnbBurnStatusAsync();
         var margin_505 = await api.Margin.GetMarginLevelInformationAsync();
         var margin_506 = await api.Margin.GetMarginAccountInfoAsync();
-        var margin_507 = await api.Margin.GetInterestMarginDataAsync();
+        var margin_507 = await api.Margin.GetCrossMarginFeeDataAsync();
         var margin_508 = await api.Margin.GetEnabledIsolatedMarginAccountLimitAsync();
-        var margin_509 = await api.Margin.GetIsolatedMarginAccountAsync();
+        var margin_509 = await api.Margin.GetIsolatedMarginAccountAsync(["BTCUSDT"]);
         var margin_510 = await api.Margin.GetIsolatedMarginFeeDataAsync();
         var margin_511 = await api.Margin.GetMarginCapitalFlowAsync();
 

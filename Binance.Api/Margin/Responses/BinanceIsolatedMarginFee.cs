@@ -8,7 +8,7 @@ public record BinanceIsolatedMarginFee
     /// <summary>
     /// Vip level
     /// </summary>
-    public int VipLevel { get; set; }
+    public long VipLevel { get; set; }
 
     /// <summary>
     /// Symbol
@@ -18,7 +18,7 @@ public record BinanceIsolatedMarginFee
     /// <summary>
     /// Leverage
     /// </summary>
-    public int Leverage { get; set; }
+    public string Leverage { get; set; } = string.Empty;
 
     /// <summary>
     /// Data

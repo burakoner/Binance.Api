@@ -9,17 +9,17 @@ public record BinanceMarginLevel
     /// The level at which your margin level is considered normal.
     /// </summary>
     [JsonProperty("normalBar")]
-    public double NormalLevel { get; set; } = 0.0;
+    public decimal NormalLevel { get; set; }
 
     /// <summary>
     /// The level at which you will be margin called (asked to deposit more funds)
     /// </summary>
     [JsonProperty("marginCallBar")]
-    public double MarginCallLevel { get; set; } = 0.0;
+    public decimal MarginCallLevel { get; set; }
 
     /// <summary>
     /// The level at which your positions will be liquidated until your account balances
     /// </summary>
     [JsonProperty("forceLiquidationBar")]
-    public double ForcedLiquidationLevel { get; set; } = 0.0;
+    public decimal ForcedLiquidationLevel { get; set; }
 }
