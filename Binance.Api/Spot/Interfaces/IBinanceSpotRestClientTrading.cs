@@ -67,7 +67,7 @@ public interface IBinanceSpotRestClientTrading
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#query-order-user_data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#get-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -75,7 +75,7 @@ public interface IBinanceSpotRestClientTrading
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The specific order</returns>
-    Task<RestCallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending order
@@ -134,17 +134,17 @@ public interface IBinanceSpotRestClientTrading
 
     /// <summary>
     /// Gets a list of open orders
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#current-open-orders-user_data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#get-open-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get open orders for, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of open orders</returns>
-    Task<RestCallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets all orders for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#all-orders-user_data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#all-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get orders for, for example `ETHUSDT`</param>
     /// <param name="orderId">If set, only orders with an order id higher than the provided will be returned</param>
@@ -154,7 +154,7 @@ public interface IBinanceSpotRestClientTrading
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of orders</returns>
-    Task<RestCallResult<List<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceSpotOrder>>> GetOrdersAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, decimal? receiveWindow = null, CancellationToken ct = default);
     
     // TODO: New order using SOR (TRADE)
 

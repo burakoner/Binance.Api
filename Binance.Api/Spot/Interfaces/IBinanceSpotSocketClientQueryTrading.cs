@@ -54,14 +54,15 @@ public interface IBinanceSpotSocketClientQueryTrading
 
     /// <summary>
     /// Get order by either orderId or clientOrderId
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#query-order-user_data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#order-status" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="orderId">Order id</param>
     /// <param name="origClientOrderId">Client order id</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, CancellationToken ct = default);
+    Task<CallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel an order by either orderId or clientOrderId
@@ -106,12 +107,13 @@ public interface IBinanceSpotSocketClientQueryTrading
 
     /// <summary>
     /// Get open orders
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/trading-requests#current-open-orders-user_data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#open-orders-status" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbols, for example `ETHUSDT`</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds; maximum 60000 with up to three decimal places</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<CallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, decimal? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all open orders for the symbol

@@ -163,6 +163,13 @@ var spot_401 = await api.Spot.GetAccountAsync();
 var spot_402 = await api.Spot.GetUserTradesAsync("BTCUSDT");
 var spot_403 = await api.Spot.GetRateLimitsAsync();
 var spot_404 = await api.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
+var spot_405 = await api.Spot.GetOrderListAsync(orderListId: 100000001);
+var spot_406 = await api.Spot.GetOrderListsAsync();
+var spot_407 = await api.Spot.GetOpenOrderListsAsync();
+var spot_408 = await api.Spot.GetAllocationsAsync("BTCUSDT");
+var spot_409 = await api.Spot.GetCommissionRatesAsync("BTCUSDT");
+var spot_410 = await api.Spot.GetOrderAmendmentsAsync("BTCUSDT", 100000001);
+var spot_411 = await api.Spot.GetAccountFiltersAsync("BTCUSDT");
 
 // Margin > General Market Data Methods (PUBLIC)
 var margin_101 = await api.Margin.GetCrossMarginCollateralRatioAsync();
@@ -889,9 +896,15 @@ var spot_309 = await ws.Spot.CancelOrdersAsync("BTCUSDT");
 var spot_401 = await ws.Spot.GetAccountAsync();
 var spot_402 = await ws.Spot.GetRateLimitsAsync();
 var spot_403 = await ws.Spot.GetOrdersAsync("BTCUSDT");
-var spot_404 = await ws.Spot.GetOcoOrdersAsync();
+var spot_404 = await ws.Spot.GetOrderListsAsync();
 var spot_405 = await ws.Spot.GetUserTradesAsync("BTCUSDT");
 var spot_406 = await ws.Spot.GetPreventedTradesAsync("BTCUSDT", orderId: 100000001);
+var spot_407 = await ws.Spot.GetOrderListAsync(orderListId: 100000001);
+var spot_408 = await ws.Spot.GetOpenOrderListsAsync();
+var spot_409 = await ws.Spot.GetAllocationsAsync("BTCUSDT");
+var spot_410 = await ws.Spot.GetCommissionRatesAsync("BTCUSDT");
+var spot_411 = await ws.Spot.GetOrderAmendmentsAsync("BTCUSDT", 100000001);
+var spot_412 = await ws.Spot.GetAccountFiltersAsync("BTCUSDT");
 
 // USDⓈ-M Futures Web Socket API -> General Methods (PUBLIC)
 var futures_101 = await ws.UsdFutures.PingAsync();

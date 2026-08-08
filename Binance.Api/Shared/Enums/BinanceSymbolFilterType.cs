@@ -105,5 +105,11 @@ public enum BinanceSymbolFilterType : byte
     /// Position Risk Control Filter
     /// </summary>
     [Map("POSITION_RISK_CONTROL")]
-    PositionRiskControl
+    PositionRiskControl,
+
+    /// <summary>
+    /// Restricts selling an asset until the specified time.
+    /// </summary>
+    [Map("T_PLUS_SELL")]
+    TPlusSell
 }

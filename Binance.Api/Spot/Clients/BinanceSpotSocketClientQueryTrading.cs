@@ -114,7 +114,7 @@ internal partial class BinanceSpotSocketClient
         return await RequestAsync<BinanceSpotOrderTest>("ws-api/v3", $"order.test", parameters, true, true, ct: ct).ConfigureAwait(false);
     }
 
-    public Task<CallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceSpotOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, decimal? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
         if (orderId == null && origClientOrderId == null)
@@ -124,6 +124,7 @@ internal partial class BinanceSpotSocketClient
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         return RequestAsync<BinanceSpotOrder>("ws-api/v3", $"order.status", parameters, true, true, weight: 4, ct: ct);
     }
@@ -214,10 +215,13 @@ internal partial class BinanceSpotSocketClient
 
     // TODO: Order Amend Keep Priority (TRADE)
 
-    public Task<CallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceSpotOrder>>> GetOpenOrdersAsync(string? symbol = null, decimal? receiveWindow = null, CancellationToken ct = default)
     {
+        if (symbol != null)
+            symbol.ValidateBinanceSymbol();
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
+        parameters.AddOptional("recvWindow", BinanceSpotAccountValidation.ReceiveWindow(_.ReceiveWindow(receiveWindow)));
 
         return RequestAsync<List<BinanceSpotOrder>>("ws-api/v3", $"openOrders.status", parameters, true, true, weight: symbol == null ? 80 : 6, ct: ct);
     }

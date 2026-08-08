@@ -17,6 +17,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.LotSize:
                 result = new BinanceSymbolLotSizeFilter
                 {
+                    QuantityExponent = obj["qtyExponent"] != null ? (int?)obj["qtyExponent"] : null,
                     MaxQuantity = (decimal)obj["maxQty"],
                     MinQuantity = (decimal)obj["minQty"],
                     StepSize = (decimal)obj["stepSize"]
@@ -25,6 +26,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.MarketLotSize:
                 result = new BinanceSymbolMarketLotSizeFilter
                 {
+                    QuantityExponent = obj["qtyExponent"] != null ? (int?)obj["qtyExponent"] : null,
                     MaxQuantity = (decimal)obj["maxQty"],
                     MinQuantity = (decimal)obj["minQty"],
                     StepSize = (decimal)obj["stepSize"]
@@ -33,6 +35,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.MinNotional:
                 result = new BinanceSymbolMinNotionalFilter
                 {
+                    PriceExponent = obj["priceExponent"] != null ? (int?)obj["priceExponent"] : null,
                     MinNotional = obj["minNotional"] != null ? (decimal)obj["minNotional"] : obj["notional"] != null ? (decimal)obj["notional"] : 0,
                     ApplyToMarketOrders = obj["applyToMarket"] != null ? (bool?)obj["applyToMarket"] : null,
                     AveragePriceMinutes = obj["avgPriceMins"] != null ? (int?)obj["avgPriceMins"] : null
@@ -41,6 +44,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.Notional:
                 result = new BinanceSymbolNotionalFilter
                 {
+                    PriceExponent = obj["priceExponent"] != null ? (int?)obj["priceExponent"] : null,
                     MinNotional = (decimal)obj["minNotional"],
                     MaxNotional = (decimal)obj["maxNotional"],
                     ApplyMinToMarketOrders = (bool)obj["applyMinToMarket"],
@@ -51,6 +55,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.Price:
                 result = new BinanceSymbolPriceFilter
                 {
+                    PriceExponent = obj["priceExponent"] != null ? (int?)obj["priceExponent"] : null,
                     MaxPrice = (decimal)obj["maxPrice"],
                     MinPrice = (decimal)obj["minPrice"],
                     TickSize = (decimal)obj["tickSize"]
@@ -78,6 +83,7 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.PricePercent:
                 result = new BinanceSymbolPercentPriceFilter
                 {
+                    MultiplierExponent = obj["multiplierExponent"] != null ? (int?)obj["multiplierExponent"] : null,
                     MultiplierUp = (decimal)obj["multiplierUp"],
                     MultiplierDown = (decimal)obj["multiplierDown"],
                     AveragePriceMinutes = obj["avgPriceMins"] != null ? (int)obj["avgPriceMins"] : null
@@ -86,12 +92,14 @@ internal class BinanceSymbolFilterConverter : JsonConverter
             case BinanceSymbolFilterType.MaxPosition:
                 result = new BinanceSymbolMaxPositionFilter
                 {
+                    QuantityExponent = obj["qtyExponent"] != null ? (int?)obj["qtyExponent"] : null,
                     MaxPosition = obj.ContainsKey("maxPosition") ? (decimal)obj["maxPosition"] : 0
                 };
                 break;
             case BinanceSymbolFilterType.PercentagePriceBySide:
                 result = new BinanceSymbolPercentPriceBySideFilter
                 {
+                    MultiplierExponent = obj["multiplierExponent"] != null ? (int?)obj["multiplierExponent"] : null,
                     AskMultiplierUp = (decimal)obj["askMultiplierUp"],
                     AskMultiplierDown = (decimal)obj["askMultiplierDown"],
                     BidMultiplierUp = (decimal)obj["bidMultiplierUp"],
@@ -126,6 +134,12 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                     MaxNumOrderLists = (int)obj["maxNumOrderLists"]
                 };
                 break;
+            case BinanceSymbolFilterType.TPlusSell:
+                result = new BinanceSymbolTPlusSellFilter
+                {
+                    EndTime = ((long)obj["endTime"]).ConvertFromMilliseconds()
+                };
+                break;
             default:
                 Trace.WriteLine($"{DateTime.Now:yyyy/MM/dd HH:mm:ss:fff} | Warning | Can't parse symbol filter of type: " + obj["filterType"]);
                 result = new BinanceSymbolFilter();
@@ -148,6 +162,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
         {
             case BinanceSymbolFilterType.LotSize:
                 var lotSizeFilter = (BinanceSymbolLotSizeFilter)filter;
+                writer.WritePropertyName("qtyExponent");
+                writer.WriteValue(lotSizeFilter.QuantityExponent);
                 writer.WritePropertyName("maxQty");
                 writer.WriteValue(lotSizeFilter.MaxQuantity);
                 writer.WritePropertyName("minQty");
@@ -157,6 +173,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 break;
             case BinanceSymbolFilterType.MarketLotSize:
                 var marketLotSizeFilter = (BinanceSymbolMarketLotSizeFilter)filter;
+                writer.WritePropertyName("qtyExponent");
+                writer.WriteValue(marketLotSizeFilter.QuantityExponent);
                 writer.WritePropertyName("maxQty");
                 writer.WriteValue(marketLotSizeFilter.MaxQuantity);
                 writer.WritePropertyName("minQty");
@@ -166,6 +184,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 break;
             case BinanceSymbolFilterType.MinNotional:
                 var minNotionalFilter = (BinanceSymbolMinNotionalFilter)filter;
+                writer.WritePropertyName("priceExponent");
+                writer.WriteValue(minNotionalFilter.PriceExponent);
                 writer.WritePropertyName("minNotional");
                 writer.WriteValue(minNotionalFilter.MinNotional);
                 writer.WritePropertyName("applyToMarket");
@@ -175,6 +195,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 break;
             case BinanceSymbolFilterType.Price:
                 var priceFilter = (BinanceSymbolPriceFilter)filter;
+                writer.WritePropertyName("priceExponent");
+                writer.WriteValue(priceFilter.PriceExponent);
                 writer.WritePropertyName("maxPrice");
                 writer.WriteValue(priceFilter.MaxPrice);
                 writer.WritePropertyName("minPrice");
@@ -189,6 +211,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 break;
             case BinanceSymbolFilterType.MaxPosition:
                 var maxPositionFilter = (BinanceSymbolMaxPositionFilter)filter;
+                writer.WritePropertyName("qtyExponent");
+                writer.WriteValue(maxPositionFilter.QuantityExponent);
                 writer.WritePropertyName("maxPosition");
                 writer.WriteValue(maxPositionFilter.MaxPosition);
                 break;
@@ -204,6 +228,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 break;
             case BinanceSymbolFilterType.PricePercent:
                 var pricePercentFilter = (BinanceSymbolPercentPriceFilter)filter;
+                writer.WritePropertyName("multiplierExponent");
+                writer.WriteValue(pricePercentFilter.MultiplierExponent);
                 writer.WritePropertyName("multiplierUp");
                 writer.WriteValue(pricePercentFilter.MultiplierUp);
                 writer.WritePropertyName("multiplierDown");
@@ -237,8 +263,15 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 writer.WritePropertyName("maxNumOrderLists");
                 writer.WriteValue(maxOrderLists.MaxNumOrderLists);
                 break;
+            case BinanceSymbolFilterType.TPlusSell:
+                var tPlusSell = (BinanceSymbolTPlusSellFilter)filter;
+                writer.WritePropertyName("endTime");
+                writer.WriteValue(tPlusSell.EndTime.ConvertToMilliseconds());
+                break;
             case BinanceSymbolFilterType.PercentagePriceBySide:
                 var pricePercentSideBySideFilter = (BinanceSymbolPercentPriceBySideFilter)filter;
+                writer.WritePropertyName("multiplierExponent");
+                writer.WriteValue(pricePercentSideBySideFilter.MultiplierExponent);
                 writer.WritePropertyName("askMultiplierUp");
                 writer.WriteValue(pricePercentSideBySideFilter.AskMultiplierUp);
                 writer.WritePropertyName("askMultiplierDown");
@@ -252,6 +285,8 @@ internal class BinanceSymbolFilterConverter : JsonConverter
                 break;
             case BinanceSymbolFilterType.Notional:
                 var notionalFilter = (BinanceSymbolNotionalFilter)filter;
+                writer.WritePropertyName("priceExponent");
+                writer.WriteValue(notionalFilter.PriceExponent);
                 writer.WritePropertyName("minNotional");
                 writer.WriteValue(notionalFilter.MinNotional);
                 writer.WritePropertyName("maxNotional");

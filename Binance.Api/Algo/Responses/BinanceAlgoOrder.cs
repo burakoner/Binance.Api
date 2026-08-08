@@ -74,9 +74,7 @@ public record BinanceAlgoOrder
     /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
-    public string RequestClientAlgoId => ClientAlgoId
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
+    public string RequestClientAlgoId => BinanceHelpers.RemoveBrokerId(ClientAlgoId);
 
     /// <summary>
     /// Book time

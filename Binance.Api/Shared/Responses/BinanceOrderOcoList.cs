@@ -38,9 +38,7 @@ public record BinanceOrderOcoList
     /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
-    public string RequestListClientOrderId => ListClientOrderId
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
+    public string RequestListClientOrderId => BinanceHelpers.RemoveBrokerId(ListClientOrderId);
 
     /// <summary>
     /// The transaction time
@@ -87,9 +85,7 @@ public record BinanceOrderId
     /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
-    public string RequestClientOrderId => ClientOrderId
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
+    public string RequestClientOrderId => BinanceHelpers.RemoveBrokerId(ClientOrderId);
 }
 
 /// <summary>

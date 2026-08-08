@@ -18,6 +18,11 @@ public record BinanceSymbolFilter
 public record BinanceSymbolPriceFilter : BinanceSymbolFilter
 {
     /// <summary>
+    /// The decimal exponent used for prices.
+    /// </summary>
+    public int? PriceExponent { get; set; }
+
+    /// <summary>
     /// The minimal price the order can be for
     /// </summary>
     public decimal MinPrice { get; set; }
@@ -39,6 +44,11 @@ public record BinanceSymbolPriceFilter : BinanceSymbolFilter
 public record BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
 {
     /// <summary>
+    /// The decimal exponent used for multipliers.
+    /// </summary>
+    public int? MultiplierExponent { get; set; }
+
+    /// <summary>
     /// The max factor the price can deviate up
     /// </summary>
     public decimal MultiplierUp { get; set; }
@@ -59,6 +69,11 @@ public record BinanceSymbolPercentPriceFilter : BinanceSymbolFilter
 /// </summary>
 public record BinanceSymbolPercentPriceBySideFilter : BinanceSymbolFilter
 {
+    /// <summary>
+    /// The decimal exponent used for multipliers.
+    /// </summary>
+    public int? MultiplierExponent { get; set; }
+
     /// <summary>
     /// The max factor the price can deviate up for buys
     /// </summary>
@@ -91,6 +106,11 @@ public record BinanceSymbolPercentPriceBySideFilter : BinanceSymbolFilter
 public record BinanceSymbolLotSizeFilter : BinanceSymbolFilter
 {
     /// <summary>
+    /// The decimal exponent used for quantities.
+    /// </summary>
+    public int? QuantityExponent { get; set; }
+
+    /// <summary>
     /// The minimal quantity of an order
     /// </summary>
     public decimal MinQuantity { get; set; }
@@ -111,6 +131,11 @@ public record BinanceSymbolLotSizeFilter : BinanceSymbolFilter
 /// </summary>
 public record BinanceSymbolMarketLotSizeFilter : BinanceSymbolFilter
 {
+    /// <summary>
+    /// The decimal exponent used for quantities.
+    /// </summary>
+    public int? QuantityExponent { get; set; }
+
     /// <summary>
     /// The minimal quantity of an order
     /// </summary>
@@ -133,6 +158,11 @@ public record BinanceSymbolMarketLotSizeFilter : BinanceSymbolFilter
 public record BinanceSymbolMinNotionalFilter : BinanceSymbolFilter
 {
     /// <summary>
+    /// The decimal exponent used for prices.
+    /// </summary>
+    public int? PriceExponent { get; set; }
+
+    /// <summary>
     /// The minimal total quote quantity of an order. This is calculated by Price * Quantity.
     /// </summary>
     public decimal MinNotional { get; set; }
@@ -153,6 +183,11 @@ public record BinanceSymbolMinNotionalFilter : BinanceSymbolFilter
 /// </summary>
 public record BinanceSymbolNotionalFilter : BinanceSymbolFilter
 {
+    /// <summary>
+    /// The decimal exponent used for prices.
+    /// </summary>
+    public int? PriceExponent { get; set; }
+
     /// <summary>
     /// The minimal total quote quantity of an order. This is calculated by Price * Quantity.
     /// </summary>
@@ -218,6 +253,11 @@ public record BinanceSymbolIcebergPartsFilter : BinanceSymbolFilter
 public record BinanceSymbolMaxPositionFilter : BinanceSymbolFilter
 {
     /// <summary>
+    /// The decimal exponent used for quantities.
+    /// </summary>
+    public int? QuantityExponent { get; set; }
+
+    /// <summary>
     /// The MaxPosition filter defines the allowed maximum position an account can have on the base asset of a symbol.
     /// </summary>
     public decimal MaxPosition { get; set; }
@@ -280,4 +320,16 @@ public record BinanceSymbolMaxOrderListsFilter : BinanceSymbolFilter
     /// Maximum number of open order lists.
     /// </summary>
     public int MaxNumOrderLists { get; set; }
+}
+
+/// <summary>
+/// Restricts selling an asset until a specified time.
+/// </summary>
+public record BinanceSymbolTPlusSellFilter : BinanceSymbolFilter
+{
+    /// <summary>
+    /// The time after which selling is allowed.
+    /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime EndTime { get; set; }
 }

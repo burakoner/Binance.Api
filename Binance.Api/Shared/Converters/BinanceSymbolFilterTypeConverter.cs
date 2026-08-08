@@ -22,5 +22,6 @@ internal class BinanceSymbolFilterTypeConverter : BaseConverter<BinanceSymbolFil
         new KeyValuePair<BinanceSymbolFilterType, string>(BinanceSymbolFilterType.IcebergOrders, "MAX_NUM_ICEBERG_ORDERS"),
         new KeyValuePair<BinanceSymbolFilterType, string>(BinanceSymbolFilterType.MaxNumberOrderAmends, "MAX_NUM_ORDER_AMENDS"),
         new KeyValuePair<BinanceSymbolFilterType, string>(BinanceSymbolFilterType.MaxNumberOrderLists, "MAX_NUM_ORDER_LISTS"),
+        new KeyValuePair<BinanceSymbolFilterType, string>(BinanceSymbolFilterType.TPlusSell, "T_PLUS_SELL"),
     };
 }

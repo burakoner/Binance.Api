@@ -102,6 +102,15 @@ public static class BinanceHelpers
     /// </summary>
     public const string ClientOrderIdSeparator = "-";
 
+    internal static string RemoveBrokerId(string clientOrderId)
+    {
+        if (clientOrderId.StartsWith(BinanceConstants.ClientOrderIdPrefixSpot, StringComparison.Ordinal))
+            return clientOrderId.Substring(BinanceConstants.ClientOrderIdPrefixSpot.Length);
+        if (clientOrderId.StartsWith(BinanceConstants.ClientOrderIdPrefixFutures, StringComparison.Ordinal))
+            return clientOrderId.Substring(BinanceConstants.ClientOrderIdPrefixFutures.Length);
+        return clientOrderId;
+    }
+
     /// <summary>
     /// Apply broker id to a client order id
     /// </summary>

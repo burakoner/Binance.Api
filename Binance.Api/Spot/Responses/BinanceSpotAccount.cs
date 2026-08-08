@@ -6,28 +6,28 @@
 public record BinanceSpotAccount
 {
     /// <summary>
-    /// Fee percentage to pay when making trades
+    /// Legacy maker commission value in basis points.
     /// </summary>
     [JsonProperty("makerCommission")]
-    public decimal MakerFee { get; set; }
+    public long MakerCommission { get; set; }
 
     /// <summary>
-    /// Fee percentage to pay when taking trades
+    /// Legacy taker commission value in basis points.
     /// </summary>
     [JsonProperty("takerCommission")]
-    public decimal TakerFee { get; set; }
+    public long TakerCommission { get; set; }
 
     /// <summary>
-    /// Fee percentage to pay when buying
+    /// Legacy buyer commission value in basis points.
     /// </summary>
     [JsonProperty("buyerCommission")]
-    public decimal BuyerFee { get; set; }
+    public long BuyerCommission { get; set; }
 
     /// <summary>
-    /// Fee percentage to pay when selling
+    /// Legacy seller commission value in basis points.
     /// </summary>
     [JsonProperty("sellerCommission")]
-    public decimal SellerFee { get; set; }
+    public long SellerCommission { get; set; }
 
     /// <summary>
     /// Commission rates for this account

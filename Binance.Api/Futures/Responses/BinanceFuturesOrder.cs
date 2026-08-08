@@ -32,9 +32,7 @@ public record BinanceFuturesOrder
     /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
-    public string RequestClientOrderId => ClientOrderId
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
+    public string RequestClientOrderId => BinanceHelpers.RemoveBrokerId(ClientOrderId);
 
     /// <summary>
     /// The price of the order

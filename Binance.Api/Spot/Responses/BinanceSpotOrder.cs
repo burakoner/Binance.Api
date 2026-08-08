@@ -29,9 +29,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
-    public string RequestClientOrderId => ClientOrderId
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
+    public string RequestClientOrderId => BinanceHelpers.RemoveBrokerId(ClientOrderId);
 
     /// <summary>
     /// Original order id
@@ -42,9 +40,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// The original order id as assigned by the client without the prefix
     /// </summary>
-    public string RequestOriginalClientOrderId => ClientOrderId
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixSpot.ToCharArray())
-        .TrimStart(BinanceConstants.ClientOrderIdPrefixFutures.ToCharArray());
+    public string RequestOriginalClientOrderId => BinanceHelpers.RemoveBrokerId(OriginalClientOrderId);
 
     /// <summary>
     /// Transaction Time
@@ -123,7 +119,7 @@ public record BinanceSpotOrder
     /// <summary>
     /// Is Working
     /// </summary>
-    public DateTime? IsWorking { get; set; }
+    public bool IsWorking { get; set; }
 
     /// <summary>
     /// When the order started working
@@ -147,6 +143,77 @@ public record BinanceSpotOrder
     /// Self trade prevention mode
     /// </summary>
     public BinanceSelfTradePreventionMode SelfTradePreventionMode { get; set; }
+
+    /// <summary>
+    /// Prevented match identifier, when the order expired due to self-trade prevention.
+    /// </summary>
+    public long? PreventedMatchId { get; set; }
+
+    /// <summary>
+    /// Quantity prevented from matching by self-trade prevention.
+    /// </summary>
+    public decimal? PreventedQuantity { get; set; }
+
+    /// <summary>
+    /// Strategy identifier supplied during order placement.
+    /// </summary>
+    public long? StrategyId { get; set; }
+
+    /// <summary>
+    /// Strategy type supplied during order placement.
+    /// </summary>
+    public long? StrategyType { get; set; }
+
+    /// <summary>
+    /// Trailing delta in basis points.
+    /// </summary>
+    public long? TrailingDelta { get; set; }
+
+    /// <summary>
+    /// Time at which a trailing-stop order became active.
+    /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? TrailingTime { get; set; }
+
+    /// <summary>
+    /// Whether Smart Order Routing was used.
+    /// </summary>
+    [JsonProperty("usedSor")]
+    public bool? UsedSmartOrderRouting { get; set; }
+
+    /// <summary>
+    /// Working floor for an order that may have allocations.
+    /// </summary>
+    public string? WorkingFloor { get; set; }
+
+    /// <summary>
+    /// Pegged-price type.
+    /// </summary>
+    [JsonProperty("pegPriceType")]
+    public string? PeggedPriceType { get; set; }
+
+    /// <summary>
+    /// Pegged-price offset type.
+    /// </summary>
+    [JsonProperty("pegOffsetType")]
+    public string? PeggedOffsetType { get; set; }
+
+    /// <summary>
+    /// Pegged-price offset value.
+    /// </summary>
+    [JsonProperty("pegOffsetValue")]
+    public long? PeggedOffsetValue { get; set; }
+
+    /// <summary>
+    /// Current pegged price.
+    /// </summary>
+    public decimal? PeggedPrice { get; set; }
+
+    /// <summary>
+    /// Reason the order expired.
+    /// </summary>
+    [JsonConverter(typeof(MapConverter))]
+    public BinanceSpotOrderExpiryReason? ExpiryReason { get; set; }
 
     /// <summary>
     /// Trades for the order

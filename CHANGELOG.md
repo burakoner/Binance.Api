@@ -17,6 +17,8 @@
   * Aligned Spot market streams with reference-price, block-trade, average-price, UTC+8 kline, microsecond timestamp, stream-limit, testnet-host, and server-shutdown contracts
   * Removed retired buyer/seller order IDs from Spot trade stream events and mapped the remaining ignored field correctly
   * Removed the retired Spot all-market ticker stream (`!ticker@arr`) overload and examples
+  * Aligned Spot Account REST and WebSocket API queries with the current routes, request weights, fractional receive windows, parameter constraints, order-list, allocation, commission, amendment, account-filter, and conditional order response contracts
+  * Fixed broker client-order ID cleanup removing valid leading characters when an ID did not start with the exact Binance broker prefix
   * Added a request-level test project for endpoint contract regression coverage
 
 * Version 5.10.19 - 19 Oct 2025
