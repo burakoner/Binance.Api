@@ -33,12 +33,13 @@ public class BinanceMarginRestClientTradeTests
         {
             AutoTimestamp = false,
             HttpClient = httpClient,
-            RateLimiterEnabled = false
+            RateLimiterEnabled = false,
+            AllowAppendingClientOrderId = true
         });
 
         var result = await client.Margin.CancelMarginOrderAsync(
             "BTCUSDT",
-            orderId: 28,
+            origClientOrderId: "original-order",
             newClientOrderId: "cancel-order",
             isIsolated: false,
             receiveWindow: 5_000);
@@ -50,8 +51,8 @@ public class BinanceMarginRestClientTradeTests
         var query = Uri.UnescapeDataString(handler.RequestUri.Query);
         Assert.Contains("signature=", query);
         Assert.Contains("symbol=BTCUSDT", query);
-        Assert.Contains("orderId=28", query);
-        Assert.Contains("newClientOrderId=cancel-order", query);
+        Assert.Contains("origClientOrderId=original-order", query);
+        Assert.Contains("newClientOrderId=x-QQCDRXG2-cancel-order", query);
         Assert.Contains("isIsolated=FALSE", query);
         Assert.Contains("recvWindow=5000", query);
         Assert.Contains("timestamp=", query);
@@ -91,12 +92,12 @@ public class BinanceMarginRestClientTradeTests
         }
 
         var cancelOcoHandler = new RecordingHttpMessageHandler("""{"orderListId":7,"orders":[],"orderReports":[]}""");
-        using (var client = CreateClient(cancelOcoHandler))
+        using (var client = CreateClient(cancelOcoHandler, allowAppendingClientOrderId: true))
         {
             var result = await client.Margin.CancelMarginOcoOrderAsync(
                 "BTCUSDT",
                 isIsolated: false,
-                orderListId: 7,
+                listClientOrderId: "original-list",
                 newClientOrderId: "cancel-list");
 
             Assert.True(result.Success);
@@ -104,8 +105,8 @@ public class BinanceMarginRestClientTradeTests
             Assert.Equal("/sapi/v1/margin/orderList", cancelOcoHandler.RequestUri!.AbsolutePath);
             Assert.Null(cancelOcoHandler.Body);
             var query = Uri.UnescapeDataString(cancelOcoHandler.RequestUri.Query);
-            Assert.Contains("orderListId=7", query);
-            Assert.Contains("newClientOrderId=cancel-list", query);
+            Assert.Contains("listClientOrderId=original-list", query);
+            Assert.Contains("newClientOrderId=x-QQCDRXG2-cancel-list", query);
             Assert.Contains("isIsolated=FALSE", query);
         }
     }
@@ -419,6 +420,43 @@ public class BinanceMarginRestClientTradeTests
     }
 
     [Fact]
+    public async Task SmallLiabilityExchange_SendsBoundedAssetListAndCurrentWeight()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler("{}");
+        using var client = CreateClient(handler, limiter);
+
+        var result = await client.Margin.SmallLiabilityExchangeAsync(["BTC", "ETH"], 5_000);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Post, handler.Method);
+        Assert.Equal("/sapi/v1/margin/exchange-small-liability", handler.RequestUri!.AbsolutePath);
+        var body = Uri.UnescapeDataString(handler.Body!);
+        Assert.Contains("assetNames=BTC,ETH", body);
+        Assert.Contains("recvWindow=5000", body);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/sapi/v1/margin/exchange-small-liability" && item.Weight == 3_000);
+    }
+
+    [Fact]
+    public async Task MarginTradeMutations_RejectUnsafeIdentifiersAssetListsAndReceiveWindows()
+    {
+        using var client = CreateClient(new RecordingHttpMessageHandler("{}"));
+
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.CancelMarginOrderAsync("BTCUSDT", orderId: 1, origClientOrderId: " "));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.CancelMarginOcoOrderAsync("BTCUSDT", orderListId: 1, listClientOrderId: " "));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.CancelAllMarginOrdersAsync("BTCUSDT", receiveWindow: 60_001));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.CancelMarginOrderAsync("BTCUSDT", orderId: 1, receiveWindow: 60_001));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.CancelMarginOcoOrderAsync("BTCUSDT", orderListId: 1, receiveWindow: 60_001));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.PlaceMarginOrderAsync("BTCUSDT", BinanceOrderSide.Buy, BinanceSpotOrderType.Market, quantity: 1, receiveWindow: 60_001));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.PlaceMarginOCOOrderAsync("BTCUSDT", BinanceOrderSide.Buy, 1, 2, 3, receiveWindow: 60_001));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => client.Margin.SmallLiabilityExchangeAsync(null!));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.SmallLiabilityExchangeAsync([]));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.SmallLiabilityExchangeAsync(Enumerable.Repeat("BTC", 11)));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.SmallLiabilityExchangeAsync(["BTC,ETH"]));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.SmallLiabilityExchangeAsync(["BTC"], 60_001));
+    }
+
+    [Fact]
     public async Task MarginOrderCountUsage_SendsScopeAndReadsInt64Counters()
     {
         var limiter = new RecordingRateLimiter();
@@ -551,13 +589,17 @@ public class BinanceMarginRestClientTradeTests
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.GetSmallLiabilityExchangeAssetsAsync(60_001));
     }
 
-    private static BinanceRestApiClient CreateClient(RecordingHttpMessageHandler handler, IRateLimiter? limiter = null)
+    private static BinanceRestApiClient CreateClient(
+        RecordingHttpMessageHandler handler,
+        IRateLimiter? limiter = null,
+        bool allowAppendingClientOrderId = false)
     {
         var options = new BinanceRestApiClientOptions(new ApiCredentials("api-key", "api-secret"))
         {
             AutoTimestamp = false,
             HttpClient = new HttpClient(handler),
-            RateLimiterEnabled = limiter != null
+            RateLimiterEnabled = limiter != null,
+            AllowAppendingClientOrderId = allowAppendingClientOrderId
         };
 #pragma warning disable CS0612
         options.RateLimiters = limiter == null ? [] : [limiter];

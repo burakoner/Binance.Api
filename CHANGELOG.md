@@ -25,6 +25,9 @@
   * Aligned both Margin Transfer queries, including the missing asset filter, optional direction, 30-day range, 64-bit pagination and response fields, raw undefined-unit timestamps, and canonical links
   * Aligned all read-only Margin Trade queries, including current public names, pagination names and types, account-scope fields, boolean encoding, 24-hour ranges, receive-window validation, 64-bit counters, exact client-order identifiers, and current response schemas
   * Added all six current Margin Special Key operations with signed parameter placement, key and IP targeting, permission modes, destructive-scope guards, non-value-formatted key models, and current account weights
+  * Fixed Margin cancellation calls altering caller-supplied existing client-order identifiers when broker ID appending is enabled; only newly created cancellation identifiers are now prefixed
+  * Enforced the 60000-millisecond receive-window ceiling across Margin order mutations and the documented one-to-ten-asset limit for small-liability exchange
+  * Made the executable console sample network-safe by default; live balance-changing examples now require both an explicit command-line flag and exact typed confirmation
   * Fixed Isolated Margin account disable requests sending signed DELETE parameters in a form body instead of the documented query string
   * Enforced the documented 90-day availability window for explicit Margin capital-flow time filters
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters

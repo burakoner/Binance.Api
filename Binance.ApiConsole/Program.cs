@@ -27,12 +27,26 @@ internal class Program
     {
         Console.WriteLine("Binance API Console App");
         Console.WriteLine("===================================");
-        Console.WriteLine("This is a sample console application to demonstrate the usage of the Binance API.");
-        Console.WriteLine("Please ensure you have the necessary API keys and permissions to access the Binance API.");
+        Console.WriteLine("WARNING: This sample includes live order, borrow, repay, transfer, and cancellation calls.");
+        Console.WriteLine("No Binance request is sent unless live execution is explicitly enabled.");
         Console.WriteLine("===================================");
-        Console.WriteLine("Press any key to start...");
-        Console.ReadKey(true);
-        Console.WriteLine("Starting...");
+
+        if (!args.Contains("--run-live-examples", StringComparer.Ordinal))
+        {
+            Console.WriteLine("Stopped safely. Pass --run-live-examples only after reviewing and editing every example.");
+            return;
+        }
+
+        const string confirmation = "RUN LIVE BINANCE EXAMPLES";
+        Console.WriteLine("Live execution was requested. These calls can change balances and open or cancel orders.");
+        Console.Write($"Type {confirmation} to continue: ");
+        if (!string.Equals(Console.ReadLine(), confirmation, StringComparison.Ordinal))
+        {
+            Console.WriteLine("Confirmation did not match. No Binance request was sent.");
+            return;
+        }
+
+        Console.WriteLine("Starting live examples...");
 
         await RestApiExamplesAsync();
         await WebSocketApiQueryExamplesAsync();

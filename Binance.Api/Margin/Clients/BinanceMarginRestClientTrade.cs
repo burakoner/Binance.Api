@@ -161,7 +161,7 @@ internal partial class BinanceMarginRestClient
                 { "symbol", symbol }
             };
         parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceMarginCanceledOrder>>(GetUrl(sapi, v1, "margin/openOrders"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
@@ -169,11 +169,11 @@ internal partial class BinanceMarginRestClient
     public Task<RestCallResult<BinanceMarginOrderOcoList>> CancelMarginOcoOrderAsync(string symbol, bool? isIsolated = null, long? orderListId = null, string? listClientOrderId = null, string? newClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
-        if (!orderListId.HasValue && string.IsNullOrEmpty(listClientOrderId))
+        if (!orderListId.HasValue && string.IsNullOrWhiteSpace(listClientOrderId))
             throw new ArgumentException("Either orderListId or listClientOrderId must be sent");
 
-        if (listClientOrderId != null)
-            listClientOrderId = BinanceHelpers.ApplyBrokerId(listClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
+        if (listClientOrderId != null && string.IsNullOrWhiteSpace(listClientOrderId))
+            throw new ArgumentException("listClientOrderId cannot be empty when provided", nameof(listClientOrderId));
 
         if (newClientOrderId != null)
             newClientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
@@ -186,7 +186,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("orderListId", orderListId);
         parameters.AddOptional("listClientOrderId", listClientOrderId);
         parameters.AddOptional("newClientOrderId", newClientOrderId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/orderList"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
@@ -194,11 +194,11 @@ internal partial class BinanceMarginRestClient
     public async Task<RestCallResult<BinanceSpotOrderBase>> CancelMarginOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, string? newClientOrderId = null, bool? isIsolated = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
-        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
+        if (!orderId.HasValue && string.IsNullOrWhiteSpace(origClientOrderId))
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
 
-        if (origClientOrderId != null)
-            origClientOrderId = BinanceHelpers.ApplyBrokerId(origClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
+        if (origClientOrderId != null && string.IsNullOrWhiteSpace(origClientOrderId))
+            throw new ArgumentException("origClientOrderId cannot be empty when provided", nameof(origClientOrderId));
 
         if (newClientOrderId != null)
             newClientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
@@ -211,7 +211,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("isIsolated", BinanceMarginOrderListRequestBuilder.FormatBoolean(isIsolated));
         parameters.AddOptional("newClientOrderId", newClientOrderId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
 
         var result = await RequestAsync<BinanceSpotOrderBase>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 10).ConfigureAwait(false);
@@ -240,6 +240,7 @@ internal partial class BinanceMarginRestClient
         CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
+        var normalizedReceiveWindow = ValidateMarginReceiveWindow(receiveWindow);
         if (stopLimitPrice.HasValue && !stopLimitTimeInForce.HasValue)
             throw new ArgumentException("stopLimitTimeInForce is required when stopLimitPrice is provided", nameof(stopLimitTimeInForce));
 
@@ -255,7 +256,7 @@ internal partial class BinanceMarginRestClient
         stopPrice = rulesCheck.StopPrice!.Value;
 
         limitClientOrderId = BinanceHelpers.ApplyBrokerId(limitClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
-        stopClientOrderId = BinanceHelpers.ApplyBrokerId(stopClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId); ;
+        stopClientOrderId = BinanceHelpers.ApplyBrokerId(stopClientOrderId, BinanceConstants.ClientOrderIdSpot, 36, RestOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection
         {
@@ -277,7 +278,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalEnum("stopLimitTimeInForce", stopLimitTimeInForce);
         parameters.AddOptional("autoRepayAtCancel", autoRepayAtCancel);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", normalizedReceiveWindow);
 
         return await RequestAsync<BinanceMarginOrderOcoList>(GetUrl(sapi, v1, "margin/order/oco"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: BinanceMarginOrderListRequestBuilder.RequestWeight(sideEffectType)).ConfigureAwait(false);
     }
@@ -346,6 +347,7 @@ internal partial class BinanceMarginRestClient
         CancellationToken ct = default)
     {
         symbol.ValidateBinanceSymbol();
+        var normalizedReceiveWindow = ValidateMarginReceiveWindow(receiveWindow);
         if (quoteQuantity != null && type != BinanceSpotOrderType.Market)
             throw new ArgumentException("quoteQuantity is only valid for market orders");
 
@@ -384,7 +386,7 @@ internal partial class BinanceMarginRestClient
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
         parameters.AddOptional("trailingDelta", trailingDelta);
         parameters.AddOptional("autoRepayAtCancel", autoRepayAtCancel);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", normalizedReceiveWindow);
 
         var result = await RequestAsync<BinancePlacedOrder>(GetUrl(sapi, v1, "margin/order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: BinanceMarginOrderListRequestBuilder.RequestWeight(sideEffectType)).ConfigureAwait(false);
         if (result) InvokeOrderPlaced(result.Data.Id);
@@ -596,13 +598,23 @@ internal partial class BinanceMarginRestClient
 
     public async Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (assets == null)
+            throw new ArgumentNullException(nameof(assets));
+        var assetList = assets.ToArray();
+        if (assetList.Length is < 1 or > 10)
+            throw new ArgumentOutOfRangeException(nameof(assets), "assets must contain between 1 and 10 entries");
+        if (assetList.Any(string.IsNullOrWhiteSpace))
+            throw new ArgumentException("assets cannot contain an empty entry", nameof(assets));
+        if (assetList.Any(asset => asset.Contains(',')))
+            throw new ArgumentException("an individual asset cannot contain a comma", nameof(assets));
+
         var parameters = new ParameterCollection()
         {
-            { "assetNames", string.Join(",", assets) }
+            { "assetNames", string.Join(",", assetList) }
         };
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<object>(GetUrl(sapi, v1, "margin/exchange-small-liability"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
+        var result = await RequestAsync<object>(GetUrl(sapi, v1, "margin/exchange-small-liability"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3_000).ConfigureAwait(false);
         return result.As(result.Success);
     }
 

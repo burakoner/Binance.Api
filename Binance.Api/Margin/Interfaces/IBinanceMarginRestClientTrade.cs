@@ -337,13 +337,14 @@ public interface IBinanceMarginRestClientTrade
         CancellationToken ct = default);
 
     /// <summary>
-    /// Cross Margin Small Liability Exchange
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/trade/Small-Liability-Exchange" /></para>
+    /// Converts up to ten Cross Margin small-liability assets. Binance permits one conversion per six hours
+    /// and only liabilities valued below 10 USDT.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#small-liability-exchange" /></para>
     /// </summary>
-    /// <param name="assets">Assets, for example `ETH`</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <param name="assets">Between one and ten asset codes, for example <c>ETH</c>.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>Whether Binance accepted the conversion.</returns>
     Task<RestCallResult<bool>> SmallLiabilityExchangeAsync(IEnumerable<string> assets, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
