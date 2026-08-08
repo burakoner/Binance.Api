@@ -7,7 +7,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 {
     /// <summary>
     /// Gets the order book for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#order-book" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#depth" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="limit">Number of entries</param>
@@ -18,7 +18,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Gets the recent trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#recent-trades" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#trades-recent" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="limit">Max results</param>
@@ -28,7 +28,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Gets the historical trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#historical-trades" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#trades-historical" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="fromId">Filter by from trade id</param>
@@ -39,12 +39,13 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Gets historical block trades.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#block-trades-historical" /></para>
     /// </summary>
     Task<CallResult<List<BinanceSpotBlockTrade>>> GetHistoricalBlockTradesAsync(string symbol, long fromId, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets compressed, aggregate trades. Trades that fill at the same time, from the same order, with the same price will have the quantity aggregated.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#aggregate-trades" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#trades-aggregate" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="fromId">Filter by from trade id</param>
@@ -57,7 +58,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get candlestick data for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#klines" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#klines" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="interval">Kline interval</param>
@@ -71,7 +72,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get candlestick data for the provided symbol. Returns modified kline data, optimized for the presentation of candlestick charts
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#ui-klines" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ui-klines" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="interval">Kline interval</param>
@@ -85,7 +86,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Gets the current average price for a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#current-average-price" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#avg-price" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="ct">Cancellation token</param>
@@ -94,17 +95,19 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Gets the current reference price for a symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#reference-price" /></para>
     /// </summary>
     Task<CallResult<BinanceSpotReferencePrice>> GetReferencePriceAsync(string symbol, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the reference-price calculation configuration for a symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#reference-price-calculation" /></para>
     /// </summary>
     Task<CallResult<BinanceSpotReferencePriceCalculation>> GetReferencePriceCalculationAsync(string symbol, BinanceSpotSymbolStatusFilter? status = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -114,7 +117,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -124,7 +127,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -133,7 +136,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -143,7 +146,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -153,7 +156,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/market-data-requests#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -162,7 +165,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get Price change statistics for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="timeZone">Default: 0 (UTC)</param>
@@ -173,7 +176,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get Price change statistics for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="timeZone">Default: 0 (UTC)</param>
@@ -184,7 +187,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get Price change statistics for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="timeZone">Default: 0 (UTC)</param>
@@ -195,7 +198,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get Price change statistics for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="timeZone">Default: 0 (UTC)</param>
@@ -208,7 +211,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// Get rolling window price change statistics with a custom window.
     /// This request is similar to ticker.24hr, but statistics are computed on demand using the arbitrary window you specify.
     /// Note: Window size precision is limited to 1 minute.While the closeTime is the current time of the request, openTime always start on a minute boundary.As such, the effective window might be up to 59999 ms wider than the requested windowSize.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#rolling-window-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker" /></para>
     /// </summary>
     /// <param name="symbol">Query ticker of a single symbol</param>
     /// <param name="windowSize">Default 1d</param>
@@ -221,7 +224,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
     /// Get rolling window price change statistics with a custom window.
     /// This request is similar to ticker.24hr, but statistics are computed on demand using the arbitrary window you specify.
     /// Note: Window size precision is limited to 1 minute.While the closeTime is the current time of the request, openTime always start on a minute boundary.As such, the effective window might be up to 59999 ms wider than the requested windowSize.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#rolling-window-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker" /></para>
     /// </summary>
     /// <param name="symbols">Query ticker for multiple symbols</param>
     /// <param name="windowSize">Default 1d</param>
@@ -242,7 +245,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get the latest market price for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-price-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-price" /></para>
     /// </summary>
     /// <param name="symbol">Query price for a single symbol</param>
     /// <param name="ct">Cancellation token</param>
@@ -252,7 +255,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get the latest market price for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-price-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-price" /></para>
     /// </summary>
     /// <param name="symbols">Query price for multiple symbols</param>
     /// <param name="ct">Cancellation token</param>
@@ -262,7 +265,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get the latest market price for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-price-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-price" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -271,7 +274,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get the current best price and quantity on the order book.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-order-book-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-book" /></para>
     /// </summary>
     /// <param name="symbol">Query ticker for a single symbol</param>
     /// <param name="ct">Cancellation token</param>
@@ -281,7 +284,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get the current best price and quantity on the order book.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-order-book-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-book" /></para>
     /// </summary>
     /// <param name="symbols">Query ticker for multiple symbols</param>
     /// <param name="ct">Cancellation token</param>
@@ -291,7 +294,7 @@ public interface IBinanceSpotSocketClientQueryMarketData
 
     /// <summary>
     /// Get the current best price and quantity on the order book.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-order-book-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-book" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>

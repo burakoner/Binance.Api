@@ -7,7 +7,7 @@ public interface IBinanceSpotRestClientGeneral
 {
     /// <summary>
     /// Pings the Binance API
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#test-connectivity" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#ping" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>True if successful ping, false if no response</returns>
@@ -15,7 +15,7 @@ public interface IBinanceSpotRestClientGeneral
 
     /// <summary>
     /// Requests the server for the local time
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#check-server-time" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#time" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Server time</returns>
@@ -23,7 +23,7 @@ public interface IBinanceSpotRestClientGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="ct">Cancellation Token</param>
     /// <returns>Exchange Info</returns>
@@ -31,7 +31,7 @@ public interface IBinanceSpotRestClientGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation Token</param>
@@ -40,7 +40,7 @@ public interface IBinanceSpotRestClientGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="status">Filter by symbol status, Trading, Halt or Break</param>
     /// <param name="ct">Cancellation Token</param>
@@ -49,7 +49,7 @@ public interface IBinanceSpotRestClientGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="permission">Permission Type</param>
     /// <param name="ct">Cancellation Token</param>
@@ -58,7 +58,7 @@ public interface IBinanceSpotRestClientGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="symbols">Symbols to get data for, for example `ETHUSDT`</param>
     /// <param name="status">Filter by symbol status, Trading, Halt or Break</param>

@@ -7,7 +7,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 {
     /// <summary>
     /// Ping to test connection
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#test-connectivity" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#ping" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -15,7 +15,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Get the server time
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#check-server-time" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#time" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -23,7 +23,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -31,7 +31,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -40,6 +40,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="status">Status</param>
     /// <param name="ct">Cancellation token</param>
@@ -48,7 +49,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="permission">Permission</param>
     /// <param name="ct">Cancellation token</param>
@@ -57,7 +58,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Gets information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-requests#exchange-information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#exchange-info" /></para>
     /// </summary>
     /// <param name="symbols">Filter by symbols, for example `ETHUSDT`</param>
     /// <param name="status">Status</param>
@@ -69,6 +70,7 @@ public interface IBinanceSpotSocketClientQueryGeneral
 
     /// <summary>
     /// Gets execution rules for all Spot symbols.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#execution-rules" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Execution rules grouped by symbol</returns>

@@ -7,7 +7,7 @@ public interface IBinanceSpotRestClientMarketData
 {
     /// <summary>
     /// Gets the order book for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#order-book" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#depth" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the order book for, for example `ETHUSDT`</param>
     /// <param name="limit">Max number of results</param>
@@ -18,7 +18,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the recent trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#recent-trades-list" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#get-trades" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get recent trades for, for example `ETHUSDT`</param>
     /// <param name="limit">Result limit</param>
@@ -28,7 +28,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the historical trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#old-trade-lookup" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#historical-trades" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get recent trades for, for example `ETHUSDT`</param>
     /// <param name="limit">Result limit</param>
@@ -50,7 +50,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets compressed, aggregate trades. Trades that fill at the same time, from the same order, with the same price will have the quantity aggregated.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#compressedaggregate-trades-list" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#agg-trades" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the trades for, for example `ETHUSDT`</param>
     /// <param name="fromId">ID to get aggregate trades from INCLUSIVE.</param>
@@ -63,7 +63,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get candlestick data for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#klines" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="interval">The candlestick timespan</param>
@@ -77,7 +77,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get candlestick data for the provided symbol. Returns modified kline data, optimized for the presentation of candlestick charts
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#uiklines" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ui-klines" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="interval">The candlestick timespan</param>
@@ -91,7 +91,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets current average price for a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#current-average-price" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#avg-price" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -100,17 +100,19 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the current reference price for a symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#reference-price" /></para>
     /// </summary>
     Task<RestCallResult<BinanceSpotReferencePrice>> GetReferencePriceAsync(string symbol, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the reference-price calculation configuration for a symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#reference-price-calculation" /></para>
     /// </summary>
     Task<RestCallResult<BinanceSpotReferencePriceCalculation>> GetReferencePriceCalculationAsync(string symbol, BinanceSpotSymbolStatusFilter? status = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -120,7 +122,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbols">The symbols to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -130,7 +132,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
@@ -139,7 +141,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -149,7 +151,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="symbols">The symbols to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -159,7 +161,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
@@ -168,7 +170,7 @@ public interface IBinanceSpotRestClientMarketData
     
     /// <summary>
     /// Get price change stats for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
@@ -179,7 +181,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get price change stats for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
@@ -190,7 +192,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get price change stats for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
@@ -201,7 +203,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get price change stats for a trading day
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#trading-day-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-trading-day" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
     /// <param name="timeZone">The timezone offset, for example -3 for UTC-3 or 5 for UTC+5</param>
@@ -212,7 +214,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the price of a symbol
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-price" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -222,7 +224,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     ///  Gets the prices of symbols
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-price" /></para>
     /// </summary>
     /// <param name="symbols">The symbols to get the price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -232,7 +234,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     ///  Gets the prices of symbols
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-price" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of prices</returns>
@@ -241,7 +243,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the best price/quantity on the order book for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-order-book-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-book-ticker" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get book price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -251,7 +253,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the best price/quantity on the order book for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-order-book-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-book-ticker" /></para>
     /// </summary>
     /// <param name="symbols">Symbols to get book price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -261,7 +263,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Gets the best price/quantity on the order book for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-order-book-ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-book-ticker" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of book prices</returns>
@@ -270,7 +272,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data based on the last x time, specified as windowSize
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#rolling-window-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker" /></para>
     /// </summary>
     /// <param name="symbol">The symbols to get data for, for example `ETHUSDT`</param>
     /// <param name="windowSize">The window size to use</param>
@@ -281,7 +283,7 @@ public interface IBinanceSpotRestClientMarketData
 
     /// <summary>
     /// Get data based on the last x time, specified as windowSize
-    /// <para><a href="https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#rolling-window-price-change-statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker" /></para>
     /// </summary>
     /// <param name="symbols">The symbols to get data for, for example `ETHUSDT`</param>
     /// <param name="windowSize">The window size to use</param>
