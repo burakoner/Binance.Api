@@ -40,7 +40,24 @@ The official documentation is a moving target. The baseline date must be advance
 - WebSocket API signing now distinguishes HMAC, RSA, and Ed25519 credentials and signs UTF-8 payload bytes. RSA and Ed25519 behavior is covered by cryptographic verification tests with non-ASCII parameters.
 - ApiSharp 4.5.1 strips Ed25519 PEM markers before asking NSec to parse a PEM key. Binance.Api now imports the PKIX private key directly for .NET 8 and later and accepts both full PEM and its base64 body.
 - USDⓈ-M `GET /fapi/v1/adlQuantile` sent signed parameters in a GET body and expected an object when `symbol` was supplied, although the current endpoint always accepts query parameters and returns an array. Both mismatches are corrected and request/response behavior is covered by a regression test.
+- Six USDⓈ-M futures-data methods generated `/fapi/futures/data/...` instead of `/futures/data/...`. Three also treated the separate 1,000 requests/5 minutes quota as endpoint request weight 1,000 even though the documented IP weight is 0. Paths and weights are corrected, basis constraints are enforced, and the missing `CMCCirculatingSupply` response field is modeled.
 - The current ApiSharp rate-limiter configuration API is obsolete and emits build warnings on every main-library target. Rate-limit behavior must be revalidated during the shared transport audit rather than treated as a cosmetic warning.
+
+## REST route inventory baseline
+
+This is a route-level candidate inventory from the official `llms-full.txt` API Reference and literal `GetUrl(...)` calls in the wrapper. An exact route match does not prove parameter or schema compatibility. An official-only or wrapper-only route is a review candidate, not an automatic implementation/removal instruction; the canonical endpoint page and product changelog remain authoritative for each change.
+
+| Product | Official routes | Wrapper routes | Exact matches | Official-only candidates | Wrapper-only candidates |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Algo Trading | 11 | 11 | 11 | 0 | 0 |
+| Convert | 9 | 9 | 9 | 0 | 0 |
+| Margin | 65 | 50 | 44 | 21 | 6 |
+| Spot | 48 | 30 | 27 | 21 | 3 |
+| USDⓈ-M Futures | 95 | 83 | 82 | 13 | 1 |
+| COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
+| Options | 44 | 45 | 41 | 3 | 4 |
+
+The official compact inventory currently lists `GET /dapi/v1/leverageBracket`, while the product changelog documents `GET /dapi/v2/leverageBracket` and the wrapper uses v2. This conflict is a concrete example of why route candidates must be verified against the endpoint page before code changes.
 
 ## Review log
 
@@ -49,3 +66,4 @@ The official documentation is a moving target. The baseline date must be advance
 | 1 | Complete | Baseline inventory, test harness, Margin cancel-order defect | Official Margin REST Trade reference, solution build, request-level regression test |
 | 2 | Complete | REST and WebSocket API authentication compatibility | Official Spot signed-endpoint rules, mixed query/body and percent-encoding tests, RSA PEM and Ed25519 cryptographic verification tests |
 | 3 | Complete | USDⓈ-M position ADL quantile endpoint | Official USDⓈ-M Trade reference, request-level query placement and symbol-filtered array response test |
+| 4 | Complete | USDⓈ-M futures-data paths, weights, constraints, and response schema | Official USDⓈ-M Market Data reference, six route tests, constraint tests, and circulating-supply deserialization test |

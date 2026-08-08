@@ -247,11 +247,11 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets Open Interest History
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest-Statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#open-interest-statistics" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="period">The period timespan</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results, up to 500. The default is 30</param>
     /// <param name="startTime">Start time to get open interest history</param>
     /// <param name="endTime">End time to get open interest history</param>
     /// <param name="ct">Cancellation token</param>
@@ -259,11 +259,11 @@ public interface IBinanceFuturesRestClientUsdMarketData
     Task<RestCallResult<List<BinanceFuturesOpenInterestHistory>>> GetOpenInterestHistoryAsync(string symbol, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
     /// <summary>
     /// Gets Top Trader Long/Short Ratio (Positions)
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#top-trader-longshort-position-ratio-market_data" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="period">The period timespan</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results, up to 500. The default is 30</param>
     /// <param name="startTime">Start time to get top trader long/short ratio (positions)</param>
     /// <param name="endTime">End time to get top trader long/short ratio (positions)</param>
     /// <param name="ct">Cancellation token</param>
@@ -272,11 +272,11 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets Top Trader Long/Short Ratio (Accounts)
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#top-trader-longshort-account-ratio-market_data" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="period">The period timespan</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results, up to 500. The default is 30</param>
     /// <param name="startTime">Start time to get top trader long/short ratio (accounts)</param>
     /// <param name="endTime">End time to get top trader long/short ratio (accounts)</param>
     /// <param name="ct">Cancellation token</param>
@@ -285,11 +285,11 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets Global Long/Short Ratio (Accounts)
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Long-Short-Ratio" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#longshort-ratio" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="period">The period timespan</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results, up to 500. The default is 30</param>
     /// <param name="startTime">Start time to get global long/short ratio (accounts)</param>
     /// <param name="endTime">End time to get global long/short ratio (accounts)</param>
     /// <param name="ct">Cancellation token</param>
@@ -298,11 +298,11 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets Taker Buy/Sell Volume Ratio
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Taker-BuySell-Volume" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#taker-buysell-volume" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="period">The period timespan</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results, up to 500. The default is 30</param>
     /// <param name="startTime">Start time to get taker buy/sell volume ratio</param>
     /// <param name="endTime">End time to get taker buy/sell volume ratio</param>
     /// <param name="ct">Cancellation token</param>
@@ -311,12 +311,12 @@ public interface IBinanceFuturesRestClientUsdMarketData
     
     /// <summary>
     /// Get basis data
-    /// <para><a href="https://binance-docs.github.io/apidocs/futures/en/#basis" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#basis" /></para>
     /// </summary>
     /// <param name="pair">The pair to get the data for, for example `ETHUSDT`</param>
-    /// <param name="contractType">The contract type</param>
+    /// <param name="contractType">The contract type. Supported values are Perpetual, CurrentQuarter, and NextQuarter</param>
     /// <param name="period">The period timespan</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results, up to 500. The default is 30</param>
     /// <param name="startTime">Start time</param>
     /// <param name="endTime">End time</param>
     /// <param name="ct">Cancellation token</param>

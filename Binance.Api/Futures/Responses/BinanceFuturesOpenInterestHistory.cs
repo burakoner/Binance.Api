@@ -24,6 +24,12 @@ public record BinanceFuturesOpenInterestHistory
     public decimal SumOpenInterestValue { get; set; }
 
     /// <summary>
+    /// Circulating supply provided by CoinMarketCap
+    /// </summary>
+    [JsonProperty("CMCCirculatingSupply")]
+    public decimal? CmcCirculatingSupply { get; set; }
+
+    /// <summary>
     /// Timestamp
     /// </summary>
     [JsonProperty("timestamp"), JsonConverter(typeof(DateTimeConverter))]
