@@ -85,7 +85,8 @@ public record BinanceMarginOtoOrderListRequest : BinanceMarginOrderListRequest
     }
 
     /// <summary>
-    /// Working-order iceberg quantity. The current Margin OTO schema marks this field as required.
+    /// Working-order iceberg quantity. The current Margin OTO schema marks this field as required;
+    /// <see cref="BinanceMarginOrderListRequest.WorkingTimeInForce"/> must be GTC when it is sent.
     /// </summary>
     public decimal WorkingIcebergQuantity { get; set; }
 
@@ -110,7 +111,7 @@ public record BinanceMarginOtoOrderListRequest : BinanceMarginOrderListRequest
     /// <summary>Pending-order trailing delta.</summary>
     public decimal? PendingTrailingDelta { get; set; }
 
-    /// <summary>Pending-order iceberg quantity.</summary>
+    /// <summary>Pending-order iceberg quantity. Pending time in force must be GTC when it is sent.</summary>
     public decimal? PendingIcebergQuantity { get; set; }
 
     /// <summary>Pending-order time in force.</summary>
@@ -137,7 +138,7 @@ public record BinanceMarginOtocoOrderListRequest : BinanceMarginOrderListRequest
         PendingAboveType = pendingAboveType;
     }
 
-    /// <summary>Working-order iceberg quantity.</summary>
+    /// <summary>Working-order iceberg quantity. Working time in force must be GTC when it is sent.</summary>
     public decimal? WorkingIcebergQuantity { get; set; }
 
     /// <summary>The side shared by the two pending orders.</summary>
@@ -161,7 +162,7 @@ public record BinanceMarginOtocoOrderListRequest : BinanceMarginOrderListRequest
     /// <summary>Pending-above trailing delta.</summary>
     public decimal? PendingAboveTrailingDelta { get; set; }
 
-    /// <summary>Pending-above iceberg quantity.</summary>
+    /// <summary>Pending-above iceberg quantity. Pending-above time in force must be GTC when it is sent.</summary>
     public decimal? PendingAboveIcebergQuantity { get; set; }
 
     /// <summary>Pending-above time in force.</summary>
@@ -182,7 +183,7 @@ public record BinanceMarginOtocoOrderListRequest : BinanceMarginOrderListRequest
     /// <summary>Pending-below trailing delta.</summary>
     public decimal? PendingBelowTrailingDelta { get; set; }
 
-    /// <summary>Pending-below iceberg quantity.</summary>
+    /// <summary>Pending-below iceberg quantity. Pending-below time in force must be GTC when it is sent.</summary>
     public decimal? PendingBelowIcebergQuantity { get; set; }
 
     /// <summary>Pending-below time in force.</summary>

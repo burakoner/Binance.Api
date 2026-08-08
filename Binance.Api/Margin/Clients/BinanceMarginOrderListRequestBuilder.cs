@@ -11,12 +11,14 @@ internal static class BinanceMarginOrderListRequestBuilder
 
         ValidateCommon(request);
         ValidatePositive(request.WorkingIcebergQuantity, nameof(request.WorkingIcebergQuantity));
+        ValidateIcebergTimeInForce(request.WorkingIcebergQuantity, request.WorkingTimeInForce, "working");
         ValidatePositive(request.PendingQuantity, nameof(request.PendingQuantity));
         ValidateOptionalPositive(request.PendingPrice, nameof(request.PendingPrice));
         ValidateOptionalPositive(request.PendingStopPrice, nameof(request.PendingStopPrice));
         ValidateOptionalPositive(request.PendingTrailingDelta, nameof(request.PendingTrailingDelta));
         ValidateOptionalPositive(request.PendingIcebergQuantity, nameof(request.PendingIcebergQuantity));
         ValidateTimeInForce(request.PendingTimeInForce, nameof(request.PendingTimeInForce));
+        ValidateIcebergTimeInForce(request.PendingIcebergQuantity, request.PendingTimeInForce, "pending");
         ValidatePendingOrder(
             request.PendingType,
             request.PendingPrice,
@@ -46,6 +48,7 @@ internal static class BinanceMarginOrderListRequestBuilder
 
         ValidateCommon(request);
         ValidateOptionalPositive(request.WorkingIcebergQuantity, nameof(request.WorkingIcebergQuantity));
+        ValidateIcebergTimeInForce(request.WorkingIcebergQuantity, request.WorkingTimeInForce, "working");
         ValidatePositive(request.PendingQuantity, nameof(request.PendingQuantity));
         ValidateOcoType(request.PendingAboveType, nameof(request.PendingAboveType));
         ValidateOcoLeg(
@@ -212,6 +215,7 @@ internal static class BinanceMarginOrderListRequestBuilder
         ValidateOptionalPositive(trailingDelta, prefix + "TrailingDelta");
         ValidateOptionalPositive(icebergQuantity, prefix + "IcebergQuantity");
         ValidateTimeInForce(timeInForce, prefix + "TimeInForce");
+        ValidateIcebergTimeInForce(icebergQuantity, timeInForce, prefix);
 
         if (type == BinanceSpotOrderType.LimitMaker && !price.HasValue)
             throw new ArgumentException($"{prefix}Price is required for a LIMIT_MAKER order.");
@@ -257,6 +261,12 @@ internal static class BinanceMarginOrderListRequestBuilder
     {
         if (value is <= 0)
             throw new ArgumentOutOfRangeException(parameterName, "Value must be greater than zero when provided.");
+    }
+
+    private static void ValidateIcebergTimeInForce(decimal? icebergQuantity, BinanceTimeInForce? timeInForce, string prefix)
+    {
+        if (icebergQuantity.HasValue && timeInForce != BinanceTimeInForce.GoodTillCanceled)
+            throw new ArgumentException($"{prefix}TimeInForce must be GTC when {prefix}IcebergQty is provided.");
     }
 
     internal static int RequestWeight(BinanceMarginSideEffectType? sideEffectType)

@@ -292,6 +292,76 @@ public class BinanceMarginRestClientTradeTests
         await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.PlaceMarginOtocoOrderAsync(otoco));
     }
 
+    [Fact]
+    public async Task OrderLists_RejectIcebergQuantitiesWithoutGtc()
+    {
+        using var client = CreateClient(new RecordingHttpMessageHandler("{}"));
+        var oto = new BinanceMarginOtoOrderListRequest(
+            "BTCUSDT",
+            BinanceSpotOrderType.Limit,
+            BinanceOrderSide.Sell,
+            60_000m,
+            0.2m,
+            0.05m,
+            BinanceSpotOrderType.Limit,
+            BinanceOrderSide.Buy,
+            0.2m)
+        {
+            WorkingTimeInForce = BinanceTimeInForce.ImmediateOrCancel,
+            PendingPrice = 55_000m,
+            PendingTimeInForce = BinanceTimeInForce.GoodTillCanceled
+        };
+        var otoco = new BinanceMarginOtocoOrderListRequest(
+            "BTCUSDT",
+            BinanceSpotOrderType.LimitMaker,
+            BinanceOrderSide.Sell,
+            60_000m,
+            0.2m,
+            BinanceOrderSide.Buy,
+            0.2m,
+            BinanceSpotOrderType.StopLoss)
+        {
+            WorkingIcebergQuantity = 0.05m,
+            PendingAboveStopPrice = 55_000m
+        };
+        var otoPending = new BinanceMarginOtoOrderListRequest(
+            "BTCUSDT",
+            BinanceSpotOrderType.Limit,
+            BinanceOrderSide.Sell,
+            60_000m,
+            0.2m,
+            0.05m,
+            BinanceSpotOrderType.Limit,
+            BinanceOrderSide.Buy,
+            0.2m)
+        {
+            WorkingTimeInForce = BinanceTimeInForce.GoodTillCanceled,
+            PendingPrice = 55_000m,
+            PendingIcebergQuantity = 0.05m,
+            PendingTimeInForce = BinanceTimeInForce.ImmediateOrCancel
+        };
+        var otocoPending = new BinanceMarginOtocoOrderListRequest(
+            "BTCUSDT",
+            BinanceSpotOrderType.LimitMaker,
+            BinanceOrderSide.Sell,
+            60_000m,
+            0.2m,
+            BinanceOrderSide.Buy,
+            0.2m,
+            BinanceSpotOrderType.StopLossLimit)
+        {
+            PendingAbovePrice = 55_000m,
+            PendingAboveStopPrice = 54_000m,
+            PendingAboveIcebergQuantity = 0.05m,
+            PendingAboveTimeInForce = BinanceTimeInForce.FillOrKill
+        };
+
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.PlaceMarginOtoOrderAsync(oto));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.PlaceMarginOtocoOrderAsync(otoco));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.PlaceMarginOtoOrderAsync(otoPending));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.PlaceMarginOtocoOrderAsync(otocoPending));
+    }
+
     private static BinanceRestApiClient CreateClient(RecordingHttpMessageHandler handler, IRateLimiter? limiter = null)
     {
         var options = new BinanceRestApiClientOptions(new ApiCredentials("api-key", "api-secret"))
