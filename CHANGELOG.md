@@ -22,6 +22,7 @@
   * Added the current Margin prevented-matches query with its documented identifier combinations, pagination cursor, and response schema
   * Aligned the complete Margin Market Data surface, including signed USER_DATA queries, current parameters, canonical links, 64-bit fields, raw undefined-unit timestamps, and corrected public names
   * Aligned the complete Margin Account surface, including leverage and isolated-account request constraints, symbol filtering, canonical links, 64-bit fee and limit fields, decimal risk levels, and current account response fields
+  * Aligned both Margin Transfer queries, including the missing asset filter, optional direction, 30-day range, 64-bit pagination and response fields, raw undefined-unit timestamps, and canonical links
   * Fixed Isolated Margin account disable requests sending signed DELETE parameters in a form body instead of the documented query string
   * Enforced the documented 90-day availability window for explicit Margin capital-flow time filters
   * Aligned Spot General REST and WebSocket API contracts, including execution rules, current symbol statuses, exchange-info precision and capability fields, SOR groups, self-trade-prevention modes, and symbol filters

@@ -2,31 +2,47 @@
 
 internal partial class BinanceMarginRestClient
 {
-    public Task<RestCallResult<BinanceRowsResult<BinanceMarginTransferHistory>>> GetMarginTransfersAsync(BinanceMarginTransferDirection direction, int? page = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceMarginTransferHistoryResult>> GetMarginTransfersAsync(
+        BinanceMarginTransferDirection? direction = null,
+        string? asset = null,
+        DateTime? startTime = null,
+        DateTime? endTime = null,
+        long? current = null,
+        long? size = null,
+        string? isolatedSymbol = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 100);
+        ValidateOptionalMarginAsset(asset, nameof(asset));
+        ValidateOptionalMarginSymbol(isolatedSymbol, nameof(isolatedSymbol));
+        ValidateMarginDateRange(startTime, endTime, 30, "transfer history");
+        ValidateMarginPagination(current, size);
 
         var parameters = new ParameterCollection();
-        parameters.AddEnum("direction", direction);
+        parameters.AddOptional("asset", asset);
+        parameters.AddOptionalEnum("type", direction);
         parameters.AddOptional("isolatedSymbol", isolatedSymbol);
-        parameters.AddOptional("size", limit);
-        parameters.AddOptional("current", page);
+        parameters.AddOptional("current", current);
+        parameters.AddOptional("size", size);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceRowsResult<BinanceMarginTransferHistory>>(GetUrl(sapi, v1, "margin/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceMarginTransferHistoryResult>(GetUrl(sapi, v1, "margin/transfer"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public async Task<RestCallResult<decimal>> GetMarginMaxTransferAmountAsync(string asset, string? isolatedSymbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
-        asset.ValidateNotNull(nameof(asset));
+        if (string.IsNullOrWhiteSpace(asset))
+            throw new ArgumentException("asset is required", nameof(asset));
+        ValidateOptionalMarginSymbol(isolatedSymbol, nameof(isolatedSymbol));
+
         var parameters = new ParameterCollection
         {
             { "asset", asset }
         };
         parameters.AddOptional("isolatedSymbol", isolatedSymbol);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
         var result = await RequestAsync<BinanceMarginAmount>(GetUrl(sapi, v1, "margin/maxTransferable"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 50);
         if (!result) return result.As<decimal>(default);
