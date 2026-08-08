@@ -18,13 +18,17 @@ internal partial class BinanceMarginRestClient
     public Task<RestCallResult<BinanceIsolatedMarginCreateAccountResult>> DisableIsolatedMarginAccountAsync(string symbol,
         int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol is required", nameof(symbol));
+        symbol.ValidateBinanceSymbol();
+
         var parameters = new ParameterCollection
         {
             {"symbol", symbol}
         };
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateMarginReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceIsolatedMarginCreateAccountResult>(GetUrl(sapi, v1, "margin/isolated/account"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 300);
+        return RequestAsync<BinanceIsolatedMarginCreateAccountResult>(GetUrl(sapi, v1, "margin/isolated/account"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 300);
     }
 
     public Task<RestCallResult<BinanceIsolatedMarginCreateAccountResult>> EnableIsolatedMarginAccountAsync(string symbol,
@@ -69,6 +73,11 @@ internal partial class BinanceMarginRestClient
         ValidateOptionalMarginAsset(asset, nameof(asset));
         ValidateOptionalMarginSymbol(symbol, nameof(symbol));
         ValidateMarginDateRange(startTime, endTime, 7, "capital-flow");
+        var oldestSupportedTime = DateTime.UtcNow.AddDays(-90);
+        if (startTime?.ToUniversalTime() < oldestSupportedTime)
+            throw new ArgumentOutOfRangeException(nameof(startTime), "capital-flow data is available only for the last 90 days");
+        if (endTime?.ToUniversalTime() < oldestSupportedTime)
+            throw new ArgumentOutOfRangeException(nameof(endTime), "capital-flow data is available only for the last 90 days");
         if (limit > 1_000)
             throw new ArgumentOutOfRangeException(nameof(limit), "limit cannot exceed 1000");
 

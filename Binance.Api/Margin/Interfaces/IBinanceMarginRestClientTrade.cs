@@ -338,6 +338,7 @@ public interface IBinanceMarginRestClientTrade
     // TODO: Create Special Key(Low-Latency Trading)(TRADE)
     // TODO: Delete Special Key(Low-Latency Trading)(TRADE)
     // TODO: Edit ip for Special Key(Low-Latency Trading)(TRADE)
+    // TODO: Exit Special Key Mode(TRADE)
     // TODO: Query Special key List(Low Latency Trading)(TRADE)
     // TODO: Query Special key(Low Latency Trading)(TRADE)
 }

@@ -18,13 +18,12 @@ public interface IBinanceMarginRestClientAccount
     Task<RestCallResult<BinanceCrossMarginLeverageResult>> AdjustMaximumLeverageAsync(int maxLeverage, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Disabled an isolated margin account info
-    /// <para><a href="https://developers.binance.com/docs/margin_trading/account/Disable-Isolated-Margin-Account" /></para>
+    /// Disables an Isolated Margin account for a symbol. A symbol can be disabled only once every 24 hours.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#disable-isolated-margin-account" /></para>
     /// </summary>
-    /// <param name="symbol">Symbol to enable isolated margin account for, for example `ETHUSDT`</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-    /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <param name="symbol">Symbol whose Isolated Margin account should be disabled, for example <c>ETHUSDT</c>.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds, maximum 60000.</param>
+    /// <param name="ct">Cancellation token.</param>
     Task<RestCallResult<BinanceIsolatedMarginCreateAccountResult>> DisableIsolatedMarginAccountAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>

@@ -93,6 +93,8 @@ public class BinanceMarginCapitalFlowTests
 
         await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.GetMarginCapitalFlowAsync(startTime: endTime.AddDays(-8), endTime: endTime));
         await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.GetMarginCapitalFlowAsync(startTime: endTime, endTime: endTime.AddDays(-1)));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.GetMarginCapitalFlowAsync(startTime: endTime.AddDays(-91)));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.GetMarginCapitalFlowAsync(endTime: endTime.AddDays(-91)));
         await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.GetMarginCapitalFlowAsync(asset: " "));
         await Assert.ThrowsAsync<ArgumentException>(() => client.Margin.GetMarginCapitalFlowAsync(symbol: " "));
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Margin.GetMarginCapitalFlowAsync(limit: 1_001));

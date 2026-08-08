@@ -1,7 +1,7 @@
 ﻿namespace Binance.Api.Margin;
 
 /// <summary>
-/// Result of creating isolated margin account
+/// Result of enabling or disabling an Isolated Margin account.
 /// </summary>
 public record BinanceIsolatedMarginCreateAccountResult
 {
