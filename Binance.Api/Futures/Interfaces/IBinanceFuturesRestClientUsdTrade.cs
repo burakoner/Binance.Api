@@ -302,14 +302,15 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Requests the margin change history for a specific symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Get-Position-Margin-Change-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#get-position-margin-change-history" /></para>
+    /// <para>Only the most recent 30 days are available. The time between <paramref name="startTime" /> and <paramref name="endTime" /> cannot exceed 30 days.</para>
     /// </summary>
     /// <param name="symbol">Symbol to get margin history for, for example `ETHUSDT`</param>
     /// <param name="type">Filter the history by the direction of margin change</param>
     /// <param name="startTime">Margin changes newer than this date will be retrieved</param>
     /// <param name="endTime">Margin changes older than this date will be retrieved</param>
     /// <param name="limit">The max number of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. The maximum is 60000 milliseconds</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of all margin changes for the symbol</returns>
     Task<RestCallResult<List<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);

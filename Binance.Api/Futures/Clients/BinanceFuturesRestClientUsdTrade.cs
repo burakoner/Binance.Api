@@ -497,6 +497,14 @@ internal partial class BinanceFuturesRestClientUsd
 
     public Task<RestCallResult<List<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        symbol.ValidateNotNull(nameof(symbol));
+        if (startTime.HasValue && endTime.HasValue)
+        {
+            var timeRange = endTime.Value - startTime.Value;
+            if (timeRange < TimeSpan.Zero || timeRange > TimeSpan.FromDays(30))
+                throw new ArgumentOutOfRangeException(nameof(endTime), endTime, "endTime must be on or after startTime and the time range cannot exceed 30 days");
+        }
+
         var parameters = new ParameterCollection
         {
             { "symbol", symbol }
@@ -505,9 +513,9 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
-        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("limit", limit);
 
-        return RequestAsync<List<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(fapi, v3, "positionMargin/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesMarginChangeHistoryResult>>(GetUrl(fapi, v1, "positionMargin/history"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public async Task<RestCallResult<BinanceFuturesOrder>> PlaceTestOrderAsync(
