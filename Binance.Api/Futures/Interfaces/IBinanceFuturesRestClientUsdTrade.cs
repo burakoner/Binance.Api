@@ -81,13 +81,13 @@ public interface IBinanceFuturesRestClientUsdTrade
         CancellationToken ct = default);
 
     /// <summary>
-    /// Edit multiple existing orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Modify-Multiple-Orders" /></para>
+    /// Modifies between one and five existing LIMIT orders concurrently
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#modify-multiple-orders-trade" /></para>
     /// </summary>
-    /// <param name="orders">The order info</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="orders">One to five amendments. Every item requires symbol, side, quantity, price, and either OrderId or OriginalClientOrderId</param>
+    /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <returns>One result per request item in request order. Matching itself is concurrent and its order is not guaranteed</returns>
     Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>

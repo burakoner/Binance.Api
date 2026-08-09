@@ -201,30 +201,53 @@ internal partial class BinanceFuturesRestClientCoin
 
     public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (orders == null)
+            throw new ArgumentNullException(nameof(orders));
+
+        var orderList = orders.ToList();
+        if (orderList.Count is < 1 or > 5)
+            throw new ArgumentException("Order list must contain between 1 and 5 orders", nameof(orders));
+
         var parameters = new ParameterCollection();
         var parameterOrders = new List<Dictionary<string, object>>();
-        int i = 0;
-        foreach (var order in orders)
+        for (var index = 0; index < orderList.Count; index++)
         {
+            var order = orderList[index];
+            if (order == null)
+                throw new ArgumentException($"Order at index {index} cannot be null", nameof(orders));
+            if (string.IsNullOrWhiteSpace(order.Symbol))
+                throw new ArgumentException($"Symbol is required for order at index {index}", nameof(orders));
+            if (order.Side != BinanceOrderSide.Buy && order.Side != BinanceOrderSide.Sell)
+                throw new ArgumentOutOfRangeException(nameof(orders), order.Side, $"Side must be Buy or Sell for order at index {index}");
+            if (order.Quantity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(orders), order.Quantity, $"Quantity must be greater than zero for order at index {index}");
+            if (order.Price <= 0)
+                throw new ArgumentOutOfRangeException(nameof(orders), order.Price, $"Price must be greater than zero for order at index {index}");
+            if (order.OriginalClientOrderId != null && string.IsNullOrWhiteSpace(order.OriginalClientOrderId))
+                throw new ArgumentException($"Original client order id cannot be empty for order at index {index}", nameof(orders));
+            if (!order.OrderId.HasValue && order.OriginalClientOrderId == null)
+                throw new ArgumentException($"Either OrderId or OriginalClientOrderId must be sent for order at index {index}", nameof(orders));
+            if (order.PriceMatch.HasValue)
+                throw new ArgumentException($"The current Binance COIN-M batch Modify Order contract does not provide a usable priceMatch combination for order at index {index}", nameof(orders));
+
             var orderParameters = new ParameterCollection()
             {
                 { "symbol", order.Symbol },
-                { "quantity", order.Quantity.ToString(BinanceConstants.CI) },
+                { "quantity", order.Quantity },
+                { "price", order.Price }
             };
             orderParameters.AddEnum("side", order.Side);
-            orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptionalEnum("priceMatch", order.PriceMatch);
-            orderParameters.AddOptional("orderId", order.OrderId?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptional("origClientOrderId", order.ClientOrderId);
+            orderParameters.AddOptional("orderId", order.OrderId);
+            orderParameters.AddOptional("origClientOrderId", order.OriginalClientOrderId);
+            orderParameters.AddOptional("modifyId", order.ModifyId);
             parameterOrders.Add(orderParameters);
-            i++;
         }
 
         parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         var response = await RequestAsync<List<BinanceFuturesOrderResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>(default!);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesOrder>>>([]);
 
         var result = new List<CallResult<BinanceFuturesOrder>>();
         foreach (var item in response.Data)

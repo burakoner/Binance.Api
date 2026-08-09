@@ -11,9 +11,9 @@ public record BinanceFuturesBatchModifyRequest
     public long? OrderId { get; set; }
 
     /// <summary>
-    /// Client id of the order to edit. This or OrderId should be provided
+    /// Original client id of the order to edit. This or OrderId must be provided; OrderId takes precedence when both are sent
     /// </summary>
-    public string? ClientOrderId { get; set; }
+    public string? OriginalClientOrderId { get; set; }
 
     /// <summary>
     /// Symbol of the order
@@ -26,17 +26,22 @@ public record BinanceFuturesBatchModifyRequest
     public BinanceOrderSide Side { get; set; }
 
     /// <summary>
-    /// Quantity
+    /// Complete new order quantity
     /// </summary>
     public decimal Quantity { get; set; }
 
     /// <summary>
-    /// Price
+    /// New order price
     /// </summary>
-    public decimal? Price { get; set; }
+    public decimal Price { get; set; }
 
     /// <summary>
-    /// PriceMatch
+    /// Published for USD-M, but currently unusable because price is required and cannot be combined with priceMatch. COIN-M does not publish it for batch modification. Non-null values are rejected
     /// </summary>
     public BinanceFuturesPriceMatch? PriceMatch { get; set; }
+
+    /// <summary>
+    /// Optional user-defined modification identifier passed through without uniqueness validation and returned only when supplied
+    /// </summary>
+    public long? ModifyId { get; set; }
 }
