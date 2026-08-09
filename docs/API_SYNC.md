@@ -209,11 +209,33 @@ WebSocket API 418/429 responses now complete their pending calls with the same t
 
 Deterministic transport tests cover both REST statuses, no automatic retry, disabled-proactive-limiter behavior, cancellation before a guarded call, REST seconds and HTTP-date parsing, WebSocket Unix-millisecond parsing, malformed values, query-handler completion, shared guard state, and Spot/Margin user-data error propagation. All 127 tests pass. No live Binance request was sent.
 
+## Slice 32: Convert REST route inventory
+
+The live Convert introduction and changelog were refreshed on 2026-08-08. The current catalog exposes nine REST routes: two Market Data operations and seven Trade operations. A normalized source scan confirms nine wrapper routes, nine exact HTTP method/path matches, no official-only route, and no wrapper-only route. This is route coverage only; none of the nine operations is marked contract-complete until its parameters, validation, response schema, and canonical documentation are reviewed.
+
+| Operation | Current official contract | Wrapper inventory result |
+| --- | --- | --- |
+| List all pairs | `GET /sapi/v1/convert/exchangeInfo`, NONE, IP 3000 | Method, path, security, and weight match; wrapper currently permits both asset filters to be absent although the current reference requires either or both |
+| Asset precision | `GET /sapi/v1/convert/assetInfo`, USER_DATA, IP 100 | Method, path, security, and weight match; parameter/model review pending |
+| Send quote request | `POST /sapi/v1/convert/getQuote`, TRADE, UID 200 | Method, path, security, and weight match; parameter/model review pending |
+| Accept quote | `POST /sapi/v1/convert/acceptQuote`, TRADE, UID 500 | Method, path, security, and weight match; mutation review pending |
+| Trade history | `GET /sapi/v1/convert/tradeFlow`, USER_DATA, UID 3000 | Route and weight match; wrapper does not enforce the documented 30-day maximum interval |
+| Order status | `GET /sapi/v1/convert/orderStatus`, USER_DATA, UID 100 | Route and security match; wrapper incorrectly declares weight 3000 |
+| Place limit order | `POST /sapi/v1/convert/limit/placeOrder`, TRADE, UID 500 | Method, path, security, and weight match; mutation/model review pending |
+| Cancel limit order | `POST /sapi/v1/convert/limit/cancelOrder`, TRADE, UID 200 | Route and security match; wrapper incorrectly declares weight 500 |
+| Query open limit orders | `GET /sapi/v1/convert/limit/queryOpenOrders`, USER_DATA, UID 3000 | Method, path, security, and weight match; response-model review pending |
+
+The two weight defects are verified against the current official generated connector, not inferred from the sparse dated changelog. A cross-cutting signed-request gap is also confirmed: Convert publicly exposes integer receive windows and does not enforce the current 60000-millisecond ceiling, while current timing security permits up to three decimal places. Existing noncanonical `developers.binance.com/docs/convert/...` interface links must be replaced while each endpoint group is touched. No code, test, or production API request was executed in this inventory-only slice.
+
 ### Revised next order
 
-1. Audit Convert and both Spot/Futures Algo Trading surfaces against their current live catalogs and dated changelogs, keeping each mutation behind deterministic request tests only.
-2. Perform the next backward review after the Convert/Algo boundary and revise derivative scope from its findings.
-3. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces and confirms the shared transport behavior.
+1. Align the two Convert Market Data routes and add deterministic request/model coverage.
+2. Align the three read-only Convert Trade queries: history, status, and open limit orders.
+3. Align the quote request/accept workflow, treating quote acceptance as a balance-changing mutation.
+4. Align limit-order placement and cancellation as a separate two-mutation slice.
+5. Inventory and then align Spot/Futures Algo Trading in similarly bounded groups.
+6. Perform the next backward review after the Convert/Algo boundary and revise derivative scope from its findings.
+7. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
 
 ## Review log
 
@@ -257,3 +279,4 @@ Deterministic transport tests cover both REST statuses, no automatic retry, disa
 | 30 | Complete | Complete Margin Special Key surface | Live canonical Trade catalog, 2024-09-19/2025-09-16/2026-04-22 Margin changelog entries, current Python and JavaScript connectors, official Postman collection, all six request/weight/model/safety contracts, 120 deterministic tests |
 | Review 7 | Complete | Backward review of complete Margin REST coverage and executable-sample financial safety | `34b00f1..5470a07` diff review, exact cancellation-ID correction, receive-window and liability-list guards, safe-default console gate, canonical-link/retirement/parameter-location scans, confirmed 65/65/65/0/0 route comparison, 122 tests, forced full multi-target rebuild |
 | 31 | Complete | Server-directed REST and WebSocket API 418/429 backoff | Current Spot REST and WebSocket API rate-limit contracts, ApiSharp 4.5.1 transport audit, no-retry/shared-guard/error-propagation tests, 127 deterministic tests |
+| 32 | Complete | Convert REST route inventory | Live Convert catalog and changelog, current official generated connector, normalized 9/9/9/0/0 route comparison, two verified weight defects, bounded follow-up groups |
