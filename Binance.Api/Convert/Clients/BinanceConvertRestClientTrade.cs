@@ -4,8 +4,12 @@ internal partial class BinanceConvertRestClient
 {
     public Task<RestCallResult<BinanceConvertQuote>> QuoteRequestAsync(string fromAsset, string toAsset, decimal? fromAmount = null, decimal? toAmount = null, BinanceConvertWalletType? walletType = null, BinanceConvertValidTime? validTime = null, int? receiveWindow = null, CancellationToken ct = default)
     {
-        if (fromAmount == null && toAmount == null || fromAmount != null && toAmount != null)
-            throw new ArgumentException("Either fromAsset or toAsset must be sent, but not both");
+        if (string.IsNullOrWhiteSpace(fromAsset))
+            throw new ArgumentException("fromAsset cannot be empty.", nameof(fromAsset));
+        if (string.IsNullOrWhiteSpace(toAsset))
+            throw new ArgumentException("toAsset cannot be empty.", nameof(toAsset));
+        if ((fromAmount is null) == (toAmount is null))
+            throw new ArgumentException("Either fromAmount or toAmount must be sent, but not both.");
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("fromAsset", fromAsset);
@@ -14,16 +18,19 @@ internal partial class BinanceConvertRestClient
         parameters.AddOptional("toAmount", toAmount?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("walletType", walletType);
         parameters.AddOptionalEnum("validTime", validTime);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceConvertQuote>(GetUrl(sapi, v1, "convert/getQuote"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 200);
     }
 
     public Task<RestCallResult<BinanceConvertResult>> AcceptQuoteAsync(string quoteId, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(quoteId))
+            throw new ArgumentException("quoteId cannot be empty.", nameof(quoteId));
+
         var parameters = new ParameterCollection();
         parameters.AddParameter("quoteId", quoteId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceConvertResult>(GetUrl(sapi, v1, "convert/acceptQuote"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 500);
     }

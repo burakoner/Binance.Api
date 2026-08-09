@@ -581,7 +581,7 @@ internal class Program
         var fiat_103 = await api.Fiat.GetPaymentHistoryAsync(BinanceFiatPaymentType.Buy);
 
         // Convert -> Trade Methods (PRIVATE)
-        var convert_201 = await api.Convert.QuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---");
+        var convert_201 = await api.Convert.QuoteRequestAsync("---FROM-ASSET---", "---TO-ASSET---", fromAmount: 1m);
         var convert_202 = await api.Convert.AcceptQuoteAsync("---QUOTE-ID---");
         var convert_203 = await api.Convert.GetHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
         var convert_204 = await api.Convert.GetStatusAsync("---ORDER-ID---");

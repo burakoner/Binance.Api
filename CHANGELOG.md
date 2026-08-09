@@ -14,6 +14,7 @@
   * Aligned both Convert Market Data operations with their current filter, receive-window, request-weight, and 64-bit precision contracts
   * Aligned the three read-only Convert Trade queries with current ranges, weights, parameters, terminology, and complete open-limit-order response data
   * Corrected Convert order-status identifier exclusivity and removed stale limit-order guidance for an undocumented exchange-info field
+  * Aligned the Convert quote request and acceptance workflow with current wallet types, request validation, receive-window limits, response contracts, and executable examples
   * Replaced retired Spot listen-key REST and stream operations with signed WebSocket API user data subscriptions, subscription-ID routing, reconnect-safe signing, and current event models
   * Replaced the removed Margin listen-key documentation contract with API-key-issued listen tokens, WebSocket API subscriptions, replacement-token extension, and current Margin event models
   * Added the separate current Cross Margin risk-data listen-key lifecycle and `margin-stream.binance.com` margin-level/liability event stream

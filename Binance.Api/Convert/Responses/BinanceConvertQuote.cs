@@ -24,19 +24,19 @@ public record BinanceConvertQuote
     public decimal InverseRatio { get; set; }
 
     /// <summary>
-    /// Valid Timestamp
+    /// Quote validity timestamp in Unix milliseconds
     /// </summary>
     [JsonProperty("validTimestamp")]
     public long ValidTimestamp { get; set; }
 
     /// <summary>
-    /// Base quantity
+    /// Destination amount
     /// </summary>
     [JsonProperty("toAmount")]
     public decimal ToQuantity { get; set; }
 
     /// <summary>
-    /// Quote quantity
+    /// Source amount
     /// </summary>
     [JsonProperty("fromAmount")]
     public decimal FromQuantity { get; set; }

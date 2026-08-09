@@ -6,26 +6,26 @@
 public interface IBinanceConvertRestClientTrade
 {
     /// <summary>
-    /// Request a quote for convert asset (selling asset) for base asset (buying asset)
-    /// <para><a href="https://developers.binance.com/docs/convert/trade" /></para>
+    /// Request a quote for a Convert token pair. A quote id is returned only when the account has enough funds to convert.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#send-quote-request" /></para>
     /// </summary>
-    /// <param name="fromAsset">Quote asset, for example `ETH`</param>
-    /// <param name="toAsset">Base asset, for example `ETH`</param>
-    /// <param name="fromAmount">Quote quantity</param>
-    /// <param name="toAmount">Quote quantity</param>
-    /// <param name="walletType">The wallet type for convert</param>
-    /// <param name="validTime">The valid time for quote</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="fromAsset">Source asset, for example BTC</param>
+    /// <param name="toAsset">Destination asset, for example USDT</param>
+    /// <param name="fromAmount">Amount debited after conversion. Exactly one of fromAmount or toAmount must be provided.</param>
+    /// <param name="toAmount">Amount credited after conversion. Exactly one of fromAmount or toAmount must be provided.</param>
+    /// <param name="walletType">Wallet or wallet combination used for payment. The server default is SPOT.</param>
+    /// <param name="validTime">Quote validity duration. The server default is 10 seconds.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<BinanceConvertQuote>> QuoteRequestAsync(string fromAsset, string toAsset, decimal? fromAmount = null, decimal? toAmount = null, BinanceConvertWalletType? walletType = null, BinanceConvertValidTime? validTime = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Accept the previously requested quote
-    /// <para><a href="https://developers.binance.com/docs/convert/trade/Accept-Quote" /></para>
+    /// Accept the offered quote and execute the conversion
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#accept-quote" /></para>
     /// </summary>
-    /// <param name="quoteId">The quote id of the order</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="quoteId">The quote id to accept</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<BinanceConvertResult>> AcceptQuoteAsync(string quoteId, int? receiveWindow = null, CancellationToken ct = default);

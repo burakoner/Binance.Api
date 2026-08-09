@@ -1,7 +1,7 @@
 ﻿namespace Binance.Api.Convert;
 
 /// <summary>
-/// Convert Quote
+/// Accepted Convert quote result
 /// </summary>
 public record BinanceConvertResult
 {
