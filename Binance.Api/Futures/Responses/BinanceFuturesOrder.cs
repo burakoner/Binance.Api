@@ -65,13 +65,13 @@ public record BinanceFuturesOrder
     public decimal? CumulativeQuantity { get; set; }
 
     /// <summary>
-    /// Cumulative quantity in quote asset ( for USD futures )
+    /// Cumulative quantity in the quote asset
     /// </summary>
     [JsonProperty("cumQuote")]
     public decimal? QuoteQuantityFilled { get; set; }
 
     /// <summary>
-    /// Cumulative quantity in quote asset ( for Coin futures )
+    /// Cumulative quantity in the base asset
     /// </summary>
     [JsonProperty("cumBase")]
     public decimal? BaseQuantityFilled { get; set; }

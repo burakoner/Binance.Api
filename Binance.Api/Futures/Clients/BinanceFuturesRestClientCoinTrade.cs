@@ -390,20 +390,35 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetOrdersAsync(string? symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetOrdersAsync(string? symbol = null, string? pair = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+        if (pair is not null && string.IsNullOrWhiteSpace(pair))
+            throw new ArgumentException("pair cannot be empty when provided", nameof(pair));
+        if ((symbol is null) == (pair is null))
+            throw new ArgumentException("Exactly one of symbol or pair must be provided");
+        if (pair is not null && orderId.HasValue)
+            throw new ArgumentException("orderId can only be combined with symbol", nameof(orderId));
+        limit?.ValidateIntBetween(nameof(limit), 1, 100);
+        if (startTime.HasValue && endTime.HasValue)
+        {
+            if (endTime.Value <= startTime.Value)
+                throw new ArgumentOutOfRangeException(nameof(endTime), "endTime must be later than startTime");
+            if (endTime.Value - startTime.Value >= TimeSpan.FromDays(7))
+                throw new ArgumentOutOfRangeException(nameof(endTime), "The query time period must be less than 7 days");
+        }
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
+        parameters.AddOptional("pair", pair);
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
-        var weight = symbol == null ? 40 : 20;
-        return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(dapi, v1, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(dapi, v1, "allOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<List<BinanceFuturesOrder>>> GetOpenOrdersAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)

@@ -312,7 +312,7 @@ internal class Program
         var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("---SYMBOL---");
         var futures_209 = await api.UsdFutures.CancelAllOrdersAfterTimeoutAsync("---SYMBOL---", TimeSpan.FromSeconds(15));
         var futures_210 = await api.UsdFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
-        var futures_211 = await api.UsdFutures.GetOrdersAsync();
+        var futures_211 = await api.UsdFutures.GetOrdersAsync("---SYMBOL---");
         var futures_212 = await api.UsdFutures.GetOpenOrdersAsync();
         var futures_213 = await api.UsdFutures.GetOpenOrderAsync("---SYMBOL---");
         var futures_214 = await api.UsdFutures.GetForcedOrdersAsync();

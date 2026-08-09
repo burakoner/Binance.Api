@@ -183,18 +183,22 @@ public interface IBinanceFuturesRestClientCoinTrade
     Task<RestCallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets all orders for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/All-Orders" /></para>
+    /// Gets all COIN-M orders for exactly one symbol or pair. Pair queries return orders for every symbol in that pair and cannot include an order ID.
+    /// When no time bounds are sent, Binance returns the latest seven days; an explicit query period must be shorter than seven days.
+    /// Canceled or expired orders with no fill are unavailable after three days, and all orders are unavailable after 90 days.
+    /// This is a signed USER_DATA query with the current post-migration flat IP weight 5.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#all-orders" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get orders for, for example `BTCUSD_PERP`</param>
-    /// <param name="orderId">If set, only orders with an order id higher than the provided will be returned</param>
-    /// <param name="startTime">If set, only orders placed after this time will be returned</param>
-    /// <param name="endTime">If set, only orders placed before this time will be returned</param>
-    /// <param name="limit">Max number of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="symbol">Optional symbol scope, for example <c>BTCUSD_PERP</c>; mutually exclusive with <paramref name="pair"/>.</param>
+    /// <param name="pair">Optional pair scope, for example <c>BTCUSD</c>; mutually exclusive with <paramref name="symbol"/>.</param>
+    /// <param name="orderId">Optional inclusive order identifier; valid only with a symbol.</param>
+    /// <param name="startTime">Optional query start time.</param>
+    /// <param name="endTime">Optional query end time. Together with <paramref name="startTime"/>, the period must be shorter than seven days.</param>
+    /// <param name="limit">Optional result limit from 1 through 100; server default is 50.</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>List of orders</returns>
-    Task<RestCallResult<List<BinanceFuturesOrder>>> GetOrdersAsync(string? symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The matching orders.</returns>
+    Task<RestCallResult<List<BinanceFuturesOrder>>> GetOrdersAsync(string? symbol = null, string? pair = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets a list of open orders
