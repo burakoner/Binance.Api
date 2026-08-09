@@ -1387,6 +1387,28 @@ No REST route, listen-token lifecycle method, callback shape, transport, authent
 
 The measurable minimum after this correction is six turns and 4.5-15 active hours. It still excludes the unknown FIX/SBE implementation program and any implementation slices produced by the remaining inventories.
 
+## Slice 102: Convert and Algo closing inventory
+
+The complete Convert and Algo Trading surfaces were refreshed on 2026-08-10 against the live top-level catalog, all four canonical REST endpoint pages, both product changelogs through their 2025-12-26 entries effective 2026-01-15, and official generated Go connector HEAD `a0c61d1ef7539023322e3b138a16cc077f9ea1d1`. This was an evidence-only inventory: no production API, account request, quote acceptance, order placement, cancellation, or other mutation was sent and no implementation was changed.
+
+The current Convert catalog contains nine method/path pairs and the wrapper contains the same nine. The current Algo catalog contains six Futures and five Spot method/path pairs and the wrapper contains the same eleven. Normalized comparisons are therefore 9/9 and 11/11 respectively, with no official-only or wrapper-only route in either product. All twenty public XML documentation links target the current canonical catalog pages; no retired `/docs/convert` or `/docs/algo` link remains on the production, interface, README, or console surfaces.
+
+Every matched endpoint was rechecked beyond its route. Convert request authentication, query/form placement, account/IP weights, mutually exclusive amount and identifier combinations, receive-window and history ranges, current wallet/valid-time/order enums, int64 timestamps and identifiers, decimal precision, and complete response containers remain aligned. The documentation still refers to an undefined `fromIsBase` value while describing limit-price direction; the wrapper deliberately does not infer or reorder financial sides from that undefined field. Algo Futures and Spot cancellation, open/historical/sub-order queries, pagination, TWAP/VP request shapes, exact 32-character client identifiers, side/position-side/urgency enums, int64 identifiers, and current complete result/order/sub-order payloads also remain aligned. Server-state-dependent notional and open-order limits remain server-enforced rather than being represented as deterministic local validation.
+
+Both product changelogs' latest security-relevant notice requires the signed payload to be percent-encoded before signature calculation from 2026-01-15. The shared REST authentication path already signs the exact encoded query or form body used on the wire, so the rule applies uniformly to all signed Convert and Algo calls. The deterministic non-ASCII HMAC regression confirms the encoded byte sequence and resulting signature.
+
+No confirmed endpoint, request, response, authentication, model, validation, documentation-link, README, console, or release-note difference remains, so this inventory does not create an implementation slice. All 18 Convert-focused tests, all 18 Algo-focused tests, the exact encoded-signature regression, and all 330 deterministic tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three known warnings.
+
+### Revised next order
+
+1. Slice 103: refresh the USDⓈ-M closing inventory across REST, WebSocket API, routed market/public/private streams, and user-data contracts.
+2. Slice 104: refresh the COIN-M closing inventory across REST, WebSocket API, market streams, and user-data contracts.
+3. Slice 105: refresh the Options closing inventory across REST, WebSocket API, market streams, and user-data contracts.
+4. Backward Review 24: reconcile Slices 100-105, cross-product public API, documentation, release notes, and the living execution order.
+5. Slice 106: define the separate Spot FIX/SBE architecture and implementation execution contract; do not represent that slice as protocol implementation.
+
+The measurable minimum after this inventory is five turns and 4-13 active hours. It still excludes the unknown FIX/SBE implementation program and any implementation work discovered by the remaining three inventories.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1515,3 +1537,4 @@ The measurable minimum after this correction is six turns and 4.5-15 active hour
 | Review 23 | Complete | Backward review of COIN-M price-kline alignment and Spot closing work; external-plan reconciliation | `fc60a22..9104788` diff review, live COIN-M and Spot schemas, Spot changelog and expiry-reason list, connector HEAD `d9be6628`, stale-surface and plan-consistency scans, 7 targeted and 330 complete tests, forced full multi-target rebuild |
 | 100 | Complete | Margin closing inventory across REST, listen-token WebSocket API, trade-data events, and Cross Margin risk data | Live 65-route catalog, changelog through 2026-07-10, current lifecycle guides and event schemas, connector HEAD `d9be6628`, 65/65 normalized REST match, five token events, two risk events, two bounded user-data defects, 59 Margin and 330 complete tests, forced rebuild |
 | 101 | Complete | Margin listen-token int64 subscription identifiers and `executionReport.I` ignored-field semantics | Live Margin event schema, shared current WebSocket API subscription contract, connector HEAD `d9be6628`, above-int32 lifecycle routing, complete conditional string-wire payload, 7 exact lifecycle, 59 Margin, and 330 complete tests, forced rebuild |
+| 102 | Complete | Convert and Algo closing inventories across all current REST endpoints | Live catalog and canonical endpoint pages, product changelogs through the 2026-01-15 signing change, connector HEAD `a0c61d1`, exact 9/9 Convert and 11/11 Algo route comparisons, endpoint-level contract matrix, canonical-link scan, 18 Convert, 18 Algo, exact encoded-signature, and 330 complete tests, forced rebuild |
