@@ -29,13 +29,22 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesCoinAccountInfo>(GetUrl(dapi, v1, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbolOrPair = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesPairBracket>>> GetPairBracketsAsync(string? pair = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("pair", symbolOrPair);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("pair", pair);
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceFuturesSymbolBracket>>(GetUrl(dapi, v2, "leverageBracket"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesPairBracket>>(GetUrl(dapi, v1, "leverageBracket"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+    }
+
+    public Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("symbol", symbol);
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        return RequestAsync<List<BinanceFuturesSymbolBracket>>(GetUrl(dapi, v2, "leverageBracket"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 2 : 1);
     }
 
     public Task<RestCallResult<BinanceFuturesPositionMode>> GetPositionModeAsync(int? receiveWindow = null, CancellationToken ct = default)

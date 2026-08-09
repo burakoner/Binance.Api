@@ -34,16 +34,25 @@ public interface IBinanceFuturesRestClientCoinAccount
     Task<RestCallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets Notional and Leverage Brackets.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Notional-Bracket-for-Pair" /></para>
+    /// Gets the default Notional and Leverage Brackets for a pair.
+    /// <para><b>Warning:</b> Binance does not recommend this v1 operation because a pair can contain symbols with different brackets. Prefer <see cref="GetBracketsAsync" /> with a specific symbol.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#notional-bracket-for-pair" /></para>
     /// </summary>
-    /// <param name="symbolOrPair">The symbol or pair to get the data for, for example `BTCUSD_PERP`</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="pair">The pair to get the default brackets for, for example `BTCUSD`</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>Notional and Leverage Brackets</returns>
-    Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbolOrPair = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>Pair-default Notional and Leverage Brackets</returns>
+    Task<RestCallResult<List<BinanceFuturesPairBracket>>> GetPairBracketsAsync(string? pair = null, int? receiveWindow = null, CancellationToken ct = default);
 
-    // TODO: Notional Bracket for Pair(USER_DATA)
+    /// <summary>
+    /// Gets the Notional and Leverage Brackets for a symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#notional-bracket-for-symbol" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol to get the brackets for, for example `BTCUSD_PERP`</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Symbol-specific Notional and Leverage Brackets</returns>
+    Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol

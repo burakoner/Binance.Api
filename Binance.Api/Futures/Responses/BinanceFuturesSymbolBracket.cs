@@ -6,7 +6,7 @@
 public record BinanceFuturesSymbolBracket
 {
     /// <summary>
-    /// Symbol or pair
+    /// Symbol
     /// </summary>
     [JsonProperty("symbol")]
     public string Symbol { get; set; } = string.Empty;
@@ -16,12 +16,6 @@ public record BinanceFuturesSymbolBracket
     /// </summary>
     [JsonProperty("notionalCoef")]
     public decimal? NotionalCoef { get; set; }
-
-    [JsonProperty("pair")]
-    private string Pair
-    {
-        set => Symbol = value;
-    }
 
     /// <summary>
     /// Brackets
@@ -40,13 +34,13 @@ public record BinanceFuturesBracket
     /// Bracket
     /// </summary>
     [JsonProperty("bracket")]
-    public int Bracket { get; set; }
+    public long Bracket { get; set; }
 
     /// <summary>
     /// Max initial leverage for this bracket
     /// </summary>
     [JsonProperty("initialLeverage")]
-    public int InitialLeverage { get; set; }
+    public long InitialLeverage { get; set; }
 
     /// <summary>
     /// Cap of this bracket
@@ -66,7 +60,7 @@ public record BinanceFuturesBracket
     [JsonProperty("notionalFloor")]
     public long Floor { get; set; }
 
-    [JsonProperty("qtyFloor")]
+    [JsonProperty("qtylFloor")]
     private long QuantityFloor
     {
         set => Floor = value;

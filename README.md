@@ -514,6 +514,9 @@ var futures_908 = await api.CoinFutures.GetDownloadIdForOrderHistoryAsync(DateTi
 var futures_909 = await api.CoinFutures.GetDownloadLinkForOrderHistoryAsync("---DOWNLOAD-ID---");
 var futures_910 = await api.CoinFutures.GetDownloadIdForTradeHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
 var futures_911 = await api.CoinFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
+var futures_912 = await api.CoinFutures.GetBracketsAsync("---SYMBOL---");
+// WARNING: Binance does not recommend pair-default v1 brackets when a pair has symbols with different brackets. Prefer GetBracketsAsync with a specific symbol.
+// var futures_913 = await api.CoinFutures.GetPairBracketsAsync("---PAIR---");
 
 // Futures Data Methods (PRIVATE)
 var futures_1001 = await api.FuturesData.GetFuturesDataLinkAsync("---SYMBOL---", BinanceFuturesDataType.TickData, DateTime.UtcNow.AddMonths(-3), DateTime.UtcNow);
