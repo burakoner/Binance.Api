@@ -466,11 +466,22 @@ The official all-orders and open-orders item schemas are exactly identical at 30
 
 Three deterministic cases cover the complete signed request, weight 5, required and omitted filters, int64 identifiers and limits, millisecond time serialization, strict time-range and limit validation, the absence of an invented receive-window ceiling, and representative list-item response fields. README, console examples, and release notes are current. The complete comparison is now 95 catalog routes, 90 wrapper routes, 90 exact matches, 5 catalog-only routes, and no wrapper-only route. Excluding the explicitly deprecated v1 price route gives 94 active catalog routes, 90 exact wrapper matches, and 4 actionable official-only routes. Trade coverage improves to 28 exact matches out of 32. All 188 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 52: native USDⓈ-M conditional Algo mutation scope decision
+
+The current `POST /fapi/v1/algoOrder` placement and `DELETE /fapi/v1/algoOrder` single-order cancellation sections were compared independently against the live Trade catalog and the current official generated JavaScript connector. Both are signed `TRADE` mutations on the same resource path, but that superficial lifecycle relationship does not make them one safe small implementation unit.
+
+Placement exposes 21 explicit business/window parameters before the signing timestamp is injected, a 25-field order response, order-count limits distinct from IP weight, and a large conditional validation matrix across order type, position mode, time in force, quantity, price matching, close-all behavior, price protection, reduce-only behavior, trailing-stop activation/callback values, self-trade prevention, and good-till-date. The canonical page also places the form-encoded fields in the request body while the current generated connector emits them as query parameters, and the page's seven-value `type` enum includes `LIMIT` and `MARKET` even though its introduction names only five supported conditional types. Those source conflicts must be resolved against authoritative endpoint behavior and cannot be silently guessed during a combined mutation slice.
+
+Single-order cancellation is materially narrower: IP weight 1, query parameters, either an int64 `algoId` or a nonblank `clientAlgoId`, an optional `recvWindow` capped at 60,000 milliseconds, and a four-field response (`algoId`, `clientAlgoId`, string `code`, and `msg`). The live section and generated connector agree on its method, path, parameter placement, identifier rule, and response shape. It will therefore be implemented alone in the next mutation slice; placement will remain a separate endpoint-level investigation and implementation.
+
+This is a decision-only slice. No source code or public API changed, route counts remain 95 catalog/90 wrapper/90 exact/5 catalog-only/0 wrapper-only, and the active comparison remains 94/90 with four actionable official-only routes after excluding the deprecated v1 ticker. The review cadence still counts Slice 51 as the only implementation slice since Backward Review 11. All 188 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Reassess native conditional Algo placement `POST /fapi/v1/algoOrder` and single-order cancellation `DELETE /fapi/v1/algoOrder` together only if both live mutation contracts form one coherent two-endpoint lifecycle; otherwise split them.
-2. Keep bulk Algo cancellation `DELETE /fapi/v1/algoOpenOrders` and the TradFi agreement mutation `POST /fapi/v1/stock/contract` in separate endpoint-level slices.
-3. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
+1. Implement only single-order cancellation `DELETE /fapi/v1/algoOrder`, including its alternative-identifier rule, endpoint-specific receive-window ceiling, signed query placement, weight, response, and deterministic no-transport validation.
+2. Investigate and implement placement `POST /fapi/v1/algoOrder` alone, resolving the canonical-body/generated-connector-query conflict and the published order-type contradiction before committing a public contract.
+3. Keep bulk Algo cancellation `DELETE /fapi/v1/algoOpenOrders` and the TradFi agreement mutation `POST /fapi/v1/stock/contract` in separate endpoint-level slices.
+4. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
 
 ## Review log
 
@@ -538,3 +549,4 @@ Three deterministic cases cover the complete signed request, weight 5, required 
 | 50 | Complete | Native USDⓈ-M conditional Algo order and open-order queries | Live canonical Trade sections, current generated connector and distinct models, signed identifier/dynamic-weight/receive-window/full-shape tests, 185 deterministic tests |
 | Review 11 | Complete | Backward review of USDⓈ-M Market Data, balance-version coexistence, native Algo queries, documentation, and execution order | `aaa8b96..22ad549` diff review, live seven-route recheck, connector schema comparison, GET/signing/weight/receive-window scans, corrected living inventory, 185 tests, forced full multi-target rebuild |
 | 51 | Complete | Native USDⓈ-M all conditional Algo orders query | Live canonical Trade section, current generated connector and shared 30-field list schema, signed filter/range/limit/receive-window tests, 188 deterministic tests |
+| 52 | Complete | Native USDⓈ-M conditional Algo mutation scope decision | Live placement and single-cancel Trade sections, current generated connector and response models, documented source conflicts, no implementation |
