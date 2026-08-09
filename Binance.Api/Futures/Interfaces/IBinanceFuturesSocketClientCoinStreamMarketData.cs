@@ -203,33 +203,33 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to mini ticker updates stream for a specific symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Individual-Symbol-Mini-Ticker-Stream" /></para>
+    /// Subscribes to 24-hour mini ticker updates for a COIN-M symbol. Use the symbol-type-aware volume properties on the callback model.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#individual-symbol-mini-ticker-stream" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to subscribe to, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamCoinMiniTick>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to mini ticker updates stream for a list of symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Individual-Symbol-Mini-Ticker-Stream" /></para>
+    /// Subscribes to 24-hour mini ticker updates for COIN-M symbols. Use the symbol-type-aware volume properties on the callback model.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#individual-symbol-mini-ticker-stream" /></para>
     /// </summary>
     /// <param name="symbols">The symbols to subscribe to, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamCoinMiniTick>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to mini ticker updates stream for all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/All-Market-Mini-Tickers-Stream" /></para>
+    /// Subscribes to the merged USDⓈ-M and COIN-M 24-hour mini ticker stream. Use <c>SymbolType</c> and the product-safe volume properties.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#all-market-mini-tickers-stream" /></para>
     /// </summary>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinMiniTick>>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamMiniTick>>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to ticker updates stream for a specific symbol

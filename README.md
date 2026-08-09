@@ -1144,9 +1144,9 @@ var futures_508 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], B
 var futures_509 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
 var futures_510 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync("---PAIR---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
 var futures_511 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync(["---PAIR---"], BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
-var futures_512 = await ws.UsdFutures.SubscribeToMiniTickersAsync("---SYMBOL---", (data) => { });
+var futures_512 = await ws.UsdFutures.SubscribeToMiniTickersAsync("---SYMBOL---", (data) => { _ = data.Data.BaseAssetVolume; _ = data.Data.QuoteAssetVolume; });
 var futures_513 = await ws.UsdFutures.SubscribeToMiniTickersAsync(["---SYMBOL---"], (data) => { });
-var futures_517 = await ws.UsdFutures.SubscribeToMiniTickersAsync((data) => { });
+var futures_517 = await ws.UsdFutures.SubscribeToMiniTickersAsync((data) => { foreach (var ticker in data.Data) { _ = ticker.SymbolType; _ = ticker.BaseAssetVolume; } });
 var futures_514 = await ws.UsdFutures.SubscribeToTickersAsync((data) => { });
 var futures_515 = await ws.UsdFutures.SubscribeToTickersAsync("---SYMBOL---", (data) => { });
 var futures_516 = await ws.UsdFutures.SubscribeToTickersAsync(["---SYMBOL---"], (data) => { });
@@ -1201,6 +1201,9 @@ var coinFutures_514 = await ws.CoinFutures.SubscribeToPartialOrderBookUpdatesAsy
 var coinFutures_515 = await ws.CoinFutures.SubscribeToPartialOrderBookUpdatesAsync(["---SYMBOL---"], 20, null, (data) => { });
 var coinFutures_516 = await ws.CoinFutures.SubscribeToOrderBookUpdatesAsync("---SYMBOL---", 500, (data) => { });
 var coinFutures_517 = await ws.CoinFutures.SubscribeToOrderBookUpdatesAsync(["---SYMBOL---"], null, (data) => { });
+var coinFutures_518 = await ws.CoinFutures.SubscribeToMiniTickerUpdatesAsync("---SYMBOL---", (data) => { _ = data.Data.BaseAssetVolume; _ = data.Data.ContractVolume; });
+var coinFutures_519 = await ws.CoinFutures.SubscribeToMiniTickerUpdatesAsync(["---SYMBOL---"], (data) => { });
+var coinFutures_520 = await ws.CoinFutures.SubscribeToAllMiniTickerUpdatesAsync((data) => { foreach (var ticker in data.Data) { _ = ticker.SymbolType; _ = ticker.BaseAssetVolume; } });
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });
