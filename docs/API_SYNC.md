@@ -394,11 +394,23 @@ The new `GetUserCommissionAsync` operation targets `/eapi/v1/commission` and acc
 
 Three deterministic tests cover both signed GET paths, absent bodies and content types, API-key headers, exact IP weights, complete block-trade filters, configured receive-window behavior, boundary rejection, int64 trade IDs, string order identifiers, timestamps, closed side/liquidity values, and commission deserialization. The full suite has 166 tests. No Binance endpoint was called. Regenerating the route comparison yields 44 official routes, 47 wrapper routes, 43 exact matches, one official-only route (`POST /eapi/v1/stock/contract`), and the same four unproven wrapper-only lifecycle candidates.
 
+## Review 10: Algo queries and first derivative implementation
+
+The backward review covers `c793ab4..7732301`: both Algo cancellations, all six read-only Algo queries, the three derivative route-inventory refreshes, and the first Options implementation group. The complete code diff, deterministic tests, public interfaces and models, README and console call sites, release notes, and execution contract were re-read. Repository scans found no stale Algo method or parameter names, obsolete Algo documentation paths, narrowed reviewed counters, GET or DELETE bodies in the reviewed Algo operations, duplicate commission operation, or old malformed Options `tradePrice` public member. No implementation regression requiring rollback or a corrective source change was found.
+
+The live Algo catalog still exposes 11 operations and the live Options catalog still exposes 44. Binance's current generated connector remains at commit `092e4f289e9047114fb8ec66256510cc207e16bb`; its Algo and Options method/path sets independently match those catalog counts. A fresh normalized comparison gives Algo 11 official/11 wrapper/11 exact/0 official-only/0 wrapper-only and Options 44/47/43/1/4. The reviewed Options account block-trade page continues to publish `GET /eapi/v1/block/user-trades`, IP weight 5, query filters, and the 60000-millisecond receive-window ceiling. The current catalog navigation and generated connector expose `GET /eapi/v1/commission`; its live Trade detail body did not render during this review, so no unsupported detail was inferred from the blank page.
+
+The derivative inventories were also regenerated rather than copied forward. USDⓈ-M remains 95 official/83 wrapper/83 exact/12 official-only/0 wrapper-only; COIN-M remains 64/64/63/1/1. The first local extraction pass falsely undercounted both wrappers because it only recognized `fapi` and `dapi` URL construction and omitted the seven USDⓈ-M and six COIN-M routes deliberately built from root-relative `/futures/data/*` paths. Expanding the extractor to both URL forms restored the documented counts and candidate identities. This was a review-script defect, not a production-code or inventory-document defect.
+
+One documentation defect was found: Slice 46 changed and added public Options operations without recording them in the root release notes. `CHANGELOG.md` now records the block-trade and user-commission alignment. No broader Options removal was made: the four wrapper-only lifecycle candidates still lack explicit retirement evidence, while COIN-M `GET /dapi/v1/pmAccountInfo` has separate positive retirement evidence and remains isolated for a future breaking slice.
+
+The next bounded group is limited to endpoint-level validation of USDⓈ-M `GET /fapi/v1/rpiDepth` and `GET /fapi/v1/symbolAdlRisk`. They may share one implementation slice only if both current endpoint pages confirm unsigned, read-only Market Data contracts; otherwise they split. Native conditional Algo mutations, TradFi agreement mutations, breaking removals, version-coexistence decisions, and ambiguous Options lifecycle candidates remain outside that slice.
+
 ### Revised next order
 
-1. Perform Review 10 across Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
-2. Reassess the three derivative inventories before selecting the next bounded endpoint group.
-3. Keep breaking removals and financially distinct mutation endpoints out of a shared implementation slice.
+1. Validate USDⓈ-M `GET /fapi/v1/rpiDepth` and `GET /fapi/v1/symbolAdlRisk` independently; implement them together only if both remain unsigned read-only Market Data operations with unambiguous current contracts.
+2. Reassess the remaining USDⓈ-M read-only candidates (`GET /fapi/v1/ticker/price`, `GET /fapi/v1/tradingSchedule`, and `GET /fapi/v2/balance`) after that bounded slice rather than pre-committing their order.
+3. Keep the COIN-M retired-operation removal, Options lifecycle candidates, version-coexistence decisions, conditional Algo mutations, and TradFi agreement mutations in separate endpoint-level slices.
 
 ## Review log
 
@@ -459,3 +471,4 @@ Three deterministic tests cover both signed GET paths, absent bodies and content
 | 44 | Complete | COIN-M Futures REST route inventory refresh | Live 64-operation catalog, current official generated connector, corrected 64/64/63/1/1 candidate identity, 2026-06-30 retirement evidence, no implementation |
 | 45 | Complete | Options REST route inventory refresh | Live 44-operation catalog, current official generated connector, refreshed 44/45/41/3/4 comparison, dated addition evidence and explicit retirement uncertainty, no implementation |
 | 46 | Complete | Read-only Options account block trades and user commission | Live canonical Options catalog, dated changelog, current generated connector and models, route/signature/weight/receive-window/model tests, 166 deterministic tests |
+| Review 10 | Complete | Algo cancellations and queries, derivative inventories, first Options implementation, documentation, and execution order | `c793ab4..7732301` diff review, live 11-route Algo and 44-route Options catalogs, corrected `/futures/data`-aware 95/83/83/12/0 and 64/64/63/1/1 regeneration, 44/47/43/1/4 Options comparison, residue scans, 166 tests, forced full multi-target rebuild |

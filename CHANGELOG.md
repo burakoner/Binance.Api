@@ -21,6 +21,7 @@
   * Aligned Spot and Futures Algo cancellation with signed DELETE query parameters, receive-window validation, canonical identifiers, and 64-bit response codes
   * Aligned all three read-only Futures Algo queries with current pagination, receive-window, terminology, documentation, and response contracts
   * Aligned all three read-only Spot Algo queries with current pagination, receive-window, terminology, documentation, and shared response contracts
+  * Aligned Options account block-trade history and user commission queries with current routes, weights, receive-window validation, and response contracts
   * Replaced retired Spot listen-key REST and stream operations with signed WebSocket API user data subscriptions, subscription-ID routing, reconnect-safe signing, and current event models
   * Replaced the removed Margin listen-key documentation contract with API-key-issued listen tokens, WebSocket API subscriptions, replacement-token extension, and current Margin event models
   * Added the separate current Cross Margin risk-data listen-key lifecycle and `margin-stream.binance.com` margin-level/liability event stream
