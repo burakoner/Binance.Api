@@ -544,6 +544,7 @@ var options_301 = await api.Options.GetAccountAsync();
 var options_302 = await api.Options.GetAccountFundingFlowAsync("---CURRENCY---");
 var options_303 = await api.Options.GetTransactionHistoryDownloadIdAsync();
 var options_304 = await api.Options.GetTransactionHistoryDownloadLinkAsync(1_000_001);
+var options_305 = await api.Options.GetMarginAccountAsync();
 
 // European Options -> Trade Methods (PRIVATE)
 var options_401 = await api.Options.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceOptionsOrderType.Limit, 100.0m, 1.10m, BinanceTimeInForce.GoodTillCanceled);
@@ -563,14 +564,13 @@ var options_412 = await api.Options.GetUserTradesAsync();
 
 // TODO: European Options -> User Data Stream Methods (PRIVATE)
 
-// TODO: European Options -> Market Maker -> Account Methods (PRIVATE)
-var options_601 = await api.Options.MarketMaker.GetAccountAsync();
-var options_602 = await api.Options.MarketMaker.GetProtectionAsync("---UNDERLYING---");
-var options_603 = await api.Options.MarketMaker.GetCancelAllCountdownAsync("---UNDERLYING---");
-var options_604 = await api.Options.MarketMaker.SetProtectionAsync("---UNDERLYING---", 3000, 5000, 100.0m, 10);
-var options_605 = await api.Options.MarketMaker.CancelAllCountdownHeartbeatAsync([]);
-var options_606 = await api.Options.MarketMaker.ResetProtectionAsync("---UNDERLYING---");
-var options_607 = await api.Options.MarketMaker.SetCancelAllCountdownAsync("---UNDERLYING---", 30);
+// European Options -> Market Maker Endpoints (PRIVATE)
+var options_601 = await api.Options.MarketMaker.GetProtectionAsync("---UNDERLYING---");
+var options_602 = await api.Options.MarketMaker.GetCancelAllCountdownAsync("---UNDERLYING---");
+var options_603 = await api.Options.MarketMaker.SetProtectionAsync("---UNDERLYING---", 3000, 5000, 100.0m, 10);
+var options_604 = await api.Options.MarketMaker.CancelAllCountdownHeartbeatAsync([]);
+var options_605 = await api.Options.MarketMaker.ResetProtectionAsync("---UNDERLYING---");
+var options_606 = await api.Options.MarketMaker.SetCancelAllCountdownAsync("---UNDERLYING---", 30);
 
 // TODO: European Options -> Market Maker -> Block Trade Methods (PRIVATE)
 var options_701 = await api.Options.MarketMaker.PlaceBlockOrderAsync( BinanceOptionsLiquidity.Taker, []);

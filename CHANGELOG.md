@@ -16,6 +16,7 @@
   * Added native USDⓈ-M bulk conditional Algo cancellation with the current symbol-scoped signed query, receive-window validation, weight, and complete response contract
   * Added explicit USDⓈ-M TradFi Perps agreement signing with the current signed form contract, receive-window ceiling, weight, response precision, and non-executable sample warning
   * Added explicit TradFi Options agreement signing with the current signed form contract, receive-window ceiling, weight, response precision, and non-executable sample warning
+  * Moved the current Options Margin Account query from the Market Maker subclient to `GetMarginAccountAsync` on the Account client and aligned its complete response contract
   * Removed the retired COIN-M Classic Portfolio Margin account-information operation; Binance directs clients to the active USDⓈ-M operation
   * Fixed the active USDⓈ-M Classic Portfolio Margin account-information query omitting USER_DATA signing and the documented receive-window ceiling
   * Added current COIN-M pair-default leverage brackets and corrected the symbol-specific route parameter, dynamic weight, receive-window ceiling, and response fields

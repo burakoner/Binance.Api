@@ -2,14 +2,6 @@
 
 internal partial class BinanceOptionsRestClientMarketMaker
 {
-    public Task<RestCallResult<BinanceOptionsMarketMakerAccount>> GetAccountAsync(int? receiveWindow = null, CancellationToken ct = default)
-    {
-        var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
-
-        return RequestAsync<BinanceOptionsMarketMakerAccount>(GetUrl(eapi, v1, "marginAccount"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
-    }
-
     public Task<RestCallResult<BinanceOptionsMarketMakerProtection>> GetProtectionAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection

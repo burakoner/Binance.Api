@@ -15,6 +15,15 @@ public interface IBinanceOptionsRestClientAccount
     Task<RestCallResult<BinanceOptionsAccount>> GetAccountAsync(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Get current Option Margin account information.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/account#option-margin-account-information" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance defaults to 5000 milliseconds when omitted and currently publishes no maximum for this endpoint</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The current Option Margin account information</returns>
+    Task<RestCallResult<BinanceOptionsMarginAccount>> GetMarginAccountAsync(long? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Query account funding flows.
     /// <para><a href="https://developers.binance.com/docs/derivatives/option/account/Account-Funding-Flow" /></para>
     /// </summary>

@@ -6,15 +6,6 @@
 public interface IBinanceOptionsRestClientMarketMakerAccount
 {
     /// <summary>
-    /// Get current account information.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-maker-endpoints" /></para>
-    /// </summary>
-    /// <param name="receiveWindow">Receive Window</param>
-    /// <param name="ct">Cancellation Token</param>
-    /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsMarketMakerAccount>> GetAccountAsync(int? receiveWindow = null, CancellationToken ct = default);
-
-    /// <summary>
     /// Get config for MMP.
     /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Get-Market-Maker-Protection-Config" /></para>
     /// </summary>
