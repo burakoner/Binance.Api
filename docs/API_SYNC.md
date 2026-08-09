@@ -1327,6 +1327,25 @@ No subscription, callback, transport, authentication, README, or console call sh
 
 The exact execution-report regression, all 41 Spot-focused tests, and all 330 solution tests pass. A forced multi-target solution rebuild succeeds with zero errors and the same three pre-existing warnings.
 
+## Backward Review 23: COIN-M price klines and Spot closing work
+
+The `fc60a22..9104788` range was reviewed as one unit across production models, subscription callbacks, validation, deterministic tests, README and console examples, release notes, this execution contract, and the external tracking plan. The range contains Slices 96-99: separate COIN-M mark-price and index-price kline contracts, the Spot closing inventory, and the Spot `executionReport.eR` correction.
+
+The live COIN-M WebSocket Stream catalog and official generated Python connector HEAD `d9be6628` still agree with the implemented split. Both families retain outer `e/E/ps/k`; mark-price data uses close time and explicitly ignored `f/L/v/q/V/Q/B` fields, while index-price data uses transaction time, ignored `f/L`, generic unit-unspecified `v/q/V/Q/B`, and the current nested `s="0"` placeholder. Exact case-sensitive topic segments, the complete fifteen-interval set, the exclusion of `1s`, and the 1,024-stream guard remain consistent. Source scans found no stale callback, deleted shared model, or executable example using the old surface.
+
+The live Spot event schema, 2026-03-09 changelog announcement effective 2026-03-26, official expiry-reason list, and generated connector HEAD still agree on optional string field `eR`. The local enum covers the nine officially listed values exactly, the callback preserves absence as `null`, and the regression exercises the real subscription envelope. The schema's unlisted `EXPIRED` example remains insufficient evidence for inventing a tenth public enum member.
+
+No production-code, test, README, console, or release-note regression was found, so this review makes no speculative code change. It did find a concrete planning defect in the external tracker: its header was stale at Slice 97 and its minimum remaining budget contradicted itself as both 8 turns / 6-19.5 hours and 9 turns / 6.5-21 hours. The tracker is reconciled to the completed Slice 99 and Review 23 state. The measurable minimum after this review is seven turns and 5.5-18 active hours: five product inventories, Review 24, and the FIX/SBE execution-contract slice. That figure does not include the still-unknown FIX/SBE implementation program or any implementation slices produced by the inventories.
+
+### Revised next order
+
+1. Slice 100: Margin closing inventory across REST, WebSocket API, listen-token, risk-data, and event-stream contracts.
+2. Slices 101-104: Convert plus Algo, USD-M, COIN-M, and Options closing inventories, each remaining evidence-only and splitting confirmed defects into small product/risk implementation slices.
+3. Backward Review 24: reconcile Slices 100-104, cross-product public API, documentation, release notes, and the living execution order.
+4. Slice 105: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. Do not represent that architecture slice as protocol implementation.
+
+Seven targeted COIN-M price-kline and Spot expiry-reason regressions pass, all 330 deterministic tests pass, and a forced full multi-target rebuild succeeds with zero errors and the same three known warnings. No authenticated Binance operation, account request, order, or mutation was sent during this review.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1452,3 +1471,4 @@ The exact execution-report regression, all 41 Spot-focused tests, and all 330 so
 | 97 | Complete | Current COIN-M index-price kline stream contract | Live canonical COIN-M stream catalog and three read-only public payload samples, connector HEAD `d9be6628`, exact-topic/full-payload/placeholder-symbol/unit-safety/public-surface tests, 330 deterministic tests, forced full multi-target rebuild |
 | 98 | Complete | Spot closing inventory across REST, WebSocket API, JSON streams, user data, FIX, and SBE | Live catalogs and changelog through 2026-07-27, connector HEAD `d9be6628`, 48/47/47 REST and 55/54/54 WebSocket API reconciliation, 15/15 JSON stream families, 6/6 user-data event types, one missing `executionReport.eR` field, confirmed empty FIX/SBE implementation surfaces, 41 Spot and 330 complete tests, forced rebuild |
 | 99 | Complete | Spot JSON user-data `executionReport.eR` expiry reason | Live event schema and official nine-value expiry-reason list, 2026-03-09 announcement effective 2026-03-26, connector HEAD `d9be6628`, exact wire-key and typed-enum regression, 41 Spot and 330 complete tests, forced rebuild |
+| Review 23 | Complete | Backward review of COIN-M price-kline alignment and Spot closing work; external-plan reconciliation | `fc60a22..9104788` diff review, live COIN-M and Spot schemas, Spot changelog and expiry-reason list, connector HEAD `d9be6628`, stale-surface and plan-consistency scans, 7 targeted and 330 complete tests, forced full multi-target rebuild |
