@@ -346,13 +346,26 @@ The live Spot schemas and current connector confirm that these queries use the a
 
 The full suite has 163 tests. No production Spot Algo query was sent. All 11 current Algo routes now have endpoint-level contract comparisons and current public documentation links; repository scans found no obsolete Algo documentation path, old closed-order method name, or old pagination parameter. Algo Trading remains at 11 official routes, 11 wrapper routes, and 11 exact method/path matches.
 
+## Slice 43: USDⓈ-M Futures REST route inventory refresh
+
+The current live USDⓈ-M REST catalog and the official generated JavaScript connector were normalized again by HTTP method and literal path, then compared with every literal `GetUrl(...)` and `HttpMethod` pair in the wrapper's USDⓈ-M REST client. The live catalog contains 95 operations—71 GET, 15 POST, 6 DELETE, and 3 PUT—and the connector exposes the same 95 unique routes. The wrapper exposes 83 unique routes; all 83 are exact method/path matches, leaving 12 official-only candidates and no wrapper-only route. The existing inventory counts happened to remain correct, but they are now refreshed against the 2026-08-09 catalog rather than inherited from the old baseline.
+
+The 12 live official-only candidates are grouped as follows:
+
+- Account, 1: `GET /fapi/v2/balance`.
+- Market Data, 4: `GET /fapi/v1/rpiDepth`, `GET /fapi/v1/symbolAdlRisk`, `GET /fapi/v1/ticker/price`, and `GET /fapi/v1/tradingSchedule`.
+- Trade, 7: `POST /fapi/v1/algoOrder`, `GET /fapi/v1/algoOrder`, `DELETE /fapi/v1/algoOrder`, `GET /fapi/v1/openAlgoOrders`, `GET /fapi/v1/allAlgoOrders`, `DELETE /fapi/v1/algoOpenOrders`, and `POST /fapi/v1/stock/contract`.
+
+Each candidate title is present in the live catalog navigation, and each literal path is present on its current Account, Market Data, or Trade catalog page. Category comparison is Account 21 official/20 exact, Market Data 34/30, Trade 32/25, Convert 4/4, Portfolio Margin Endpoints 1/1, and User Data Streams 3/3. The six `/fapi/v1/*AlgoOrder*` operations are native USDⓈ-M conditional Algo orders and are separate from the `/sapi/v1/algo/futures/*` Algo Trading product completed in Slices 38–42.
+
+This inventory proves route presence only. It does not authorize implementation, prove that both V2 and V3 balance contracts should be exposed, or justify grouping the financially distinct TradFi-perpetual mutation with conditional Algo orders. Changelog history, endpoint parameters, request placement, weights, response schemas, coexistence/retirement state, and safety constraints remain endpoint-level work. No source code or public API changed in this slice, and no Binance endpoint was called.
+
 ### Revised next order
 
-1. Refresh only the USDⓈ-M route inventory without implementation work.
-2. Refresh only the COIN-M route inventory in a separate slice.
-3. Refresh only the Options route inventory in a separate slice.
-4. Select and complete the first bounded derivative implementation group from those inventories.
-5. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
+1. Refresh only the COIN-M route inventory without implementation work.
+2. Refresh only the Options route inventory in a separate slice.
+3. Select and complete the first bounded derivative implementation group from those inventories.
+4. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
 
 ## Review log
 
@@ -409,3 +422,4 @@ The full suite has 163 tests. No production Spot Algo query was sent. All 11 cur
 | 40 | Complete | Spot and Futures Algo cancellation | Live canonical Future and Spot Algo pages, current official generated connector, signed DELETE query placement, receive-window/canonical-name/int64-response tests, 155 deterministic tests |
 | 41 | Complete | Read-only Futures Algo queries | Live canonical Future Algo query sections, current official generated connector and models, signed GET/pagination/validation/naming/int64-response tests, 159 deterministic tests |
 | 42 | Complete | Read-only Spot Algo queries | Live canonical Spot Algo query sections, current official generated connector and models, signed GET/pagination/validation/naming/shared-model tests, 163 deterministic tests |
+| 43 | Complete | USDⓈ-M Futures REST route inventory refresh | Live 95-operation catalog, current official generated connector, normalized 95/83/83/12/0 comparison, category and candidate-path verification, no implementation |
