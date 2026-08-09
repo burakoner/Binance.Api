@@ -888,6 +888,19 @@ Three deterministic no-network tests cover canonical per-symbol and all-market t
 1. Slice 80: fully audit the USDⓈ-M aggregate-trade stream against its current schema, including `nq`, post-integration `st`, topic rules, and any fields retained locally but absent from the canonical payload.
 2. Re-rank the Futures WebSocket authentication gap after Slice 80; perform mandatory Backward Review 18 no later than Slice 82.
 
+## Slice 80: current USDⓈ-M aggregate-trade stream
+
+The USDⓈ-M aggregate-trade stream was compared field by field against the live canonical WebSocket Market Streams catalog, the 2025-12-29 changelog change effective 2025-12-31, and official generated Go connector HEAD `a0c61d1`. The current stream is `{symbol}@aggTrade`, updates every 100 milliseconds, and aggregates market trades with the same price and taking side. Its complete payload is `e`, `E`, `s`, `a`, `p`, `q`, `nq`, `f`, `l`, `T`, `m`, and `st`. Decimal `q` includes all market-trade quantity, while decimal `nq` excludes trades involving RPI orders. Integer `st` identifies the post-integration product as 1 for UM or 2 for CM. The wrapper now exposes these last two missing fields as `NormalQuantity` and `SymbolType` without narrowing int64 aggregate and first/last trade identifiers.
+
+The old USDⓈ-M overloads returned a shared Futures model that exposes boolean wire field `M` as `Ignore`. Neither the current USDⓈ-M canonical response, its example, nor the current USDⓈ-M generated connector contains that field. That shared model is also used by the COIN-M client, whose endpoint is outside this slice and was not changed without an independent audit. The USDⓈ-M overloads therefore now return product-specific `BinanceFuturesUsdtStreamAggregatedTrade`; it contains the complete current USDⓈ-M schema and no misleading default-false `Ignore` member, while COIN-M behavior remains untouched. Both public overloads point to the canonical catalog anchor. Topic creation shares the small symbol-topic helper introduced with Slice 79, rejects null, empty, or blank collections before transport, lowercases names, and does not invent a spot-style character whitelist that would reject derivative names such as `BTCUSD_PERP`.
+
+Two new deterministic no-network tests cover exact topic creation, derivative-symbol preservation, missing-symbol rejection, complete current payload deserialization, decimal `q`/`nq` separation, int64 identifier precision, timestamps, `st = 2`, and removal of the stale wrapper-only property. Together with the Slice 79 stream regressions, all five targeted cases pass. All 269 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance connection was opened.
+
+### Revised next order
+
+1. Slice 81: audit and implement only the missing USDⓈ-M WebSocket API `userDataStream.start`, `userDataStream.ping`, and `userDataStream.stop` lifecycle against the current API-key-only contract, weights, response envelopes, and existing REST/stream ownership.
+2. Slice 82: audit the equivalent COIN-M lifecycle independently, then perform mandatory Backward Review 18 before any further implementation chain.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -988,3 +1001,4 @@ Three deterministic no-network tests cover canonical per-symbol and all-market t
 | 78 | Complete | Futures WebSocket API multi-dimensional rate-limit architecture decision | Twenty-three executable request paths, live USDⓈ-M/COIN-M WebSocket rate-limit contracts, effective UM/CM integration notice, ApiSharp 4.5.1 transport surface, 263 deterministic tests, forced full multi-target rebuild, no unsafe default limiter |
 | Review 17 | Complete | Backward review of All Orders, Force Orders, and the Futures WebSocket limiter decision; positional-request safety correction and stream-gap re-ranking | `5b9a736..efc9175` diff review, live REST/WebSocket contracts and current changelog, ApiSharp surface audit, 16 targeted and 264 complete tests, forced full multi-target rebuild |
 | 79 | Complete | Current USDⓈ-M per-symbol and all-market mark-price stream contracts | Live canonical stream catalog, 2026-03-16 changelog, generated connector HEAD `a0c61d1`, topic/update-speed/full-payload tests, 267 deterministic tests, forced full multi-target rebuild |
+| 80 | Complete | Current USDⓈ-M aggregate-trade stream contract | Live canonical stream catalog, 2025-12-29 changelog, generated connector HEAD `a0c61d1`, topic/full-payload/stale-field tests, 269 deterministic tests, forced full multi-target rebuild |

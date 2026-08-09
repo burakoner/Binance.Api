@@ -4,24 +4,24 @@ internal partial class BinanceFuturesSocketClientUsd
 {
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(
         string symbol,
-        Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesUsdtStreamAggregatedTrade>> onMessage,
         CancellationToken ct = default)
         => SubscribeToAggregatedTradesAsync([symbol], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradesAsync(
         IEnumerable<string> symbols,
-        Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesUsdtStreamAggregatedTrade>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamAggregatedTrade>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesUsdtStreamAggregatedTrade>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@aggTrade").ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribeAsync(AggregateTradeStreamTopics(symbols), false, handler, ct);
     }
+
+    internal static string[] AggregateTradeStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@aggTrade");
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
         string symbol,
@@ -57,9 +57,21 @@ internal partial class BinanceFuturesSocketClientUsd
 
     internal static string[] MarkPriceStreamTopics(IEnumerable<string> symbols, int? updateInterval)
     {
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
+        var updateSpeed = updateInterval == 1000 ? "@1s" : string.Empty;
+        return SymbolStreamTopics(symbols, "@markPrice" + updateSpeed);
+    }
+
+    internal static string MarkPriceAllMarketStreamTopic(int? updateInterval)
+    {
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
+        return "!markPrice@arr" + (updateInterval == 1000 ? "@1s" : string.Empty);
+    }
+
+    private static string[] SymbolStreamTopics(IEnumerable<string> symbols, string suffix)
+    {
         if (symbols == null)
             throw new ArgumentNullException(nameof(symbols));
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
 
         var symbolList = symbols.ToArray();
         if (symbolList.Length == 0)
@@ -68,16 +80,9 @@ internal partial class BinanceFuturesSocketClientUsd
             if (string.IsNullOrWhiteSpace(symbol))
                 throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
 
-        var updateSpeed = updateInterval == 1000 ? "@1s" : string.Empty;
         return symbolList
-            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@markPrice" + updateSpeed)
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + suffix)
             .ToArray();
-    }
-
-    internal static string MarkPriceAllMarketStreamTopic(int? updateInterval)
-    {
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-        return "!markPrice@arr" + (updateInterval == 1000 ? "@1s" : string.Empty);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
