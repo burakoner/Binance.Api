@@ -52,12 +52,6 @@ public record BinanceFuturesOrderModifyHistory
     /// </summary>
     [JsonProperty("amendment")]
     public BinanceFuturesOrderChanges EditInfo { get; set; } = null!;
-
-    /// <summary>
-    /// Price match
-    /// </summary>
-    [JsonProperty("priceMatch")]
-    public BinanceFuturesPriceMatch PriceMatch { get; set; }
 }
 
 /// <summary>
@@ -77,12 +71,17 @@ public record BinanceFuturesOrderChanges
     [JsonProperty("origQty")]
     public BinanceFuturesOrderChange Quantity { get; set; } = null!;
 
-
     /// <summary>
-    /// Amount of times changed
+    /// Number of times the order has been modified
     /// </summary>
     [JsonProperty("count")]
-    public int EditCount { get; set; }
+    public long EditCount { get; set; }
+
+    /// <summary>
+    /// Optional user-defined modification identifier supplied with this amendment
+    /// </summary>
+    [JsonProperty("modifyId")]
+    public long? ModifyId { get; set; }
 }
 
 /// <summary>

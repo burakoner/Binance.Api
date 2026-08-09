@@ -29,6 +29,7 @@
   * Added the complete USDⓈ-M `ALGO_UPDATE` user data event with native conditional-order callback routing and the activation placeholder
   * Aligned USDⓈ-M and COIN-M single-order modification with mandatory quantity and price, correct COIN-M side and identifier serialization, current IP weights, receive-window validation, and int64 `modifyId` pass-through
   * Aligned USDⓈ-M and COIN-M batch order modification with one-to-five-item validation, mandatory post-migration quantity and price, numeric JSON fields, int64 `modifyId`, per-item results, current IP weights, and receive-window limits
+  * Aligned USDⓈ-M and COIN-M order-modification history with required order identity, inclusive time filters, current limit and retention guidance, exact weights, receive-window validation, int64 counts, and nested conditional `modifyId`
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport

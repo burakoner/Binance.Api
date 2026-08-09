@@ -398,7 +398,7 @@ var futures_204 = await api.UsdFutures.ModifyOrdersAsync([
         ModifyId = 2L
     }
 ]);
-var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("---SYMBOL---");
+var futures_205 = await api.UsdFutures.GetOrderModifyHistoryAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_206 = await api.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_207 = await api.UsdFutures.CancelOrdersAsync("---SYMBOL---", [1_000_000L]);
 var futures_208 = await api.UsdFutures.CancelAllOrdersAsync("---SYMBOL---");

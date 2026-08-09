@@ -259,17 +259,26 @@ internal partial class BinanceFuturesRestClientUsd
         return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? origClientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol is required", nameof(symbol));
+        if (origClientOrderId is not null && string.IsNullOrWhiteSpace(origClientOrderId))
+            throw new ArgumentException("origClientOrderId cannot be empty when provided", nameof(origClientOrderId));
+        if (!orderId.HasValue && origClientOrderId is null)
+            throw new ArgumentException("Either orderId or origClientOrderId must be sent");
+        if (limit > 100)
+            throw new ArgumentOutOfRangeException(nameof(limit), limit, "limit cannot exceed 100");
+
         var parameters = new ParameterCollection
         {
             { "symbol", symbol }
         };
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("origClientOrderId", clientOrderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
 
         return RequestAsync<List<BinanceFuturesOrderModifyHistory>>(GetUrl(fapi, v1, "orderAmendment"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);

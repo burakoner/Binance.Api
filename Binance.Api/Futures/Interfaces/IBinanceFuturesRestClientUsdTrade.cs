@@ -91,19 +91,19 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Get order edit history
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Get-Order-Modify-History" /></para>
+    /// Gets the modification history for one order. History older than three months is unavailable
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#get-order-modify-history" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get orders for, for example `ETHUSDT`</param>
-    /// <param name="orderId">Filter by order id</param>
-    /// <param name="clientOrderId">Filter by client order id</param>
-    /// <param name="startTime">If set, only orders edited after this time will be returned</param>
-    /// <param name="endTime">If set, only orders edited before this time will be returned</param>
-    /// <param name="limit">Max number of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="symbol">The order symbol, for example `ETHUSDT`</param>
+    /// <param name="orderId">The exchange order id. Either this or origClientOrderId is required; this id takes precedence when both are sent</param>
+    /// <param name="origClientOrderId">The original client order id. Either this or orderId is required</param>
+    /// <param name="startTime">Inclusive modification-time lower bound</param>
+    /// <param name="endTime">Inclusive modification-time upper bound</param>
+    /// <param name="limit">Maximum number of results; defaults to 50 and cannot exceed 100</param>
+    /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? clientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The order's available modification history, including a conditional ModifyId inside each amendment</returns>
+    Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? origClientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending order

@@ -740,6 +740,22 @@ Three no-network tests cover both signed PUT paths, form/query split, API-key au
 3. Add the conditional user-data-stream amendment identifier `M` in Slice 75.
 4. Perform mandatory Backward Review 16 across Slices 71-75, then re-rank the 2026-08-05 All Orders and Force Orders response changes before another implementation chain.
 
+## Slice 73: current USDⓈ-M and COIN-M REST order-modification history
+
+`GET /fapi/v1/orderAmendment` and `GET /dapi/v1/orderAmendment` were rechecked independently against their live canonical Trade sections, the combined derivatives changelog change effective 2026-07-30, and official generated JavaScript connector HEAD `092e4f2`. Both are signed USER_DATA query endpoints with IP weight 1. They require nonblank `symbol` plus either int64 `orderId` or `origClientOrderId`; both may be sent and `orderId` takes precedence. Optional `startTime` and `endTime` are inclusive modification-time boundaries. The server default limit is 50 and the published maximum is 100, `recvWindow` is capped at 60,000 milliseconds, and modification history older than three months is unavailable.
+
+Both implementations now reject missing/blank symbols, missing identities, blank supplied client identities, limits above 100, and explicit or configured receive windows above 60,000 before transport. The public parameter is renamed from the imprecise `clientOrderId` to the wire-accurate `origClientOrderId`. All filters remain in the signed GET query and timestamp/signature injection remains transport-owned. Binance publishes neither a minimum limit nor a maximum query-window span for these routes, and describes old history as unavailable rather than an invalid request; the wrapper therefore does not invent a positive-limit, time-order, three-month-relative-clock, or range-length rejection. A caller can use the inclusive time filters, while the server remains authoritative for retention.
+
+The current response shape is shared across products: int64 amendment and order identifiers, symbol, pair, client order id, modification time, and an `amendment` object containing decimal before/after price and original-quantity values, an int64 modification count, and nullable int64 `modifyId`. The latter is nested inside `amendment` and appears only for modifications whose request supplied it. The stale wrapper-only top-level `priceMatch` property was removed. The live COIN-M page and generated COIN-M type incorrectly describe `amendment.count` as a 24-hour trade count; its location and field name, the USDⓈ-M endpoint/type definition, and both examples show that this is copied ticker text and the value is the order-modification count. That evidence-backed interpretation is the implemented meaning.
+
+Four no-network tests cover both signed GET paths, API-key authentication, exact weight, both identifier combinations and precision, inclusive time serialization, default-limit omission, maximum limit, receive-window ceilings, complete shared response data, nested present/absent `modifyId`, int64/decimal deserialization, and all explicit local validation. The complete suite now has 247 passing tests, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
+### Revised next order
+
+1. Audit paired WebSocket API `order.modify` in Slice 74 without assuming REST parameter placement, signing envelope, or limiter behavior.
+2. Add the conditional user-data-stream amendment identifier `M` in Slice 75.
+3. Perform mandatory Backward Review 16 across Slices 71-75, then re-rank the 2026-08-05 All Orders and Force Orders response changes before another implementation chain.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -831,3 +847,4 @@ Three no-network tests cover both signed PUT paths, form/query split, API-key au
 | Review 15 | Complete | Backward review of funding history, account trade lists, funding-fee account events, and native Algo updates; forward order-modification risk review | `6737463..94fa49f` diff review, live REST/stream contracts, 2026-08-07 changelog head, connector HEAD `092e4f2`, closed source-lag corrections, verified COIN-M single-modify serialization defect, 36 targeted and 237 complete tests, forced full multi-target rebuild |
 | 71 | Complete | Current USDⓈ-M and COIN-M REST single-order modification contracts | Live Trade sections, 2026-06-30 architecture-integration notice, 2026-07-30 `modifyId` changelog, current generated connector, signed form/weight/validation/precision/response tests, 240 deterministic tests |
 | 72 | Complete | Current USDⓈ-M and COIN-M REST batch order modification contracts | Live Trade sections, 2026-06-30 architecture-integration notice, 2026-07-30 `modifyId` changelog, current generated connector, signed body/item-validation/numeric-serialization/per-item response tests, 243 deterministic tests |
+| 73 | Complete | Current USDⓈ-M and COIN-M REST order-modification history contracts | Live Trade sections, 2026-07-30 `modifyId` changelog, current generated connector, signed query/identity/filter/limit/retention/model tests, 247 deterministic tests |
