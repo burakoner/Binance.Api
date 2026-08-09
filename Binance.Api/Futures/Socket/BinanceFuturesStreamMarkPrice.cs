@@ -42,10 +42,22 @@ public record BinanceFuturesStreamMarkPrice: BinanceFuturesStreamEvent
 public record BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
 {
     /// <summary>
-    /// Mark Price
+    /// Index price
     /// </summary>
     [JsonProperty("i")]
     public decimal IndexPrice { get; set; }
+
+    /// <summary>
+    /// Mark price moving average
+    /// </summary>
+    [JsonProperty("ap")]
+    public decimal MarkPriceMovingAverage { get; set; }
+
+    /// <summary>
+    /// Symbol type after UM/CM integration: 1 = UM, 2 = CM
+    /// </summary>
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
 }
 
 /// <summary>

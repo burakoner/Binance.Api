@@ -36,6 +36,7 @@
   * Aligned USDⓈ-M and COIN-M All Orders with current symbol/pair scope, identifier combinations, seven-day windows, limits, post-migration weights, receive-window ceilings, retention guidance, and complete response fields
   * Aligned USDⓈ-M and COIN-M User's Force Orders with the missing limit, product-specific receive-window and retention contracts, dynamic weights, current filters, and complete response fields
   * Kept the existing positional Force Orders receive-window argument from being silently reinterpreted as the newly added limit
+  * Aligned USDⓈ-M per-symbol and all-market mark-price streams with current topics, update speeds, moving-average and post-integration symbol-type fields, and canonical documentation
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport

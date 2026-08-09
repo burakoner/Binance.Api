@@ -875,6 +875,19 @@ Sixteen targeted no-network cases cover both reviewed REST groups and transport 
 1. Slice 79: fully audit the USDⓈ-M per-symbol and all-market mark-price streams, including the missing `ap` field, against current canonical schema and generated-connector evidence.
 2. Re-rank the separate aggregate-trade `nq` candidate and Futures WebSocket authentication gap after Slice 79; perform Backward Review 18 no later than the fourth post-review slice.
 
+## Slice 79: current USDⓈ-M per-symbol and all-market mark-price streams
+
+The two USDⓈ-M mark-price streams were compared field by field against the live canonical WebSocket Market Streams catalog, the 2026-03-16 USDⓈ-M changelog entry, and official generated Go connector HEAD `a0c61d1`. The per-symbol contract is `{symbol}@markPrice` at the default three-second cadence or `{symbol}@markPrice@1s` at the only explicit update speed. The all-market contract is `!markPrice@arr` or `!markPrice@arr@1s` with the same cadence rule. The wrapper's existing topic strings were already semantically correct: its explicit `3000` value selects the suffix-free default rather than manufacturing an undocumented `@3s` suffix. Topic creation is now deterministic and rejects null, empty, or blank symbol collections and unsupported intervals before any connection attempt. It deliberately permits CM names such as `BTCUSD_PERP`, which the merged stream accepts. The three public overloads point to the live canonical catalog anchors instead of legacy detail URLs that now redirect to Binance's generic landing page.
+
+Both current response schemas contain event type/time, symbol, mark price, index price, estimated settlement price, funding rate, next funding time, the 2026-03-16 `ap` mark-price moving average, and post-UM/CM-integration integer `st` where 1 means UM and 2 means CM. The canonical schema and generated connector agree that `ap` is a numeric string and `st` is an integer, so `BinanceFuturesUsdtStreamMarkPrice` now exposes decimal `MarkPriceMovingAverage` and integer `SymbolType`. This is not just the changelog delta: `st` was also missing and was included because the endpoint was audited against its complete current schema. The all-market test deliberately exercises `st = 2`, because the current USDⓈ-M page says the merged stream can deliver CM symbols through `fstream`. COIN-M client/model changes remain outside this bounded USDⓈ-M slice and were not inferred from the USDⓈ-M page.
+
+Three deterministic no-network tests cover canonical per-symbol and all-market topics, the suffix-free three-second default, the explicit one-second suffix, invalid symbol and interval rejection, complete per-symbol payload deserialization, merged CM-symbol delivery, decimal precision, both current symbol-type values, and millisecond timestamps. All 267 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance connection was opened.
+
+### Revised next order
+
+1. Slice 80: fully audit the USDⓈ-M aggregate-trade stream against its current schema, including `nq`, post-integration `st`, topic rules, and any fields retained locally but absent from the canonical payload.
+2. Re-rank the Futures WebSocket authentication gap after Slice 80; perform mandatory Backward Review 18 no later than Slice 82.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -974,3 +987,4 @@ Sixteen targeted no-network cases cover both reviewed REST groups and transport 
 | 77 | Complete | Current USDⓈ-M and COIN-M User's Force Orders contracts | Live Trade sections, 2026-08-05 changelog, current generated connector, signed filter/limit/dynamic-weight/product-receive-window/full-response tests, 263 deterministic tests |
 | 78 | Complete | Futures WebSocket API multi-dimensional rate-limit architecture decision | Twenty-three executable request paths, live USDⓈ-M/COIN-M WebSocket rate-limit contracts, effective UM/CM integration notice, ApiSharp 4.5.1 transport surface, 263 deterministic tests, forced full multi-target rebuild, no unsafe default limiter |
 | Review 17 | Complete | Backward review of All Orders, Force Orders, and the Futures WebSocket limiter decision; positional-request safety correction and stream-gap re-ranking | `5b9a736..efc9175` diff review, live REST/WebSocket contracts and current changelog, ApiSharp surface audit, 16 targeted and 264 complete tests, forced full multi-target rebuild |
+| 79 | Complete | Current USDⓈ-M per-symbol and all-market mark-price stream contracts | Live canonical stream catalog, 2026-03-16 changelog, generated connector HEAD `a0c61d1`, topic/update-speed/full-payload tests, 267 deterministic tests, forced full multi-target rebuild |

@@ -27,10 +27,10 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
 
     /// <summary>
     /// Subscribes to the Mark price update stream for a single symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Mark-Price-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#mark-price-stream" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
-    /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
+    /// <param name="updateInterval">Update interval in milliseconds. Use 1000 for the explicit 1-second stream; null or 3000 uses the default 3-second stream</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
@@ -38,20 +38,20 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
 
     /// <summary>
     /// Subscribes to the Mark price update stream for a list of symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Mark-Price-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#mark-price-stream" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
-    /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
+    /// <param name="updateInterval">Update interval in milliseconds. Use 1000 for the explicit 1-second stream; null or 3000 uses the default 3-second stream</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(IEnumerable<string> symbols, int? updateInterval, Action<WebSocketDataEvent<BinanceFuturesUsdtStreamMarkPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the Mark price update stream for a all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Mark-Price-Stream-for-All-market" /></para>
+    /// Subscribes to the Mark price update stream for all symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#mark-price-stream-for-all-market" /></para>
     /// </summary>
-    /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
+    /// <param name="updateInterval">Update interval in milliseconds. Use 1000 for the explicit 1-second stream; null or 3000 uses the default 3-second stream</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>

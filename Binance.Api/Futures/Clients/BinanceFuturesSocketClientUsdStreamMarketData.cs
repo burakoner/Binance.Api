@@ -36,15 +36,11 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<BinanceFuturesUsdtStreamMarkPrice>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesUsdtStreamMarkPrice>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")).ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribeAsync(MarkPriceStreamTopics(symbols, updateInterval), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
@@ -52,13 +48,36 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<List<BinanceFuturesUsdtStreamMarkPrice>>> onMessage,
         CancellationToken ct = default)
     {
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesUsdtStreamMarkPrice>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], false, handler, ct);
+        return SubscribeAsync([MarkPriceAllMarketStreamTopic(updateInterval)], false, handler, ct);
+    }
+
+    internal static string[] MarkPriceStreamTopics(IEnumerable<string> symbols, int? updateInterval)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
+
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        var updateSpeed = updateInterval == 1000 ? "@1s" : string.Empty;
+        return symbolList
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@markPrice" + updateSpeed)
+            .ToArray();
+    }
+
+    internal static string MarkPriceAllMarketStreamTopic(int? updateInterval)
+    {
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
+        return "!markPrice@arr" + (updateInterval == 1000 ? "@1s" : string.Empty);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
