@@ -399,22 +399,37 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(dapi, v1, "forceOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesCoinUserTrade>>> GetUserTradesAsync(string? symbol = null, string? pair = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? orderId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesCoinUserTrade>>> GetUserTradesAsync(string? symbol = null, string? pair = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, string? orderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+        if (pair is not null && string.IsNullOrWhiteSpace(pair))
+            throw new ArgumentException("pair cannot be empty when provided", nameof(pair));
+        if ((symbol is null) == (pair is null))
+            throw new ArgumentException("Exactly one of symbol or pair must be provided");
+        if (orderId is not null && string.IsNullOrWhiteSpace(orderId))
+            throw new ArgumentException("orderId cannot be empty when provided", nameof(orderId));
+        if (pair is not null && fromId.HasValue)
+            throw new ArgumentException("fromId cannot be combined with pair", nameof(fromId));
+        if (pair is not null && orderId is not null)
+            throw new ArgumentException("orderId can only be combined with symbol", nameof(orderId));
+        if (fromId.HasValue && (startTime.HasValue || endTime.HasValue))
+            throw new ArgumentException("fromId cannot be combined with startTime or endTime", nameof(fromId));
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        if (startTime.HasValue && endTime.HasValue && endTime.Value - startTime.Value > TimeSpan.FromDays(7))
+            throw new ArgumentOutOfRangeException(nameof(endTime), "The query time period cannot exceed 7 days");
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("pair", pair);
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("fromId", fromId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        var weight = symbol == null ? 40 : 20;
-        return RequestAsync<List<BinanceFuturesCoinUserTrade>>(GetUrl(dapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<List<BinanceFuturesCoinUserTrade>>(GetUrl(dapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? marginAsset = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default)

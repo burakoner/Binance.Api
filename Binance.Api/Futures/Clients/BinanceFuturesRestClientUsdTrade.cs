@@ -599,7 +599,13 @@ internal partial class BinanceFuturesRestClientUsd
 
     public Task<RestCallResult<List<BinanceFuturesUsdUserTrade>>> GetUserTradesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? orderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol is required", nameof(symbol));
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        if (fromId.HasValue && (startTime.HasValue || endTime.HasValue))
+            throw new ArgumentException("fromId cannot be combined with startTime or endTime", nameof(fromId));
+        if (startTime.HasValue && endTime.HasValue && endTime.Value - startTime.Value > TimeSpan.FromDays(7))
+            throw new ArgumentOutOfRangeException(nameof(endTime), "The query time period cannot exceed 7 days");
 
         var parameters = new ParameterCollection
         {
@@ -610,7 +616,7 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("fromId", fromId?.ToString(BinanceConstants.CI));
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceFuturesUsdUserTrade>>(GetUrl(fapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }

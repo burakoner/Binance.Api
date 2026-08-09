@@ -298,18 +298,20 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets all user trades for provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Account-Trade-List" /></para>
+    /// Gets account trades for a required USDⓈ-M symbol. When no time bounds are sent, Binance returns the last seven days.
+    /// An explicit time range cannot exceed seven days, <paramref name="fromId"/> cannot be combined with either time bound,
+    /// and only trades from the past six months are available. This is a signed USER_DATA query with IP weight 5.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#account-trade-list" /></para>
     /// </summary>
-    /// <param name="symbol">Symbol to get trades for, for example `ETHUSDT`</param>
-    /// <param name="limit">The max number of results</param>
-    /// <param name="orderId">Get the trades for a specific order</param>
-    /// <param name="fromId">TradeId to fetch from. Default gets most recent trades</param>
-    /// <param name="startTime">Orders newer than this date will be retrieved</param>
-    /// <param name="endTime">Orders older than this date will be retrieved</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="symbol">Required symbol, for example <c>ETHUSDT</c>.</param>
+    /// <param name="limit">Optional result limit from 1 through 1000; server default is 500.</param>
+    /// <param name="orderId">Optional order identifier.</param>
+    /// <param name="fromId">Optional inclusive trade identifier; cannot be combined with a time bound.</param>
+    /// <param name="startTime">Optional start time.</param>
+    /// <param name="endTime">Optional end time.</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>List of trades</returns>
+    /// <returns>The matching account trades.</returns>
     Task<RestCallResult<List<BinanceFuturesUsdUserTrade>>> GetUserTradesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? orderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>

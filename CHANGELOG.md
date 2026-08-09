@@ -24,6 +24,7 @@
   * Added current COIN-M pair-default leverage brackets and corrected the symbol-specific route parameter, dynamic weight, receive-window ceiling, and response fields
   * Aligned USDⓈ-M and COIN-M historical market trades with the current API-key-only contract, IP weight 200, required-symbol and limit validation, canonical documentation, and complete USDⓈ-M RPI response data
   * Aligned USDⓈ-M funding-rate history with optional symbol and time filters, the current limit contract, canonical shared-rate-limit guidance, and the new funding-rate type response field
+  * Aligned USDⓈ-M and COIN-M account trade lists with current signed query combinations, seven-day windows, receive-window ceilings, post-migration weight, identifier types, and complete product response fields
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport

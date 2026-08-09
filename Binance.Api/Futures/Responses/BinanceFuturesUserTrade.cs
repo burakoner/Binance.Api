@@ -90,10 +90,28 @@ public record BinanceFuturesUserTrade
 public record BinanceFuturesUsdUserTrade: BinanceFuturesUserTrade
 {
     /// <summary>
+    /// The pair
+    /// </summary>
+    [JsonProperty("pair")]
+    public string Pair { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Base quantity
+    /// </summary>
+    [JsonProperty("baseQty")]
+    public decimal BaseQuantity { get; set; }
+
+    /// <summary>
     /// Quote quantity
     /// </summary>
     [JsonProperty("quoteQty")]
     public decimal QuoteQuantity { get; set; }
+
+    /// <summary>
+    /// The margin asset
+    /// </summary>
+    [JsonProperty("marginAsset")]
+    public string MarginAsset { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -118,4 +136,10 @@ public record BinanceFuturesCoinUserTrade : BinanceFuturesUserTrade
     /// </summary>
     [JsonProperty("baseQty")]
     public decimal BaseQuantity { get; set; }
+
+    /// <summary>
+    /// Quote quantity
+    /// </summary>
+    [JsonProperty("quoteQty")]
+    public decimal QuoteQuantity { get; set; }
 }

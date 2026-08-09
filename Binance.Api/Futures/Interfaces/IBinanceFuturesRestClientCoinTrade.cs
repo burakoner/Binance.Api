@@ -230,20 +230,23 @@ public interface IBinanceFuturesRestClientCoinTrade
     Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets all user trades for provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Account-Trade-List" /></para>
+    /// Gets COIN-M account trades for exactly one symbol or pair. Pair queries return trades for every symbol in the pair,
+    /// cannot include <paramref name="fromId"/> or <paramref name="orderId"/>, and order identifiers are supported only with a symbol.
+    /// When no time bounds are sent, Binance returns the last seven days; an explicit time range cannot exceed seven days.
+    /// This is a signed USER_DATA query with the current post-migration flat IP weight 5.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#account-trade-list" /></para>
     /// </summary>
-    /// <param name="symbol">Symbol to get trades for, for example `BTCUSD_PERP`</param>
-    /// <param name="pair">Symbol to get trades for, for example `BTCUSD`</param>
-    /// <param name="limit">The max number of results</param>
-    /// <param name="fromId">TradeId to fetch from. Default gets most recent trades</param>
-    /// <param name="orderId">Get the trades for a specific order</param>
-    /// <param name="startTime">Orders newer than this date will be retrieved</param>
-    /// <param name="endTime">Orders older than this date will be retrieved</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="symbol">Optional symbol scope, for example <c>BTCUSD_PERP</c>; mutually exclusive with <paramref name="pair"/>.</param>
+    /// <param name="pair">Optional pair scope, for example <c>BTCUSD</c>; mutually exclusive with <paramref name="symbol"/>.</param>
+    /// <param name="limit">Optional result limit from 1 through 1000; server default is 50.</param>
+    /// <param name="fromId">Optional inclusive trade identifier; only valid with symbol and without a time bound.</param>
+    /// <param name="orderId">Optional string order identifier; only valid with symbol.</param>
+    /// <param name="startTime">Optional start time.</param>
+    /// <param name="endTime">Optional end time.</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>List of trades</returns>
-    Task<RestCallResult<List<BinanceFuturesCoinUserTrade>>> GetUserTradesAsync(string? symbol = null, string? pair = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, long? orderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The matching account trades.</returns>
+    Task<RestCallResult<List<BinanceFuturesCoinUserTrade>>> GetUserTradesAsync(string? symbol = null, string? pair = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? fromId = null, string? orderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets account position information
