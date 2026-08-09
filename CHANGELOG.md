@@ -41,6 +41,7 @@
   * Aligned the COIN-M aggregate-trade stream with a product-specific model containing the post-integration symbol type, current topic validation, and no stale ignore or USDⓈ-M-only normal-quantity fields
   * Aligned COIN-M per-symbol, pair, and cross-host all-market mark-price streams with current topics, update speeds, post-integration symbol type, moving average, canonical documentation, product-neutral all-market callbacks, and a single estimated-settlement-price property
   * Aligned COIN-M individual and merged all-market book-ticker streams with current real-time topics, pair and post-integration symbol-type fields, canonical documentation, and deterministic topic/payload coverage
+  * Aligned the merged USDⓈ-M and COIN-M contract-info stream with its current real-time topic, optional bracket payload, post-integration symbol type, canonical documentation, current contract/status enums, and int64 bracket fields
   * Added the USDⓈ-M WebSocket API user-data-stream start, keepalive, and stop lifecycle with API-key-only authentication, current weights, listen-key responses, and controlled missing-credential errors
   * Added the COIN-M WebSocket API user-data-stream start, keepalive, and stop lifecycle with API-key-only authentication, current weights, listen-key responses, and controlled missing-credential errors
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint

@@ -1191,6 +1191,7 @@ var coinFutures_506 = await ws.CoinFutures.SubscribeToAllMarkPriceUpdatesOfAllSy
 var coinFutures_507 = await ws.CoinFutures.SubscribeToBookTickerUpdatesAsync("---SYMBOL---", (data) => { });
 var coinFutures_508 = await ws.CoinFutures.SubscribeToBookTickerUpdatesAsync(["---SYMBOL---"], (data) => { });
 var coinFutures_509 = await ws.CoinFutures.SubscribeToAllBookTickerUpdatesAsync((data) => { });
+var coinFutures_510 = await ws.CoinFutures.SubscribeToSymbolUpdatesAsync((data) => { });
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });

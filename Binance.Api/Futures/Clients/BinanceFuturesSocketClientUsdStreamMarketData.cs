@@ -321,8 +321,10 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!contractInfo"], false, handler, ct);
+        return SubscribeAsync([ContractInfoStreamTopic], false, handler, ct);
     }
+
+    internal const string ContractInfoStreamTopic = "!contractInfo";
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(
         string symbol,

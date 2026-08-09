@@ -20,7 +20,7 @@ public record BinanceFuturesStreamSymbolUpdate : BinanceFuturesStreamEvent
     /// <summary>
     /// Contract type
     /// </summary>
-    [JsonProperty("ct")]
+    [JsonProperty("ct"), JsonConverter(typeof(MapConverter))]
     public BinanceFuturesContractType ContractType { get; set; }
 
     /// <summary>
@@ -40,7 +40,7 @@ public record BinanceFuturesStreamSymbolUpdate : BinanceFuturesStreamEvent
     /// <summary>
     /// Symbol status
     /// </summary>
-    [JsonProperty("cs")]
+    [JsonProperty("cs"), JsonConverter(typeof(MapConverter))]
     public BinanceSymbolStatus Status { get; set; }
 
     /// <summary>
@@ -48,6 +48,12 @@ public record BinanceFuturesStreamSymbolUpdate : BinanceFuturesStreamEvent
     /// </summary>
     [JsonProperty("bks")]
     public List<BinanceBracketUpdate>? Brackets { get; set; }
+
+    /// <summary>
+    /// Symbol type (1 = USDⓈ-M, 2 = COIN-M)
+    /// </summary>
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
 }
 
 /// <summary>
@@ -59,19 +65,19 @@ public record BinanceBracketUpdate
     /// Notional bracket
     /// </summary>
     [JsonProperty("bs")]
-    public int NotionalBracket { get; set; }
+    public long NotionalBracket { get; set; }
 
     /// <summary>
     /// Floor notional
     /// </summary>
     [JsonProperty("bnf")]
-    public decimal FloorNotional { get; set; }
+    public long FloorNotional { get; set; }
 
     /// <summary>
     /// Max notional
     /// </summary>
     [JsonProperty("bnc")]
-    public decimal MaxNotional { get; set; }
+    public long MaxNotional { get; set; }
 
     /// <summary>
     /// Maintenance ratio
@@ -80,20 +86,20 @@ public record BinanceBracketUpdate
     public decimal MaintenanceRatio { get; set; }
 
     /// <summary>
+    /// Auxiliary number for quick calculation
+    /// </summary>
+    [JsonProperty("cf")]
+    public long Auxiliary { get; set; }
+
+    /// <summary>
     /// Min leverage
     /// </summary>
     [JsonProperty("mi")]
-    public decimal MinLeverage { get; set; }
+    public long MinLeverage { get; set; }
 
     /// <summary>
     /// Max leverage
     /// </summary>
     [JsonProperty("ma")]
-    public decimal MaxLeverage { get; set; }
-
-    /// <summary>
-    /// Auxiliary number for quick calculation
-    /// </summary>
-    [JsonProperty("cf")]
-    public decimal Auxiliary { get; set; }
+    public long MaxLeverage { get; set; }
 }

@@ -44,12 +44,6 @@ public enum BinanceFuturesContractType : byte
     /// <summary>
     /// Perpetual delivering
     /// </summary>
-    [Map("DELIVERING")]
-    Delivering,
-
-    /// <summary>
-    /// Perpetual delivering
-    /// </summary>
     [Map("PERPETUAL_DELIVERING")]
     PerpetualDelivering,
 
@@ -62,6 +56,6 @@ public enum BinanceFuturesContractType : byte
     /// <summary>
     /// Next quarter delivering
     /// </summary>
-    [Map("NEXT_QUARTER DELIVERING")]
+    [Map("NEXT_QUARTER_DELIVERING")]
     NextQuarterDelivering,
 }

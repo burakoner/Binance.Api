@@ -999,6 +999,20 @@ Forward re-ranking keeps the mini-ticker family out of the next slice: merged UM
 2. Perform mandatory Backward Review 19 across Slices 83-86 immediately after Slice 86; do not begin another implementation slice before that review and re-ranking.
 3. Revisit mini-ticker/ticker volume semantics, liquidation, depth/RPI-depth, and Futures WebSocket session authentication only after Review 19.
 
+## Slice 86: current merged contract-info stream
+
+The contract-info stream was compared field by field against the live canonical COIN-M and USDⓈ-M WebSocket Streams catalogs, the COIN-M changelog's 2026-06-10 architecture-integration entry effective 2026-06-30, the linked integration notice, and official generated Go connector HEAD `a0c61d1`. The exact all-market topic is `!contractInfo`; it updates in real time and now carries the same merged UM + CM universe on both `wss://fstream.binance.com` and `wss://dstream.binance.com`. The complete cross-product payload is `e/E/s/ps/ct/dt/ot/cs/bks/st`. Pair `ps` is present for COIN-M data but absent from the current USDⓈ-M schema, while bracket array `bks` appears only when bracket data changes. Integer `st` identifies UM as 1 and CM as 2.
+
+The shared `BinanceFuturesStreamSymbolUpdate` model now exposes `SymbolType`, retains nullable brackets, and correctly converts mapped contract-type and symbol-status wire strings. The shared enum surface now matches the current union published by both products: the malformed `NEXT_QUARTER DELIVERING` map was corrected, the undocumented generic `DELIVERING` contract type and six stale non-Futures statuses were removed, and `DELIVERED`, `TRADING_HALT`, and `TRADING_CANCEL_ONLY` were added. These are intentional public breaking corrections under the current-contract-only policy. The bracket object now follows the current `bs/bnf/bnc/mmr/cf/mi/ma` schema. The official catalog and generated connector define `bs`, `bnf`, `bnc`, `cf`, `mi`, and `ma` as int64, so their public properties changed to `long`; this prevents overflow rather than preserving stale local `int`/`decimal` types. Maintenance ratio `mmr` remains `decimal`, preserving more financial precision than the documented floating-point wire number. Both product clients retain the exact topic through explicit tested constants, and their public XML links now target the canonical endpoint pages. README, console examples, and release notes expose the COIN-M subscription.
+
+Five deterministic regressions cover the exact topic on both product clients, the complete COIN-M bracket-update payload with values above the 32-bit boundary, a merged USDⓈ-M listing update in which pair and bracket fields are absent, and the complete current cross-product contract-type and status wire enums. The payload tests also prove mapped enums, timestamp conversion, decimal maintenance-ratio precision, and both `st` values. All five targeted tests and all 289 deterministic tests pass; a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No live Binance request or WebSocket connection was opened.
+
+### Revised next order
+
+1. Perform mandatory Backward Review 19 across Slices 83-86 before any new implementation.
+2. During Review 19, revalidate the four stream families together, scan shared-model and public callback consequences, run the complete deterministic suite and forced full multi-target rebuild, and revise the forward order from current official evidence.
+3. Do not preselect Slice 87 before that review; mini-ticker/ticker volume semantics, liquidation, depth/RPI-depth, and Futures WebSocket session authentication remain candidates rather than an execution order.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1106,3 +1120,4 @@ Forward re-ranking keeps the mini-ticker family out of the next slice: merged UM
 | 83 | Complete | Current COIN-M aggregate-trade stream contract | Live canonical COIN-M stream catalog, 2026-06-10 integration changelog and notice, connector HEAD `a0c61d1`, topic/full-payload/stale-field tests, 277 deterministic tests, forced full multi-target rebuild |
 | 84 | Complete | Current COIN-M per-symbol, all-symbols-of-pair, and cross-host all-market mark-price stream contracts | Live canonical COIN-M and USDⓈ-M stream catalogs, 2026-06-10 integration changelog/notice and resolved COIN-M all-market page absence, connector HEAD `a0c61d1`, topic/full-payload/sentinel tests, 281 deterministic tests, forced full multi-target rebuild |
 | 85 | Complete | Current COIN-M individual-symbol and merged all-book-ticker stream contracts | Live canonical COIN-M and USDⓈ-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, topic/full-payload/cross-product tests, 284 deterministic tests, forced full multi-target rebuild |
+| 86 | Complete | Current merged USDⓈ-M and COIN-M contract-info stream contract | Live canonical COIN-M and USDⓈ-M stream catalogs and enum definitions, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, topic/full-payload/enum/optional-bracket/int64 tests, 289 deterministic tests, forced full multi-target rebuild |

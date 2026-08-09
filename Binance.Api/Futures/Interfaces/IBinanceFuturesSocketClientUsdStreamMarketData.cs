@@ -303,7 +303,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
 
     /// <summary>
     /// Subscribe to contract/symbol updates
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Contract-Info-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#contract-info-stream" /></para>
     /// </summary>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
