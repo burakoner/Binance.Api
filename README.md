@@ -1155,7 +1155,8 @@ var futures_534 = await ws.UsdFutures.SubscribeToUserDataStreamAsync("-----LISTE
     onStrategyUpdated: (data) => { },
     onGridUpdated: (data) => { },
     onListenKeyExpired: (data) => { },
-    onConditionalOrderTriggerRejectUpdate: (data) => { }
+    onConditionalOrderTriggerRejectUpdate: (data) => { },
+    onAlgoUpdated: (data) => { }
     );
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)

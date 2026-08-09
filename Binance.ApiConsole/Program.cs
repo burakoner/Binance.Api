@@ -1050,7 +1050,8 @@ internal class Program
             onStrategyUpdated: (data) => { },
             onGridUpdated: (data) => { },
             onListenKeyExpired: (data) => { },
-            onConditionalOrderTriggerRejectUpdate: (data) => { }
+            onConditionalOrderTriggerRejectUpdate: (data) => { },
+            onAlgoUpdated: (data) => { }
             );
 
         // European Options Web Socket Stream -> Market Data Methods (PUBLIC)

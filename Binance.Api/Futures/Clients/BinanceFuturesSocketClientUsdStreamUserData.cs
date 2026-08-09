@@ -13,7 +13,8 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<BinanceFuturesStreamGridUpdate>>? onGridUpdated = null,
         Action<WebSocketDataEvent<BinanceFuturesStreamUpdate>>? onListenKeyExpired = null,
         Action<WebSocketDataEvent<BinanceFuturesStreamConditionOrderTriggerRejectUpdate>>? onConditionalOrderTriggerRejectUpdate = null,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        Action<WebSocketDataEvent<BinanceFuturesStreamAlgoUpdate>>? onAlgoUpdated = null)
     {
         listenKey.ValidateNotNull(nameof(listenKey));
 
@@ -93,6 +94,13 @@ internal partial class BinanceFuturesSocketClientUsd
                         break;
                     }
 
+                // Native conditional Algo order update
+                case "ALGO_UPDATE":
+                    {
+                        DispatchAlgoUpdate(combinedToken, token, data, onAlgoUpdated);
+                        break;
+                    }
+
                 // Strategy Update
                 case "STRATEGY_UPDATE":
                     {
@@ -153,5 +161,20 @@ internal partial class BinanceFuturesSocketClientUsd
         });
 
         return SubscribeAsync([listenKey], false, handler, ct);
+    }
+
+    internal void DispatchAlgoUpdate(
+        JToken combinedToken,
+        JToken token,
+        WebSocketDataEvent<string> source,
+        Action<WebSocketDataEvent<BinanceFuturesStreamAlgoUpdate>>? handler)
+    {
+        var result = Deserialize<BinanceFuturesStreamAlgoUpdate>(token);
+        if (result)
+        {
+            result.Data.ListenKey = combinedToken["stream"]!.Value<string>()!;
+            handler?.Invoke(source.As(result.Data));
+        }
+        else Logger.Log(LogLevel.Warning, "Couldn't deserialize data received from Algo order stream: " + result.Error);
     }
 }
