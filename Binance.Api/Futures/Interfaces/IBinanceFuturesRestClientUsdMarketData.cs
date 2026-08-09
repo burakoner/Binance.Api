@@ -85,14 +85,14 @@ public interface IBinanceFuturesRestClientUsdMarketData
     Task<RestCallResult<List<BinanceFuturesUsdTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Get trade history for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Old-Trades-Lookup" /></para>
+    /// Gets market trade history from the last month. Requires an API key but no request signature
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#old-trades-lookup" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get trades for, for example `ETHUSDT`</param>
-    /// <param name="limit">The max amount of results, max 500</param>
-    /// <param name="fromId">Return trades after this trade id</param>
+    /// <param name="limit">Maximum number of results, between 1 and 500; server default is 100</param>
+    /// <param name="fromId">Trade ID to fetch from; when omitted the most recent trades are returned</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <returns>Market trades, excluding insurance-fund and ADL trades</returns>
     Task<RestCallResult<List<BinanceFuturesUsdTrade>>> GetHistoricalTradesAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
 
     /// <summary>

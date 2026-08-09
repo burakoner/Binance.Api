@@ -50,14 +50,14 @@ public interface IBinanceFuturesRestClientCoinMarketData
     Task<RestCallResult<List<BinanceFuturesCoinTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets the historical  trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Old-Trades-Lookup" /></para>
+    /// Gets market trade history from the last month. Requires an API key but no request signature
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#old-trades-lookup" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get recent trades for, for example `BTCUSD_PERP`</param>
-    /// <param name="limit">Max amount of results, max 500</param>
-    /// <param name="fromId">From which trade id on results should be retrieved</param>
+    /// <param name="symbol">The symbol to get trades for, for example `BTCUSD_PERP`</param>
+    /// <param name="limit">Maximum number of results, between 1 and 500; server default is 100</param>
+    /// <param name="fromId">Trade ID to fetch from; when omitted the most recent trades are returned</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>List of recent trades</returns>
+    /// <returns>Market trades, excluding insurance-fund and ADL trades</returns>
     Task<RestCallResult<List<BinanceFuturesCoinTrade>>> GetHistoricalTradesAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
 
     /// <summary>

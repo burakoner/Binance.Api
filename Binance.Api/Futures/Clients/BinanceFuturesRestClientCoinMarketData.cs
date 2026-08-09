@@ -58,12 +58,15 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesCoinTrade>>> GetHistoricalTradesAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("Symbol is required", nameof(symbol));
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
+
         var parameters = new ParameterCollection { { "symbol", symbol } };
         parameters.AddOptional("limit", limit);
         parameters.AddOptional("fromId", fromId);
 
-        return RequestAsync<List<BinanceFuturesCoinTrade>>(GetUrl(dapi, v1, "historicalTrades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<List<BinanceFuturesCoinTrade>>(GetUrl(dapi, v1, "historicalTrades"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 200);
     }
 
     public Task<RestCallResult<List<BinanceFuturesAggregatedTrade>>> GetAggregatedTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)

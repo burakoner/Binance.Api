@@ -620,9 +620,9 @@ README and the safely gated console previously executed all four calls when thei
 
 ### Revised next order
 
-1. Fully align the two current USD-M and COIN-M Old Trades Lookup contracts in Slice 66: weight, API-key-only authentication, required symbol and limit validation, complete response models, canonical links, and deterministic request/model tests.
-2. Perform Backward Review 14 immediately after Slice 66, covering Slices 63-66, the living inventories, source conflicts, financial sample safety, and the revised execution order.
-3. Use Review 14 to split the remaining derivatives response and stream drift into bounded groups; do not combine the six 2026-08-05 account-query endpoints with the 2026-08-07 stream changes.
+1. Perform Backward Review 14 immediately after Slice 66, covering Slices 63-66, the living inventories, source conflicts, financial sample safety, and the revised execution order.
+2. Use Review 14 to recheck and split the remaining derivatives response and stream drift into bounded groups; do not combine the six 2026-08-05 account-query endpoints with the 2026-08-07 stream changes.
+3. Do not begin another implementation slice before Review 14 closes any regression and locks the next endpoint group.
 
 ## Slice 65: current inventory and derivatives semantic-risk decision
 
@@ -635,6 +635,16 @@ Endpoint-level comparison also proves that a weight-only patch would be incomple
 The remaining current derivatives candidates were ranked but deliberately not folded into Slice 66. The 2026-08-05 response additions affect six USD-M/COIN-M account queries; the shared order model already maps `pair`, `cumBase`, `cumQuote`, and `goodTillDate`, but the product-specific user-trade models do not yet expose the now-common `pair`, `baseQty`, `marginAsset`, and `quoteQty` set on both products. The USD-M funding-rate model lacks the 2026-07-23 `rateType` field. The USD-M order-modification methods and models expose no 2026-07-21 `modifyId`. The futures stream models expose neither the funding-fee symbol nor the trailing-algo activation placeholder announced on 2026-08-07. These are verified semantic gaps, not inferred route gaps; their complete endpoint and event contracts require separate bounded audits after Review 14.
 
 The next implementation group is therefore exactly two endpoints: current USD-M and COIN-M Old Trades Lookup. This boundary is small enough to verify completely and addresses the only confirmed tenfold limiter defect first. All 213 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
+## Slice 66: current USD-M and COIN-M Old Trades Lookup contracts
+
+`GET /fapi/v1/historicalTrades` and `GET /dapi/v1/historicalTrades` were rechecked independently against their live Market Data sections, the 2026-07-29 combined derivatives changelog entry, and the current official generated JavaScript connector and response types. Both are unsigned MARKET_DATA GET requests that require `X-MBX-APIKEY`, consume IP weight 200, require `symbol`, accept optional `limit` from 1 through 500 with server default 100, accept optional int64 `fromId`, and return only order-book market trades from the last month. Insurance-fund and ADL trades are explicitly excluded.
+
+Both wrapper methods now charge the exact weight 200 instead of the stale 20, reject null, empty, or whitespace-only required symbols before transport, retain the existing current limit boundary and int64 cursor, and link directly to their canonical sections. The authentication transport remains deliberately unsigned: configured credentials add the required API-key header, while timestamp and signature are absent. The public return documentation now describes historical market trades rather than recent trades and records the one-month and excluded-trade boundaries.
+
+The USD-M response now maps the current `isRPITrade` boolean in addition to int64 `id`, decimal `price`, `qty`, and `quoteQty`, millisecond `time`, and `isBuyerMaker`. The same USD trade model is also used by the current Recent Trades endpoint, whose live response publishes `isRPITrade` as well, so the field belongs on the product response model rather than an endpoint-only duplicate. The COIN-M model already covered its complete current `id`, `price`, `qty`, `baseQty`, `time`, and `isBuyerMaker` shape and required no speculative field.
+
+Seven targeted deterministic cases lock both methods' paths, GET/query placement, API-key header, absent timestamp/signature/body, exact weight 200, int64 cursor and identifier precision, decimal and timestamp deserialization, all current product-specific fields, required-symbol rejection including whitespace, and the 1-through-500 limit boundary. The complete suite now has 220 passing tests. A forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent, and method/path inventories remain unchanged.
 
 ## Review log
 
@@ -718,3 +728,4 @@ The next implementation group is therefore exactly two endpoints: current USD-M 
 | 63 | Complete | Current Options Margin Account ownership, request, and response contract | Live Account section and general rules, 2023-08-29 changelog context, current generated connector/types, root-client migration, signed query/weight/full-model/configured-receive-window tests, 213 deterministic tests |
 | 64 | Complete | Quarantine four undocumented Options operations from executable samples | Refreshed current catalog/connector absence, dated lifecycle evidence, README/console call-site scan, route-specific warnings, no public API or transport change, 213 deterministic tests |
 | 65 | Complete | Refresh living inventories and rank current semantic-risk candidates | Current product changelog heads, live USD-M/COIN-M Old Trades Lookup sections, current generated connector/types, exact tenfold weight and USD-M response gaps, bounded Slice 66 decision, no implementation |
+| 66 | Complete | Current USD-M and COIN-M Old Trades Lookup contracts | Live Market Data sections, 2026-07-29 derivatives changelog, current connector/types, API-key-only query and weight-200 tests, complete product response models, 220 deterministic tests |

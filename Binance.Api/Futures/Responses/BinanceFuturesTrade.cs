@@ -46,6 +46,12 @@ public record BinanceFuturesUsdTrade: BinanceFuturesTrade
     /// </summary>
     [JsonProperty("quoteQty")]
     public decimal QuoteQuantity { get; set; }
+
+    /// <summary>
+    /// Whether the trade involved a Retail Price Improvement order
+    /// </summary>
+    [JsonProperty("isRPITrade")]
+    public bool IsRpiTrade { get; set; }
 }
 
 /// <summary>

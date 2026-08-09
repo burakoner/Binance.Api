@@ -21,6 +21,7 @@
   * Removed the retired COIN-M Classic Portfolio Margin account-information operation; Binance directs clients to the active USDⓈ-M operation
   * Fixed the active USDⓈ-M Classic Portfolio Margin account-information query omitting USER_DATA signing and the documented receive-window ceiling
   * Added current COIN-M pair-default leverage brackets and corrected the symbol-specific route parameter, dynamic weight, receive-window ceiling, and response fields
+  * Aligned USDⓈ-M and COIN-M historical market trades with the current API-key-only contract, IP weight 200, required-symbol and limit validation, canonical documentation, and complete USDⓈ-M RPI response data
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport
