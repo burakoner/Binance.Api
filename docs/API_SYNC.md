@@ -1083,6 +1083,23 @@ The two overloads use the canonical Public transport path, exact fixed-speed top
 3. Keep the undocumented `@trade` methods and private/listen-key routing as separate lifecycle decisions.
 4. Keep mini-ticker/ticker volume semantics separate because merged UM/CM fields remain product-dependent.
 
+## Backward Review 20: liquidation and depth stream contracts
+
+The complete `15a763d..3035e42` implementation range was reviewed across production clients, public interfaces and models, deterministic tests, README and console examples, release notes, and this execution contract. The live USDⓈ-M Market and Public catalogs, the complete live COIN-M stream catalog, the effective UM/CM integration notice, the relevant USDⓈ-M and COIN-M changelogs, and official generated Go connector HEAD `a0c61d1` were rechecked on 2026-08-10. No production Binance request or WebSocket connection was opened.
+
+No defect was found in Slices 87-89. Liquidation events preserve the product-dependent outer/inner pair locations and merged outer symbol type without stale unwrapping; USDⓈ-M subscriptions use the Market channel. Standard partial and diff depth subscriptions use the correct USDⓈ-M Public or COIN-M transport, accept only documented explicit `100ms` and `500ms` suffixes, retain the suffix-free 250-millisecond default, and preserve `ps/st` and int64 sequence fields. RPI depth remains USDⓈ-M-only, uses the exact fixed `{symbol}@rpiDepth@500ms` topic on the Public channel, reuses the complete compatible depth model, and documents the zero-quantity ambiguity. Repository-wide scans found no stale liquidation wrapper or nested unwrap, explicit `@250ms` generation, incorrect reviewed channel, COIN-M RPI surface, or obsolete public call site. Relevant generated-connector JSON tags match the local event models, and repository diff checks report no whitespace errors.
+
+Forward review confirmed a pre-existing financial-data risk outside the reviewed range. Both `!miniTicker@arr` endpoints now publish the merged UM + CM universe, but the current USDⓈ-M and COIN-M pages give product-dependent meanings to the same wire fields: USDⓈ-M describes `v` as base-asset volume and `q` as quote-asset volume, while COIN-M describes `v` as total contract volume and `q` as base-asset volume. The local all-market callbacks still deserialize every merged event into a host-specific model with semantic property names and omit `st`; a counter-product event can therefore be accepted while its volumes are silently mislabeled. Adding `st` alone would not fix that contract. Slice 90 must audit the complete individual and merged mini-ticker family and expose enough raw/product-discriminated information to prevent semantic flattening. The larger full-ticker family remains a separate follow-up because it has the same volume issue plus additional fields.
+
+Eleven targeted liquidation, standard-depth, and RPI-depth regressions pass, all 301 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings.
+
+### Revised next order
+
+1. Slice 90: fully audit the USDⓈ-M and COIN-M individual and merged all-market mini-ticker family, including exact topics, channels, `ps/st`, product-dependent `v/q` meanings, public callback/model consequences, links, and deterministic tests.
+2. Audit the full 24-hour ticker family as a separate slice after the mini-ticker model decision; do not mechanically reuse a host-specific volume interpretation for merged events.
+3. Audit the undocumented `@trade` methods and private/listen-key stream routing as separate lifecycle and transport decisions rather than combining them with ticker models.
+4. Perform Backward Review 21 no later than the fourth implementation slice after this review, with earlier review if a shared-model correction has wider public consequences than expected.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1195,3 +1212,4 @@ The two overloads use the canonical Public transport path, exact fixed-speed top
 | 87 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market liquidation stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded snapshot-description and COIN `st` example conflicts, topic/envelope/pair-location/symbol-type tests, 295 deterministic tests, forced full multi-target rebuild |
 | 88 | Complete | Current standard USDⓈ-M and COIN-M partial/diff depth stream contracts | Live canonical USDⓈ-M Public and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded explicit/default speed and COIN `st` example conflicts, topic/full-payload/int64/decimal tests, 299 deterministic tests, forced full multi-target rebuild |
 | 89 | Complete | Current USDⓈ-M RPI diff-depth stream contract and evidence-based COIN-M exclusion | Live canonical USDⓈ-M Public and complete COIN-M stream catalogs, 2025-11-25 USDⓈ-M changelog, 2026-06-10 integration notice, connector HEAD `a0c61d1`, exact-topic/full-payload/zero-quantity tests, 301 deterministic tests, forced full multi-target rebuild |
+| Review 20 | Complete | Backward review of liquidation, standard depth, and RPI depth streams; merged mini-ticker semantic-risk re-ranking | `15a763d..3035e42` diff review, live USDⓈ-M Market/Public and COIN-M stream catalogs, integration notice and changelogs, connector HEAD `a0c61d1`, stale-call/channel/topic/model-tag scans, 11 targeted and 301 complete tests, forced full multi-target rebuild |
