@@ -997,6 +997,11 @@ var futures_202 = await ws.UsdFutures.GetPricesAsync();
 var futures_203 = await ws.UsdFutures.GetBookPriceAsync("---SYMBOL---");
 var futures_204 = await ws.UsdFutures.GetBookPricesAsync();
 
+// USDⓈ-M Futures Web Socket API -> User Data Stream Methods (API KEY ONLY)
+var futures_251 = await ws.UsdFutures.StartUserDataStreamAsync();
+var futures_252 = await ws.UsdFutures.KeepAliveUserDataStreamAsync();
+var futures_253 = await ws.UsdFutures.StopUserDataStreamAsync();
+
 // USDⓈ-M Futures Web Socket API -> Account Methods (PRIVATE)
 var futures_301 = await ws.UsdFutures.GetBalancesAsync();
 var futures_302 = await ws.UsdFutures.GetAccountAsync();

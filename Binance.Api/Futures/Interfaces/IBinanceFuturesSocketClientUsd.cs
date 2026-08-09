@@ -8,5 +8,6 @@ public interface IBinanceFuturesSocketClientUsd:
     IBinanceFuturesSocketClientUsdQueryGeneral,
     IBinanceFuturesSocketClientUsdQueryMarketData,
     IBinanceFuturesSocketClientUsdQueryTrade,
+    IBinanceFuturesSocketClientUsdQueryUserDataStream,
     IBinanceFuturesSocketClientUsdStreamMarketData,
     IBinanceFuturesSocketClientUsdStreamUserData;

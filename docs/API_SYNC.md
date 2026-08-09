@@ -901,6 +901,21 @@ Two new deterministic no-network tests cover exact topic creation, derivative-sy
 1. Slice 81: audit and implement only the missing USDⓈ-M WebSocket API `userDataStream.start`, `userDataStream.ping`, and `userDataStream.stop` lifecycle against the current API-key-only contract, weights, response envelopes, and existing REST/stream ownership.
 2. Slice 82: audit the equivalent COIN-M lifecycle independently, then perform mandatory Backward Review 18 before any further implementation chain.
 
+## Slice 81: current USDⓈ-M WebSocket API user-data-stream lifecycle
+
+The three USDⓈ-M WebSocket API user-data-stream operations were audited against the live canonical User Data Streams catalog, the current derivatives changelog, and official generated Go connector HEAD `a0c61d1`. All three use `wss://ws-fapi.binance.com/ws-fapi/v1`, consume IP weight 1, require an API key, and do not require a signature, timestamp, receive window, or caller-supplied listen key. Their exact method names are `userDataStream.start`, `userDataStream.ping`, and `userDataStream.stop`. The catalog request schemas and examples place `apiKey` inside `params`; the generated connector independently marks each request `WithAPIKey: true` and `Signed: false`. The wrapper now follows that API-key-only contract through its existing query transport rather than reusing a signed account method.
+
+`userDataStream.start` returns the active `listenKey` and extends it for 60 minutes when the API key already owns a stream. `userDataStream.ping` extends that stream and returns the kept-alive `listenKey`; the 2024-04-19 changelog specifically records this response-field addition effective 2024-04-25. `userDataStream.stop` returns an empty result object, which the public method maps to success without inventing response data. All three response envelopes continue through the shared `id`, `status`, `result`, and `rateLimits` model. The public methods are grouped on a new `IBinanceFuturesSocketClientUsdQueryUserDataStream` surface as `StartUserDataStreamAsync`, `KeepAliveUserDataStreamAsync`, and `StopUserDataStreamAsync` so they are not confused with the retained REST `/fapi/v1/listenKey` lifecycle. The existing stream subscription accepts a listen key produced by either lifecycle.
+
+The no-credential regression exposed an older USDⓈ-M WebSocket transport defect: reading `AuthenticationProvider` before proving credentials existed caused a `NullReferenceException` instead of the intended controlled error. The USDⓈ-M transport now tracks configured API-key and secret availability before provider creation. It performs time synchronization and signature generation only for signed calls; API-key-only calls add only `apiKey`. Existing signed USDⓈ-M account and trade requests preserve their prior timestamp/signature path. COIN-M remains outside this bounded slice and still requires its own audit.
+
+Three deterministic no-network tests cover exact path, method, weight, API-key/signature metadata, public interface exposure, controlled missing-credential failures, both listen-key response shapes, the empty stop result, and returned request-weight counters. All 272 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request or connection was opened.
+
+### Revised next order
+
+1. Slice 82: audit and implement only the equivalent COIN-M WebSocket API `userDataStream.start`, `userDataStream.ping`, and `userDataStream.stop` lifecycle against its own live contract.
+2. Perform mandatory Backward Review 18 across Slices 79-82 immediately after Slice 82; do not start another implementation slice before that review and re-ranking.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1002,3 +1017,4 @@ Two new deterministic no-network tests cover exact topic creation, derivative-sy
 | Review 17 | Complete | Backward review of All Orders, Force Orders, and the Futures WebSocket limiter decision; positional-request safety correction and stream-gap re-ranking | `5b9a736..efc9175` diff review, live REST/WebSocket contracts and current changelog, ApiSharp surface audit, 16 targeted and 264 complete tests, forced full multi-target rebuild |
 | 79 | Complete | Current USDⓈ-M per-symbol and all-market mark-price stream contracts | Live canonical stream catalog, 2026-03-16 changelog, generated connector HEAD `a0c61d1`, topic/update-speed/full-payload tests, 267 deterministic tests, forced full multi-target rebuild |
 | 80 | Complete | Current USDⓈ-M aggregate-trade stream contract | Live canonical stream catalog, 2025-12-29 changelog, generated connector HEAD `a0c61d1`, topic/full-payload/stale-field tests, 269 deterministic tests, forced full multi-target rebuild |
+| 81 | Complete | Current USDⓈ-M WebSocket API user-data-stream lifecycle | Live canonical User Data Streams catalog, 2024-04-19 changelog, generated connector HEAD `a0c61d1`, API-key-only method/weight/envelope/credential-guard tests, 272 deterministic tests, forced full multi-target rebuild |

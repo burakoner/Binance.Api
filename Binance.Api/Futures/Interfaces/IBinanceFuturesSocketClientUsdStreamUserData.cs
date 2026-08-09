@@ -6,10 +6,10 @@
 public interface IBinanceFuturesSocketClientUsdStreamUserData
 {
     /// <summary>
-    /// Subscribes to the USD-M user data stream. Prior to using this, the <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)">restClient.UsdFuturesApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtain a listen key.
+    /// Subscribes to the USD-M user data stream. Start the stream and obtain a listen key with <see cref="IBinanceFuturesSocketClientUsdQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)"/> first.
     /// <para><a href="https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams" /></para>
     /// </summary>
-    /// <param name="listenKey">Listen key retrieved by the <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)">restClient.UsdFuturesApi.Account.StartUserStreamAsync</see> method</param>
+    /// <param name="listenKey">Listen key retrieved by <see cref="IBinanceFuturesSocketClientUsdQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)"/></param>
     /// <param name="onLeverageUpdated">The event handler for leverage changed update</param>
     /// <param name="onMarginUpdated">The event handler for whenever a margin has changed</param>
     /// <param name="onAccountUpdated">The event handler for whenever an account update is received</param>
