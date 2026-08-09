@@ -232,11 +232,11 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="autoCloseType">Optional liquidation or ADL filter.</param>
     /// <param name="startTime">Optional query start time within the available 90-day history.</param>
     /// <param name="endTime">Optional query end time within the available 90-day history.</param>
-    /// <param name="limit">Optional result limit; server default is 50 and maximum is 100.</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
+    /// <param name="limit">Optional result limit; server default is 50 and maximum is 100.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The matching liquidation and ADL orders.</returns>
-    Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets COIN-M account trades for exactly one symbol or pair. Pair queries return trades for every symbol in the pair,

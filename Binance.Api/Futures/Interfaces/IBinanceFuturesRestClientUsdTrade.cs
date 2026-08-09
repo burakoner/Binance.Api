@@ -307,11 +307,11 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="autoCloseType">Optional liquidation or ADL filter.</param>
     /// <param name="startTime">Optional query start time.</param>
     /// <param name="endTime">Optional query end time.</param>
-    /// <param name="limit">Optional result limit; server default is 50 and maximum is 100.</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds. The current endpoint schema publishes no endpoint-specific maximum.</param>
+    /// <param name="limit">Optional result limit; server default is 50 and maximum is 100.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The matching liquidation and ADL orders.</returns>
-    Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets account trades for a required USDⓈ-M symbol. When no time bounds are sent, Binance returns the last seven days.

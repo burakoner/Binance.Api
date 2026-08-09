@@ -129,6 +129,31 @@ public class BinanceFuturesRestClientForceOrdersTests
         Assert.Null(coinHandler.RequestUri);
     }
 
+    [Fact]
+    public async Task ForceOrders_PreservesExistingPositionalReceiveWindowMeaning()
+    {
+        var usdHandler = new RecordingHttpMessageHandler("[]");
+        using (var usdClient = CreateClient(usdHandler))
+        {
+            var result = await usdClient.UsdFutures.GetForcedOrdersAsync(null, null, null, null, 60_001);
+
+            Assert.True(result.Success);
+            var query = DecodedQuery(usdHandler);
+            Assert.Contains("recvWindow=60001", query);
+            Assert.DoesNotContain("limit=", query);
+        }
+
+        var coinHandler = new RecordingHttpMessageHandler("[]");
+        using var coinClient = CreateClient(coinHandler);
+
+        var coinResult = await coinClient.CoinFutures.GetForcedOrdersAsync(null, null, null, null, 60_000);
+
+        Assert.True(coinResult.Success);
+        var coinQuery = DecodedQuery(coinHandler);
+        Assert.Contains("recvWindow=60000", coinQuery);
+        Assert.DoesNotContain("limit=", coinQuery);
+    }
+
     private const string UsdResponse =
         """
         [{

@@ -447,7 +447,7 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "openOrder"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, int? limit = null, CancellationToken ct = default)
     {
         if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
             throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
