@@ -1152,6 +1152,26 @@ One deterministic public-surface regression proves that both unsupported method 
 1. Perform Backward Review 21 now across Slices 90-92, including public breaking corrections, model semantics, transport routing, tests, examples, release notes, and this execution contract.
 2. Do not begin another implementation slice until Review 21 refreshes the remaining Futures stream and private/listen-key routing priorities.
 
+## Backward Review 21: ticker contracts and raw-trade lifecycle
+
+The complete `8db4049..b9c8d32` implementation range was reviewed across production clients, public interfaces and models, deterministic tests, README and console examples, release notes, and this execution contract. The live USDⓈ-M Market catalog, complete COIN-M stream catalog, effective UM/CM integration notice, current derivatives changelog, and official generated Go connector HEAD `a0c61d1` were rechecked on 2026-08-10. No production Binance request or WebSocket connection was opened.
+
+No defect was found in Slices 90-92. The individual and merged mini-ticker models exactly retain `e/E/s/ps/c/o/h/l/v/q/st`; the full-ticker models exactly retain `e/E/s/ps/p/P/w/c/Q/o/h/l/v/q/O/C/F/L/n/st`. Both families preserve raw `v/q`, resolve product-safe volume projections through `st`, keep USDⓈ-M on the Market channel and COIN-M on `dstream`, and use the documented individual and all-market cadences. The COIN-M pages still contradict the integration notice by showing `st: 1` in examples; the implementation correctly follows the notice's explicit `1 = UM` and `2 = CM` definition. The eight corresponding generated connector models have the same JSON-tag sets as the local models. Repository-wide scans found no stale host-specific ticker type or unsupported public raw-trade call site, while the supported aggregate-trade streams and private `ORDER_TRADE_UPDATE` flow remain intact.
+
+Forward review found a pre-existing, higher-priority transport defect outside the reviewed range. The USDⓈ-M listen-key subscription still delegates to the legacy unrouted `/stream` address. Binance's current connection notice says that legacy routes were decommissioned on 2026-04-23 and that private streams must use the routed `/private` endpoint; an unrouted Market or Private connection no longer pushes data. This subscription therefore cannot be treated as production-safe. Slice 93 must audit and implement the complete current private connection grammar, including listen-key and event query parameters, envelope handling, and reconnect behavior. COIN-M `dstream` must remain outside that change unless its own current documentation supplies equivalent evidence.
+
+The next financial-data risk is the kline family. Current USDⓈ-M and COIN-M schemas define product-dependent `v/q/V/Q` meanings and an int64 trade count, while the local COIN-M property names flatten contract and base-asset volumes and both models retain an `int` counter. Continuous-contract callbacks additionally discard outer `ps/ct`; the COIN-M callback uses the USDⓈ-M inner model, and the nested payload has no symbol field to recover the lost pair. These are separate public-contract decisions and must not be bundled with private routing.
+
+Sixteen targeted mini-ticker, full-ticker, aggregate-trade, public-surface, and socket-address regressions pass, all 312 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings.
+
+### Revised next order
+
+1. Slice 93: audit and correct the complete USDⓈ-M listen-key/private WebSocket route and connection contract; do not mechanically change COIN-M transport.
+2. Slice 94: audit the individual USDⓈ-M and COIN-M `<symbol>@kline_<interval>` family, including product-safe volume semantics, int64 counters, exact topics, models, examples, and deterministic tests.
+3. Slice 95: audit USDⓈ-M and COIN-M continuous-contract kline streams separately, preserving outer `ps/ct` and product-specific nested semantics.
+4. Re-rank COIN-M index-price and mark-price kline streams after Slice 95 rather than pre-bundling them with standard or continuous-contract klines.
+5. Perform Backward Review 22 no later than the fourth implementation slice after Review 21.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1268,3 +1288,4 @@ One deterministic public-surface regression proves that both unsupported method 
 | 90 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market mini-ticker stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded COIN `st` example conflicts, product-discriminated volume/topic/full-payload tests, 306 deterministic tests, forced full multi-target rebuild |
 | 91 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market 24-hour ticker stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded COIN `st` example conflict, product-discriminated volume/current-field/topic/full-payload tests, 311 deterministic tests, forced full multi-target rebuild |
 | 92 | Complete | Removal of unsupported USDⓈ-M and COIN-M raw trade stream contracts | Complete live Futures stream catalogs, current derivatives changelog, connector HEAD `a0c61d1`, public-surface removal test, 312 deterministic tests, forced full multi-target rebuild |
+| Review 21 | Complete | Backward review of merged mini/full ticker and unsupported raw-trade removal; USDⓈ-M private-routing and kline semantic-risk re-ranking | `8db4049..b9c8d32` diff review, live USDⓈ-M and COIN-M stream catalogs, integration notice and changelog, connector HEAD `a0c61d1`, exact wire-tag reconciliation, 16 targeted and 312 complete tests, forced full multi-target rebuild |
