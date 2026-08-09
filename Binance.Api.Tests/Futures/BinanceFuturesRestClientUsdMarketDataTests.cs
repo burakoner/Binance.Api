@@ -71,6 +71,8 @@ public class BinanceFuturesRestClientUsdMarketDataTests
             client.UsdFutures.GetRpiOrderBookAsync(symbol!));
         await Assert.ThrowsAnyAsync<ArgumentException>(() =>
             client.UsdFutures.GetAdlRiskAsync(symbol!));
+        await Assert.ThrowsAnyAsync<ArgumentException>(() =>
+            client.UsdFutures.GetPriceAsync(symbol!));
     }
 
     [Fact]
@@ -121,6 +123,95 @@ public class BinanceFuturesRestClientUsdMarketDataTests
             result.Data,
             item => Assert.Equal("BTCUSDT", item.Symbol),
             item => Assert.Equal("ETHUSDT", item.Symbol));
+    }
+
+    [Fact]
+    public async Task GetPriceAsync_UsesCurrentV2PublicContractAndDeserializesObject()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """{"symbol":"BTCUSDT","price":"6000.01","time":1589437530011}""");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient, limiter);
+
+        var result = await client.UsdFutures.GetPriceAsync("BTCUSDT");
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v2/ticker/price", handler.RequestUri!.AbsolutePath);
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains("symbol=BTCUSDT", query);
+        Assert.DoesNotContain("timestamp=", query);
+        Assert.DoesNotContain("signature=", query);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/fapi/v2/ticker/price" && item.Weight == 1 && !item.Signed);
+        Assert.Equal("BTCUSDT", result.Data.Symbol);
+        Assert.Equal(6000.01m, result.Data.Price);
+        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1589437530011).UtcDateTime, result.Data.Time);
+    }
+
+    [Fact]
+    public async Task GetPricesAsync_UsesCurrentV2PublicContractAndDeserializesArray()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """[{"symbol":"BTCUSDT","price":"6000.01","time":1589437530011},{"symbol":"ETHUSDT","price":"3000.02","time":1589437530012}]""");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient, limiter);
+
+        var result = await client.UsdFutures.GetPricesAsync();
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v2/ticker/price", handler.RequestUri!.AbsolutePath);
+        Assert.Equal(string.Empty, handler.RequestUri.Query);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/fapi/v2/ticker/price" && item.Weight == 2 && !item.Signed);
+        Assert.Collection(
+            result.Data,
+            item => Assert.Equal("BTCUSDT", item.Symbol),
+            item => Assert.Equal("ETHUSDT", item.Symbol));
+    }
+
+    [Fact]
+    public async Task GetTradingScheduleAsync_UsesCurrentPublicContractAndDeserializesAllMarkets()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            {
+              "updateTime": 1761286643918,
+              "marketSchedules": {
+                "EQUITY": { "sessions": [{ "startTime": 1761177600000, "endTime": 1761206400000, "type": "OVERNIGHT" }] },
+                "COMMODITY": { "sessions": [{ "startTime": 1761724800000, "endTime": 1761744600000, "type": "NO_TRADING" }] },
+                "KR_EQUITY": { "sessions": [{ "startTime": 1779958800000, "endTime": 1780009200000, "type": "REGULAR" }] },
+                "HK_EQUITY": { "sessions": [{ "startTime": 1779955200000, "endTime": 1780018200000, "type": "NO_TRADING" }] }
+              }
+            }
+            """);
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient, limiter);
+
+        var result = await client.UsdFutures.GetTradingScheduleAsync();
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v1/tradingSchedule", handler.RequestUri!.AbsolutePath);
+        Assert.Equal(string.Empty, handler.RequestUri.Query);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/fapi/v1/tradingSchedule" && item.Weight == 5 && !item.Signed);
+        Assert.Equal(1761286643918, result.Data.UpdateTime);
+
+        var equity = Assert.Single(result.Data.MarketSchedules.Equity!.Sessions);
+        Assert.Equal(1761177600000, equity.StartTime);
+        Assert.Equal(1761206400000, equity.EndTime);
+        Assert.Equal("OVERNIGHT", equity.Type);
+        Assert.Equal("NO_TRADING", Assert.Single(result.Data.MarketSchedules.Commodity!.Sessions).Type);
+        Assert.Equal("REGULAR", Assert.Single(result.Data.MarketSchedules.KoreanEquity!.Sessions).Type);
+        Assert.Equal("NO_TRADING", Assert.Single(result.Data.MarketSchedules.HongKongEquity!.Sessions).Type);
     }
 
     [Theory]

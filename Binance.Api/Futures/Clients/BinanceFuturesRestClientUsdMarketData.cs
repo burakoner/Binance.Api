@@ -74,6 +74,11 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         return RequestAsync<BinanceFuturesRpiOrderBook>(GetUrl(fapi, v1, "rpiDepth"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 20);
     }
 
+    public Task<RestCallResult<BinanceFuturesTradingSchedule>> GetTradingScheduleAsync(CancellationToken ct = default)
+    {
+        return RequestAsync<BinanceFuturesTradingSchedule>(GetUrl(fapi, v1, "tradingSchedule"), HttpMethod.Get, ct, requestWeight: 5);
+    }
+
     public Task<RestCallResult<List<BinanceFuturesUsdTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
@@ -231,6 +236,8 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
 
     public Task<RestCallResult<BinanceFuturesPrice>> GetPriceAsync(string symbol, CancellationToken ct = default)
     {
+        symbol.ValidateNotNull(nameof(symbol));
+
         var parameters = new ParameterCollection
         {
             { "symbol", symbol }

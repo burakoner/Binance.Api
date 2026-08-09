@@ -288,6 +288,7 @@ internal class Program
         var futures_133 = await api.UsdFutures.GetAdlRiskAsync("---SYMBOL---");
         var futures_134 = await api.UsdFutures.GetAdlRisksAsync();
         var futures_135 = await api.UsdFutures.GetRpiOrderBookAsync("---SYMBOL---");
+        var futures_136 = await api.UsdFutures.GetTradingScheduleAsync();
 
         // USDⓈ-M Futures -> Trading Methods (PRIVATE)
         var futures_201 = await api.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);

@@ -67,6 +67,14 @@ public interface IBinanceFuturesRestClientUsdMarketData
     Task<RestCallResult<BinanceFuturesRpiOrderBook>> GetRpiOrderBookAsync(string symbol, long? limit = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Gets the TradFi perpetual market trading schedules
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#trading-schedule" /></para>
+    /// </summary>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The current market trading schedules</returns>
+    Task<RestCallResult<BinanceFuturesTradingSchedule>> GetTradingScheduleAsync(CancellationToken ct = default);
+
+    /// <summary>
     /// Get the most recent trades for a symbol
     /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Recent-Trades-List" /></para>
     /// </summary>
@@ -222,7 +230,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets the price of a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#symbol-price-ticker-v2" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -231,7 +239,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get a list of the prices of all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#symbol-price-ticker-v2" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of prices</returns>
