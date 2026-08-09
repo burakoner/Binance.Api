@@ -317,6 +317,38 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesCountDownResult>(GetUrl(fapi, v1, "countdownCancelAll"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
+    public Task<RestCallResult<BinanceFuturesAlgoOrder>> GetAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        if (clientAlgoId is not null && string.IsNullOrWhiteSpace(clientAlgoId))
+            throw new ArgumentException("clientAlgoId cannot be empty when provided", nameof(clientAlgoId));
+        if (algoId is null && clientAlgoId is null)
+            throw new ArgumentException("Either algoId or clientAlgoId must be sent");
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("algoId", algoId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("clientAlgoId", clientAlgoId);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesAlgoOrder>(GetUrl(fapi, v1, "algoOrder"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+    }
+
+    public Task<RestCallResult<List<BinanceFuturesOpenAlgoOrder>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+        if (algoType is not null && string.IsNullOrWhiteSpace(algoType))
+            throw new ArgumentException("algoType cannot be empty when provided", nameof(algoType));
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("algoType", algoType);
+        parameters.AddOptional("symbol", symbol);
+        parameters.AddOptional("algoId", algoId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        var weight = symbol is null ? 40 : 1;
+        return RequestAsync<List<BinanceFuturesOpenAlgoOrder>>(GetUrl(fapi, v1, "openAlgoOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+    }
+
     public Task<RestCallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orderId == null && origClientOrderId == null)

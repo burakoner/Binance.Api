@@ -434,11 +434,23 @@ The existing `GetBalancesAsync` remains the primary v3 operation and its stale v
 
 Three deterministic cases cover both route versions, signed query placement, API-key authentication, exact weight 5, absent request bodies, every published response field, millisecond time conversion, and explicit/default receive-window rejection. README and console examples expose the v2 method while preserving the v3 default. The complete USDⓈ-M comparison is now 95 catalog routes, 87 wrapper routes, 87 exact matches, 8 catalog-only routes, and no wrapper-only route. Excluding the explicitly deprecated v1 price route gives 94 active catalog routes, 87 exact wrapper matches, and 7 actionable official-only routes. The active Account surface is complete at 21/21 exact matches. All 179 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 50: native USDⓈ-M conditional Algo order queries
+
+`GET /fapi/v1/algoOrder` and `GET /fapi/v1/openAlgoOrders` were compared independently against their live Trade sections and the current official generated JavaScript connector. Both are signed `USER_DATA` GET operations with query parameters and no request body. The current catalog does not expose a dated per-route changelog entry for either operation, so no lifecycle conclusion was inferred from that absence; both live sections and both generated contracts are current and unmarked as deprecated.
+
+`GetAlgoOrderAsync` consumes IP weight 1 and requires at least one of the optional int64 `algoId` or string `clientAlgoId` identifiers while permitting both because the official contract does not declare them mutually exclusive. Blank client IDs are rejected before transport. Its endpoint section publishes `recvWindow` without a maximum, and the current general-info signing examples also do not establish a global ceiling, so this method normalizes the configured value without inventing the 60,000-millisecond restriction published elsewhere. The documented lookup-retention limits remain server behavior: unfilled canceled/expired orders older than three days and every order older than 90 days may no longer be found.
+
+`GetOpenAlgoOrdersAsync` accepts optional `symbol`, `algoType`, and int64 `algoId` filters. It consumes weight 1 when a symbol is supplied and weight 40 when all symbols are requested; blank string filters are rejected so they cannot incorrectly select the cheaper rate-limit path. This endpoint explicitly caps `recvWindow` at 60,000 milliseconds, so both explicit and client-default values above that ceiling are rejected before transport.
+
+The two responses share a common order-information base but retain distinct public result types. The single-order response preserves its optional triggered-order `actualType` and `actualQty`; the open-order response preserves its four TP/SL trigger and order prices. `actualOrderId` stays a string because the documented untriggered value is empty, `icebergQuantity` stays nullable text because the current response can publish the literal string `null`, and the four documented int64 time fields remain raw because their response schema does not state a unit.
+
+Six deterministic cases cover both identifier paths, missing/blank identifiers, both dynamic weights, signed query placement, API-key authentication, absent request bodies, all filters, the endpoint-specific receive-window rule, and every field unique to both response shapes. README and console examples expose both methods. Regenerating the complete comparison gives 95 catalog routes, 89 wrapper routes, 89 exact matches, 6 catalog-only routes, and no wrapper-only route. Excluding the explicitly deprecated v1 price route gives 94 active catalog routes, 89 exact wrapper matches, and 5 actionable official-only routes. Trade coverage improves from 25 to 27 exact matches out of 32. All 185 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Validate only the read-only native USDⓈ-M `GET /fapi/v1/algoOrder` and `GET /fapi/v1/openAlgoOrders` contracts in the next bounded slice.
-2. Perform Backward Review 11 after that fourth post-review implementation slice, then decide whether `GET /fapi/v1/allAlgoOrders` remains separate or can join a revised read-only group.
-3. Keep native conditional Algo order placement/cancellation, bulk cancellation, the TradFi agreement mutation, the COIN-M retired-operation removal, and Options lifecycle candidates in separate endpoint-level slices.
+1. Perform Backward Review 11 immediately across Slices 47-50, including code, tests, documentation, route counts, and the execution order; do not start another endpoint first.
+2. Subject to that review, validate the remaining read-only native USDⓈ-M `GET /fapi/v1/allAlgoOrders` contract in its own bounded slice.
+3. Keep native conditional Algo placement/cancellation, bulk cancellation, the TradFi agreement mutation, the COIN-M retired-operation removal, and Options lifecycle candidates in separate endpoint-level slices.
 
 ## Review log
 
@@ -503,3 +515,4 @@ Three deterministic cases cover both route versions, signed query placement, API
 | 47 | Complete | USDⓈ-M RPI order book and symbol-level ADL risk | Live canonical Market Data sections, 2025-11-20/2025-11-27 changelog entries, current generated connector and models, unsigned query/weight/variant/int64 tests, 173 deterministic tests |
 | 48 | Complete | USDⓈ-M trading schedule and deprecated-v1/current-v2 price decision | Live canonical Market Data sections, 2025-12-16/2026-07-16 changelog entries, explicit v1 deprecation evidence, current connector/models, unsigned query/weight/shape tests, 176 deterministic tests |
 | 49 | Complete | USDⓈ-M v2/v3 account balance coexistence | Live canonical Account sections, current generated connector and shared schema, signed query/weight/receive-window/full-model tests, 179 deterministic tests |
+| 50 | Complete | Native USDⓈ-M conditional Algo order and open-order queries | Live canonical Trade sections, current generated connector and distinct models, signed identifier/dynamic-weight/receive-window/full-shape tests, 185 deterministic tests |

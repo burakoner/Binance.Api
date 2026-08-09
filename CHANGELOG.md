@@ -9,6 +9,7 @@
   * Added current USDⓈ-M RPI order-book and symbol-level ADL risk Market Data queries with exact weights, parameters, response variants, and 64-bit fields
   * Added the current USDⓈ-M TradFi trading schedule, aligned the v2 price ticker contract, and excluded the deprecated v1 price route
   * Added the current coexisting USDⓈ-M v2 account-balance query and aligned both v2 and v3 balance contracts with the documented receive-window ceiling
+  * Added native USDⓈ-M conditional Algo order and open-order queries with exact identifier, weight, receive-window, and response-shape contracts
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport

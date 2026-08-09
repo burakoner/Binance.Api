@@ -141,6 +141,29 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<BinanceFuturesCountDownResult>> CancelAllOrdersAfterTimeoutAsync(string symbol, TimeSpan countDownTime, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Gets a native conditional Algo order by exchange or client Algo ID
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-algo-order" /></para>
+    /// </summary>
+    /// <param name="algoId">Exchange-assigned Algo order ID</param>
+    /// <param name="clientAlgoId">Client-assigned Algo order ID</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The matching native conditional Algo order</returns>
+    Task<RestCallResult<BinanceFuturesAlgoOrder>> GetAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets current native conditional Algo open orders for one symbol or all symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#current-all-algo-open-orders" /></para>
+    /// </summary>
+    /// <param name="symbol">Optional symbol filter, for example `ETHUSDT`</param>
+    /// <param name="algoType">Optional Algo type filter</param>
+    /// <param name="algoId">Optional exchange-assigned Algo order ID filter</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Current native conditional Algo open orders</returns>
+    Task<RestCallResult<List<BinanceFuturesOpenAlgoOrder>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.
     /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Order" /></para>
     /// </summary>
