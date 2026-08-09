@@ -58,4 +58,10 @@ public enum BinanceFuturesContractType : byte
     /// </summary>
     [Map("NEXT_QUARTER_DELIVERING")]
     NextQuarterDelivering,
+
+    /// <summary>
+    /// TradFi perpetual
+    /// </summary>
+    [Map("TRADIFI_PERPETUAL")]
+    TradFiPerpetual,
 }

@@ -1211,6 +1211,28 @@ Five deterministic regressions cover both products' exact topics and validation,
 2. Re-rank COIN-M index-price and mark-price kline streams after Slice 95.
 3. Perform Backward Review 22 immediately after Slice 96 at the latest and before any Slice 97 implementation.
 
+## Slice 95: current USDⓈ-M and COIN-M continuous-contract kline streams
+
+The `<pair>_<contractType>@continuousKline_<interval>` family was compared against the live routed USDⓈ-M Market and COIN-M WebSocket Stream catalogs, the effective UM/CM integration notice, and official generated Python connector HEAD `d9be6628`. Because the generated schemas omit nested symbol identity and the current official COIN-M cadence text conflicts with generated 250-millisecond metadata, unauthenticated read-only production subscriptions were also opened for `btcusdt_perpetual@continuousKline_1m` and `btcusd_perpetual@continuousKline_1m`, capturing at least one market payload from each. They performed no account, order, or mutation operation and were closed after observation.
+
+Both live payloads confirmed outer `e/E/ps/ct/k` and nested `t/T/i/f/L/o/c/h/l/v/n/x/q/V/Q/B`; nested `s` is absent. The previous callbacks returned only `k`, losing event type, event time, pair, and continuous contract type, while the COIN-M callback incorrectly deserialized the nested data through the USDⓈ-M standard-kline wrapper. Each product now exposes a dedicated continuous-kline outer model and dedicated nested model. Pair and contract type remain in their actual outer locations, `ct` uses current wire mapping, and the nested IDs and trade count are int64. Stale standard-symbol assumptions are not present on either nested model.
+
+Volume meaning remains product-dependent and was corroborated by the live values. USDⓈ-M uses base-asset volume, quote-asset volume, taker-buy base-asset volume, and taker-buy quote-asset volume for `v/q/V/Q`. COIN-M uses contract volume, base-asset volume, taker-buy contract volume, and taker-buy base-asset volume. The COIN-M callback can no longer silently expose USDⓈ-M volume property names.
+
+The current operation enums also differ. USDⓈ-M supports `perpetual`, `current_quarter`, `next_quarter`, and `tradifi_perpetual`, plus intervals `1s/1m/3m/5m/15m/30m/1h/2h/4h/6h/8h/12h/1d/3d/1w/1M`. COIN-M supports only the first three non-TradFi contract types and the same interval set without `1s`. `TRADIFI_PERPETUAL` was added to the shared contract-type enum because the current USDⓈ-M operation requires it; endpoint-specific validation rejects unrelated shared enum values, rejects COIN-M `1s` and TradFi requests, validates pairs, and enforces the documented 1024-stream connection ceiling. Topics retain exact lowercase pair and contract tokens while the `continuousKline` segment remains case-sensitive.
+
+After migration, either host may transport either product, but this payload has no `st` product discriminator. The wrapper cannot infer whether `v/q/V/Q` use USDⓈ-M or COIN-M units, so public XML explicitly requires the matching product client and callback model. No symbol-pattern inference or silent cross-product conversion was added.
+
+The COIN-M catalog says “Kline update every second” while both current generated stream methods label update speed as 250 milliseconds. The brief live observation confirmed the shape but did not establish a stable cadence. This official-source contradiction is recorded rather than converted into a false API guarantee; the operation has no cadence parameter, so it does not alter subscription construction or payload handling.
+
+Five new deterministic regressions cover exact topics, the USDⓈ-M-only one-second and TradFi contracts, COIN-M rejections, null/empty/blank/undefined/limit guards, complete combined payloads, pair and contract identity, timestamps, decimal precision, near-int64-limit update IDs, above-int32 trade counts, interval and contract conversion, product-specific volume units, ignore fields, and public callback types. README and console examples now show outer identity and product-specific nested volumes and include both COIN-M overloads. Ten targeted continuous/enum tests and all 324 deterministic tests pass.
+
+### Revised next order
+
+1. Perform Backward Review 22 across Slices 93-95 before another implementation slice because two consecutive kline slices changed public models and callback signatures.
+2. Re-rank the still-mandatory COIN-M index-price and mark-price kline candidates during that review; keep them separate unless the live contracts prove they share one safe model.
+3. Refresh the full-scope closing inventory after the ranked kline candidates are resolved.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1330,3 +1352,4 @@ Five deterministic regressions cover both products' exact topics and validation,
 | Review 21 | Complete | Backward review of merged mini/full ticker and unsupported raw-trade removal; USDⓈ-M private-routing and kline semantic-risk re-ranking | `8db4049..b9c8d32` diff review, live USDⓈ-M and COIN-M stream catalogs, integration notice and changelog, connector HEAD `a0c61d1`, exact wire-tag reconciliation, 16 targeted and 312 complete tests, forced full multi-target rebuild |
 | 93 | Complete | Current USDⓈ-M private listen-key stream route and reconnect-safe subscription state | Live User Data Streams catalog and route-migration notice, 2026-04-23 decommissioning evidence, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect-source audit, private-address/listen-key tests, 314 deterministic tests, forced full multi-target rebuild |
 | 94 | Complete | Current standard USDⓈ-M and COIN-M individual-symbol kline stream contracts | Live routed USDⓈ-M and COIN-M stream catalogs, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 319 deterministic tests, forced full multi-target rebuild |
+| 95 | Complete | Current USDⓈ-M and COIN-M continuous-contract kline stream contracts | Live routed catalogs and read-only public payload samples, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 324 deterministic tests, forced full multi-target rebuild |

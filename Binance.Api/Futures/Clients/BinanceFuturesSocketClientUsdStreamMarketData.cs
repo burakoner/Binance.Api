@@ -132,7 +132,7 @@ internal partial class BinanceFuturesSocketClientUsd
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(string pair,
         BinanceFuturesContractType contractType,
         BinanceKlineInterval interval,
-        Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamContinuousKline>> onMessage,
         CancellationToken ct = default)
         => SubscribeToContinuousContractKlinesAsync([pair], contractType, interval, onMessage, ct);
 
@@ -140,16 +140,20 @@ internal partial class BinanceFuturesSocketClientUsd
         IEnumerable<string> pairs,
         BinanceFuturesContractType contractType,
         BinanceKlineInterval interval,
-        Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default)
+        Action<WebSocketDataEvent<BinanceFuturesStreamContinuousKline>> onMessage, CancellationToken ct = default)
     {
-        pairs.ValidateNotNull(nameof(pairs));
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceStreamContinuousKlineWrapper>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamContinuousKline>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Kline));
+            onMessage(data.As(data.Data.Data));
         });
-        pairs = pairs.Select(a => a.ToLower(BinanceConstants.CI) + "_" + MapConverter.GetString(contractType)!.ToLower() + "@continuousKline_" + MapConverter.GetString(interval)).ToArray();
-        return SubscribeMarketAsync(pairs, false, handler, ct);
+        return SubscribeMarketAsync(ContinuousKlineStreamTopics(pairs, contractType, interval), false, handler, ct);
     }
+
+    internal static string[] ContinuousKlineStreamTopics(
+        IEnumerable<string> pairs,
+        BinanceFuturesContractType contractType,
+        BinanceKlineInterval interval)
+        => BinanceFuturesStreamValidation.UsdContinuousKlineStreamTopics(pairs, contractType, interval);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default) => SubscribeToMiniTickersAsync(new[] { symbol }, onMessage, ct);
 

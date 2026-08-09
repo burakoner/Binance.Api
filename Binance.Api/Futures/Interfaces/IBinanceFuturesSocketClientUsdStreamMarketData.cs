@@ -106,8 +106,9 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the continuous contract candlestick update stream for the provided pair
+    /// Subscribes to the USDⓈ-M continuous contract candlestick stream for the provided pair. The callback retains pair and contract type; volumes use base-asset and quote-asset units.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#continuous-contract-klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this USDⓈ-M callback only for USDⓈ-M pairs.</para>
     /// </summary>
     /// <param name="pair">The pair, for example `ETHUSDT`</param>
     /// <param name="contractType">The contract type</param>
@@ -115,11 +116,12 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamContinuousKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the continuous contract candlestick update stream for the provided pairs
+    /// Subscribes to the USDⓈ-M continuous contract candlestick stream for the provided pairs. The callback retains pair and contract type; volumes use base-asset and quote-asset units.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#continuous-contract-klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this USDⓈ-M callback only for USDⓈ-M pairs.</para>
     /// </summary>
     /// <param name="pairs">The pairs, for example `ETHUSDT`</param>
     /// <param name="contractType">The contract type</param>
@@ -127,7 +129,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(IEnumerable<string> pairs, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(IEnumerable<string> pairs, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamContinuousKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to 24-hour mini ticker updates for a USDⓈ-M symbol. Use the symbol-type-aware volume properties on the callback model.

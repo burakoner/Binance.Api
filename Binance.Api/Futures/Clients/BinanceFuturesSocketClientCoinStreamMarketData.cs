@@ -180,7 +180,7 @@ internal partial class BinanceFuturesSocketClientCoin
         string pair,
         BinanceFuturesContractType contractType,
         BinanceKlineInterval interval,
-        Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamCoinContinuousKline>> onMessage,
         CancellationToken ct = default)
         => SubscribeToContinuousContractKlineUpdatesAsync([pair], contractType, interval, onMessage, ct);
 
@@ -188,20 +188,21 @@ internal partial class BinanceFuturesSocketClientCoin
         IEnumerable<string> pairs,
         BinanceFuturesContractType contractType,
         BinanceKlineInterval interval,
-        Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamCoinContinuousKline>> onMessage,
         CancellationToken ct = default)
     {
-        pairs.ValidateNotNull(nameof(pairs));
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamKlineWrapper>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamCoinContinuousKline>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Kline));
+            onMessage(data.As(data.Data.Data));
         });
-        var topics = pairs.Select(a =>
-            a.ToLower(BinanceConstants.CI) + "_" +
-            MapConverter.GetString(contractType)!.ToLower() + "@continuousKline_" +
-            MapConverter.GetString(interval)).ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(ContinuousKlineStreamTopics(pairs, contractType, interval), false, handler, ct);
     }
+
+    internal static string[] ContinuousKlineStreamTopics(
+        IEnumerable<string> pairs,
+        BinanceFuturesContractType contractType,
+        BinanceKlineInterval interval)
+        => BinanceFuturesStreamValidation.CoinContinuousKlineStreamTopics(pairs, contractType, interval);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesOfAllSymbolsOfPairAsync(
         string pair,

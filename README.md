@@ -1142,7 +1142,7 @@ var futures_506 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", Bin
 var futures_507 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
 var futures_508 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], BinanceKlineInterval.FourHours, (data) => { });
 var futures_509 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
-var futures_510 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync("---PAIR---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
+var futures_510 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync("---PAIR---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { _ = data.Data.Pair; _ = data.Data.Kline.BaseAssetVolume; });
 var futures_511 = await ws.UsdFutures.SubscribeToContinuousContractKlinesAsync(["---PAIR---"], BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
 var futures_512 = await ws.UsdFutures.SubscribeToMiniTickersAsync("---SYMBOL---", (data) => { _ = data.Data.BaseAssetVolume; _ = data.Data.QuoteAssetVolume; });
 var futures_513 = await ws.UsdFutures.SubscribeToMiniTickersAsync(["---SYMBOL---"], (data) => { });
@@ -1208,6 +1208,8 @@ var coinFutures_524 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync("---SYMB
 var coinFutures_525 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync("---SYMBOL---", [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
 var coinFutures_526 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync(["---SYMBOL---"], BinanceKlineInterval.FourHours, (data) => { });
 var coinFutures_527 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
+var coinFutures_528 = await ws.CoinFutures.SubscribeToContinuousContractKlineUpdatesAsync("---PAIR---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { _ = data.Data.Pair; _ = data.Data.Kline.ContractVolume; });
+var coinFutures_529 = await ws.CoinFutures.SubscribeToContinuousContractKlineUpdatesAsync(["---PAIR---"], BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });

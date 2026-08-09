@@ -105,7 +105,8 @@ public class BinanceFuturesStreamSymbolUpdateTests
             [BinanceFuturesContractType.NextQuarter] = "NEXT_QUARTER",
             [BinanceFuturesContractType.PerpetualDelivering] = "PERPETUAL_DELIVERING",
             [BinanceFuturesContractType.CurrentQuarterDelivering] = "CURRENT_QUARTER_DELIVERING",
-            [BinanceFuturesContractType.NextQuarterDelivering] = "NEXT_QUARTER_DELIVERING"
+            [BinanceFuturesContractType.NextQuarterDelivering] = "NEXT_QUARTER_DELIVERING",
+            [BinanceFuturesContractType.TradFiPerpetual] = "TRADIFI_PERPETUAL"
         };
 
         Assert.Equal(expected, Enum.GetValues<BinanceFuturesContractType>()

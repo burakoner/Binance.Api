@@ -1,12 +1,12 @@
 namespace Binance.Api.Futures;
 
 /// <summary>
-/// USDⓈ-M continuous contract kline update
+/// COIN-M continuous contract kline update
 /// </summary>
-public record BinanceFuturesStreamContinuousKline : BinanceFuturesStreamEvent
+public record BinanceFuturesStreamCoinContinuousKline : BinanceFuturesStreamEvent
 {
     /// <summary>
-    /// The pair, for example <c>BTCUSDT</c>
+    /// The pair, for example <c>BTCUSD</c>
     /// </summary>
     [JsonProperty("ps")]
     public string Pair { get; set; } = string.Empty;
@@ -21,13 +21,13 @@ public record BinanceFuturesStreamContinuousKline : BinanceFuturesStreamEvent
     /// The kline data
     /// </summary>
     [JsonProperty("k")]
-    public BinanceFuturesStreamContinuousKlineData Kline { get; set; } = default!;
+    public BinanceFuturesStreamCoinContinuousKlineData Kline { get; set; } = default!;
 }
 
 /// <summary>
-/// USDⓈ-M continuous contract kline data
+/// COIN-M continuous contract kline data
 /// </summary>
-public record BinanceFuturesStreamContinuousKlineData
+public record BinanceFuturesStreamCoinContinuousKlineData
 {
     /// <summary>
     /// The open time of this candlestick
@@ -84,10 +84,10 @@ public record BinanceFuturesStreamContinuousKlineData
     public decimal ClosePrice { get; set; }
 
     /// <summary>
-    /// The base asset volume traded during this candlestick
+    /// The contract volume traded during this candlestick
     /// </summary>
     [JsonProperty("v")]
-    public decimal BaseAssetVolume { get; set; }
+    public decimal ContractVolume { get; set; }
 
     /// <summary>
     /// The number of trades in this candlestick
@@ -102,22 +102,22 @@ public record BinanceFuturesStreamContinuousKlineData
     public bool Final { get; set; }
 
     /// <summary>
-    /// The quote asset volume traded during this candlestick
+    /// The base asset volume traded during this candlestick
     /// </summary>
     [JsonProperty("q")]
-    public decimal QuoteAssetVolume { get; set; }
+    public decimal BaseAssetVolume { get; set; }
+
+    /// <summary>
+    /// The taker buy contract volume of this candlestick
+    /// </summary>
+    [JsonProperty("V")]
+    public decimal TakerBuyContractVolume { get; set; }
 
     /// <summary>
     /// The taker buy base asset volume of this candlestick
     /// </summary>
-    [JsonProperty("V")]
-    public decimal TakerBuyBaseAssetVolume { get; set; }
-
-    /// <summary>
-    /// The taker buy quote asset volume of this candlestick
-    /// </summary>
     [JsonProperty("Q")]
-    public decimal TakerBuyQuoteAssetVolume { get; set; }
+    public decimal TakerBuyBaseAssetVolume { get; set; }
 
     /// <summary>
     /// Ignore

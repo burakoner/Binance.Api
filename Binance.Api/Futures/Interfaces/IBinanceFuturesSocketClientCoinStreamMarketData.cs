@@ -128,8 +128,9 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamCoinKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the continuous contract candlestick update stream for the provided pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Continuous-Contract-Kline-Candlestick-Streams" /></para>
+    /// Subscribes to the COIN-M continuous contract candlestick stream for the provided pair. The callback retains pair and contract type; volumes use contract and base-asset units.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#continuous-contract-klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this COIN-M callback only for COIN-M pairs.</para>
     /// </summary>
     /// <param name="pair">The pair, for example `BTCUSD`</param>
     /// <param name="contractType">The contract type</param>
@@ -137,11 +138,12 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamCoinContinuousKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the continuous contract candlestick update stream for the provided pairs
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Continuous-Contract-Kline-Candlestick-Streams" /></para>
+    /// Subscribes to the COIN-M continuous contract candlestick stream for the provided pairs. The callback retains pair and contract type; volumes use contract and base-asset units.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#continuous-contract-klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this COIN-M callback only for COIN-M pairs.</para>
     /// </summary>
     /// <param name="pairs">The pairs, for example `BTCUSD`</param>
     /// <param name="contractType">The contract type</param>
@@ -149,7 +151,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(IEnumerable<string> pairs, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(IEnumerable<string> pairs, BinanceFuturesContractType contractType, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamCoinContinuousKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the index candlestick update stream for the provided pair
