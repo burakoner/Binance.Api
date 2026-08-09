@@ -306,12 +306,25 @@ The old optional `recvWindow` parameter was removed from this operation. It is a
 
 Three deterministic tests cover signed form-body placement, API-key headers, exact UID weight, both duration boundaries, closed side values, positive quantity, generated and caller-supplied client IDs, 64-bit response codes, and the absence of `recvWindow` even when a global default is configured. The full suite has 152 tests. No production Spot Algo order was submitted. Eight untouched Algo interface links remain stale and belong to the cancellation/query slices.
 
+## Review 9: Convert and Algo order mutations
+
+The backward review covers `e98e741..730f42e`: Convert quote request/acceptance, Convert limit placement/cancellation, the Algo route inventory, both Futures Algo placements, and Spot TWAP placement. The complete code, tests, public interfaces, response models, README/console call sites, changelog, and execution contract were re-read. No regression requiring rollback or a corrective code change was found.
+
+The current official catalogs still normalize to 9 Convert routes with 9 exact wrapper matches and 11 Algo routes with 11 exact wrapper matches. The latest official generated connector commits for both products remain the 2026-07-21 dependency/security releases; their latest functional contract changes remain 2026-07-13. Rechecking those sources confirmed the implemented weights, fixed 32-character Algo IDs, closed enums, request fields, and response schemas. Repository scans found no stale Convert mutation call, old Algo placement `clientOrderId` name, Spot TWAP `recvWindow`, incorrect VP weight, or duplicate `msg` mapping for Algo placement success.
+
+The source conflicts remain intentionally resolved at endpoint scope. The generated Convert and Algo connectors place the reviewed POST business fields in the query, while the live canonical endpoint pages define form-encoded Request Body schemas and curl examples; the live pages continue to win. Convert's limit-order page still references `fromIsBase` while the current exchange-info response and connector model omit it, so the wrapper continues not to infer asset orientation. No new compatibility field or speculative behavior was introduced during review.
+
+The next two mutations are confirmed as one coherent bounded slice. Both Spot and Futures Algo cancellation operations are signed `DELETE` routes with IP weight 1, required 64-bit `algoId`, optional `recvWindow` capped at 60000, query parameters, and the same response shape. The wrapper currently sends both cancellation payloads in a DELETE body, does not enforce the receive-window ceiling, exposes the parameter as `algoOrderId`, narrows the documented 64-bit response `code` to `int32`, and retains stale links. These are forward findings for the cancellation slice, not silently mixed into this review.
+
+A full deterministic run remains at 152 passing tests. The first multi-target build attempt encountered genuinely missing files in the local NuGet cache rather than a source error; a normal solution restore repopulated the packages, after which the complete solution built with zero errors and the same three pre-existing warnings. No production API request was sent.
+
 ### Revised next order
 
-1. Perform Review 9 now that implementation slices 35, 36, 38, and 39 are complete; review code, tests, documentation, and this execution order before any further endpoint work.
-2. Align the Spot and Futures cancellation mutations together only if Review 9 confirms their canonical contracts remain symmetric.
-3. Align the three read-only Futures queries, then the three read-only Spot queries, in separate slices.
-4. Audit USDⓈ-M, COIN-M, and Options only after the Algo surface and Review 9 findings are closed.
+1. Align the Spot and Futures Algo cancellation mutations together.
+2. Align the three read-only Futures Algo queries, then the three read-only Spot Algo queries, in separate slices.
+3. Refresh the USDⓈ-M, COIN-M, and Options route inventories without mixing inventory and implementation work.
+4. Select and complete the first bounded derivative implementation group from that refreshed inventory.
+5. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
 
 ## Review log
 
@@ -364,3 +377,4 @@ Three deterministic tests cover signed form-body placement, API-key headers, exa
 | 37 | Complete | Algo Trading REST route inventory | Current official Algo catalog and changelog, current generated connector routes/weights/models, normalized 11/11/11/0/0 comparison, bounded mutation/query follow-up groups |
 | 38 | Complete | Futures Algo VP and TWAP order placement | Live canonical Future Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/fixed-ID/response tests, 149 deterministic tests |
 | 39 | Complete | Spot Algo TWAP order placement | Live canonical Spot Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/fixed-ID/validation/removed-parameter tests, 152 deterministic tests |
+| Review 9 | Complete | Convert quote/limit mutations, Algo inventory and new-order mutations, documentation, and execution order | `e98e741..730f42e` diff review, refreshed 9/9 and 11/11 route comparisons, current canonical pages and generated connectors, residue/call-site scans, 152 tests, restored forced full multi-target build |
