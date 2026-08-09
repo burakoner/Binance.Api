@@ -160,27 +160,41 @@ internal partial class BinanceFuturesRestClientCoin
     public Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
+        decimal quantity,
+        decimal price,
         long? orderId = null,
         string? origClientOrderId = null,
-        decimal? quantity = null,
-        decimal? price = null,
         BinanceFuturesPriceMatch? priceMatch = null,
+        long? modifyId = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("Symbol is required", nameof(symbol));
+        if (side != BinanceOrderSide.Buy && side != BinanceOrderSide.Sell)
+            throw new ArgumentOutOfRangeException(nameof(side), side, "Side must be Buy or Sell");
+        if (quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity), quantity, "Quantity must be greater than zero");
+        if (price <= 0)
+            throw new ArgumentOutOfRangeException(nameof(price), price, "Price must be greater than zero");
+        if (origClientOrderId != null && string.IsNullOrWhiteSpace(origClientOrderId))
+            throw new ArgumentException("Original client order id cannot be empty", nameof(origClientOrderId));
+        if (!orderId.HasValue && origClientOrderId == null)
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
+        if (priceMatch.HasValue)
+            throw new ArgumentException("Binance currently requires price for Modify Order and also prohibits sending priceMatch with price", nameof(priceMatch));
 
         var parameters = new ParameterCollection
         {
-            { "symbol", symbol }
+            { "symbol", symbol },
+            { "quantity", quantity.ToString(BinanceConstants.CI) },
+            { "price", price.ToString(BinanceConstants.CI) }
         };
+        parameters.AddEnum("side", side);
         parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
-        parameters.AddOptionalEnum("origClientOrderId", priceMatch);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("modifyId", modifyId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "order"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 1);
     }

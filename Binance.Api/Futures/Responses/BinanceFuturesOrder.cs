@@ -30,6 +30,12 @@ public record BinanceFuturesOrder
     public string ClientOrderId { get; set; } = string.Empty;
 
     /// <summary>
+    /// User-defined modification identifier, returned only when supplied on an order modification request
+    /// </summary>
+    [JsonProperty("modifyId")]
+    public long? ModifyId { get; set; }
+
+    /// <summary>
     /// The order id as assigned by the client without the prefix
     /// </summary>
     public string RequestClientOrderId => BinanceHelpers.RemoveBrokerId(ClientOrderId);

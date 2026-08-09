@@ -385,7 +385,8 @@ var futures_136 = await api.UsdFutures.GetTradingScheduleAsync();
 // USDⓈ-M Futures -> Trading Methods (PRIVATE)
 var futures_201 = await api.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
 var futures_202 = await api.UsdFutures.PlaceOrdersAsync([]);
-var futures_203 = await api.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
+// Binance currently requires price and also prohibits priceMatch with price on Modify Order; priceMatch is rejected fail-closed.
+var futures_203 = await api.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, 50_000.0m, orderId: 1_000_000L, modifyId: 1L);
 var futures_204 = await api.UsdFutures.ModifyOrdersAsync([]);
 var futures_205 = await api.UsdFutures.GetOrderEditHistoryAsync("---SYMBOL---");
 var futures_206 = await api.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);

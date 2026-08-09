@@ -73,27 +73,29 @@ public interface IBinanceFuturesRestClientCoinTrade
     Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order" /></para>
+    /// Modifies an existing LIMIT order and moves it to the back of the match queue
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#modify-order-trade" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
-    /// <param name="side">The order side (buy/sell)</param>
-    /// <param name="orderId">The order id of the order</param>
-    /// <param name="origClientOrderId">The client order id of the order</param>
-    /// <param name="quantity">Order quantity, cannot be sent with closePosition=true</param>
-    /// <param name="price">Order Price</param>
-    /// <param name="priceMatch">Price Match</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="side">The existing order side</param>
+    /// <param name="quantity">The complete new order quantity; required together with price after the COIN-M architecture migration</param>
+    /// <param name="price">The new order price; required together with quantity after the COIN-M architecture migration</param>
+    /// <param name="orderId">The exchange order id. Either this or origClientOrderId is required; this id takes precedence when both are sent</param>
+    /// <param name="origClientOrderId">The original client order id. Either this or orderId is required</param>
+    /// <param name="priceMatch">Published by Binance, but currently unusable because the same live contract requires price and prohibits combining priceMatch with price; non-null values are rejected</param>
+    /// <param name="modifyId">Optional user-defined modification identifier passed through without uniqueness validation and returned only when supplied</param>
+    /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <returns>The current modification acknowledgement. Immediate modify responses do not contain fill-derived average or cumulative quote/base values</returns>
     Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
+        decimal quantity,
+        decimal price,
         long? orderId = null,
         string? origClientOrderId = null,
-        decimal? quantity = null,
-        decimal? price = null,
         BinanceFuturesPriceMatch? priceMatch = null,
+        long? modifyId = null,
         int? receiveWindow = null,
         CancellationToken ct = default);
 
