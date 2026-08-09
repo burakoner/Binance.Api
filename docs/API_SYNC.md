@@ -80,7 +80,7 @@ This is a method-and-path candidate inventory from the official generated API ca
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 45 | 41 | 3 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The official compact COIN-M inventory similarly lists `GET /dapi/v1/leverageBracket`, while the product changelog documents `GET /dapi/v2/leverageBracket` and the wrapper uses v2. These conflicts are concrete examples of why route candidates must be verified against the endpoint page before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -360,12 +360,21 @@ Each candidate title is present in the live catalog navigation, and each literal
 
 This inventory proves route presence only. It does not authorize implementation, prove that both V2 and V3 balance contracts should be exposed, or justify grouping the financially distinct TradFi-perpetual mutation with conditional Algo orders. Changelog history, endpoint parameters, request placement, weights, response schemas, coexistence/retirement state, and safety constraints remain endpoint-level work. No source code or public API changed in this slice, and no Binance endpoint was called.
 
+## Slice 44: COIN-M Futures REST route inventory refresh
+
+The live COIN-M REST catalog, the current official generated JavaScript connector, and every literal method/path pair in the wrapper's COIN-M client were normalized independently. The live catalog contains 64 operations—49 GET, 8 POST, 4 DELETE, and 3 PUT—and the connector exposes the same 64 unique routes. The wrapper also exposes 64 routes, with 63 exact matches, one official-only candidate, and one wrapper-only candidate. The numeric 64/64/63/1/1 row remains unchanged, but the old explanation of those candidates was stale.
+
+The official-only route is `GET /dapi/v1/leverageBracket`. The current live Account catalog and connector expose both that pair-default operation and the wrapper's already matched `GET /dapi/v2/leverageBracket` symbol-specific operation. The v1 page explicitly warns that pair defaults can be ambiguous when a pair has multiple symbol brackets and recommends v2 for a specific symbol. This is coexistence, not a v1-versus-v2 documentation conflict; adding v1 remains endpoint-level work rather than replacing v2.
+
+The wrapper-only route is `GET /dapi/v1/pmAccountInfo`. It is absent from both the current COIN-M catalog and connector, and the dated 2026-06-30 COIN-M changelog states that it is no longer in use and directs clients to `GET /fapi/v1/pmAccountInfo`. The wrapper therefore retains a verified retired public operation that must be removed in a later implementation slice; this inventory records the finding without mixing a breaking API removal into documentation-only work.
+
+Category comparison is Account 13 official/12 exact/1 official-only, Market Data 26/26, Trade 22/22, and User Data Streams 3/3. The sole wrapper-only route is outside those current official modules. Route counts do not prove parameter, weight, signing, response, or retirement correctness for the 63 matches. No source code or public API changed, no Binance endpoint was called, and the deterministic suite remains at 163 tests.
+
 ### Revised next order
 
-1. Refresh only the COIN-M route inventory without implementation work.
-2. Refresh only the Options route inventory in a separate slice.
-3. Select and complete the first bounded derivative implementation group from those inventories.
-4. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
+1. Refresh only the Options route inventory without implementation work.
+2. Select and complete the first bounded derivative implementation group from the three refreshed inventories.
+3. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
 
 ## Review log
 
@@ -423,3 +432,4 @@ This inventory proves route presence only. It does not authorize implementation,
 | 41 | Complete | Read-only Futures Algo queries | Live canonical Future Algo query sections, current official generated connector and models, signed GET/pagination/validation/naming/int64-response tests, 159 deterministic tests |
 | 42 | Complete | Read-only Spot Algo queries | Live canonical Spot Algo query sections, current official generated connector and models, signed GET/pagination/validation/naming/shared-model tests, 163 deterministic tests |
 | 43 | Complete | USDⓈ-M Futures REST route inventory refresh | Live 95-operation catalog, current official generated connector, normalized 95/83/83/12/0 comparison, category and candidate-path verification, no implementation |
+| 44 | Complete | COIN-M Futures REST route inventory refresh | Live 64-operation catalog, current official generated connector, corrected 64/64/63/1/1 candidate identity, 2026-06-30 retirement evidence, no implementation |
