@@ -16,8 +16,6 @@ internal partial class BinanceFuturesSocketClientUsd
         CancellationToken ct = default,
         Action<WebSocketDataEvent<BinanceFuturesStreamAlgoUpdate>>? onAlgoUpdated = null)
     {
-        listenKey.ValidateNotNull(nameof(listenKey));
-
         var handler = new Action<WebSocketDataEvent<string>>(data =>
         {
             var combinedToken = JToken.Parse(data.Data);
@@ -160,7 +158,15 @@ internal partial class BinanceFuturesSocketClientUsd
             }
         });
 
-        return SubscribeAsync([listenKey], false, handler, ct);
+        return SubscribePrivateAsync(UserDataStreamTopics(listenKey), false, handler, ct);
+    }
+
+    internal static string[] UserDataStreamTopics(string listenKey)
+    {
+        if (string.IsNullOrWhiteSpace(listenKey))
+            throw new ArgumentException("Listen key must not be empty", nameof(listenKey));
+
+        return [listenKey];
     }
 
     internal void DispatchAlgoUpdate(

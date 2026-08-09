@@ -1172,6 +1172,25 @@ Sixteen targeted mini-ticker, full-ticker, aggregate-trade, public-surface, and 
 4. Re-rank COIN-M index-price and mark-price kline streams after Slice 95 rather than pre-bundling them with standard or continuous-contract klines.
 5. Perform Backward Review 22 no later than the fourth implementation slice after Review 21.
 
+## Slice 93: current USDⓈ-M private listen-key stream route
+
+The live USDⓈ-M User Data Streams connection section, every current event section, the important WebSocket route-migration notice, the effective 2026-04-23 legacy-route decommissioning entry, and official generated Python connector HEAD `d9be6628` were compared against the complete local listen-key subscription path. No production Binance request or WebSocket connection was opened.
+
+The old subscription connected to the unrouted `wss://fstream.binance.com/stream` address. Binance now states that unrouted Market and Private connections no longer push data. The subscription therefore exposed a valid-looking `WebSocketUpdateSubscription` flow whose account, position, and order events could silently never arrive. It now connects to `wss://fstream.binance.com/private/stream` and sends the existing JSON `SUBSCRIBE` request with the case-sensitive listen key as its sole topic. This matches the current generated connector's private-channel subscription mode. The migration notice also documents URL-query `listenKey/events` filtering and direct `/private/ws/<listenKey>` access, but neither is mandatory for an unfiltered subscription; adding a new filter surface or switching envelope mode would be unnecessary public churn.
+
+The current user-data page lists `MARGIN_CALL`, `ACCOUNT_UPDATE`, `ORDER_TRADE_UPDATE`, `ACCOUNT_CONFIG_UPDATE`, `TRADE_LITE`, `CONDITIONAL_ORDER_TRIGGER_REJECT`, `STRATEGY_UPDATE`, deprecated-but-currently-documented `GRID_UPDATE`, `ALGO_UPDATE`, and `listenKeyExpired`. The local dispatcher already covers all ten event names and consumes the combined `stream/data` envelope, so no event callback or model was changed. ApiSharp 4.5.1 retains the subscription request on the connection and resends that same request after reconnect; moving the connection address therefore preserves listen-key resubscription behavior on the private channel. Blank listen keys are now rejected before a connection attempt, while nonblank keys retain exact casing and content.
+
+README and console samples require no call-site change because the public method signature and callback set remain current. Public XML documentation now explicitly identifies the routed private channel and links both the current user-data page and migration notice. The release notes record the route correction and blank-key guard.
+
+Three deterministic socket-address/topic tests prove the Market, Public, and Private addresses, exact listen-key preservation, and null/empty/blank rejection. All 314 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings.
+
+### Revised next order
+
+1. Slice 94: audit the individual USDⓈ-M and COIN-M `<symbol>@kline_<interval>` family, including product-safe volume semantics, int64 counters, exact topics, models, examples, and deterministic tests.
+2. Slice 95: audit continuous-contract kline streams separately, retaining outer pair/contract identity and product-specific inner values.
+3. Re-rank index-price and mark-price kline candidates after Slice 95.
+4. Perform Backward Review 22 no later than Slice 97, the fourth implementation slice after Review 21.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1289,3 +1308,4 @@ Sixteen targeted mini-ticker, full-ticker, aggregate-trade, public-surface, and 
 | 91 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market 24-hour ticker stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded COIN `st` example conflict, product-discriminated volume/current-field/topic/full-payload tests, 311 deterministic tests, forced full multi-target rebuild |
 | 92 | Complete | Removal of unsupported USDⓈ-M and COIN-M raw trade stream contracts | Complete live Futures stream catalogs, current derivatives changelog, connector HEAD `a0c61d1`, public-surface removal test, 312 deterministic tests, forced full multi-target rebuild |
 | Review 21 | Complete | Backward review of merged mini/full ticker and unsupported raw-trade removal; USDⓈ-M private-routing and kline semantic-risk re-ranking | `8db4049..b9c8d32` diff review, live USDⓈ-M and COIN-M stream catalogs, integration notice and changelog, connector HEAD `a0c61d1`, exact wire-tag reconciliation, 16 targeted and 312 complete tests, forced full multi-target rebuild |
+| 93 | Complete | Current USDⓈ-M private listen-key stream route and reconnect-safe subscription state | Live User Data Streams catalog and route-migration notice, 2026-04-23 decommissioning evidence, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect-source audit, private-address/listen-key tests, 314 deterministic tests, forced full multi-target rebuild |

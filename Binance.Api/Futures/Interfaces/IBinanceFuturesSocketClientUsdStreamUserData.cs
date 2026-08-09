@@ -6,8 +6,9 @@
 public interface IBinanceFuturesSocketClientUsdStreamUserData
 {
     /// <summary>
-    /// Subscribes to the USD-M user data stream. Start the stream and obtain a listen key with <see cref="IBinanceFuturesSocketClientUsdQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)"/> first.
+    /// Subscribes to the USD-M user data stream through the routed private channel. Start the stream and obtain a listen key with <see cref="IBinanceFuturesSocketClientUsdQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)"/> first.
     /// <para><a href="https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice" /></para>
     /// </summary>
     /// <param name="listenKey">Listen key retrieved by <see cref="IBinanceFuturesSocketClientUsdQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientUsdUserDataStream.StartUserStreamAsync(CancellationToken)"/></param>
     /// <param name="onLeverageUpdated">The event handler for leverage changed update</param>

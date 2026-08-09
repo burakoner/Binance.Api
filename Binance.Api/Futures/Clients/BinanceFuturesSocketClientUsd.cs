@@ -199,8 +199,8 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     internal Task<CallResult<WebSocketUpdateSubscription>> SubscribePublicAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
         => SubscribeAsync(PublicStreamAddress, topics, authenticated, onData, ct);
 
-    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
-        => SubscribeAsync(LegacyStreamAddress, topics, authenticated, onData, ct);
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribePrivateAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+        => SubscribeAsync(PrivateStreamAddress, topics, authenticated, onData, ct);
 
     internal static string MarketStreamAddress
         => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("market/stream");
@@ -208,8 +208,8 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     internal static string PublicStreamAddress
         => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("public/stream");
 
-    private static string LegacyStreamAddress
-        => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("stream");
+    internal static string PrivateStreamAddress
+        => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("private/stream");
 
     private Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string address, IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     {
