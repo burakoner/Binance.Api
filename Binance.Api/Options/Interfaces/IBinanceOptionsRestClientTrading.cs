@@ -177,4 +177,13 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string? symbol = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the account's Options commission rates.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#user-commission" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
+    /// <param name="ct">Cancellation Token</param>
+    /// <returns></returns>
+    Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(int? receiveWindow = null, CancellationToken ct = default);
 }

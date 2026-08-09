@@ -71,12 +71,12 @@ public interface IBinanceOptionsRestClientMarketMakerBlockTrade
 
     /// <summary>
     /// Gets block trades for a specific account.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Account-Block-Trade-List" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#account-block-trade-list" /></para>
     /// </summary>
     /// <param name="underlying">Underlying</param>
     /// <param name="startTime">Start Time</param>
     /// <param name="endTime">End Time</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsMarketMakerBlockTrade>>> GetBlockTradesAsync(string? underlying = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default);

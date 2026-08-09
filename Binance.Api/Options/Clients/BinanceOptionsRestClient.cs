@@ -35,6 +35,15 @@ internal partial class BinanceOptionsRestClient : IBinanceOptionsRestClient
         int requestWeight = 1) where T : class
         => _.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
+    internal int? ValidateReceiveWindow(int? receiveWindow)
+    {
+        var normalizedReceiveWindow = _.ReceiveWindow(receiveWindow);
+        if (normalizedReceiveWindow > 60_000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), "receiveWindow cannot exceed 60000 milliseconds");
+
+        return normalizedReceiveWindow;
+    }
+
     internal Uri GetUrl(string api, string version, string endpoint)
     {
         var url = BinanceAddress.Default.EuropeanOptionsRestApiAddress;

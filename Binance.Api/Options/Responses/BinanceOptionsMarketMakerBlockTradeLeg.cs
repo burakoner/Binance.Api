@@ -24,7 +24,7 @@ public record BinanceOptionsMarketMakerBlockTradeLeg
     /// <summary>
     /// Order ID
     /// </summary>
-    public long OrderId { get; set; }
+    public string OrderId { get; set; } = "";
 
     /// <summary>
     /// Order Price
@@ -71,7 +71,7 @@ public record BinanceOptionsMarketMakerBlockTradeLeg
     /// <summary>
     /// Id
     /// </summary>
-    public long Id { get; set; }
+    public string Id { get; set; } = "";
 
     /// <summary>
     /// Trade Id
@@ -81,7 +81,8 @@ public record BinanceOptionsMarketMakerBlockTradeLeg
     /// <summary>
     /// Trade Price
     /// </summary>
-    public decimal tradePrice { get; set; }
+    [JsonProperty("tradePrice")]
+    public decimal TradePrice { get; set; }
 
     /// <summary>
     /// Trade Quantity

@@ -80,8 +80,8 @@ internal partial class BinanceOptionsRestClientMarketMaker
         parameters.AddOptional("underlying", underlying);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", _.ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceOptionsMarketMakerBlockTrade>>(GetUrl(eapi, v1, "block/order/orders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<List<BinanceOptionsMarketMakerBlockTrade>>(GetUrl(eapi, v1, "block/user-trades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 }

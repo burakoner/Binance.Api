@@ -272,4 +272,12 @@ internal partial class BinanceOptionsRestClient
         return RequestAsync<List<BinanceOptionsUserTrade>>(GetUrl(eapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
+    public Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceOptionsUserCommission>(GetUrl(eapi, v1, "commission"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+    }
+
 }

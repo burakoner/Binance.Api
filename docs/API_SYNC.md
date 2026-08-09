@@ -78,9 +78,9 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Spot | 48 | 47 | 47 | 1 | 0 |
 | USDⓈ-M Futures | 95 | 83 | 83 | 12 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
-| Options | 44 | 45 | 41 | 3 | 4 |
+| Options | 44 | 47 | 43 | 1 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The refreshed Options row still has the same 44/45/41/3/4 arithmetic, but its four wrapper-only routes have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -384,11 +384,21 @@ The four wrapper-only routes are `GET /eapi/v1/account`, `GET /eapi/v1/historica
 
 Category comparison is Account 2 official/2 exact, Market Data 12/12, Market Maker Block Trade 7/6, Market Maker Endpoints 6/6, Trade 14/12, and User Data Streams 3/3. The wrapper-only candidates sit outside those current official method/path sets. Route presence does not prove parameter placement, signing, weight, validation, response schema, or lifecycle correctness for the 41 matches. No source code or public API changed, and no Binance endpoint was called.
 
+## Slice 46: Read-only Options block trades and commission
+
+`GET /eapi/v1/block/user-trades` and `GET /eapi/v1/commission` were compared against their current Options catalog sections, the dated product changelog, and the current official generated connector and response models. Both are signed USER_DATA queries with IP weight 5, optional `recvWindow` capped at 60000 milliseconds, query parameters, API-key headers, and no request body.
+
+The public `GetBlockTradesAsync` operation already represented the account block-trade-list semantics and response hierarchy, but incorrectly sent its request to the separate `GET /eapi/v1/block/order/orders` route. It now targets `/eapi/v1/block/user-trades`, preserving the still-valid block-order query that independently uses `/block/order/orders`. The account-list filters remain the documented optional `underlying`, `startTime`, and `endTime`; no undocumented time ordering or range constraint was invented. Its response model now keeps the schema's string-typed `orderId` and `id` fields as strings, and the malformed public `tradePrice` member is corrected to `TradePrice` with an explicit wire mapping.
+
+The new `GetUserCommissionAsync` operation targets `/eapi/v1/commission` and accepts only the documented optional receive window. Its dedicated response represents the `commissions` collection and each underlying's string-encoded maker and taker fee values as decimals. Both explicit and globally configured receive windows above the published maximum are rejected before transport.
+
+Three deterministic tests cover both signed GET paths, absent bodies and content types, API-key headers, exact IP weights, complete block-trade filters, configured receive-window behavior, boundary rejection, int64 trade IDs, string order identifiers, timestamps, closed side/liquidity values, and commission deserialization. The full suite has 166 tests. No Binance endpoint was called. Regenerating the route comparison yields 44 official routes, 47 wrapper routes, 43 exact matches, one official-only route (`POST /eapi/v1/stock/contract`), and the same four unproven wrapper-only lifecycle candidates.
+
 ### Revised next order
 
-1. Validate and implement the two read-only official Options additions, `GET /eapi/v1/block/user-trades` and `GET /eapi/v1/commission`, as the first bounded derivative group.
-2. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
-3. Reassess the three derivative inventories before sequencing breaking removals or financially distinct mutation endpoints.
+1. Perform Review 10 across Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
+2. Reassess the three derivative inventories before selecting the next bounded endpoint group.
+3. Keep breaking removals and financially distinct mutation endpoints out of a shared implementation slice.
 
 ## Review log
 
@@ -448,3 +458,4 @@ Category comparison is Account 2 official/2 exact, Market Data 12/12, Market Mak
 | 43 | Complete | USDⓈ-M Futures REST route inventory refresh | Live 95-operation catalog, current official generated connector, normalized 95/83/83/12/0 comparison, category and candidate-path verification, no implementation |
 | 44 | Complete | COIN-M Futures REST route inventory refresh | Live 64-operation catalog, current official generated connector, corrected 64/64/63/1/1 candidate identity, 2026-06-30 retirement evidence, no implementation |
 | 45 | Complete | Options REST route inventory refresh | Live 44-operation catalog, current official generated connector, refreshed 44/45/41/3/4 comparison, dated addition evidence and explicit retirement uncertainty, no implementation |
+| 46 | Complete | Read-only Options account block trades and user commission | Live canonical Options catalog, dated changelog, current generated connector and models, route/signature/weight/receive-window/model tests, 166 deterministic tests |
