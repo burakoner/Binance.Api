@@ -822,6 +822,21 @@ Five deterministic no-network tests cover both signed GET routes, API-key authen
 2. Slice 78: inventory and decide the cross-method Futures WebSocket API multi-dimensional rate-limit architecture before changing transport behavior.
 3. Implement only the bounded limiter outcome supported by Slice 78, then perform mandatory Backward Review 17 no later than the fourth post-review slice.
 
+## Slice 77: current USDⓈ-M and COIN-M User's Force Orders contracts
+
+`GET /fapi/v1/forceOrders` and `GET /dapi/v1/forceOrders` were audited independently against their live canonical Trade sections, the combined derivatives changelog effective 2026-08-05, and official generated JavaScript connector HEAD `092e4f2`. Both are signed USER_DATA queries with an optional symbol, optional `LIQUIDATION`/`ADL` filter, optional start and end times, server-default limit 50, maximum limit 100, and dynamic IP weight 20 with a symbol or 50 without one. The implementations already carried the correct dynamic weight but silently discarded the documented limit. They now serialize it, reject only values above the published maximum, reject a supplied blank symbol, expose the wire-accurate `autoCloseType` parameter name, and retain all filters in the signed GET query. The executable README and console examples now use symbol scope and the maximum limit, avoiding the heavier unscoped request in ordinary sample use.
+
+The two products deliberately do not share an invented timing contract. USDⓈ-M states that omitting `startTime` queries the seven days before `endTime`, but publishes neither an explicit maximum range nor an endpoint-specific `recvWindow` maximum; its current generated connector agrees. The wrapper therefore preserves larger explicit/configured receive windows and does not copy a seven-day rejection from All Orders or another product. COIN-M explicitly caps `recvWindow` at 60,000 milliseconds and supports querying only the past 90 days. Explicit and configured COIN-M receive windows above that maximum now fail before transport. The 90-day statement is availability guidance rather than a specified maximum query span, so it is documented without a local-clock rejection; Binance remains authoritative for retained data. Neither current page publishes a minimum limit or a time-order validation rule, and the client does not invent either.
+
+The current full response schemas share int64 order identity, symbol, pair, status, client order identifier, decimal price, average price, original/executed quantity, cumulative quote and base values, time-in-force, type, reduce/close booleans, side, position side, stop price, working/original type, and creation/update timestamps. COIN-M additionally publishes `priceProtect` and `goodTillDate`; USDⓈ-M does not. The shared order model already represented all of these keys, including the changelog's new USDⓈ-M `cumBase`/`pair` and COIN-M `cumQuote`/`goodTillDate`, so no endpoint-specific duplicate model was added.
+
+Five deterministic no-network tests cover both signed paths, API-key authentication, all four symbol/unscoped weight outcomes, both close-type filters, every query field, maximum limit, blank-symbol and over-limit rejection, product-specific explicit/configured receive-window behavior, int64 precision, and complete USDⓈ-M and COIN-M response deserialization. All 263 deterministic tests pass, and a forced full multi-target solution build succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
+### Revised next order
+
+1. Slice 78: inventory and decide the cross-method Futures WebSocket API multi-dimensional rate-limit architecture before changing transport behavior.
+2. Implement only the bounded limiter outcome supported by Slice 78, then perform mandatory Backward Review 17 no later than the fourth post-review slice.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -918,3 +933,4 @@ Five deterministic no-network tests cover both signed GET routes, API-key authen
 | 75 | Complete | Current USDⓈ-M and COIN-M `ORDER_TRADE_UPDATE` event contracts | Live user-data-stream schemas, 2026-07-30 `M` changelog, current generated connector, full-field/model/converter tests, 253 deterministic tests |
 | Review 16 | Complete | Backward review of the Futures order-modification lifecycle and forward All Orders, Force Orders, and WebSocket limiter risk | `c02c226..7245515` diff review, live REST/WebSocket/stream contracts, 2026-07-30 and 2026-08-05 changelog entries, connector HEAD `092e4f2`, 16 targeted and 253 complete tests, forced full multi-target rebuild |
 | 76 | Complete | Current USDⓈ-M and COIN-M All Orders contracts | Live Trade sections, 2026-08-05 changelog, current generated connector, signed scope/range/limit/weight/receive-window/full-response tests, 258 deterministic tests |
+| 77 | Complete | Current USDⓈ-M and COIN-M User's Force Orders contracts | Live Trade sections, 2026-08-05 changelog, current generated connector, signed filter/limit/dynamic-weight/product-receive-window/full-response tests, 263 deterministic tests |

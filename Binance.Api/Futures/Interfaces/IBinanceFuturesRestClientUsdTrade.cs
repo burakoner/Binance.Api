@@ -298,17 +298,20 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<BinanceFuturesOrder>> GetOpenOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets a list of users forced orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Users-Force-Orders" /></para>
+    /// Gets the account's USDⓈ-M liquidation and ADL orders. Omitting <paramref name="autoCloseType"/> returns both types;
+    /// omitting <paramref name="startTime"/> queries the seven days before <paramref name="endTime"/>.
+    /// This signed USER_DATA query consumes IP weight 20 with a symbol and 50 without one.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#users-force-orders" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get forced orders for, for example `ETHUSDT`</param>
-    /// <param name="closeType">Filter by reason for close</param>
-    /// <param name="startTime">Filter by start time</param>
-    /// <param name="endTime">Filter by end time</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="symbol">Optional symbol scope, for example <c>ETHUSDT</c>.</param>
+    /// <param name="autoCloseType">Optional liquidation or ADL filter.</param>
+    /// <param name="startTime">Optional query start time.</param>
+    /// <param name="endTime">Optional query end time.</param>
+    /// <param name="limit">Optional result limit; server default is 50 and maximum is 100.</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds. The current endpoint schema publishes no endpoint-specific maximum.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>List of forced orders</returns>
-    Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The matching liquidation and ADL orders.</returns>
+    Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets account trades for a required USDⓈ-M symbol. When no time bounds are sent, Binance returns the last seven days.

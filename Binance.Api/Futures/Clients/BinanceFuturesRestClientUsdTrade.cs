@@ -649,14 +649,20 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesOrder>(GetUrl(fapi, v1, "openOrder"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? closeType = null, DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesOrder>>> GetForcedOrdersAsync(string? symbol = null, BinanceFuturesAutoCloseType? autoCloseType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+        if (limit > 100)
+            throw new ArgumentOutOfRangeException(nameof(limit), limit, "limit cannot exceed 100");
+
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptionalEnum("autoCloseType", closeType);
+        parameters.AddOptionalEnum("autoCloseType", autoCloseType);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
         var weight = symbol == null ? 50 : 20;
         return RequestAsync<List<BinanceFuturesOrder>>(GetUrl(fapi, v1, "forceOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);

@@ -315,7 +315,7 @@ internal class Program
         var futures_211 = await api.UsdFutures.GetOrdersAsync("---SYMBOL---");
         var futures_212 = await api.UsdFutures.GetOpenOrdersAsync();
         var futures_213 = await api.UsdFutures.GetOpenOrderAsync("---SYMBOL---");
-        var futures_214 = await api.UsdFutures.GetForcedOrdersAsync();
+        var futures_214 = await api.UsdFutures.GetForcedOrdersAsync("---SYMBOL---", limit: 100);
         var futures_215 = await api.UsdFutures.GetUserTradesAsync("---SYMBOL---");
         var futures_216 = await api.UsdFutures.SetMarginTypeAsync("---SYMBOL---", BinanceFuturesMarginType.Isolated);
         var futures_217 = await api.UsdFutures.SetPositionModeAsync(true);
@@ -406,7 +406,7 @@ internal class Program
         var futures_708 = await api.CoinFutures.GetOrdersAsync("---SYMBOL---");
         var futures_709 = await api.CoinFutures.GetOpenOrdersAsync();
         var futures_710 = await api.CoinFutures.GetOpenOrderAsync("---SYMBOL---");
-        var futures_711 = await api.CoinFutures.GetForcedOrdersAsync();
+        var futures_711 = await api.CoinFutures.GetForcedOrdersAsync("---SYMBOL---", limit: 100);
         var futures_712 = await api.CoinFutures.GetUserTradesAsync("---SYMBOL---");
         var futures_713 = await api.CoinFutures.GetPositionsAsync();
         var futures_714 = await api.CoinFutures.SetPositionModeAsync(true);

@@ -34,6 +34,7 @@
   * Aligned USDⓈ-M and COIN-M `ORDER_TRADE_UPDATE` events with the conditional string `modifyId`, product-specific account, margin, strategy, and expiry fields, and reliable wire enum and timestamp conversion
   * Clarified that WebSocket API request weights and returned counters are not proactively rate-limited, and corrected the documented default client-order-id adjustment behavior
   * Aligned USDⓈ-M and COIN-M All Orders with current symbol/pair scope, identifier combinations, seven-day windows, limits, post-migration weights, receive-window ceilings, retention guidance, and complete response fields
+  * Aligned USDⓈ-M and COIN-M User's Force Orders with the missing limit, product-specific receive-window and retention contracts, dynamic weights, current filters, and complete response fields
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport
