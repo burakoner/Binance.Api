@@ -7,25 +7,24 @@ public interface IBinanceAlgoRestClientSpot
 {
     /// <summary>
     /// Place a new spot time weighted average price order
-    /// <para><a href="https://developers.binance.com/docs/algo/spot-algo/Time-Weighted-Average-Price-New-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api/spot-algo#time-weighted-average-price-spot-algo" /></para>
     /// </summary>
+    /// <remarks>Binance permits at most 20 open Spot Algo orders</remarks>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="side">Order side</param>
-    /// <param name="quantity">Order quantity</param>
-    /// <param name="duration">Duration in seconds. 300 - 86400</param>
-    /// <param name="clientOrderId">Client order id</param>
+    /// <param name="quantity">Order quantity. The maximum notional is symbol-dependent</param>
+    /// <param name="duration">Duration in seconds, from 300 through 86400</param>
+    /// <param name="clientAlgoId">Unique Algo order id containing exactly 32 characters. A value is generated when omitted</param>
     /// <param name="limitPrice">Limit price of the order. If null will use market price</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
+    /// <returns>The submission result</returns>
     Task<RestCallResult<BinanceAlgoOrderResult>> PlaceTimeWeightedAveragePriceOrderAsync(
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
         int duration,
-        string? clientOrderId = null,
+        string? clientAlgoId = null,
         decimal? limitPrice = null,
-        int? receiveWindow = null,
         CancellationToken ct = default);
 
     /// <summary>

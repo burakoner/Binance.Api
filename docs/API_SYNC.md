@@ -296,13 +296,22 @@ All supplied `clientAlgoId` values must now contain exactly 32 characters. An om
 
 The client cannot safely pre-validate either endpoint's notional range because it depends on the current mark price, and it cannot know whether a `reduceOnly` request would open a position from request parameters alone. Binance remains authoritative for these state-dependent rules; the wrapper does not manufacture a stale price or account-state check. Four deterministic tests cover both signed form bodies, API-key headers, exact UID weights, generated and caller-supplied client IDs, closed enums, duration and receive-window boundaries, Hedge Mode rejection, 64-bit response codes, and the corrected success field. The full suite has 149 tests. No production Algo order was submitted.
 
+## Slice 39: Spot Algo TWAP new order
+
+`POST /sapi/v1/algo/spot/newOrderTwap` was compared against the live canonical Spot Algo page, the current generated connector and response model, and the connector's 2026-07-13 changelog. It remains a signed TRADE operation with UID weight 3000. The canonical page defines a form-encoded Request Body while the generated connector places business parameters in the query; the endpoint-specific live contract wins, so the wrapper retains the signed form body.
+
+The operation now validates its required symbol, positive quantity, BUY/SELL side, and duration from 300 through 86400 seconds. Caller-supplied `clientAlgoId` values must contain exactly 32 characters, and generated broker-prefixed values now use that same exact length rather than the obsolete 36-character order-ID ceiling. The public parameter and canonical documentation link use the current `clientAlgoId` terminology.
+
+The old optional `recvWindow` parameter was removed from this operation. It is absent from both the live endpoint schema and the current generated connector, so a configured global receive window is no longer injected into the request. The maximum notional is symbol-dependent and cannot be safely enforced without current symbol-specific data; Binance remains authoritative rather than the wrapper inventing a fixed ceiling. Binance's maximum of 20 open Spot Algo orders is also server-state-dependent and remains a documented server-side limit. The shared placement response was already aligned in Slice 38.
+
+Three deterministic tests cover signed form-body placement, API-key headers, exact UID weight, both duration boundaries, closed side values, positive quantity, generated and caller-supplied client IDs, 64-bit response codes, and the absence of `recvWindow` even when a global default is configured. The full suite has 152 tests. No production Spot Algo order was submitted. Eight untouched Algo interface links remain stale and belong to the cancellation/query slices.
+
 ### Revised next order
 
-1. Align the Spot TWAP new-order mutation as its own small slice.
-2. Perform Review 9 after implementation slices 35, 36, 38, and 39; review code, tests, documentation, and this execution order before continuing.
-3. Align the Spot and Futures cancellation mutations together if their canonical contracts remain symmetric.
-4. Align the three read-only Futures queries, then the three read-only Spot queries, in separate slices.
-5. Audit USDⓈ-M, COIN-M, and Options only after the Algo surface and Review 9 findings are closed.
+1. Perform Review 9 now that implementation slices 35, 36, 38, and 39 are complete; review code, tests, documentation, and this execution order before any further endpoint work.
+2. Align the Spot and Futures cancellation mutations together only if Review 9 confirms their canonical contracts remain symmetric.
+3. Align the three read-only Futures queries, then the three read-only Spot queries, in separate slices.
+4. Audit USDⓈ-M, COIN-M, and Options only after the Algo surface and Review 9 findings are closed.
 
 ## Review log
 
@@ -354,3 +363,4 @@ The client cannot safely pre-validate either endpoint's notional range because i
 | 36 | Complete | Convert limit-order placement and cancellation | Live canonical Trade and Market Data pages, 2026-01-27/2026-07-13 connector changelog, current connector/model source, signed form-body/weight/int64/validation/response tests, 145 deterministic tests |
 | 37 | Complete | Algo Trading REST route inventory | Current official Algo catalog and changelog, current generated connector routes/weights/models, normalized 11/11/11/0/0 comparison, bounded mutation/query follow-up groups |
 | 38 | Complete | Futures Algo VP and TWAP order placement | Live canonical Future Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/fixed-ID/response tests, 149 deterministic tests |
+| 39 | Complete | Spot Algo TWAP order placement | Live canonical Spot Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/fixed-ID/validation/removed-parameter tests, 152 deterministic tests |

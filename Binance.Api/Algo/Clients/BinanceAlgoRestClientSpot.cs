@@ -37,12 +37,20 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         BinanceOrderSide side,
         decimal quantity,
         int duration,
-        string? clientOrderId = null,
+        string? clientAlgoId = null,
         decimal? limitPrice = null,
-        int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdSpot, 36, _.RestOptions.AllowAppendingClientOrderId);
+        symbol.ValidateBinanceSymbol();
+        if (side is not (BinanceOrderSide.Buy or BinanceOrderSide.Sell))
+            throw new ArgumentOutOfRangeException(nameof(side), "side must be BUY or SELL");
+        if (quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity), "quantity must be greater than zero");
+        if (duration is < 300 or > 86400)
+            throw new ArgumentOutOfRangeException(nameof(duration), "duration must be between 300 and 86400 seconds");
+        if (clientAlgoId is not null && clientAlgoId.Length != 32)
+            throw new ArgumentException("clientAlgoId must contain exactly 32 characters when provided", nameof(clientAlgoId));
+        clientAlgoId = BinanceHelpers.ApplyBrokerId(clientAlgoId, BinanceConstants.ClientOrderIdSpot, 32, _.RestOptions.AllowAppendingClientOrderId);
 
         var parameters = new ParameterCollection()
         {
@@ -51,9 +59,8 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
             { "duration", duration },
         };
         parameters.AddEnum("side", side);
-        parameters.AddOptional("clientAlgoId", clientOrderId);
+        parameters.AddOptional("clientAlgoId", clientAlgoId);
         parameters.AddOptional("limitPrice", limitPrice);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceAlgoOrderResult>(GetUrl(sapi, v1, "algo/spot/newOrderTwap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
     }
