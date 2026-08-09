@@ -1107,6 +1107,8 @@ internal class Program
         var coinFutures_529 = await ws.CoinFutures.SubscribeToContinuousContractKlineUpdatesAsync(["---PAIR---"], BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
         var coinFutures_530 = await ws.CoinFutures.SubscribeToMarkPriceKlineUpdatesAsync("---SYMBOL---", BinanceKlineInterval.OneDay, (data) => { _ = data.Data.Pair; _ = data.Data.Kline.Symbol; _ = data.Data.Kline.ClosePrice; });
         var coinFutures_531 = await ws.CoinFutures.SubscribeToMarkPriceKlineUpdatesAsync(["---SYMBOL---"], BinanceKlineInterval.OneDay, (data) => { });
+        var coinFutures_532 = await ws.CoinFutures.SubscribeToIndexKlineUpdatesAsync("---PAIR---", BinanceKlineInterval.OneDay, (data) => { _ = data.Data.Pair; _ = data.Data.Kline.ClosePrice; });
+        var coinFutures_533 = await ws.CoinFutures.SubscribeToIndexKlineUpdatesAsync(["---PAIR---"], BinanceKlineInterval.OneDay, (data) => { });
 
         // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
         var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });

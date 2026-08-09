@@ -155,14 +155,16 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
 
     /// <summary>
     /// Subscribes to the index candlestick update stream for the provided pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Index-Kline-Candlestick-Streams" /></para>
+    /// <para>The callback preserves the outer pair and event metadata. The nested symbol field currently contains <c>0</c>; use the outer pair for identity.</para>
+    /// <para>Binance does not document asset or contract units for the nested volume-named fields.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#index-kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="pair">The pair, for example `BTCUSD`</param>
     /// <param name="interval">The interval of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(string pair, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(string pair, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexPriceKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to mark-price updates for all symbols of a pair
@@ -177,14 +179,16 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
 
     /// <summary>
     /// Subscribes to the index candlestick update stream for the provided pairs
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Index-Kline-Candlestick-Streams" /></para>
+    /// <para>The callback preserves the outer pair and event metadata. The nested symbol field currently contains <c>0</c>; use the outer pair for identity.</para>
+    /// <para>Binance does not document asset or contract units for the nested volume-named fields.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#index-kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="pairs">The pairs, for example `BTCUSD`</param>
     /// <param name="interval">The interval of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(IEnumerable<string> pairs, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(IEnumerable<string> pairs, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexPriceKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the mark price candlestick update stream for the provided symbol

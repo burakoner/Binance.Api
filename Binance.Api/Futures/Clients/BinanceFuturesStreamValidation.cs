@@ -97,6 +97,32 @@ internal static class BinanceFuturesStreamValidation
             symbol.ToLower(BinanceConstants.CI) + "@markPriceKline_" + intervalText).ToArray();
     }
 
+    public static string[] CoinIndexPriceKlineStreamTopics(
+        IEnumerable<string> pairs,
+        BinanceKlineInterval interval)
+    {
+        if (pairs == null)
+            throw new ArgumentNullException(nameof(pairs));
+
+        var pairList = pairs.ToArray();
+        if (pairList.Length == 0)
+            throw new ArgumentException("At least one pair is required.", nameof(pairs));
+        if (pairList.Any(string.IsNullOrWhiteSpace))
+            throw new ArgumentException("Pairs cannot be null or blank.", nameof(pairs));
+
+        if (!Enum.IsDefined(typeof(BinanceKlineInterval), interval)
+            || interval == BinanceKlineInterval.OneSecond
+            || MapConverter.GetString(interval) == null)
+            throw new ArgumentOutOfRangeException(nameof(interval), "The COIN-M index price kline stream does not support the provided interval.");
+
+        if (pairList.Length > 1024)
+            throw new ArgumentException("A single connection can listen to at most 1024 streams.", nameof(pairs));
+
+        var intervalText = MapConverter.GetString(interval);
+        return pairList.Select(pair =>
+            pair.ToLower(BinanceConstants.CI) + "@indexPriceKline_" + intervalText).ToArray();
+    }
+
     private static string[] ContinuousKlineStreamTopics(
         IEnumerable<string> pairs,
         BinanceFuturesContractType contractType,

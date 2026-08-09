@@ -1241,12 +1241,12 @@ Slice 93 remains correct. The listen key is preserved exactly in a JSON `SUBSCRI
 
 Slices 94 and 95 also remain internally consistent. Standard-symbol streams use product-specific USDⓈ-M and COIN-M volume models, preserve nested symbol identity and outer `e/E`, reject unsupported one-second intervals, and contain no WebSocket `premiumIndex` residue. Continuous streams retain outer `e/E/ps/ct`, do not invent a nested symbol, use separate product-specific inner models, allow USDⓈ-M-only `1s` and TradFi perpetual values, and reject those values for COIN-M. The new `TradFiPerpetual` enum member remains appended after existing members, so adding the current wire value did not shift prior enum numeric values. Repository scans found no stale continuous callback type, old misleading kline volume property, or executable README/console call site using the removed public contracts.
 
-No regression or additional production-code correction was found in the reviewed range. The review did find concrete defects in the previously deferred COIN-M price-kline families. Both current generated outer schemas use `ps`, while the shared local wrapper expects `s`, so current identity is empty; both callbacks discard `e/E`. Index-price kline additionally drops nested `s/f/L/v/q/V/Q/B`, including financially meaningful COIN-M contract/base-asset volumes. Mark-price kline exposes the same shared model even though its corresponding ID and volume fields are documented as ignore values. The families therefore must not be collapsed into one model.
+No regression or additional production-code correction was found in the reviewed range. The review did find concrete defects in the previously deferred COIN-M price-kline families. Both current generated outer schemas use `ps`, while the shared local wrapper expects `s`, so current identity is empty; both callbacks discard `e/E`. Index-price kline additionally drops nested `s/f/L/v/q/V/Q/B`, whose exact current meanings still required endpoint-level and live-wire validation. Mark-price kline exposes the same shared model even though its corresponding ID and volume fields are documented as ignore values. The families therefore must not be collapsed into one model.
 
 ### Revised next order
 
 1. Slice 96: align the COIN-M mark-price kline family first because it directly represents the mark-price history used for derivatives risk and currently loses pair/event identity. Preserve its documented ignore fields without assigning index-volume semantics.
-2. Slice 97: align the COIN-M index-price kline family separately, retaining outer pair/event identity and complete nested symbol, int64 identifiers/counters, and contract/base-asset volume semantics.
+2. Slice 97: align the COIN-M index-price kline family separately, retaining outer pair/event identity and validating every nested field without assuming that standard COIN-M kline identifier or volume semantics apply.
 3. Refresh the full-scope closing inventory after Slice 97 and create only evidence-backed follow-up slices.
 4. Perform Backward Review 23 no later than the fourth implementation slice after this review and before any fifth implementation slice.
 
@@ -1266,9 +1266,36 @@ Three deterministic regressions cover exact topics and validation, complete oute
 
 ### Revised next order
 
-1. Slice 97: align the COIN-M index-price kline family separately, retaining outer pair/event identity and complete nested symbol, int64 identifiers/counters, and contract/base-asset volume semantics.
+1. Slice 97: align the COIN-M index-price kline family separately, retaining outer pair/event identity and validating every nested field without assuming that standard COIN-M kline identifier or volume semantics apply.
 2. Refresh the full-scope closing inventory after Slice 97 and create only evidence-backed follow-up slices.
 3. Perform Backward Review 23 no later than the fourth implementation slice after Review 22 and before any fifth implementation slice.
+
+## Slice 97: current COIN-M index-price kline stream
+
+The `<pair>@indexPriceKline_<interval>` family was compared against the live canonical COIN-M WebSocket Stream catalog and official generated Python connector HEAD `d9be6628`. An unauthenticated read-only production subscription to `btcusd@indexPriceKline_1m` captured three consecutive public market payloads and was then closed. It performed no account, order, or mutation operation.
+
+The current outer payload is `e/E/ps/k`, with `e=indexPrice_kline` and the usable pair identity in `ps`. Nested data is `t/T/s/i/f/L/o/c/h/l/v/n/x/q/V/Q/B`. Both the catalog example and all three live samples contained literal `s="0"`, so that field is preserved as the documented symbol field but is explicitly not presented as identity; consumers must use outer `Pair`. The previous callback discarded `e/E/ps`, returned only an incomplete inner model, and expected outer `s`, which does not exist.
+
+The current catalog and generated schema name `T` as transaction time and explicitly label `f/L` as ignored even though live values resembled time boundaries, so the public properties follow those names and retain `f/L` only as int64 `IgnoredValueF/L`. The same sources name `v/q/V/Q/B` generically as volume, quote volume, taker-buy volume, last-trade volume, and best-bid quantity, but specify no asset or contract units. All observed values were zero. The dedicated inner model preserves those documented fields as decimals under those generic names and warns that units are unspecified; it does not invent standard COIN-M contract/base-asset semantics. `n` follows the documented trade-count name and uses int64 storage.
+
+The official interval set is `1m/3m/5m/15m/30m/1h/2h/4h/6h/8h/12h/1d/3d/1w/1M`; `1s` is unsupported. Topic construction rejects null, empty, or blank pairs, undefined and one-second intervals, and more than 1024 streams before transport. It lowercases only the pair while preserving the case-sensitive `indexPriceKline` segment and month interval token.
+
+The catalog and generated operation advertise 250-millisecond updates, while the three observed event-time gaps were approximately one second. Because the stream has no cadence parameter, this contradiction does not change request construction; no cadence guarantee was added to the public API.
+
+Three deterministic regressions cover exact topics and validation, complete outer/nested deserialization with decimal precision and int64 boundaries, placeholder-symbol behavior, generic unit-safe field names, removal of the stale shared model, and the dedicated public callback type. README and console examples use outer pair identity and price data rather than the placeholder symbol or unspecified-unit fields.
+
+### Revised next order
+
+1. Slice 98: refresh the Spot closing inventory against the current REST, WebSocket API, market-stream, user-data, FIX, and SBE catalogs.
+2. Slice 99: refresh the Margin closing inventory across REST, WebSocket API, listen-token, risk-data, and event-stream contracts.
+3. Perform Backward Review 23 across Slices 96-99 before continuing; include code, documentation, task ordering, and scope.
+4. Slice 100: refresh the smaller Convert and Algo closing inventories together, while keeping any discovered implementation work product-separated.
+5. Slice 101: refresh the USDⓈ-M closing inventory across REST, WebSocket API, routed market/public/private streams, and user-data contracts.
+6. Slice 102: refresh the COIN-M closing inventory across REST, WebSocket API, market streams, and user-data contracts.
+7. Slice 103: refresh the Options closing inventory across REST, WebSocket API, market streams, and user-data contracts.
+8. Perform Backward Review 24 and the final cross-product public breaking-change, documentation, release-note, full-test, and forced-build reconciliation after the inventory is clean.
+
+Each inventory slice is evidence-only: any confirmed endpoint, model, transport, or documentation defect becomes a separately numbered, small product/risk implementation slice before correction. This prevents the closing audit from turning into another multi-hour mixed implementation turn.
 
 ## Review log
 
@@ -1392,3 +1419,4 @@ Three deterministic regressions cover exact topics and validation, complete oute
 | 95 | Complete | Current USDⓈ-M and COIN-M continuous-contract kline stream contracts | Live routed catalogs and read-only public payload samples, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 324 deterministic tests, forced full multi-target rebuild |
 | Review 22 | Complete | Backward review of USDⓈ-M private routing and standard/continuous USDⓈ-M and COIN-M kline contracts; COIN-M mark/index kline defect separation and re-ranking | `c3e57ec..7353cbd` diff review, live user-data/routed stream catalogs, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect source, stale-surface scans, 18 targeted and 324 complete tests, forced full multi-target rebuild |
 | 96 | Complete | Current COIN-M mark-price kline stream contract | Live canonical COIN-M stream catalog and read-only public payload sample, connector HEAD `d9be6628`, exact-topic/full-payload/ignore-semantics/public-surface tests, 327 deterministic tests, forced full multi-target rebuild |
+| 97 | Complete | Current COIN-M index-price kline stream contract | Live canonical COIN-M stream catalog and three read-only public payload samples, connector HEAD `d9be6628`, exact-topic/full-payload/placeholder-symbol/unit-safety/public-surface tests, 330 deterministic tests, forced full multi-target rebuild |
