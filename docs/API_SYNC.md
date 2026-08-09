@@ -1252,6 +1252,24 @@ No regression or additional production-code correction was found in the reviewed
 
 Eighteen targeted route, standard-kline, continuous-kline, public-surface, payload, and enum tests pass. All 324 deterministic tests pass, and a forced full multi-target rebuild succeeds with zero errors and the same three known warnings. No authenticated Binance operation, account request, or mutation was sent during this review.
 
+## Slice 96: current COIN-M mark-price kline stream
+
+The `<symbol>@markPriceKline_<interval>` family was compared against the live canonical COIN-M WebSocket Stream catalog and official generated Python connector HEAD `d9be6628`. An unauthenticated read-only production subscription to `btcusd_perp@markPriceKline_1m` was also opened long enough to capture one public market payload, then closed. It performed no account, order, or mutation operation.
+
+The current outer payload is `e/E/ps/k`, with `e=markPrice_kline` and pair identity in `ps`. Nested data is `t/T/s/i/f/L/o/c/h/l/v/n/x/q/V/Q/B`, with symbol identity in nested `s`. The previous shared wrapper expected outer `s`, manually copied that empty value into the kline, and returned only the nested model; pair, event type, event time, and the real nested symbol were therefore lost. The callback now returns a dedicated outer mark-price model preserving event metadata, pair, and the complete nested kline.
+
+The official schema labels `f/L/v/q/V/Q/B` as ignored for this stream. Although the observed `f/L` values resembled timestamps and the observed volume-like values were zero, those samples do not authorize financial semantics. The dedicated inner model therefore exposes them only through wire-key-based `IgnoredValue*` properties and XML warnings; it does not reuse index-price or standard-kline identifier and volume names. Prices remain decimals, times use millisecond conversion, and both the ignored integer values and basic-data count use int64 storage.
+
+The current interval set is `1m/3m/5m/15m/30m/1h/2h/4h/6h/8h/12h/1d/3d/1w/1M`; `1s` is not supported. Topic construction now rejects null, empty, or blank symbols, undefined and one-second intervals, and more than 1024 streams before transport. It lowercases only the symbol while preserving the case-sensitive `markPriceKline` segment and month interval token.
+
+Three deterministic regressions cover exact topics and validation, complete outer/nested deserialization with decimal precision and int64 boundaries, explicit ignore semantics, and the dedicated public callback type. README and console examples now demonstrate pair, symbol, and price access without presenting ignored fields as trade volumes.
+
+### Revised next order
+
+1. Slice 97: align the COIN-M index-price kline family separately, retaining outer pair/event identity and complete nested symbol, int64 identifiers/counters, and contract/base-asset volume semantics.
+2. Refresh the full-scope closing inventory after Slice 97 and create only evidence-backed follow-up slices.
+3. Perform Backward Review 23 no later than the fourth implementation slice after Review 22 and before any fifth implementation slice.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1373,3 +1391,4 @@ Eighteen targeted route, standard-kline, continuous-kline, public-surface, paylo
 | 94 | Complete | Current standard USDⓈ-M and COIN-M individual-symbol kline stream contracts | Live routed USDⓈ-M and COIN-M stream catalogs, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 319 deterministic tests, forced full multi-target rebuild |
 | 95 | Complete | Current USDⓈ-M and COIN-M continuous-contract kline stream contracts | Live routed catalogs and read-only public payload samples, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 324 deterministic tests, forced full multi-target rebuild |
 | Review 22 | Complete | Backward review of USDⓈ-M private routing and standard/continuous USDⓈ-M and COIN-M kline contracts; COIN-M mark/index kline defect separation and re-ranking | `c3e57ec..7353cbd` diff review, live user-data/routed stream catalogs, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect source, stale-surface scans, 18 targeted and 324 complete tests, forced full multi-target rebuild |
+| 96 | Complete | Current COIN-M mark-price kline stream contract | Live canonical COIN-M stream catalog and read-only public payload sample, connector HEAD `d9be6628`, exact-topic/full-payload/ignore-semantics/public-surface tests, 327 deterministic tests, forced full multi-target rebuild |

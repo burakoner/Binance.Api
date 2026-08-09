@@ -242,25 +242,27 @@ internal partial class BinanceFuturesSocketClientCoin
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(
         string symbol,
         BinanceKlineInterval interval,
-        Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamMarkPriceKline>> onMessage,
         CancellationToken ct = default)
         => SubscribeToMarkPriceKlineUpdatesAsync([symbol], interval, onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(
         IEnumerable<string> symbols,
         BinanceKlineInterval interval,
-        Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamMarkPriceKline>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamIndexKlineWrapper>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamMarkPriceKline>>>(data =>
         {
-            data.Data.Data.Kline.Symbol = data.Data.Data.Symbol;
-            onMessage(data.As(data.Data.Data.Kline));
+            onMessage(data.As(data.Data.Data));
         });
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@markPriceKline_" + MapConverter.GetString(interval)).ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(MarkPriceKlineStreamTopics(symbols, interval), false, handler, ct);
     }
+
+    internal static string[] MarkPriceKlineStreamTopics(
+        IEnumerable<string> symbols,
+        BinanceKlineInterval interval)
+        => BinanceFuturesStreamValidation.CoinMarkPriceKlineStreamTopics(symbols, interval);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(
         string symbol,

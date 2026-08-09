@@ -188,25 +188,27 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
 
     /// <summary>
     /// Subscribes to the mark price candlestick update stream for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-Kline-Candlestick-Streams" /></para>
+    /// <para>The callback preserves the outer pair and event metadata. Fields named <c>Ignored*</c> are present on the wire but Binance documents them as ignored.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#mark-price-kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="interval">The interval of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamMarkPriceKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the mark price candlestick update stream for the provided symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-Kline-Candlestick-Streams" /></para>
+    /// <para>The callback preserves the outer pair and event metadata. Fields named <c>Ignored*</c> are present on the wire but Binance documents them as ignored.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#mark-price-kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="interval">The interval of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceKlineUpdatesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamMarkPriceKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to 24-hour mini ticker updates for a COIN-M symbol. Use the symbol-type-aware volume properties on the callback model.

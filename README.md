@@ -1210,6 +1210,8 @@ var coinFutures_526 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync(["---SYM
 var coinFutures_527 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
 var coinFutures_528 = await ws.CoinFutures.SubscribeToContinuousContractKlineUpdatesAsync("---PAIR---", BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { _ = data.Data.Pair; _ = data.Data.Kline.ContractVolume; });
 var coinFutures_529 = await ws.CoinFutures.SubscribeToContinuousContractKlineUpdatesAsync(["---PAIR---"], BinanceFuturesContractType.Perpetual, BinanceKlineInterval.OneDay, (data) => { });
+var coinFutures_530 = await ws.CoinFutures.SubscribeToMarkPriceKlineUpdatesAsync("---SYMBOL---", BinanceKlineInterval.OneDay, (data) => { _ = data.Data.Pair; _ = data.Data.Kline.Symbol; _ = data.Data.Kline.ClosePrice; });
+var coinFutures_531 = await ws.CoinFutures.SubscribeToMarkPriceKlineUpdatesAsync(["---SYMBOL---"], BinanceKlineInterval.OneDay, (data) => { });
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });
