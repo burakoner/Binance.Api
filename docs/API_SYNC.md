@@ -1297,6 +1297,26 @@ Three deterministic regressions cover exact topics and validation, complete oute
 
 Each inventory slice is evidence-only: any confirmed endpoint, model, transport, or documentation defect becomes a separately numbered, small product/risk implementation slice before correction. This prevents the closing audit from turning into another multi-hour mixed implementation turn.
 
+## Slice 98: Spot closing inventory
+
+The complete Spot surface was refreshed on 2026-08-10 against the live REST, WebSocket API, JSON WebSocket Streams, User Data Stream, FIX API, and SBE Market Data Streams catalogs, the Spot changelog through 2026-07-27, and official generated Python connector HEAD `d9be6628`. This was an evidence-only inventory: no production API, account, order, or mutation call was made and no implementation was changed.
+
+The normalized REST inventory contains 48 generated routes and 47 wrapper routes. All 47 active routes match exactly; the sole generated-only route is the deprecated `POST /api/v3/order/oco`, and there is no wrapper-only route. The WebSocket API inventory contains 55 generated methods and 54 wrapper methods. All 54 active methods match exactly; the sole generated-only method is deprecated `orderList.place`, and there is no wrapper-only method. Retired REST listen-key operations and legacy WebSocket user-data lifecycle methods remain absent.
+
+All 15 generated JSON market-stream families are represented by the wrapper, including reference price, block trade, UTC+8 kline, all-market mini ticker, rolling-window ticker, partial depth, and diff depth. The current `serverShutdown` envelope is handled, microsecond time-unit selection and the 1,024-topic limit remain covered, and the retired Spot `!ticker@arr` overload has not returned. All six current JSON user-data event types are dispatched. A case-sensitive field comparison of their generated models found one real defect: `executionReport` now conditionally publishes string field `eR` (`expiryReason`) when an order expires, but `BinanceSpotStreamOrderUpdate` drops it. The existing `BinanceSpotOrderExpiryReason` enum already covers the current values, so the correction is bounded to the stream model and deterministic coverage.
+
+FIX and SBE are not small endpoint misses in the JSON wrapper. The current FIX catalog defines three TLS session roles—Order Entry, Drop Copy, and Market Data—and 25 listed FIX 4.4 message types. `Binance.FIX.Api` contains QuickFIX/n dependencies but still exposes only the historical empty `Class1`; it implements zero current session or message contracts. The current SBE market-data service exposes four binary stream families (`trade`, `bestBidAsk`, diff depth, and depth-20 snapshot), and Spot user-data subscriptions also support SBE output. The solution has no SBE transport/session surface or binary decoder. Treating either protocol as covered because the solution builds would be false.
+
+The unchanged implementation baseline passes 41/41 Spot-focused tests and 330/330 complete tests. A forced multi-target solution rebuild succeeds with zero errors and the same three pre-existing warnings: two XML-documentation warnings on the empty FIX `Class1` and one console use of the obsolete USD-M v2 account query.
+
+### Inventory decisions
+
+1. Slice 99 will add only the missing Spot JSON `executionReport.eR` contract and its regression test.
+2. Backward Review 23 follows Slice 99, covering Slices 96-99 before another implementation or inventory turn.
+3. Slices 100-104 will refresh Margin, Convert plus Algo, USD-M, COIN-M, and Options respectively; Review 24 follows those five inventory turns.
+4. Slice 105 will produce the separate FIX/SBE architecture and implementation contract: package boundary, generated-schema strategy, credential/session safety, binary transport, deterministic conformance testing, and the smallest ordered implementation slices. It will not pretend to implement both protocols in one turn.
+5. Final project reconciliation cannot occur before the FIX/SBE decision and its resulting evidence-backed work are complete. The earlier 6-20 hour closing estimate covered only REST/JSON inventories and is no longer a project-completion estimate.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1420,3 +1440,4 @@ Each inventory slice is evidence-only: any confirmed endpoint, model, transport,
 | Review 22 | Complete | Backward review of USDⓈ-M private routing and standard/continuous USDⓈ-M and COIN-M kline contracts; COIN-M mark/index kline defect separation and re-ranking | `c3e57ec..7353cbd` diff review, live user-data/routed stream catalogs, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect source, stale-surface scans, 18 targeted and 324 complete tests, forced full multi-target rebuild |
 | 96 | Complete | Current COIN-M mark-price kline stream contract | Live canonical COIN-M stream catalog and read-only public payload sample, connector HEAD `d9be6628`, exact-topic/full-payload/ignore-semantics/public-surface tests, 327 deterministic tests, forced full multi-target rebuild |
 | 97 | Complete | Current COIN-M index-price kline stream contract | Live canonical COIN-M stream catalog and three read-only public payload samples, connector HEAD `d9be6628`, exact-topic/full-payload/placeholder-symbol/unit-safety/public-surface tests, 330 deterministic tests, forced full multi-target rebuild |
+| 98 | Complete | Spot closing inventory across REST, WebSocket API, JSON streams, user data, FIX, and SBE | Live catalogs and changelog through 2026-07-27, connector HEAD `d9be6628`, 48/47/47 REST and 55/54/54 WebSocket API reconciliation, 15/15 JSON stream families, 6/6 user-data event types, one missing `executionReport.eR` field, confirmed empty FIX/SBE implementation surfaces, 41 Spot and 330 complete tests, forced rebuild |
