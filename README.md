@@ -678,7 +678,7 @@ var convert_202 = await api.Convert.AcceptQuoteAsync("---QUOTE-ID---");
 var convert_203 = await api.Convert.GetHistoryAsync(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
 var convert_204 = await api.Convert.GetStatusAsync("---ORDER-ID---");
 var convert_205 = await api.Convert.PlaceLimitOrderAsync("---BASE-ASSET---", "---QUOTE-ASSET---", 100.0m, BinanceOrderSide.Buy, BinanceConvertExpiredTime.OneDay, 10.0m);
-var convert_206 = await api.Convert.CancelLimitOrderAsync("---ORDER-ID---");
+var convert_206 = await api.Convert.CancelLimitOrderAsync(long.Parse("---ORDER-ID---"));
 var convert_207 = await api.Convert.GetOpenLimitOrdersAsync();
 
 // Institutional Loan Methods (PRIVATE)

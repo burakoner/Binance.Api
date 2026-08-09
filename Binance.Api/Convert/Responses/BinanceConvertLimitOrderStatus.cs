@@ -9,11 +9,11 @@ public record BinanceConvertLimitOrderStatus
     /// Order ID
     /// </summary>
     [JsonProperty("orderId")]
-    public string? OrderId { get; set; }
+    public long OrderId { get; set; }
 
     /// <summary>
     /// Status
     /// </summary>
     [JsonProperty("status")]
-    public string? Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 }

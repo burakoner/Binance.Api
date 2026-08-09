@@ -81,8 +81,12 @@ internal partial class BinanceConvertRestClient
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (baseAmount == null && quoteAmount == null || baseAmount != null && quoteAmount != null)
-            throw new ArgumentException("Either baseAsset or quoteAsset must be sent, but not both");
+        if (string.IsNullOrWhiteSpace(baseAsset))
+            throw new ArgumentException("baseAsset cannot be empty.", nameof(baseAsset));
+        if (string.IsNullOrWhiteSpace(quoteAsset))
+            throw new ArgumentException("quoteAsset cannot be empty.", nameof(quoteAsset));
+        if ((baseAmount is null) == (quoteAmount is null))
+            throw new ArgumentException("Either baseAmount or quoteAmount must be sent, but not both.");
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("baseAsset", baseAsset);
@@ -93,18 +97,18 @@ internal partial class BinanceConvertRestClient
         parameters.AddOptional("quoteAmount", quoteAmount?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("expiredType", expiredType);
         parameters.AddOptionalEnum("walletType", walletType);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceConvertLimitOrder>(GetUrl(sapi, v1, "convert/limit/placeOrder"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 500);
     }
 
-    public Task<RestCallResult<BinanceConvertLimitOrderStatus>> CancelLimitOrderAsync(string orderId, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceConvertLimitOrderStatus>> CancelLimitOrderAsync(long orderId, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddParameter("orderId", orderId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceConvertLimitOrderStatus>(GetUrl(sapi, v1, "convert/limit/cancelOrder"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 500);
+        return RequestAsync<BinanceConvertLimitOrderStatus>(GetUrl(sapi, v1, "convert/limit/cancelOrder"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 200);
     }
 
     public async Task<RestCallResult<List<BinanceConvertOpenOrder>>> GetOpenLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)

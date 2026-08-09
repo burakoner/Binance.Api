@@ -221,8 +221,8 @@ The live Convert introduction and changelog were refreshed on 2026-08-08. The cu
 | Accept quote | `POST /sapi/v1/convert/acceptQuote`, TRADE, UID 500 | Complete in slice 35: required quote ID, receive window, signed body, weight, and response aligned |
 | Trade history | `GET /sapi/v1/convert/tradeFlow`, USER_DATA, UID 3000 | Complete in slice 34: range, limit, receive window, signed query, weight, terminology, and response model aligned |
 | Order status | `GET /sapi/v1/convert/orderStatus`, USER_DATA, UID 100 | Complete in slice 34: identifier contract, current parameter set, signed query, weight, and response model aligned |
-| Place limit order | `POST /sapi/v1/convert/limit/placeOrder`, TRADE, UID 500 | Method, path, security, and weight match; mutation/model review pending |
-| Cancel limit order | `POST /sapi/v1/convert/limit/cancelOrder`, TRADE, UID 200 | Route and security match; wrapper incorrectly declares weight 500 |
+| Place limit order | `POST /sapi/v1/convert/limit/placeOrder`, TRADE, UID 500 | Complete in slice 36: required fields, exclusive amount, enums, receive window, signed body, and current response aligned |
+| Cancel limit order | `POST /sapi/v1/convert/limit/cancelOrder`, TRADE, UID 200 | Complete in slice 36: 64-bit identifier, receive window, signed body, weight, and response aligned |
 | Query open limit orders | `GET /sapi/v1/convert/limit/queryOpenOrders`, USER_DATA, UID 3000 | Complete in slice 34: current public method name, receive-window ceiling, signed query, weight, and dedicated response model aligned |
 
 The two weight defects are verified against the current official generated connector, not inferred from the sparse dated changelog. The inventory also found that Convert does not enforce the current 60000-millisecond receive-window ceiling. Parameter types must be resolved from each endpoint page rather than the broader timing guide: the current `assetInfo` schema specifically defines an integer `int64` receive window. Existing noncanonical `developers.binance.com/docs/convert/...` interface links must be replaced while each endpoint group is touched. No code, test, or production API request was executed in this inventory-only slice.
@@ -259,10 +259,20 @@ The quote workflow was compared against the live canonical Trade page, the curre
 
 Four deterministic test groups cover signed request placement, API-key headers, UID weights, all optional quote fields, source- and destination-amount variants, current wallet serialization, validation, configured receive windows, decimal response values, string order identifiers, timestamps, and status mapping. The previously invalid README and gated console examples now provide the required source amount. The full suite has 141 tests. No quote was requested or accepted against a production account.
 
+## Slice 36: Convert limit-order placement and cancellation
+
+The two limit-order mutations were compared against the live canonical Trade page, the current generated connector and response models, and the connector's 2026-01-27 and 2026-07-13 changelog entries. `POST /sapi/v1/convert/limit/placeOrder` remains a signed TRADE operation with UID weight 500. It now validates both required asset codes, requires exactly one of `baseAmount` or `quoteAmount`, reports the correct amount fields in validation errors, and enforces the 60000-millisecond receive-window ceiling for explicit and configured values. The current side and expiry enums were already complete, and the seven wallet values aligned in Slice 35 also apply here.
+
+The place-order response is replaced with the current two-field schema: 64-bit `orderId` and open string `status`. The removed quote ID, ratios, amounts, validity time, creation time, and expiration time are not retained as historical compatibility fields. `POST /sapi/v1/convert/limit/cancelOrder` now accepts and returns the documented 64-bit order ID instead of a string, uses UID weight 200 instead of the incorrect 500, enforces the receive-window ceiling, and preserves the response status as an open string.
+
+Two official source conflicts remain explicit. The Trade page tells callers to obtain `fromIsBase` from `exchangeInfo`, but the live Market Data response and current generated model expose no such field. The client therefore sends caller-provided `baseAsset` and `quoteAsset` values exactly and does not infer or reorder them. The generated connector also places both POST operations' business parameters in the query, while the live endpoint page defines Request Body schemas and form-encoded examples; the endpoint-specific live contract wins, matching the resolution in Slice 35.
+
+Four deterministic test groups cover both signed form bodies, API-key headers, exact UID weights, 64-bit identifier precision, side/expiry/wallet serialization, base- and quote-amount variants, explicit and configured receive-window rejection, and both response schemas. README and gated console cancellation examples now use the current numeric identifier type. All nine current Convert REST routes are now contract-reviewed, the full suite has 145 tests, and no production order was placed or canceled.
+
 ### Revised next order
 
-1. Align limit-order placement and cancellation as a separate two-mutation slice; explicitly resolve the documented `fromIsBase` conflict without inventing behavior.
-2. Inventory and then align Spot/Futures Algo Trading in similarly bounded groups.
+1. Inventory current Spot/Futures Algo Trading routes without mixing in implementation changes.
+2. Align Algo Trading in bounded endpoint groups selected from that inventory.
 3. Perform the next backward review after four further bounded slices and revise derivative scope from its findings.
 4. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
 
@@ -313,3 +323,4 @@ Four deterministic test groups cover signed request placement, API-key headers, 
 | 34 | Complete | Read-only Convert Trade contracts | Live canonical Trade page, current official generated connector and changelog, history/status/open-limit-order request, validation, weight, naming, and response-model tests, 137 deterministic tests |
 | Review 8 | Complete | Transport backoff, Convert inventory, Market Data, read-only Trade, documentation, and execution order | `ef488de..b4d8da5` diff review, live REST backoff recheck, regenerated 9/9/9/0/0 route comparison, order-status exclusivity correction, unsupported `fromIsBase` guidance removal, canonical-link and stale-call scans, 137 tests, forced full multi-target rebuild |
 | 35 | Complete | Convert quote request and acceptance | Live canonical Trade page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/enum/response tests, 141 deterministic tests |
+| 36 | Complete | Convert limit-order placement and cancellation | Live canonical Trade and Market Data pages, 2026-01-27/2026-07-13 connector changelog, current connector/model source, signed form-body/weight/int64/validation/response tests, 145 deterministic tests |

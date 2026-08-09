@@ -54,19 +54,20 @@ public interface IBinanceConvertRestClientTrade
 
     /// <summary>
     /// Enable users to place a limit order
-    /// <para><a href="https://developers.binance.com/docs/convert/trade/Place-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#place-limit-order" /></para>
     /// </summary>
     /// <param name="baseAsset">Base asset</param>
-    /// <param name="quoteAsset">quote asset</param>
+    /// <param name="quoteAsset">Quote asset</param>
     /// <param name="limitPrice">Symbol limit price (from baseAsset to quoteAsset)</param>
-    /// <param name="side">BUY or SELL</param>
-    /// <param name="expiredType">1_D, 3_D, 7_D, 30_D (D means day)</param>
-    /// <param name="baseAmount">Base asset amount. (One of baseAmount or quoteAmount is required)</param>
-    /// <param name="quoteAmount">Quote asset amount. (One of baseAmount or quoteAmount is required)</param>
-    /// <param name="walletType">SPOT or FUNDING or SPOT_FUNDING. It is to use which type of assets. Default is SPOT.</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="side">Order side</param>
+    /// <param name="expiredType">Order expiry duration</param>
+    /// <param name="baseAmount">Base asset amount. Exactly one of baseAmount or quoteAmount must be provided.</param>
+    /// <param name="quoteAmount">Quote asset amount. Exactly one of baseAmount or quoteAmount must be provided.</param>
+    /// <param name="walletType">Wallet or wallet combination used for payment. The server default is SPOT.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
+    /// <remarks>The current exchangeInfo response does not expose the fromIsBase field referenced by the Trade documentation. This client does not infer or reorder baseAsset and quoteAsset.</remarks>
     /// <exception cref="ArgumentException"></exception>
     Task<RestCallResult<BinanceConvertLimitOrder>> PlaceLimitOrderAsync(string baseAsset, string quoteAsset,
        decimal limitPrice,
@@ -80,13 +81,13 @@ public interface IBinanceConvertRestClientTrade
 
     /// <summary>
     /// Enable users to cancel a limit order
-    /// <para><a href="https://developers.binance.com/docs/convert/trade/Cancel-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#cancel-limit-order" /></para>
     /// </summary>
-    /// <param name="orderId">The orderId from placeOrder api</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="orderId">The order id returned by PlaceLimitOrderAsync</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceConvertLimitOrderStatus>> CancelLimitOrderAsync(string orderId, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceConvertLimitOrderStatus>> CancelLimitOrderAsync(long orderId, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query current open limit orders
