@@ -43,6 +43,7 @@
   * Aligned COIN-M individual and merged all-market book-ticker streams with current real-time topics, pair and post-integration symbol-type fields, canonical documentation, and deterministic topic/payload coverage
   * Aligned the merged USDⓈ-M and COIN-M contract-info stream with its current real-time topic, optional bracket payload, post-integration symbol type, canonical documentation, current contract/status enums, and int64 bracket fields
   * Corrected documented USDⓈ-M WebSocket market-stream subscriptions to use the current `/market/stream` and `/public/stream` channels instead of the previously hardcoded shared `/stream` path
+  * Aligned USDⓈ-M and COIN-M individual and merged all-market liquidation streams with their complete event envelopes, product-dependent pair location, merged symbol type, exact topics, canonical documentation, and deterministic payload coverage
   * Added the USDⓈ-M WebSocket API user-data-stream start, keepalive, and stop lifecycle with API-key-only authentication, current weights, listen-key responses, and controlled missing-credential errors
   * Added the COIN-M WebSocket API user-data-stream start, keepalive, and stop lifecycle with API-key-only authentication, current weights, listen-key responses, and controlled missing-credential errors
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint

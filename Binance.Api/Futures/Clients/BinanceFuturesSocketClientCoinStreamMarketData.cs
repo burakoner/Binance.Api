@@ -376,26 +376,42 @@ internal partial class BinanceFuturesSocketClientCoin
         Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidationData>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidation>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@forceOrder").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(LiquidationStreamTopics(symbols), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllLiquidationUpdatesAsync(
         Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage,
         CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidationData>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidation>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!forceOrder@arr"], false, handler, ct);
+        return SubscribeAsync([LiquidationAllMarketStreamTopic], false, handler, ct);
     }
+
+    internal static string[] LiquidationStreamTopics(IEnumerable<string> symbols)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        return symbolList
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@forceOrder")
+            .ToArray();
+    }
+
+    internal const string LiquidationAllMarketStreamTopic = "!forceOrder@arr";
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToSymbolUpdatesAsync(
         Action<WebSocketDataEvent<BinanceFuturesStreamSymbolUpdate>> onMessage,

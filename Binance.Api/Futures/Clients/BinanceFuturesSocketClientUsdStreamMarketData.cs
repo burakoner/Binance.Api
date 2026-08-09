@@ -234,24 +234,26 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidationData>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidation>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@forceOrder").ToArray();
-        return SubscribeMarketAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(LiquidationStreamTopics(symbols), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidationData>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamLiquidation>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Data));
+            onMessage(data.As(data.Data.Data));
         });
-        return SubscribeMarketAsync(["!forceOrder@arr"], false, handler, ct);
+        return SubscribeMarketAsync([LiquidationAllMarketStreamTopic], false, handler, ct);
     }
+
+    internal static string[] LiquidationStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@forceOrder");
+
+    internal const string LiquidationAllMarketStreamTopic = "!forceOrder@arr";
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(
         string symbol,

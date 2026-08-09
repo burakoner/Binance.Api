@@ -290,8 +290,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllBookTickerUpdatesAsync(Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to specific symbol forced liquidations stream
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Liquidation-Order-Streams" /></para>
+    /// Subscribes to liquidation-order snapshots for a specific symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#market-liquidation-order-streams" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -300,8 +300,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to list of symbol forced liquidations stream
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Liquidation-Order-Streams" /></para>
+    /// Subscribes to liquidation-order snapshots for the provided symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#market-liquidation-order-streams" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
@@ -310,8 +310,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to all forced liquidations stream
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/All-Market-Liquidation-Order-Streams" /></para>
+    /// Subscribes to merged USDⓈ-M and COIN-M all-market liquidation-order snapshots
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#all-market-liquidation-order-streams" /></para>
     /// </summary>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>

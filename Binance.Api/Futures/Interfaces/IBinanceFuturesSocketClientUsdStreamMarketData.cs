@@ -217,7 +217,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to specific symbol forced liquidations stream
+    /// Subscribes to liquidation-order snapshots for a specific symbol
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#liquidation-order-streams" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
@@ -227,7 +227,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to list of symbol forced liquidations stream
+    /// Subscribes to liquidation-order snapshots for the provided symbols
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#liquidation-order-streams" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
@@ -237,7 +237,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to all forced liquidations stream
+    /// Subscribes to merged USDⓈ-M and COIN-M all-market liquidation-order snapshots
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#all-market-liquidation-order-streams" /></para>
     /// </summary>
     /// <param name="onMessage">The event handler for the received data</param>
