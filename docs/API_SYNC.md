@@ -1233,6 +1233,25 @@ Five new deterministic regressions cover exact topics, the USDⓈ-M-only one-sec
 2. Re-rank the still-mandatory COIN-M index-price and mark-price kline candidates during that review; keep them separate unless the live contracts prove they share one safe model.
 3. Refresh the full-scope closing inventory after the ranked kline candidates are resolved.
 
+## Backward Review 22: private routing and kline stream contracts
+
+The complete Slice 93-95 implementation range `c3e57ec..7353cbd` was re-read across production clients, public interfaces, event and kline models, deterministic tests, README and console examples, release notes, this execution contract, and the external tracking plan. Current USDⓈ-M user-data and route-migration pages, routed USDⓈ-M and COIN-M stream catalogs, effective UM/CM integration text, and official generated Python connector HEAD `d9be6628` were rechecked. All four public documentation targets respond successfully.
+
+Slice 93 remains correct. The listen key is preserved exactly in a JSON `SUBSCRIBE` request sent to `/private/stream`; null, empty, and blank keys are rejected before transport. ApiSharp 4.5.1 stores that request on the subscription, optionally revitalizes the same request object, and passes it back to `SubscribeAndWaitAsync` after reconnection, so the private route retains reconnect-safe listen-key resubscription. Market and Public route helpers remain separate and unchanged. No user-data callback family was lost by the route move.
+
+Slices 94 and 95 also remain internally consistent. Standard-symbol streams use product-specific USDⓈ-M and COIN-M volume models, preserve nested symbol identity and outer `e/E`, reject unsupported one-second intervals, and contain no WebSocket `premiumIndex` residue. Continuous streams retain outer `e/E/ps/ct`, do not invent a nested symbol, use separate product-specific inner models, allow USDⓈ-M-only `1s` and TradFi perpetual values, and reject those values for COIN-M. The new `TradFiPerpetual` enum member remains appended after existing members, so adding the current wire value did not shift prior enum numeric values. Repository scans found no stale continuous callback type, old misleading kline volume property, or executable README/console call site using the removed public contracts.
+
+No regression or additional production-code correction was found in the reviewed range. The review did find concrete defects in the previously deferred COIN-M price-kline families. Both current generated outer schemas use `ps`, while the shared local wrapper expects `s`, so current identity is empty; both callbacks discard `e/E`. Index-price kline additionally drops nested `s/f/L/v/q/V/Q/B`, including financially meaningful COIN-M contract/base-asset volumes. Mark-price kline exposes the same shared model even though its corresponding ID and volume fields are documented as ignore values. The families therefore must not be collapsed into one model.
+
+### Revised next order
+
+1. Slice 96: align the COIN-M mark-price kline family first because it directly represents the mark-price history used for derivatives risk and currently loses pair/event identity. Preserve its documented ignore fields without assigning index-volume semantics.
+2. Slice 97: align the COIN-M index-price kline family separately, retaining outer pair/event identity and complete nested symbol, int64 identifiers/counters, and contract/base-asset volume semantics.
+3. Refresh the full-scope closing inventory after Slice 97 and create only evidence-backed follow-up slices.
+4. Perform Backward Review 23 no later than the fourth implementation slice after this review and before any fifth implementation slice.
+
+Eighteen targeted route, standard-kline, continuous-kline, public-surface, payload, and enum tests pass. All 324 deterministic tests pass, and a forced full multi-target rebuild succeeds with zero errors and the same three known warnings. No authenticated Binance operation, account request, or mutation was sent during this review.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1353,3 +1372,4 @@ Five new deterministic regressions cover exact topics, the USDⓈ-M-only one-sec
 | 93 | Complete | Current USDⓈ-M private listen-key stream route and reconnect-safe subscription state | Live User Data Streams catalog and route-migration notice, 2026-04-23 decommissioning evidence, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect-source audit, private-address/listen-key tests, 314 deterministic tests, forced full multi-target rebuild |
 | 94 | Complete | Current standard USDⓈ-M and COIN-M individual-symbol kline stream contracts | Live routed USDⓈ-M and COIN-M stream catalogs, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 319 deterministic tests, forced full multi-target rebuild |
 | 95 | Complete | Current USDⓈ-M and COIN-M continuous-contract kline stream contracts | Live routed catalogs and read-only public payload samples, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 324 deterministic tests, forced full multi-target rebuild |
+| Review 22 | Complete | Backward review of USDⓈ-M private routing and standard/continuous USDⓈ-M and COIN-M kline contracts; COIN-M mark/index kline defect separation and re-ranking | `c3e57ec..7353cbd` diff review, live user-data/routed stream catalogs, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect source, stale-surface scans, 18 targeted and 324 complete tests, forced full multi-target rebuild |
