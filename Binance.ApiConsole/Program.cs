@@ -1076,6 +1076,10 @@ internal class Program
             onAlgoUpdated: (data) => { }
             );
 
+        // COIN-M Futures Web Socket Stream -> Market Data Methods (PUBLIC)
+        var coinFutures_501 = await ws.CoinFutures.SubscribeToAggregatedTradeUpdatesAsync("---SYMBOL---", (data) => { });
+        var coinFutures_502 = await ws.CoinFutures.SubscribeToAggregatedTradeUpdatesAsync(["---SYMBOL---"], (data) => { });
+
         // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
         var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });
         var options_102 = await ws.Options.SubscribeToOpenInterestAsync("---ASSET---", DateTime.UtcNow, (data) => { });

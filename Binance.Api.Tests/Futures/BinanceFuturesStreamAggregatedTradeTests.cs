@@ -57,4 +57,56 @@ public class BinanceFuturesStreamAggregatedTradeTests
         Assert.Equal(2, update.SymbolType);
         Assert.Null(typeof(BinanceFuturesUsdtStreamAggregatedTrade).GetProperty("Ignore"));
     }
+
+    [Fact]
+    public void CoinTopics_UseCanonicalNameAndPreserveDerivativeSymbols()
+    {
+        Assert.Equal(
+            ["btcusd_perp@aggTrade", "btcusd_260925@aggTrade"],
+            BinanceFuturesSocketClientCoin.AggregateTradeStreamTopics(["BTCUSD_PERP", "BTCUSD_260925"]));
+
+        Assert.Throws<ArgumentNullException>(() =>
+            BinanceFuturesSocketClientCoin.AggregateTradeStreamTopics(null!));
+        Assert.Throws<ArgumentException>(() =>
+            BinanceFuturesSocketClientCoin.AggregateTradeStreamTopics([]));
+        Assert.Throws<ArgumentException>(() =>
+            BinanceFuturesSocketClientCoin.AggregateTradeStreamTopics([" "]));
+    }
+
+    [Fact]
+    public void CoinPayload_MapsCompleteCurrentOfficialSchema()
+    {
+        const string payload = """
+            {
+              "e": "aggTrade",
+              "E": 1753344000001,
+              "a": 9223372036854775806,
+              "s": "BTCUSD_PERP",
+              "p": "9643.50000000",
+              "q": "2.12500000",
+              "f": 9223372036854775804,
+              "l": 9223372036854775805,
+              "T": 1753344000002,
+              "m": false,
+              "st": 2
+            }
+            """;
+
+        var update = JsonConvert.DeserializeObject<BinanceFuturesCoinStreamAggregatedTrade>(payload);
+
+        Assert.NotNull(update);
+        Assert.Equal("aggTrade", update.Event);
+        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1_753_344_000_001).UtcDateTime, update.EventTime);
+        Assert.Equal("BTCUSD_PERP", update.Symbol);
+        Assert.Equal(9_223_372_036_854_775_806L, update.Id);
+        Assert.Equal(9_643.5m, update.Price);
+        Assert.Equal(2.125m, update.Quantity);
+        Assert.Equal(9_223_372_036_854_775_804L, update.FirstTradeId);
+        Assert.Equal(9_223_372_036_854_775_805L, update.LastTradeId);
+        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1_753_344_000_002).UtcDateTime, update.TradeTime);
+        Assert.False(update.BuyerIsMaker);
+        Assert.Equal(2, update.SymbolType);
+        Assert.Null(typeof(BinanceFuturesCoinStreamAggregatedTrade).GetProperty("Ignore"));
+        Assert.Null(typeof(BinanceFuturesCoinStreamAggregatedTrade).GetProperty("NormalQuantity"));
+    }
 }

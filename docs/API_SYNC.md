@@ -949,6 +949,22 @@ Forward review found a smaller verified data-loss gap ahead of the broader Futur
 2. Re-rank the independently verified COIN-M mark-price and remaining integration-affected stream gaps after Slice 83; keep Futures WebSocket session authentication as a separate candidate rather than bundling it into a market-stream slice.
 3. Perform mandatory Backward Review 19 no later than the fourth implementation slice after this review.
 
+## Slice 83: current COIN-M aggregate-trade stream
+
+The COIN-M aggregate-trade stream was compared field by field against the live canonical WebSocket Streams catalog, the COIN-M changelog's 2026-06-10 integration entry effective 2026-06-30, the linked UM/CM integration notice, and official generated Go connector HEAD `a0c61d1`. The current stream is `{symbol}@aggTrade` on `wss://dstream.binance.com`, updates every 100 milliseconds, and aggregates market trades with the same price and taking side. Its complete payload is `e`, `E`, `a`, `s`, `p`, `q`, `f`, `l`, `T`, `m`, and `st`. Integer `st` identifies the post-integration product as 1 for UM or 2 for CM. The current COIN-M contract contains neither the retired `M` field nor USDⓈ-M-only `nq`.
+
+The shared legacy `BinanceFuturesStreamAggregatedTrade` model was replaced with product-specific `BinanceFuturesCoinStreamAggregatedTrade`; both public COIN-M subscription overloads now return that exact model. This is an intentional public breaking change: preserving the stale shared type would preserve a false wire contract, contrary to the project's current-contract-only policy. The new model retains int64 aggregate and first/last trade identifiers, exposes `SymbolType`, and removes `Ignore`. Topic generation now rejects null, empty, or whitespace-only symbols before transport, lowercases valid perpetual and dated contract symbols, and emits the exact `{symbol}@aggTrade` form. Public XML links now target the canonical endpoint page, and README plus console examples expose both single-symbol and multi-symbol subscriptions.
+
+Two deterministic regressions cover topic formation/validation and the full current payload, including near-int64-limit identifiers, decimal precision, timestamp conversion, `st = 2`, and the absence of stale `Ignore` and cross-product `NormalQuantity` properties. All four aggregate-trade tests pass, all 277 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No live Binance request or WebSocket connection was opened.
+
+Forward re-ranking found the next bounded data-loss gap in the COIN-M mark-price family. The live catalog documents per-symbol `{symbol}@markPrice@{updateSpeed}` and pair `{pair}@markPrice@{updateSpeed}` streams with 3-second and 1-second variants and complete `e/E/s/p/P/i/r/T/st` payloads, while the local COIN-M model still drops `st`. The integration notice also lists `!markPrice@arr`, but explicitly says standalone COIN-M all-market pages will be added later and the current COIN-M catalog has no corresponding page. Slice 84 must therefore audit all three variants together while recording that source asymmetry; it must not infer an undocumented standalone schema or bundle unrelated integration streams.
+
+### Revised next order
+
+1. Slice 84: fully audit the COIN-M per-symbol, all-symbols-of-pair, and all-market mark-price stream contracts; resolve the catalog/integration-notice asymmetry, align valid topics, update intervals, complete payloads, public links, and deterministic tests.
+2. Re-rank the other integration-affected streams against Futures WebSocket session authentication after Slice 84; keep each implementation slice bounded to one coherent contract family.
+3. Perform mandatory Backward Review 19 no later than Slice 86, the fourth implementation slice after Review 18.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1053,3 +1069,4 @@ Forward review found a smaller verified data-loss gap ahead of the broader Futur
 | 81 | Complete | Current USDⓈ-M WebSocket API user-data-stream lifecycle | Live canonical User Data Streams catalog, 2024-04-19 changelog, generated connector HEAD `a0c61d1`, API-key-only method/weight/envelope/credential-guard tests, 272 deterministic tests, forced full multi-target rebuild |
 | 82 | Complete | Current COIN-M WebSocket API user-data-stream lifecycle | Live canonical COIN-M User Data Streams catalog, recorded absence of a COIN-M-specific changelog entry, generated connector HEAD `a0c61d1`, API-key-only method/weight/envelope/credential-guard tests, 275 deterministic tests, forced full multi-target rebuild |
 | Review 18 | Complete | Backward review of USDⓈ-M mark-price and aggregate-trade streams, both Futures WebSocket user-data lifecycles, and the Review 17 positional-safety follow-up; COIN-M stream-gap re-ranking | `efc9175..a03c47a` diff review, live stream/lifecycle catalogs and integration notice, connector HEAD `a0c61d1`, 17 targeted and 275 complete tests, forced full multi-target rebuild |
+| 83 | Complete | Current COIN-M aggregate-trade stream contract | Live canonical COIN-M stream catalog, 2026-06-10 integration changelog and notice, connector HEAD `a0c61d1`, topic/full-payload/stale-field tests, 277 deterministic tests, forced full multi-target rebuild |

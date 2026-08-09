@@ -6,24 +6,24 @@
 public interface IBinanceFuturesSocketClientCoinStreamMarketData
 {
     /// <summary>
-    /// Subscribes to the aggregated trades update stream for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Aggregate-Trade-Streams" /></para>
+    /// Subscribes to the 100-millisecond aggregate-trade stream for the provided symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#aggregate-trade-streams" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesCoinStreamAggregatedTrade>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the aggregated trades update stream for the provided symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Aggregate-Trade-Streams" /></para>
+    /// Subscribes to the 100-millisecond aggregate-trade stream for the provided symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#aggregate-trade-streams" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesCoinStreamAggregatedTrade>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the Index price update stream for a single pair

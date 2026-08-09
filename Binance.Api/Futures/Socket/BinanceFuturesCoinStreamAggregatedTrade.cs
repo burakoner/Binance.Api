@@ -1,61 +1,61 @@
-﻿namespace Binance.Api.Futures;
+namespace Binance.Api.Futures;
 
 /// <summary>
-/// Aggregated information about trades for a symbol
+/// COIN-M aggregate-trade update
 /// </summary>
-public record BinanceFuturesStreamAggregatedTrade : BinanceFuturesStreamEvent
+public record BinanceFuturesCoinStreamAggregatedTrade : BinanceFuturesStreamEvent
 {
     /// <summary>
-    /// The symbol the trade was for
+    /// Symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; } = "";
+    public string Symbol { get; set; } = string.Empty;
 
     /// <summary>
-    /// The id of this aggregated trade
+    /// Aggregate trade ID
     /// </summary>
     [JsonProperty("a")]
     public long Id { get; set; }
 
     /// <summary>
-    /// The price of the trades
+    /// Price
     /// </summary>
     [JsonProperty("p")]
     public decimal Price { get; set; }
 
     /// <summary>
-    /// The combined quantity of the trades
+    /// Quantity
     /// </summary>
     [JsonProperty("q")]
     public decimal Quantity { get; set; }
 
     /// <summary>
-    /// The first trade id in this aggregation
+    /// First trade ID in the aggregation
     /// </summary>
     [JsonProperty("f")]
     public long FirstTradeId { get; set; }
 
     /// <summary>
-    /// The last trade id in this aggregation
+    /// Last trade ID in the aggregation
     /// </summary>
     [JsonProperty("l")]
     public long LastTradeId { get; set; }
 
     /// <summary>
-    /// The time of the trades
+    /// Trade time
     /// </summary>
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime TradeTime { get; set; }
 
     /// <summary>
-    /// Whether the buyer was the maker
+    /// Whether the buyer was the market maker
     /// </summary>
     [JsonProperty("m")]
     public bool BuyerIsMaker { get; set; }
 
     /// <summary>
-    /// Unused
+    /// Symbol type after UM/CM integration: 1 = UM, 2 = CM
     /// </summary>
-    [JsonProperty("M")]
-    public bool Ignore { get; set; }
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
 }

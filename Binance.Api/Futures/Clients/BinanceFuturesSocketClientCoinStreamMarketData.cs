@@ -4,23 +4,37 @@ internal partial class BinanceFuturesSocketClientCoin
 {
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(
         string symbol,
-        Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesCoinStreamAggregatedTrade>> onMessage,
         CancellationToken ct = default)
         => SubscribeToAggregatedTradeUpdatesAsync([symbol], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(
         IEnumerable<string> symbols,
-        Action<WebSocketDataEvent<BinanceFuturesStreamAggregatedTrade>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesCoinStreamAggregatedTrade>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamAggregatedTrade>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesCoinStreamAggregatedTrade>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@aggTrade").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(AggregateTradeStreamTopics(symbols), false, handler, ct);
+    }
+
+    internal static string[] AggregateTradeStreamTopics(IEnumerable<string> symbols)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        return symbolList
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@aggTrade")
+            .ToArray();
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPriceUpdatesAsync(
