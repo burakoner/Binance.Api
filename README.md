@@ -607,7 +607,7 @@ var subaccount_319 = await api.SubAccount.TransferSubAccountToSubAccountAsync("-
 var subaccount_320 = await api.SubAccount.UniversalTransferAsync(BinanceSubAccountTransferAccountType.Spot, BinanceSubAccountTransferAccountType.UsdtFuture, "---ASSET---", 100.0m);
 
 // Convert -> Market Data Methods (PRIVATE)
-var convert_101 = await api.Convert.GetPairsAsync();
+var convert_101 = await api.Convert.GetPairsAsync("---FROM-ASSET---");
 var convert_102 = await api.Convert.GetAssetsAsync();
 
 // Crypto Loan -> Flexible Rate -> Market Data Methods (PRIVATE)

@@ -215,8 +215,8 @@ The live Convert introduction and changelog were refreshed on 2026-08-08. The cu
 
 | Operation | Current official contract | Wrapper inventory result |
 | --- | --- | --- |
-| List all pairs | `GET /sapi/v1/convert/exchangeInfo`, NONE, IP 3000 | Method, path, security, and weight match; wrapper currently permits both asset filters to be absent although the current reference requires either or both |
-| Asset precision | `GET /sapi/v1/convert/assetInfo`, USER_DATA, IP 100 | Method, path, security, and weight match; parameter/model review pending |
+| List all pairs | `GET /sapi/v1/convert/exchangeInfo`, NONE, IP 3000 | Complete in slice 33: method, path, security, weight, filter combination, and response model aligned |
+| Asset precision | `GET /sapi/v1/convert/assetInfo`, USER_DATA, IP 100 | Complete in slice 33: signed query, weight, receive-window ceiling, and 64-bit fraction aligned |
 | Send quote request | `POST /sapi/v1/convert/getQuote`, TRADE, UID 200 | Method, path, security, and weight match; parameter/model review pending |
 | Accept quote | `POST /sapi/v1/convert/acceptQuote`, TRADE, UID 500 | Method, path, security, and weight match; mutation review pending |
 | Trade history | `GET /sapi/v1/convert/tradeFlow`, USER_DATA, UID 3000 | Route and weight match; wrapper does not enforce the documented 30-day maximum interval |
@@ -225,7 +225,13 @@ The live Convert introduction and changelog were refreshed on 2026-08-08. The cu
 | Cancel limit order | `POST /sapi/v1/convert/limit/cancelOrder`, TRADE, UID 200 | Route and security match; wrapper incorrectly declares weight 500 |
 | Query open limit orders | `GET /sapi/v1/convert/limit/queryOpenOrders`, USER_DATA, UID 3000 | Method, path, security, and weight match; response-model review pending |
 
-The two weight defects are verified against the current official generated connector, not inferred from the sparse dated changelog. A cross-cutting signed-request gap is also confirmed: Convert publicly exposes integer receive windows and does not enforce the current 60000-millisecond ceiling, while current timing security permits up to three decimal places. Existing noncanonical `developers.binance.com/docs/convert/...` interface links must be replaced while each endpoint group is touched. No code, test, or production API request was executed in this inventory-only slice.
+The two weight defects are verified against the current official generated connector, not inferred from the sparse dated changelog. The inventory also found that Convert does not enforce the current 60000-millisecond receive-window ceiling. Parameter types must be resolved from each endpoint page rather than the broader timing guide: the current `assetInfo` schema specifically defines an integer `int64` receive window. Existing noncanonical `developers.binance.com/docs/convert/...` interface links must be replaced while each endpoint group is touched. No code, test, or production API request was executed in this inventory-only slice.
+
+## Slice 33: Convert Market Data
+
+Both current Convert Market Data operations are aligned against their live canonical page. `GET /sapi/v1/convert/exchangeInfo` remains unsigned with IP weight 3000 and now rejects requests that omit both `fromAsset` and `toAsset`, while still accepting either filter alone or both together. Its amount bounds remain decimal values and deterministic response coverage includes the documented `9E+24` upper-limit sentinel.
+
+`GET /sapi/v1/convert/assetInfo` remains a signed USER_DATA query with IP weight 100. It now validates both explicit and client-option receive windows against the documented 60000-millisecond maximum. The response `fraction` field is changed from `int32` to the documented `int64`, and both interface links now point to the canonical endpoint anchors. Four deterministic tests cover request method/path, query placement, authentication, weights, filter validation, configured and explicit receive-window rejection, and both response models. The full suite has 131 tests. No production API request was sent.
 
 ### Revised next order
 
@@ -280,3 +286,4 @@ The two weight defects are verified against the current official generated conne
 | Review 7 | Complete | Backward review of complete Margin REST coverage and executable-sample financial safety | `34b00f1..5470a07` diff review, exact cancellation-ID correction, receive-window and liability-list guards, safe-default console gate, canonical-link/retirement/parameter-location scans, confirmed 65/65/65/0/0 route comparison, 122 tests, forced full multi-target rebuild |
 | 31 | Complete | Server-directed REST and WebSocket API 418/429 backoff | Current Spot REST and WebSocket API rate-limit contracts, ApiSharp 4.5.1 transport audit, no-retry/shared-guard/error-propagation tests, 127 deterministic tests |
 | 32 | Complete | Convert REST route inventory | Live Convert catalog and changelog, current official generated connector, normalized 9/9/9/0/0 route comparison, two verified weight defects, bounded follow-up groups |
+| 33 | Complete | Convert Market Data contracts | Live canonical Market Data page, pair-filter and signed-query tests, receive-window guards, exponent limit and 64-bit fraction models, 131 deterministic tests |

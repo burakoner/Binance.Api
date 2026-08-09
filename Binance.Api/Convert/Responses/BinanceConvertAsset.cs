@@ -13,5 +13,5 @@ public record BinanceConvertAsset
     /// <summary>
     /// Fraction
     /// </summary>
-    public int Fraction { get; set; }
+    public long Fraction { get; set; }
 }
