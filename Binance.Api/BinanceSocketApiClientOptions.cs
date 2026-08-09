@@ -5,8 +5,10 @@
 /// </summary>
 /// <remarks>
 /// No client-side request-weight or order-count limiter is installed for WebSocket API queries. Published
-/// per-method weights and returned rate-limit counters are not used for proactive request pacing. Applications
-/// must coordinate those limits at the correct IP and account scopes.
+/// per-method weights and returned rate-limit counters are not used for proactive request pacing. The configured
+/// per-connection message limit must not be interpreted as protection for Binance's weighted IP and UID order
+/// quotas, including quota pools shared with REST traffic. Applications must coordinate those limits at the
+/// correct IP and account scopes.
 ///
 /// WebSocket API status 418 and 429 responses guard subsequent API requests on the same root client until the
 /// server-provided retryAfter time. The failed request is never retried automatically. Applications using
