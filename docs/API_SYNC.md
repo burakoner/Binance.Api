@@ -528,11 +528,20 @@ One official-source ambiguity remains visible rather than being guessed away. Th
 
 All 199 deterministic tests pass. A forced full solution rebuild succeeds with zero errors and the same three known warnings: two missing XML comments in the placeholder FIX project targets and the obsolete v2 USDⓈ-M account example. No production Binance request was sent.
 
+## Slice 57: USDⓈ-M TradFi Perps agreement mutation decision
+
+`POST /fapi/v1/stock/contract` was reviewed independently against its live Trade section, the 2025-12-11 USDⓈ-M changelog entry, the current official generated JavaScript connector and response model, and Binance's current TradFi Perps product material. The route is current and unmarked as deprecated. It is a signed USER_DATA POST with IP weight 50, a required signing timestamp, an optional `recvWindow` capped at 60,000 milliseconds, and a two-field response containing int64 `code` plus string `msg`. The endpoint-specific schema and curl example use an `application/x-www-form-urlencoded` request body, while the generated connector puts its optional receive window in the query; the implementation will follow the endpoint-specific body contract and the wrapper's established mixed-payload signature transport.
+
+The published API contract does not provide the agreement text, eligibility or jurisdiction rules, repeat-call behavior, a current-status query, or a reversal operation. The broader product material confirms that TradFi Perps are leveraged derivatives rather than ownership of the underlying stocks and can involve liquidation, funding, off-hours price-gap, and changing-specification risks, but it does not close those account-level agreement gaps. The wrapper must therefore treat this call as a potentially one-way eligibility mutation and must not present it as ordinary configuration, infer idempotency, retry it automatically, or invoke it as an implicit prerequisite for placing an order.
+
+The endpoint is still implementable because the transport and response contracts are deterministic and the project's objective is current official API coverage. The public operation will be explicitly named `SignTradFiPerpsAgreementAsync`, document that callers must review the current Binance account UI and applicable terms before invoking it, enforce both explicit and client-default receive-window ceilings, preserve the documented int64 result code in a dedicated semantic response type, and remain caller-initiated only. Deterministic tests will cover the signed form request, weight 50, response fields, and pre-transport receive-window rejection. README and console material may show only a commented, prominently warned call; the broad live-example gate must not sign an agreement as a side effect of running unrelated examples.
+
+This is a decision-only slice. No public API or production code changed, so the route comparison remains 95 catalog/93 wrapper/93 exact/2 catalog-only/0 wrapper-only raw and 94 active/93 exact with this single actionable current gap. All 199 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Perform a decision-only analysis of the remaining TradFi agreement mutation `POST /fapi/v1/stock/contract`, including availability, eligibility and financial/legal effect, security, weight, request placement, and response contract. Do not implement it in the same slice.
-2. Only if the decision finds a sufficiently current and safe public contract, implement that single endpoint in a separate slice with deterministic tests and a safely gated example, then declare the active USDⓈ-M REST surface complete.
-3. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
+1. Implement only `POST /fapi/v1/stock/contract` under the explicit opt-in and sample-safety boundaries locked in Slice 57, then regenerate the route inventory and declare the active USDⓈ-M REST surface complete.
+2. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
 
 ## Review log
 
@@ -606,3 +615,4 @@ All 199 deterministic tests pass. A forced full solution rebuild succeeds with z
 | 55 | Complete | Native USDⓈ-M conditional Algo order placement | Live canonical Trade section, 2025-11-06/2026-06-20 product changelog, current connector/model, signed form/enum/combination/rate/response tests, 196 deterministic tests |
 | 56 | Complete | Bulk native USDⓈ-M conditional Algo cancellation | Live canonical Trade section, 2025-11-06 migration changelog, signed symbol-query/receive-window/weight/int64-response tests, 199 deterministic tests |
 | Review 12 | Complete | Backward review of native USDⓈ-M all-orders query and conditional Algo mutations, documentation, and execution order | `b6480ce..81456e3` diff review, live 95-route regeneration, four-route transport/weight/validation/model recheck, two documentation corrections, recorded `priceProtect` ambiguity, 199 tests, forced full multi-target rebuild |
+| 57 | Complete | USDⓈ-M TradFi Perps agreement mutation decision | Live canonical Trade section, 2025-12-11 changelog entry, current connector/response model, current product-risk material, explicit opt-in and sample-safety boundaries, no implementation |
