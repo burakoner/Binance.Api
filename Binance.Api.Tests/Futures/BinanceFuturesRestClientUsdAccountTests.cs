@@ -86,6 +86,63 @@ public class BinanceFuturesRestClientUsdAccountTests
         Assert.Null(configuredHandler.RequestUri);
     }
 
+    [Fact]
+    public async Task PortfolioMarginAccountInfo_UsesCurrentSignedContractAndDeserializesResponse()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            {
+              "maxWithdrawAmountUSD": "1627523.32459208",
+              "asset": "BTC",
+              "maxWithdrawAmount": "27.43689636"
+            }
+            """);
+        using var client = CreateClient(handler, limiter);
+
+        var result = await client.UsdFutures.GetPortfolioMarginAccountInfoAsync("BTC", 60_000);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v1/pmAccountInfo", handler.RequestUri!.AbsolutePath);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.True(handler.Headers.TryGetValue("X-MBX-APIKEY", out var values));
+        Assert.Equal("api-key", Assert.Single(values!));
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains("asset=BTC", query);
+        Assert.Contains("recvWindow=60000", query);
+        Assert.Contains("timestamp=", query);
+        Assert.Contains("signature=", query);
+        Assert.Contains(limiter.Requests, item =>
+            item.Endpoint == "/fapi/v1/pmAccountInfo" && item.Weight == 5 && item.Signed);
+
+        Assert.Equal("BTC", result.Data.Asset);
+        Assert.Equal(27.43689636m, result.Data.MaximumWithdrawAmount);
+        Assert.Equal(1627523.32459208m, result.Data.MaximumWithdrawAmountUSD);
+    }
+
+    [Fact]
+    public async Task PortfolioMarginAccountInfo_RejectsReceiveWindowAboveCurrentMaximum()
+    {
+        var explicitHandler = new RecordingHttpMessageHandler("{}");
+        using (var explicitClient = CreateClient(explicitHandler))
+        {
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+                explicitClient.UsdFutures.GetPortfolioMarginAccountInfoAsync("BTC", 60_001));
+        }
+        Assert.Null(explicitHandler.RequestUri);
+
+        var configuredHandler = new RecordingHttpMessageHandler("{}");
+        using var configuredClient = CreateClient(
+            configuredHandler,
+            defaultReceiveWindow: TimeSpan.FromMilliseconds(60_001));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            configuredClient.UsdFutures.GetPortfolioMarginAccountInfoAsync("BTC"));
+        Assert.Null(configuredHandler.RequestUri);
+    }
+
     private static BinanceRestApiClient CreateClient(
         RecordingHttpMessageHandler handler,
         IRateLimiter? limiter = null,

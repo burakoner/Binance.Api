@@ -8,8 +8,8 @@ internal partial class BinanceFuturesRestClientUsd
         {
             { "asset", asset }
         };
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesPortfolioMarginAccount>(GetUrl(fapi, v1, "pmAccountInfo"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<BinanceFuturesPortfolioMarginAccount>(GetUrl(fapi, v1, "pmAccountInfo"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 }
