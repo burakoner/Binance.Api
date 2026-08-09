@@ -568,6 +568,28 @@ The shared bracket item now maps the currently documented and connector-generate
 2. Implement only the first independently verified Options contract in a bounded slice, keeping agreement mutations separate from lifecycle removals.
 3. Perform Backward Review 13 immediately after that Options implementation, covering code, tests, release notes, route inventories, and the execution order since Review 12.
 
+## Slice 61: resolve Options lifecycle candidates and agreement scope
+
+The one official-only and four wrapper-only Options routes were rechecked independently against the live Account, Market Data, and Trade catalogs, the dated Options changelog, and the current official generated JavaScript connector. This was a decision-only slice: no public operation, response model, sample, or production transport was changed, and no Binance endpoint was called. The normalized inventory therefore remains 44 official routes, 47 wrapper routes, 43 exact matches, one official-only route, and four wrapper-only routes. All 206 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings.
+
+`POST /eapi/v1/stock/contract` is the only independently verified implementation candidate. The live Trade contract and its 2026-07-09 changelog entry identify a current signed USER_DATA mutation with IP weight 50, required signing timestamp, optional `recvWindow` capped at 60,000 milliseconds, and a response containing int64 `code` plus string `msg`. The endpoint-specific schema places the parameters in an `application/x-www-form-urlencoded` body, while the generated connector places its optional receive window in the query. The implementation will follow the endpoint-specific body contract and the wrapper's established mixed-payload signing transport, remain an explicit caller-only agreement operation, receive no endpoint-level retry, and appear only as a commented warning sample. Binance's public API material does not define the agreement text, jurisdiction or eligibility rules, repeat-call behavior, status, or reversal semantics; none will be invented.
+
+The four wrapper-only routes are not current documented contracts, but absence from a catalog is not proof that a server route has been retired:
+
+- `GET /eapi/v1/account` is absent from the current catalog and connector. The 2023-08-29 changelog nevertheless names both this route and the still-current `GET /eapi/v1/marginAccount`, proving that the routes coexisted at that date; no later explicit removal notice was found. The wrapper's `/account` operation therefore remains an unresolved, unsupported lifecycle candidate rather than being deleted on an assumption.
+- `GET /eapi/v1/income/asyn` and `GET /eapi/v1/income/asyn/id` are absent from the current catalog and connector. The 2023-07-21 changelog explicitly added both, and no later removal or disablement notice was found. They remain unresolved, unsupported lifecycle candidates.
+- `GET /eapi/v1/historicalTrades` is absent from the current Market Data catalog and connector, and no Options-specific addition, deprecation, or removal notice was found. Changelog entries for similarly named USD-M and COIN-M routes are not evidence for the Options route. It also remains unresolved and unsupported.
+
+Binance's current introduction warns that undocumented interfaces should not be relied upon and may change without notice. Consequently, the executable README and console calls for these four wrapper-only routes are not acceptable as guidance for the current supported surface. They must be quarantined from executable samples in a bounded follow-up, but that documentation safety correction must not be misrepresented as proof of server retirement or used by itself to justify breaking public-API removal.
+
+The current `GET /eapi/v1/marginAccount` route is already implemented under the wrapper's Market Maker client, so the stale account-client TODO claiming that it is missing is incorrect and the route inventory remains exact. Endpoint-level inspection exposed semantic drift that route comparison could not detect: the live response includes `adjustedEquity`, `canTrade`, `canDeposit`, `canWithdraw`, `reduceOnly`, and int64 `tradeGroupId`, while the wrapper model omits them and still exposes the non-current `lpProfit` field. Its client ownership, model, receive-window boundary, documentation link, and stale TODO require a separate complete endpoint audit; they are not silently folded into the agreement mutation.
+
+### Revised next order
+
+1. Implement only `POST /eapi/v1/stock/contract` with the explicit agreement-safety, transport, weight, receive-window, model, test, and sample boundaries above.
+2. Perform Backward Review 13 immediately after that implementation, covering code, tests, release notes, route inventories, sample safety, and the execution order since Review 12.
+3. Audit the complete current `/eapi/v1/marginAccount` contract and separately quarantine undocumented wrapper-only calls from executable samples; make no breaking lifecycle removal without explicit evidence or a separately authorized verification method.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -644,3 +666,4 @@ The shared bracket item now maps the currently documented and connector-generate
 | 58 | Complete | Explicit USDⓈ-M TradFi Perps agreement signing | Live canonical Trade section, Slice 57 safety decisions, signed form placement, weight/receive-window/int64-response tests, commented warning samples, 94/94 active route comparison |
 | 59 | Complete | Retired COIN-M Classic Portfolio Margin account-query removal | Live 2026-06-30 retirement notice, current connector absence, public/call-site/model dependency scan, 64/63/63/1/0 route comparison |
 | 60 | Complete | COIN-M pair-default and symbol-specific leverage brackets | Live Account sections, current connector and response types, signed query/parameter/dynamic-weight/receive-window/int64 tests, 64/64 active route comparison |
+| 61 | Complete | Options agreement scope and wrapper-only route lifecycle decisions | Live Account, Market Data, and Trade catalogs, dated Options changelog, current connector, route/model/call-site scans, no implementation |
