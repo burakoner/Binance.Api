@@ -1,20 +1,18 @@
-﻿namespace Binance.Api.Convert;
+namespace Binance.Api.Convert;
 
 /// <summary>
-/// Convert trade info
+/// Open Convert limit order
 /// </summary>
-public record BinanceConvertTrade
+public record BinanceConvertOpenOrder
 {
     /// <summary>
     /// Quote id
     /// </summary>
-    [JsonProperty("quoteId")]
     public string QuoteId { get; set; } = string.Empty;
 
     /// <summary>
     /// Order id
     /// </summary>
-    [JsonProperty("orderId")]
     public long OrderId { get; set; }
 
     /// <summary>
@@ -26,7 +24,6 @@ public record BinanceConvertTrade
     /// <summary>
     /// Source asset
     /// </summary>
-    [JsonProperty("fromAsset")]
     public string FromAsset { get; set; } = string.Empty;
 
     /// <summary>
@@ -38,7 +35,6 @@ public record BinanceConvertTrade
     /// <summary>
     /// Destination asset
     /// </summary>
-    [JsonProperty("toAsset")]
     public string ToAsset { get; set; } = string.Empty;
 
     /// <summary>
@@ -50,19 +46,23 @@ public record BinanceConvertTrade
     /// <summary>
     /// Price ratio
     /// </summary>
-    [JsonProperty("ratio")]
     public decimal Ratio { get; set; }
 
     /// <summary>
     /// Inverse price ratio
     /// </summary>
-    [JsonProperty("inverseRatio")]
     public decimal InverseRatio { get; set; }
 
     /// <summary>
     /// Creation time
     /// </summary>
     [JsonConverter(typeof(DateTimeConverter))]
-    [JsonProperty("createTime")]
     public DateTime CreateTime { get; set; }
+
+    /// <summary>
+    /// Expiration time
+    /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
+    [JsonProperty("expiredTimestamp")]
+    public DateTime ExpireTime { get; set; }
 }

@@ -587,7 +587,7 @@ internal class Program
         var convert_204 = await api.Convert.GetStatusAsync("---ORDER-ID---");
         var convert_205 = await api.Convert.PlaceLimitOrderAsync("---BASE-ASSET---", "---QUOTE-ASSET---", 100.0m, BinanceOrderSide.Buy, BinanceConvertExpiredTime.OneDay, 10.0m);
         var convert_206 = await api.Convert.CancelLimitOrderAsync("---ORDER-ID---");
-        var convert_207 = await api.Convert.GetLimitOrdersAsync();
+        var convert_207 = await api.Convert.GetOpenLimitOrdersAsync();
 
         // Institutional Loan Methods (PRIVATE)
         var insloan_101 = await api.InstitutionalLoan.GetLoanGroupsAsync();

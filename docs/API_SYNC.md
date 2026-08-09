@@ -219,11 +219,11 @@ The live Convert introduction and changelog were refreshed on 2026-08-08. The cu
 | Asset precision | `GET /sapi/v1/convert/assetInfo`, USER_DATA, IP 100 | Complete in slice 33: signed query, weight, receive-window ceiling, and 64-bit fraction aligned |
 | Send quote request | `POST /sapi/v1/convert/getQuote`, TRADE, UID 200 | Method, path, security, and weight match; parameter/model review pending |
 | Accept quote | `POST /sapi/v1/convert/acceptQuote`, TRADE, UID 500 | Method, path, security, and weight match; mutation review pending |
-| Trade history | `GET /sapi/v1/convert/tradeFlow`, USER_DATA, UID 3000 | Route and weight match; wrapper does not enforce the documented 30-day maximum interval |
-| Order status | `GET /sapi/v1/convert/orderStatus`, USER_DATA, UID 100 | Route and security match; wrapper incorrectly declares weight 3000 |
+| Trade history | `GET /sapi/v1/convert/tradeFlow`, USER_DATA, UID 3000 | Complete in slice 34: range, limit, receive window, signed query, weight, terminology, and response model aligned |
+| Order status | `GET /sapi/v1/convert/orderStatus`, USER_DATA, UID 100 | Complete in slice 34: identifier contract, current parameter set, signed query, weight, and response model aligned |
 | Place limit order | `POST /sapi/v1/convert/limit/placeOrder`, TRADE, UID 500 | Method, path, security, and weight match; mutation/model review pending |
 | Cancel limit order | `POST /sapi/v1/convert/limit/cancelOrder`, TRADE, UID 200 | Route and security match; wrapper incorrectly declares weight 500 |
-| Query open limit orders | `GET /sapi/v1/convert/limit/queryOpenOrders`, USER_DATA, UID 3000 | Method, path, security, and weight match; response-model review pending |
+| Query open limit orders | `GET /sapi/v1/convert/limit/queryOpenOrders`, USER_DATA, UID 3000 | Complete in slice 34: current public method name, receive-window ceiling, signed query, weight, and dedicated response model aligned |
 
 The two weight defects are verified against the current official generated connector, not inferred from the sparse dated changelog. The inventory also found that Convert does not enforce the current 60000-millisecond receive-window ceiling. Parameter types must be resolved from each endpoint page rather than the broader timing guide: the current `assetInfo` schema specifically defines an integer `int64` receive window. Existing noncanonical `developers.binance.com/docs/convert/...` interface links must be replaced while each endpoint group is touched. No code, test, or production API request was executed in this inventory-only slice.
 
@@ -233,15 +233,22 @@ Both current Convert Market Data operations are aligned against their live canon
 
 `GET /sapi/v1/convert/assetInfo` remains a signed USER_DATA query with IP weight 100. It now validates both explicit and client-option receive windows against the documented 60000-millisecond maximum. The response `fraction` field is changed from `int32` to the documented `int64`, and both interface links now point to the canonical endpoint anchors. Four deterministic tests cover request method/path, query placement, authentication, weights, filter validation, configured and explicit receive-window rejection, and both response models. The full suite has 131 tests. No production API request was sent.
 
+## Slice 34: Read-only Convert Trade
+
+The three current read-only Trade operations were compared against both the live canonical Trade page and Binance's auto-generated Convert connector source. The sparse connector changelog records the 2025-09-19 switch of `queryLimitOpenOrders` from POST to GET, which the wrapper already matched; it does not describe the other current contract differences found by the endpoint-level comparison.
+
+`GET /sapi/v1/convert/tradeFlow` remains a signed USER_DATA query with UID weight 3000 and now rejects reversed ranges, intervals over 30 days, limits over 1000, and receive windows over 60000 milliseconds. Its model now uses the documented source/destination terminology and preserves `orderStatus` as a string because this endpoint does not publish a closed status enum. `GET /sapi/v1/convert/orderStatus` now uses UID weight 100, requires at least one non-empty order or quote identifier, permits both because neither the current schema nor generated connector prohibits the combination, and no longer sends the undocumented `recvWindow` parameter. Its string status and full numeric/time fields are covered.
+
+`GET /sapi/v1/convert/limit/queryOpenOrders` is now exposed as `GetOpenLimitOrdersAsync` and deserializes into a dedicated `BinanceConvertOpenOrder` model rather than the obsolete limit-order submission model. The response now retains the documented 64-bit order ID, status, source/destination assets and amounts, ratios, creation time, and expiration time. Six deterministic tests cover all three signed GET requests, weights, query placement, boundary rejection, configured receive windows, large identifiers, envelopes, and response fields. The full suite has 137 tests. No production API request was sent.
+
 ### Revised next order
 
-1. Align the two Convert Market Data routes and add deterministic request/model coverage.
-2. Align the three read-only Convert Trade queries: history, status, and open limit orders.
-3. Align the quote request/accept workflow, treating quote acceptance as a balance-changing mutation.
-4. Align limit-order placement and cancellation as a separate two-mutation slice.
-5. Inventory and then align Spot/Futures Algo Trading in similarly bounded groups.
-6. Perform the next backward review after the Convert/Algo boundary and revise derivative scope from its findings.
-7. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
+1. Perform the due backward review of slices 31-34 and revise code, documentation, and execution order from its findings.
+2. Align the quote request/accept workflow, treating quote acceptance as a balance-changing mutation.
+3. Align limit-order placement and cancellation as a separate two-mutation slice.
+4. Inventory and then align Spot/Futures Algo Trading in similarly bounded groups.
+5. Perform the next backward review after the Convert/Algo boundary and revise derivative scope from its findings.
+6. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
 
 ## Review log
 
@@ -287,3 +294,4 @@ Both current Convert Market Data operations are aligned against their live canon
 | 31 | Complete | Server-directed REST and WebSocket API 418/429 backoff | Current Spot REST and WebSocket API rate-limit contracts, ApiSharp 4.5.1 transport audit, no-retry/shared-guard/error-propagation tests, 127 deterministic tests |
 | 32 | Complete | Convert REST route inventory | Live Convert catalog and changelog, current official generated connector, normalized 9/9/9/0/0 route comparison, two verified weight defects, bounded follow-up groups |
 | 33 | Complete | Convert Market Data contracts | Live canonical Market Data page, pair-filter and signed-query tests, receive-window guards, exponent limit and 64-bit fraction models, 131 deterministic tests |
+| 34 | Complete | Read-only Convert Trade contracts | Live canonical Trade page, current official generated connector and changelog, history/status/open-limit-order request, validation, weight, naming, and response-model tests, 137 deterministic tests |

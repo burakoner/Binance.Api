@@ -30,26 +30,36 @@ internal partial class BinanceConvertRestClient
 
     public Task<RestCallResult<BinanceListRangeResponse<BinanceConvertTrade>>> GetHistoryAsync(DateTime startTime, DateTime endTime, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (startTime > endTime)
+            throw new ArgumentException("startTime cannot be later than endTime", nameof(startTime));
+        if (endTime - startTime > TimeSpan.FromDays(30))
+            throw new ArgumentException("The time range cannot exceed 30 days", nameof(endTime));
+        if (limit > 1000)
+            throw new ArgumentOutOfRangeException(nameof(limit), "limit cannot exceed 1000");
+
         var parameters = new ParameterCollection();
         parameters.AddMilliseconds("startTime", startTime);
         parameters.AddMilliseconds("endTime", endTime);
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceListRangeResponse<BinanceConvertTrade>>(GetUrl(sapi, v1, "convert/tradeFlow"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceConvertStatus>> GetStatusAsync(string? orderId = null, string? quoteId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceConvertStatus>> GetStatusAsync(string? orderId = null, string? quoteId = null, CancellationToken ct = default)
     {
-        if (orderId == null && quoteId == null || orderId != null && quoteId != null)
-            throw new ArgumentException("Either orderId or quoteId must be sent, but not both");
+        if (string.IsNullOrWhiteSpace(orderId) && string.IsNullOrWhiteSpace(quoteId))
+            throw new ArgumentException("Either orderId or quoteId must be provided.");
+        if (orderId != null && string.IsNullOrWhiteSpace(orderId))
+            throw new ArgumentException("orderId cannot be empty.", nameof(orderId));
+        if (quoteId != null && string.IsNullOrWhiteSpace(quoteId))
+            throw new ArgumentException("quoteId cannot be empty.", nameof(quoteId));
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("quoteId", quoteId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceConvertStatus>(GetUrl(sapi, v1, "convert/orderStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceConvertStatus>(GetUrl(sapi, v1, "convert/orderStatus"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 100);
     }
 
     public Task<RestCallResult<BinanceConvertLimitOrder>> PlaceLimitOrderAsync(string baseAsset, string quoteAsset,
@@ -88,12 +98,12 @@ internal partial class BinanceConvertRestClient
         return RequestAsync<BinanceConvertLimitOrderStatus>(GetUrl(sapi, v1, "convert/limit/cancelOrder"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 500);
     }
 
-    public async Task<RestCallResult<List<BinanceConvertLimitOrder>>> GetLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<BinanceConvertOpenOrder>>> GetOpenLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        var result = await RequestAsync<BinanceListResponse<BinanceConvertLimitOrder>>(GetUrl(sapi, v1, "convert/limit/queryOpenOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
-        return result.Success ? result.As(result.Data.List) : result.As<List<BinanceConvertLimitOrder>>([]);
+        var result = await RequestAsync<BinanceListResponse<BinanceConvertOpenOrder>>(GetUrl(sapi, v1, "convert/limit/queryOpenOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3000).ConfigureAwait(false);
+        return result.Success ? result.As(result.Data.List) : result.As<List<BinanceConvertOpenOrder>>([]);
     }
 }

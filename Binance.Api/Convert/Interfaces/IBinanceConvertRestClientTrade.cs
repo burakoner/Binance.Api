@@ -32,26 +32,25 @@ public interface IBinanceConvertRestClientTrade
 
     /// <summary>
     /// Get convert trade history
-    /// <para><a href="https://developers.binance.com/docs/convert/trade/Get-Convert-Trade-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#get-convert-trade-history" /></para>
     /// </summary>
     /// <param name="startTime">Filter by start time</param>
-    /// <param name="endTime">Filter by end time</param>
-    /// <param name="limit">Max amount of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="endTime">Filter by end time. The interval from startTime cannot exceed 30 days.</param>
+    /// <param name="limit">Maximum number of results. The value cannot exceed 1000; the server default is 100.</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<BinanceListRangeResponse<BinanceConvertTrade>>> GetHistoryAsync(DateTime startTime, DateTime endTime, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get convert order status
-    /// <para><a href="https://developers.binance.com/docs/convert/trade/Order-Status" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#order-status" /></para>
     /// </summary>
-    /// <param name="orderId">The order id of the order</param>
-    /// <param name="quoteId">The quote id of the order</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="orderId">The order id. Either orderId or quoteId must be provided.</param>
+    /// <param name="quoteId">The quote id. Either orderId or quoteId must be provided.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceConvertStatus>> GetStatusAsync(string? orderId = null, string? quoteId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceConvertStatus>> GetStatusAsync(string? orderId = null, string? quoteId = null, CancellationToken ct = default);
 
     /// <summary>
     /// Enable users to place a limit order
@@ -90,11 +89,11 @@ public interface IBinanceConvertRestClientTrade
     Task<RestCallResult<BinanceConvertLimitOrderStatus>> CancelLimitOrderAsync(string orderId, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Request a quote for the requested token pairs
-    /// <para><a href="https://developers.binance.com/docs/convert/trade/Query-Order" /></para>
+    /// Query current open limit orders
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#query-limit-open-orders" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceConvertLimitOrder>>> GetLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceConvertOpenOrder>>> GetOpenLimitOrdersAsync(int? receiveWindow = null, CancellationToken ct = default);
 }
