@@ -99,12 +99,11 @@ public interface IBinanceOptionsRestClientMarketData
     Task<RestCallResult<List<BinanceOptionsKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Get older market historical trades.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-data/Old-Trades-Lookup" /></para>
+    /// UNDOCUMENTED: Calls <c>GET /eapi/v1/historicalTrades</c>, which is absent from the current Options catalog and official connector. Its server lifecycle is unresolved and it is not a supported current contract
     /// </summary>
-    /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
-    /// <param name="limit">Number of records Default:100 Max:500</param>
-    /// <param name="fromId">The UniqueId ID from which to return. The latest deal record is returned by default</param>
+    /// <param name="symbol">Wrapper symbol parameter; the current server contract is undocumented</param>
+    /// <param name="limit">Wrapper result-limit parameter; the current server contract is undocumented</param>
+    /// <param name="fromId">Wrapper trade-identifier parameter; the current server contract is undocumented</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsBlockTrade>>> GetHistoricalTradesAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
