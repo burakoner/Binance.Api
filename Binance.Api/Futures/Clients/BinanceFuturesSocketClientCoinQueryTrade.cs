@@ -2,6 +2,10 @@
 
 internal partial class BinanceFuturesSocketClientCoin
 {
+    internal const string ModifyOrderPath = "ws-dapi/v1";
+    internal const string ModifyOrderMethod = "order.modify";
+    internal const int ModifyOrderIpWeight = 1;
+
     public async Task<CallResult<BinanceFuturesOrder>> PlaceOrderAsync(
         string symbol,
         BinanceOrderSide side,
@@ -76,27 +80,69 @@ internal partial class BinanceFuturesSocketClientCoin
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
-        decimal? price = null,
-        BinanceFuturesPriceMatch? priceMatch = null,
+        decimal price,
         long? orderId = null,
         string? origClientOrderId = null,
-        int? receiveWindow = null,
+        BinanceFuturesPriceMatch? priceMatch = null,
+        long? modifyId = null,
+        long? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
+        var parameters = CreateModifyOrderParameters(
+            symbol,
+            side,
+            quantity,
+            price,
+            orderId,
+            origClientOrderId,
+            priceMatch,
+            modifyId,
+            __.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesOrder>(ModifyOrderPath, ModifyOrderMethod, parameters, true, true, weight: ModifyOrderIpWeight, ct: ct);
+    }
+
+    internal static ParameterCollection CreateModifyOrderParameters(
+        string symbol,
+        BinanceOrderSide side,
+        decimal quantity,
+        decimal price,
+        long? orderId,
+        string? origClientOrderId,
+        BinanceFuturesPriceMatch? priceMatch,
+        long? modifyId,
+        long? receiveWindow)
+    {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("Symbol is required", nameof(symbol));
+        if (side != BinanceOrderSide.Buy && side != BinanceOrderSide.Sell)
+            throw new ArgumentOutOfRangeException(nameof(side), side, "Side must be Buy or Sell");
+        if (quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity), quantity, "Quantity must be greater than zero");
+        if (price <= 0)
+            throw new ArgumentOutOfRangeException(nameof(price), price, "Price must be greater than zero");
+        if (origClientOrderId != null && string.IsNullOrWhiteSpace(origClientOrderId))
+            throw new ArgumentException("Original client order id cannot be empty", nameof(origClientOrderId));
+        if (!orderId.HasValue && origClientOrderId == null)
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
+        if (priceMatch.HasValue)
+            throw new ArgumentException("Binance currently requires price for Modify Order and also prohibits sending priceMatch with price", nameof(priceMatch));
+        if (receiveWindow > 60_000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), receiveWindow, "receiveWindow cannot exceed 60000 milliseconds");
 
-        var parameters = new ParameterCollection();
-        parameters.AddParameter("symbol", symbol);
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol },
+            { "quantity", quantity },
+            { "price", price }
+        };
         parameters.AddEnum("side", side);
-        parameters.AddParameter("quantity", quantity.ToString(BinanceConstants.CI));
-        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
-        parameters.AddOptionalEnum("priceMatch", priceMatch);
-        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("modifyId", modifyId);
+        parameters.AddOptional("recvWindow", receiveWindow);
 
-        return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.modify", parameters, true, true, weight: 1, ct: ct);
+        return parameters;
     }
 
     public Task<CallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)

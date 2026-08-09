@@ -84,6 +84,7 @@ public class BinanceSocketApiClient
     }
 
     internal int? ReceiveWindow(int? receiveWindow) => receiveWindow ?? (ApiOptions.ReceiveWindow != null ? System.Convert.ToInt32(ApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
+    internal long? ReceiveWindow(long? receiveWindow) => receiveWindow ?? (ApiOptions.ReceiveWindow != null ? System.Convert.ToInt64(ApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
     internal decimal? ReceiveWindow(decimal? receiveWindow) => receiveWindow ?? (ApiOptions.ReceiveWindow != null ? System.Convert.ToDecimal(ApiOptions.ReceiveWindow?.TotalMilliseconds) : null);
 
     /// <summary>

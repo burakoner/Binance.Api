@@ -1003,7 +1003,8 @@ var futures_302 = await ws.UsdFutures.GetAccountAsync();
 
 // USDⓈ-M Futures -> Trading Methods (PRIVATE)
 var futures_401 = await ws.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
-var futures_402 = await ws.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, orderId: 1_000_000L);
+// Binance currently requires price and prohibits priceMatch with price on WebSocket Modify Order; priceMatch is rejected fail-closed.
+var futures_402 = await ws.UsdFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 110.0m, 50_000.0m, orderId: 1_000_000L, modifyId: 3L);
 var futures_403 = await ws.UsdFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_404 = await ws.UsdFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_405 = await ws.UsdFutures.GetPositionsAsync();
@@ -1014,7 +1015,7 @@ var futures_602 = await ws.CoinFutures.GetTimeAsync();
 
 // Coin-M Futures -> Trading Methods (PRIVATE)
 var futures_701 = await ws.CoinFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);
-var futures_702 = await ws.CoinFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m);
+var futures_702 = await ws.CoinFutures.ModifyOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, 60_000.0m, orderId: 1_000_000L, modifyId: 4L);
 var futures_703 = await ws.CoinFutures.CancelOrderAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_704 = await ws.CoinFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_705 = await ws.CoinFutures.GetPositionsAsync();

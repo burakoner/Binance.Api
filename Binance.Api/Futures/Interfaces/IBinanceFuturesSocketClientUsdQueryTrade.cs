@@ -33,20 +33,22 @@ public interface IBinanceFuturesSocketClientUsdQueryTrade
     Task<CallResult<BinanceFuturesOrder>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesOrderType type, decimal? quantity, decimal? price = null, decimal? stopPrice = null, string? newClientOrderId = null, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceFuturesPriceMatch? priceMatch = null, BinanceFuturesWorkingType? workingType = null, bool? reduceOnly = null, bool? closePosition = null, bool? priceProtect = null, decimal? activationPrice = null, decimal? callbackRate = null, DateTime? goodTillDate = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Edit an existing order
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Modify-Order" /></para>
+    /// Modifies an existing LIMIT order. The amended order is reordered in the match queue
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#modify-order" /></para>
     /// </summary>
+    /// <remarks>An order can be modified fewer than 10000 times. Filter failures reject the amendment without changing the order. Binance cancels a partially filled order when the new quantity is less than or equal to its executed quantity, and cancels a GTX order when the new price would execute immediately.</remarks>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="side">Order side</param>
-    /// <param name="quantity">New quantity</param>
-    /// <param name="price">New price</param>
-    /// <param name="priceMatch">Only available for Limit/Stop/TakeProfit order</param>
-    /// <param name="orderId">Order id of the order to edit</param>
-    /// <param name="origClientOrderId">Client order id of the order to edit</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="quantity">The complete new order quantity</param>
+    /// <param name="price">The complete new order price</param>
+    /// <param name="orderId">The exchange order id. Either this or origClientOrderId is required; this id takes precedence when both are sent</param>
+    /// <param name="origClientOrderId">The original client order id. Either this or orderId is required</param>
+    /// <param name="priceMatch">Published by Binance, but currently unusable because the same live contract requires price and prohibits combining priceMatch with price; non-null values are rejected</param>
+    /// <param name="modifyId">Optional user-defined modification identifier passed through without uniqueness validation and returned only when supplied</param>
+    /// <param name="receiveWindow">The receive window in milliseconds</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<CallResult<BinanceFuturesOrder>> ModifyOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal? price = null, BinanceFuturesPriceMatch? priceMatch = null, long? orderId = null, string? origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The current modification acknowledgement. Immediate modify responses do not contain fill-derived average or cumulative quote/base values</returns>
+    Task<CallResult<BinanceFuturesOrder>> ModifyOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal price, long? orderId = null, string? origClientOrderId = null, BinanceFuturesPriceMatch? priceMatch = null, long? modifyId = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending order
