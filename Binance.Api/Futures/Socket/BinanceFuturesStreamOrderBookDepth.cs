@@ -12,6 +12,18 @@ public record BinanceFuturesStreamOrderBookDepth : BinanceFuturesStreamEvent
     public string Symbol { get; set; } = string.Empty;
 
     /// <summary>
+    /// Pair symbol
+    /// </summary>
+    [JsonProperty("ps")]
+    public string Pair { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Symbol type: 1 for USDⓈ-M, 2 for COIN-M
+    /// </summary>
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
+
+    /// <summary>
     /// The time the event happened
     /// </summary>
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
@@ -21,7 +33,7 @@ public record BinanceFuturesStreamOrderBookDepth : BinanceFuturesStreamEvent
     /// The ID of the first update
     /// </summary>
     [JsonProperty("U")]
-    public long? FirstUpdateId { get; set; }
+    public long FirstUpdateId { get; set; }
 
     /// <summary>
     /// The ID of the last update

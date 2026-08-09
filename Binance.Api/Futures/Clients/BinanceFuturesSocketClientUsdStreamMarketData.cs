@@ -270,18 +270,11 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        levels.ValidateIntValues(nameof(levels), 5, 10, 20);
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamOrderBookDepth>>>(data =>
         {
-            data.Data.Data.Symbol = data.Data.Stream?.Split('@')[0] ?? "";
             onMessage(data.As(data.Data.Data));
         });
-
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-        return SubscribePublicAsync(symbols, false, handler, ct);
+        return SubscribePublicAsync(PartialDepthStreamTopics(symbols, levels, updateInterval), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(
@@ -297,13 +290,25 @@ internal partial class BinanceFuturesSocketClientUsd
         Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamOrderBookDepth>>>(data =>
             onMessage(data.As(data.Data.Data)));
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-        return SubscribePublicAsync(symbols, false, handler, ct);
+        return SubscribePublicAsync(DiffDepthStreamTopics(symbols, updateInterval), false, handler, ct);
+    }
+
+    internal static string[] PartialDepthStreamTopics(IEnumerable<string> symbols, int levels, int? updateInterval)
+    {
+        levels.ValidateIntValues(nameof(levels), 5, 10, 20);
+        return DepthStreamTopics(symbols, $"@depth{levels}", updateInterval);
+    }
+
+    internal static string[] DiffDepthStreamTopics(IEnumerable<string> symbols, int? updateInterval)
+        => DepthStreamTopics(symbols, "@depth", updateInterval);
+
+    private static string[] DepthStreamTopics(IEnumerable<string> symbols, string suffix, int? updateInterval)
+    {
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 500);
+        var updateSpeed = updateInterval.HasValue ? $"@{updateInterval.Value}ms" : string.Empty;
+        return SymbolStreamTopics(symbols, suffix + updateSpeed);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToCompositeIndexesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamCompositeIndex>> onMessage, CancellationToken ct = default)

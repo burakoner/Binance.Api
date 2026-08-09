@@ -1156,8 +1156,8 @@ var futures_520 = await ws.UsdFutures.SubscribeToBookTickersAsync((data) => { })
 var futures_521 = await ws.UsdFutures.SubscribeToLiquidationsAsync("---SYMBOL---", (data) => { });
 var futures_522 = await ws.UsdFutures.SubscribeToLiquidationsAsync(["---SYMBOL---"], (data) => { });
 var futures_523 = await ws.UsdFutures.SubscribeToLiquidationsAsync((data) => { _ = data.Data.SymbolType; _ = data.Data.Order.Symbol; });
-var futures_524 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync("---SYMBOL---", 20, 100, (data) => { });
-var futures_525 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync(["---SYMBOL---"], 20, 250, (data) => { });
+var futures_524 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync("---SYMBOL---", 20, 100, (data) => { _ = data.Data.Pair; _ = data.Data.SymbolType; });
+var futures_525 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync(["---SYMBOL---"], 20, null, (data) => { });
 var futures_526 = await ws.UsdFutures.SubscribeToOrderBooksAsync("---SYMBOL---", 500, (data) => { });
 var futures_527 = await ws.UsdFutures.SubscribeToOrderBooksAsync(["---SYMBOL---"], null, (data) => { });
 var futures_528 = await ws.UsdFutures.SubscribeToCompositeIndexesAsync("---SYMBOL---", (data) => { });
@@ -1195,6 +1195,10 @@ var coinFutures_510 = await ws.CoinFutures.SubscribeToSymbolUpdatesAsync((data) 
 var coinFutures_511 = await ws.CoinFutures.SubscribeToLiquidationUpdatesAsync("---SYMBOL---", (data) => { });
 var coinFutures_512 = await ws.CoinFutures.SubscribeToLiquidationUpdatesAsync(["---SYMBOL---"], (data) => { });
 var coinFutures_513 = await ws.CoinFutures.SubscribeToAllLiquidationUpdatesAsync((data) => { _ = data.Data.SymbolType; _ = data.Data.Order.Pair; });
+var coinFutures_514 = await ws.CoinFutures.SubscribeToPartialOrderBookUpdatesAsync("---SYMBOL---", 20, 100, (data) => { _ = data.Data.Pair; _ = data.Data.SymbolType; });
+var coinFutures_515 = await ws.CoinFutures.SubscribeToPartialOrderBookUpdatesAsync(["---SYMBOL---"], 20, null, (data) => { });
+var coinFutures_516 = await ws.CoinFutures.SubscribeToOrderBookUpdatesAsync("---SYMBOL---", 500, (data) => { });
+var coinFutures_517 = await ws.CoinFutures.SubscribeToOrderBookUpdatesAsync(["---SYMBOL---"], null, (data) => { });
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });
