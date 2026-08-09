@@ -21,7 +21,7 @@ internal record BinanceFuturesStreamKlineWrapper : BinanceFuturesStreamEvent
 /// <summary>
 /// The kline data
 /// </summary>
-public record BinanceFuturesStreamKline
+public record BinanceFuturesStreamKline : BinanceFuturesStreamEvent
 {
     /// <summary>
     /// The open time of this candlestick
@@ -29,9 +29,11 @@ public record BinanceFuturesStreamKline
     [JsonProperty("t"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime OpenTime { get; set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// The base asset volume traded during this candlestick
+    /// </summary>
     [JsonProperty("v")]
-    public decimal Volume { get; set; }
+    public decimal BaseAssetVolume { get; set; }
 
     /// <summary>
     /// The close time of this candlestick
@@ -39,9 +41,11 @@ public record BinanceFuturesStreamKline
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime CloseTime { get; set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// The quote asset volume traded during this candlestick
+    /// </summary>
     [JsonProperty("q")]
-    public decimal QuoteVolume { get; set; }
+    public decimal QuoteAssetVolume { get; set; }
 
     /// <summary>
     /// The symbol this candlestick is for
@@ -95,19 +99,25 @@ public record BinanceFuturesStreamKline
     /// The amount of trades in this candlestick
     /// </summary>
     [JsonProperty("n")]
-    public int TradeCount { get; set; }
+    public long TradeCount { get; set; }
 
     /// <summary>
     /// The taker buy base asset volume of this candlestick
     /// </summary>
     [JsonProperty("V")]
-    public decimal TakerBuyBaseVolume { get; set; }
+    public decimal TakerBuyBaseAssetVolume { get; set; }
 
     /// <summary>
     /// The taker buy quote asset volume of this candlestick
     /// </summary>
     [JsonProperty("Q")]
-    public decimal TakerBuyQuoteVolume { get; set; }
+    public decimal TakerBuyQuoteAssetVolume { get; set; }
+
+    /// <summary>
+    /// Ignore
+    /// </summary>
+    [JsonProperty("B")]
+    public decimal Ignore { get; set; }
 
     /// <summary>
     /// Boolean indicating whether this candlestick is closed

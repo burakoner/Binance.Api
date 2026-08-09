@@ -80,8 +80,9 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamAllMarketMarkPrice>>> onMessage, int? updateInterval = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// Subscribes to the COIN-M candlestick update stream for the provided symbol. Volumes use contract and base-asset units.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this COIN-M callback only for COIN-M symbols.</para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="interval">The interval of the candlesticks</param>
@@ -91,8 +92,9 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamCoinKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbol and intervals
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// Subscribes to the COIN-M candlestick update stream for the provided symbol and intervals. Volumes use contract and base-asset units.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this COIN-M callback only for COIN-M symbols.</para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="intervals">The intervals of the candlesticks</param>
@@ -102,8 +104,9 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamCoinKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// Subscribes to the COIN-M candlestick update stream for the provided symbols. Volumes use contract and base-asset units.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this COIN-M callback only for COIN-M symbols.</para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="interval">The interval of the candlesticks</param>
@@ -113,8 +116,9 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamCoinKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbols and intervals
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// Subscribes to the COIN-M candlestick update stream for the provided symbols and intervals. Volumes use contract and base-asset units.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this COIN-M callback only for COIN-M symbols.</para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="intervals">The intervals of the candlesticks</param>

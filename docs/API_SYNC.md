@@ -1189,7 +1189,27 @@ Three deterministic socket-address/topic tests prove the Market, Public, and Pri
 1. Slice 94: audit the individual USDⓈ-M and COIN-M `<symbol>@kline_<interval>` family, including product-safe volume semantics, int64 counters, exact topics, models, examples, and deterministic tests.
 2. Slice 95: audit continuous-contract kline streams separately, retaining outer pair/contract identity and product-specific inner values.
 3. Re-rank index-price and mark-price kline candidates after Slice 95.
-4. Perform Backward Review 22 no later than Slice 97, the fourth implementation slice after Review 21.
+4. Perform Backward Review 22 immediately after Slice 96 at the latest and before any Slice 97 implementation.
+
+## Slice 94: current standard USDⓈ-M and COIN-M kline streams
+
+The individual-symbol `<symbol>@kline_<interval>` operations were compared field by field against the live USDⓈ-M Market and COIN-M WebSocket Stream catalogs, the effective UM/CM integration notice, the current routed-connection rules, and official generated Python connector HEAD `d9be6628`. Both products use the exact lowercase topic, publish every 250 milliseconds when a current kline exists, and support `1m/3m/5m/15m/30m/1h/2h/4h/6h/8h/12h/1d/3d/1w/1M`; neither current stream supports `1s`. USDⓈ-M remains on the routed Market channel and COIN-M remains on `dstream`. No production Binance request or WebSocket connection was opened.
+
+The complete event is outer `e/E/s/k` plus nested `t/T/s/i/f/L/o/c/h/l/v/n/x/q/V/Q/B`. The previous callbacks discarded outer event type and event time by returning only `k`; both product models now inherit the Futures event contract and the handlers copy current outer `e/E` values onto the returned kline. The documented ignore field `B` is retained, and `n` is now int64 rather than overflowing above `int.MaxValue`.
+
+Volume meanings are product-dependent. USDⓈ-M defines `v/q/V/Q` as base-asset volume, quote-asset volume, taker-buy base-asset volume, and taker-buy quote-asset volume. COIN-M defines them as contract volume, base-asset volume, taker-buy contract volume, and taker-buy base-asset volume. The public properties now state those exact units; the misleading historical `Volume`, `QuoteVolume`, `TakerBuyBaseVolume`, and `TakerBuyQuoteVolume` names were removed rather than retained as aliases. This is an intentional public breaking correction.
+
+The integration notice says either `fstream` or `dstream` can subscribe to either product after migration, but this event contains no `st` product discriminator. The wrapper therefore cannot safely infer volume units from the payload. Public documentation explicitly requires callers to use the USDⓈ-M callback/model for USDⓈ-M symbols and the COIN-M callback/model for COIN-M symbols even though Binance transport can carry either. Inventing symbol-pattern inference would be unsafe.
+
+The USDⓈ-M public overloads also exposed a `premiumIndex` boolean that generated an undocumented `p<SYMBOL>@kline_<interval>` stream. Current catalogs and generated connectors contain no premium-index WebSocket stream; premium-index kline remains a REST operation. The switch and generated topic were removed under the current-contract-only policy. Shared topic validation now rejects null, empty, or blank symbol/interval collections, unsupported and one-second intervals, and more than the documented 1024 streams per connection. README and console examples demonstrate product-specific volume units and now include the four standard COIN-M overloads.
+
+Five deterministic regressions cover both products' exact topics and validation, dated COIN-M symbols, complete combined payloads, outer event propagation, decimal precision, timestamps, near-int64-limit trade IDs, above-int32 trade counts, interval conversion, product-specific volumes, ignore fields, stale-property absence, and removal of the undocumented premium switch. All 319 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings.
+
+### Revised next order
+
+1. Slice 95: audit USDⓈ-M and COIN-M continuous-contract kline streams, preserving outer `ps/ct`, nested event data, and product-specific volumes without inheriting standard-symbol assumptions.
+2. Re-rank COIN-M index-price and mark-price kline streams after Slice 95.
+3. Perform Backward Review 22 immediately after Slice 96 at the latest and before any Slice 97 implementation.
 
 ## Review log
 
@@ -1309,3 +1329,4 @@ Three deterministic socket-address/topic tests prove the Market, Public, and Pri
 | 92 | Complete | Removal of unsupported USDⓈ-M and COIN-M raw trade stream contracts | Complete live Futures stream catalogs, current derivatives changelog, connector HEAD `a0c61d1`, public-surface removal test, 312 deterministic tests, forced full multi-target rebuild |
 | Review 21 | Complete | Backward review of merged mini/full ticker and unsupported raw-trade removal; USDⓈ-M private-routing and kline semantic-risk re-ranking | `8db4049..b9c8d32` diff review, live USDⓈ-M and COIN-M stream catalogs, integration notice and changelog, connector HEAD `a0c61d1`, exact wire-tag reconciliation, 16 targeted and 312 complete tests, forced full multi-target rebuild |
 | 93 | Complete | Current USDⓈ-M private listen-key stream route and reconnect-safe subscription state | Live User Data Streams catalog and route-migration notice, 2026-04-23 decommissioning evidence, connector HEAD `d9be6628`, ApiSharp 4.5.1 reconnect-source audit, private-address/listen-key tests, 314 deterministic tests, forced full multi-target rebuild |
+| 94 | Complete | Current standard USDⓈ-M and COIN-M individual-symbol kline stream contracts | Live routed USDⓈ-M and COIN-M stream catalogs, integration notice, connector HEAD `d9be6628`, topic/full-payload/product-volume/public-surface tests, 319 deterministic tests, forced full multi-target rebuild |

@@ -1138,7 +1138,7 @@ var futures_502 = await ws.UsdFutures.SubscribeToAggregatedTradesAsync(["---SYMB
 var futures_503 = await ws.UsdFutures.SubscribeToMarkPricesAsync("---SYMBOL---", 1000, (data) => { });
 var futures_504 = await ws.UsdFutures.SubscribeToMarkPricesAsync(["---SYMBOL---"], 3000, (data) => { });
 var futures_505 = await ws.UsdFutures.SubscribeToMarkPricesAsync(null, (data) => { });
-var futures_506 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", BinanceKlineInterval.FourHours, (data) => { });
+var futures_506 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", BinanceKlineInterval.FourHours, (data) => { _ = data.Data.BaseAssetVolume; _ = data.Data.QuoteAssetVolume; });
 var futures_507 = await ws.UsdFutures.SubscribeToKlinesAsync("---SYMBOL---", [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
 var futures_508 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], BinanceKlineInterval.FourHours, (data) => { });
 var futures_509 = await ws.UsdFutures.SubscribeToKlinesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
@@ -1204,6 +1204,10 @@ var coinFutures_520 = await ws.CoinFutures.SubscribeToAllMiniTickerUpdatesAsync(
 var coinFutures_521 = await ws.CoinFutures.SubscribeToTickerUpdatesAsync("---SYMBOL---", (data) => { _ = data.Data.BaseAssetVolume; _ = data.Data.ContractVolume; });
 var coinFutures_522 = await ws.CoinFutures.SubscribeToTickerUpdatesAsync(["---SYMBOL---"], (data) => { });
 var coinFutures_523 = await ws.CoinFutures.SubscribeToAllTickerUpdatesAsync((data) => { foreach (var ticker in data.Data) { _ = ticker.SymbolType; _ = ticker.BaseAssetVolume; } });
+var coinFutures_524 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync("---SYMBOL---", BinanceKlineInterval.FourHours, (data) => { _ = data.Data.ContractVolume; _ = data.Data.BaseAssetVolume; });
+var coinFutures_525 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync("---SYMBOL---", [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
+var coinFutures_526 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync(["---SYMBOL---"], BinanceKlineInterval.FourHours, (data) => { });
+var coinFutures_527 = await ws.CoinFutures.SubscribeToKlineUpdatesAsync(["---SYMBOL---"], [BinanceKlineInterval.FourHours, BinanceKlineInterval.OneDay], (data) => { });
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });

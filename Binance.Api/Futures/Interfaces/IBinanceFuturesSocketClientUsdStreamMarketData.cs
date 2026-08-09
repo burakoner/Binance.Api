@@ -58,52 +58,52 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(int? updateInterval, Action<WebSocketDataEvent<List<BinanceFuturesStreamAllMarketMarkPrice>>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbol
+    /// Subscribes to the USDⓈ-M candlestick update stream for the provided symbol. Volumes use base-asset and quote-asset units.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this USDⓈ-M callback only for USDⓈ-M symbols.</para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="interval">The interval of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="premiumIndex">Whether you want to subscribe to premium index k-lines</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, bool premiumIndex = false, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbol and intervals
+    /// Subscribes to the USDⓈ-M candlestick update stream for the provided symbol and intervals. Volumes use base-asset and quote-asset units.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this USDⓈ-M callback only for USDⓈ-M symbols.</para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="intervals">The intervals of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="premiumIndex">Whether you want to subscribe to premium index k-lines</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(string symbol, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, bool premiumIndex = false, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(string symbol, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbols
+    /// Subscribes to the USDⓈ-M candlestick update stream for the provided symbols. Volumes use base-asset and quote-asset units.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this USDⓈ-M callback only for USDⓈ-M symbols.</para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
     /// <param name="interval">The interval of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="premiumIndex">Whether you want to subscribe to premium index k-lines</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, bool premiumIndex = false, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the candlestick update stream for the provided symbols and intervals
+    /// Subscribes to the USDⓈ-M candlestick update stream for the provided symbols and intervals. Volumes use base-asset and quote-asset units.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#klinecandlestick-streams" /></para>
+    /// <para>The payload has no product discriminator; use this USDⓈ-M callback only for USDⓈ-M symbols.</para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
     /// <param name="intervals">The intervals of the candlesticks</param>
     /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="premiumIndex">Whether you want to subscribe to premium index k-lines</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, bool premiumIndex = false, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the continuous contract candlestick update stream for the provided pair

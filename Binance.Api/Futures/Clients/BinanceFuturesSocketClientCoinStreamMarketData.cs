@@ -158,14 +158,22 @@ internal partial class BinanceFuturesSocketClientCoin
         Action<WebSocketDataEvent<BinanceFuturesStreamCoinKline>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamCoinKlineWrapper>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Kline));
+            onMessage(data.As(StandardKline(data.Data.Data)));
         });
 
-        var topics = symbols.SelectMany(a => intervals.Select(i => a.ToLower(BinanceConstants.CI) + "@kline_" + MapConverter.GetString(i))).ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(KlineStreamTopics(symbols, intervals), false, handler, ct);
+    }
+
+    internal static string[] KlineStreamTopics(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals)
+        => BinanceFuturesStreamValidation.KlineStreamTopics(symbols, intervals);
+
+    internal static BinanceFuturesStreamCoinKline StandardKline(BinanceFuturesStreamCoinKlineWrapper update)
+    {
+        update.Kline.Event = update.Event;
+        update.Kline.EventTime = update.EventTime;
+        return update.Kline;
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlineUpdatesAsync(

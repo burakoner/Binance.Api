@@ -21,7 +21,7 @@ internal record BinanceFuturesStreamCoinKlineWrapper : BinanceFuturesStreamEvent
 /// <summary>
 /// The kline data
 /// </summary>
-public record BinanceFuturesStreamCoinKline
+public record BinanceFuturesStreamCoinKline : BinanceFuturesStreamEvent
 {
     /// <summary>
     /// The open time of this candlestick
@@ -54,10 +54,10 @@ public record BinanceFuturesStreamCoinKline
     public decimal ClosePrice { get; set; }
 
     /// <summary>
-    /// The volume traded during this candlestick
+    /// The base asset volume traded during this candlestick
     /// </summary>
     [JsonProperty("q")]
-    public decimal Volume { get; set; }
+    public decimal BaseAssetVolume { get; set; }
 
     /// <summary>
     /// The close time of this candlestick
@@ -66,28 +66,28 @@ public record BinanceFuturesStreamCoinKline
     public DateTime CloseTime { get; set; }
 
     /// <summary>
-    /// The volume traded during this candlestick in the asset form
+    /// The contract volume traded during this candlestick
     /// </summary>
     [JsonProperty("v")]
-    public decimal QuoteVolume { get; set; }
+    public decimal ContractVolume { get; set; }
 
     /// <summary>
     /// The amount of trades in this candlestick
     /// </summary>
     [JsonProperty("n")]
-    public int TradeCount { get; set; }
+    public long TradeCount { get; set; }
 
     /// <summary>
     /// Taker buy base asset volume
     /// </summary>
     [JsonProperty("Q")]
-    public decimal TakerBuyBaseVolume { get; set; }
+    public decimal TakerBuyBaseAssetVolume { get; set; }
 
     /// <summary>
-    /// Taker buy quote asset volume
+    /// Taker buy contract volume
     /// </summary>
     [JsonProperty("V")]
-    public decimal TakerBuyQuoteVolume { get; set; }
+    public decimal TakerBuyContractVolume { get; set; }
 
     /// <summary>
     /// The symbol this candlestick is for
@@ -98,7 +98,7 @@ public record BinanceFuturesStreamCoinKline
     /// <summary>
     /// The interval of this candlestick
     /// </summary>
-    [JsonProperty("i")]
+    [JsonProperty("i"), JsonConverter(typeof(MapConverter))]
     public BinanceKlineInterval Interval { get; set; }
 
     /// <summary>
@@ -112,6 +112,12 @@ public record BinanceFuturesStreamCoinKline
     /// </summary>
     [JsonProperty("L")]
     public long LastTrade { get; set; }
+
+    /// <summary>
+    /// Ignore
+    /// </summary>
+    [JsonProperty("B")]
+    public decimal Ignore { get; set; }
 
     /// <summary>
     /// Boolean indicating whether this candlestick is closed

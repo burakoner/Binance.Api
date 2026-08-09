@@ -89,40 +89,44 @@ internal partial class BinanceFuturesSocketClientUsd
         string symbol,
         BinanceKlineInterval interval,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
-        bool premiumIndex = false,
         CancellationToken ct = default)
-        => SubscribeToKlinesAsync([symbol], interval, onMessage, premiumIndex, ct);
+        => SubscribeToKlinesAsync([symbol], interval, onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         string symbol,
         IEnumerable<BinanceKlineInterval> intervals,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
-        bool premiumIndex = false,
         CancellationToken ct = default)
-        => SubscribeToKlinesAsync([symbol], intervals, onMessage, premiumIndex, ct);
+        => SubscribeToKlinesAsync([symbol], intervals, onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         IEnumerable<string> symbols,
         BinanceKlineInterval interval,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
-        bool premiumIndex = false,
         CancellationToken ct = default)
-        => SubscribeToKlinesAsync(symbols, [interval], onMessage, premiumIndex, ct);
+        => SubscribeToKlinesAsync(symbols, [interval], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(
         IEnumerable<string> symbols,
         IEnumerable<BinanceKlineInterval> intervals,
         Action<WebSocketDataEvent<BinanceFuturesStreamKline>> onMessage,
-        bool premiumIndex = false,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamKlineWrapper>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Kline));
+            onMessage(data.As(StandardKline(data.Data.Data)));
         });
-        symbols = symbols.SelectMany(a => intervals.Select(i => (premiumIndex ? "p" + a.ToUpper(BinanceConstants.CI) : a.ToLower(BinanceConstants.CI)) + "@kline_" + MapConverter.GetString(i))).ToArray();
-        return SubscribeMarketAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(KlineStreamTopics(symbols, intervals), false, handler, ct);
+    }
+
+    internal static string[] KlineStreamTopics(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals)
+        => BinanceFuturesStreamValidation.KlineStreamTopics(symbols, intervals);
+
+    internal static BinanceFuturesStreamKline StandardKline(BinanceFuturesStreamKlineWrapper update)
+    {
+        update.Kline.Event = update.Event;
+        update.Kline.EventTime = update.EventTime;
+        return update.Kline;
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(string pair,
