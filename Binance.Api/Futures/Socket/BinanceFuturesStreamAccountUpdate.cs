@@ -6,6 +6,12 @@ namespace Binance.Api.Futures;
 public record BinanceFuturesStreamAccountUpdate: BinanceFuturesStreamEvent
 {
     /// <summary>
+    /// The account alias. Only provided by COIN-M Futures
+    /// </summary>
+    [JsonProperty("i")]
+    public string? AccountAlias { get; set; }
+
+    /// <summary>
     /// The update data
     /// </summary>
     [JsonProperty("a")]
@@ -28,6 +34,12 @@ public record BinanceFuturesStreamAccountUpdate: BinanceFuturesStreamEvent
 /// </summary>
 public record BinanceFuturesStreamAccountUpdateData
 {
+    /// <summary>
+    /// The symbol associated with the funding fee event
+    /// </summary>
+    [JsonProperty("S")]
+    public string? Symbol { get; set; }
+
     /// <summary>
     /// Account update reason type
     /// </summary>
