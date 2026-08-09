@@ -75,30 +75,60 @@ internal partial class BinanceFuturesSocketClientCoin
         Action<WebSocketDataEvent<BinanceFuturesCoinStreamMarkPrice>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesCoinStreamMarkPrice>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")).ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(MarkPriceStreamTopics(symbols, updateInterval), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(
-        Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesStreamAllMarketMarkPrice>>> onMessage,
         int? updateInterval = null,
         CancellationToken ct = default)
     {
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesCoinStreamMarkPrice>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamAllMarketMarkPrice>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], false, handler, ct);
+        return SubscribeAsync([MarkPriceAllMarketStreamTopic(updateInterval)], false, handler, ct);
+    }
+
+    internal static string[] MarkPriceStreamTopics(IEnumerable<string> symbols, int? updateInterval)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        var updateSpeed = MarkPriceUpdateSpeed(updateInterval);
+        return symbolList
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@markPrice" + updateSpeed)
+            .ToArray();
+    }
+
+    internal static string MarkPricePairStreamTopic(string pair, int? updateInterval)
+    {
+        if (pair == null)
+            throw new ArgumentNullException(nameof(pair));
+        if (string.IsNullOrWhiteSpace(pair))
+            throw new ArgumentException("Pair cannot be null or blank.", nameof(pair));
+
+        return pair.ToLower(BinanceConstants.CI) + "@markPrice" + MarkPriceUpdateSpeed(updateInterval);
+    }
+
+    internal static string MarkPriceAllMarketStreamTopic(int? updateInterval)
+        => "!markPrice@arr" + MarkPriceUpdateSpeed(updateInterval);
+
+    private static string MarkPriceUpdateSpeed(int? updateInterval)
+    {
+        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
+        return updateInterval == 1000 ? "@1s" : string.Empty;
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlineUpdatesAsync(
@@ -171,13 +201,11 @@ internal partial class BinanceFuturesSocketClientCoin
         Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage,
         CancellationToken ct = default)
     {
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesCoinStreamMarkPrice>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync([pair + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")], false, handler, ct);
+        return SubscribeAsync([MarkPricePairStreamTopic(pair, updateInterval)], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(

@@ -24,6 +24,12 @@ public record BinanceFuturesStreamMarkPrice: BinanceFuturesStreamEvent
     public decimal EstimatedSettlePrice { get; set; }
 
     /// <summary>
+    /// Index price
+    /// </summary>
+    [JsonProperty("i")]
+    public decimal IndexPrice { get; set; }
+
+    /// <summary>
     /// Next Funding Rate
     /// </summary>
     [JsonProperty("r")]
@@ -41,12 +47,6 @@ public record BinanceFuturesStreamMarkPrice: BinanceFuturesStreamEvent
 /// </summary>
 public record BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
 {
-    /// <summary>
-    /// Index price
-    /// </summary>
-    [JsonProperty("i")]
-    public decimal IndexPrice { get; set; }
-
     /// <summary>
     /// Mark price moving average
     /// </summary>
@@ -66,14 +66,26 @@ public record BinanceFuturesUsdtStreamMarkPrice : BinanceFuturesStreamMarkPrice
 public record BinanceFuturesCoinStreamMarkPrice : BinanceFuturesStreamMarkPrice
 {
     /// <summary>
-    /// Mark Price
+    /// Symbol type after UM/CM integration: 1 = UM, 2 = CM
     /// </summary>
-    [JsonProperty("P")]
-    public new decimal EstimatedSettlePrice { get; set; }
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
+}
+
+/// <summary>
+/// Cross-host all-market mark-price update
+/// </summary>
+public record BinanceFuturesStreamAllMarketMarkPrice : BinanceFuturesStreamMarkPrice
+{
+    /// <summary>
+    /// Mark price moving average
+    /// </summary>
+    [JsonProperty("ap")]
+    public decimal MarkPriceMovingAverage { get; set; }
 
     /// <summary>
-    /// Mark Price
+    /// Symbol type after UM/CM integration: 1 = UM, 2 = CM
     /// </summary>
-    [JsonProperty("i")]
-    public decimal IndexPrice { get; set; }
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
 }

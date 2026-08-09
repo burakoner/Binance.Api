@@ -48,8 +48,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPriceUpdatesAsync(IEnumerable<string> pairs, int? updateInterval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the Mark price update stream for a single symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-Stream" /></para>
+    /// Subscribes to the mark-price update stream for a single symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#mark-price-stream" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
@@ -59,8 +59,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(string symbol, int? updateInterval, Action<WebSocketDataEvent<BinanceFuturesCoinStreamMarkPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the Mark price update stream for a list of symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-of-All-Symbols-of-a-Pair" /></para>
+    /// Subscribes to the mark-price update stream for a list of symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#mark-price-stream" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
@@ -70,14 +70,14 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(IEnumerable<string> symbols, int? updateInterval, Action<WebSocketDataEvent<BinanceFuturesCoinStreamMarkPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    ///Subscribe to the Mark price update stream for all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-of-All-Symbols-of-a-Pair" /></para>
+    /// Subscribes to the all-market mark-price update stream
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#mark-price-stream-for-all-market" /></para>
     /// </summary>
     /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage, int? updateInterval = null, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamAllMarketMarkPrice>>> onMessage, int? updateInterval = null, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribes to the candlestick update stream for the provided symbol
@@ -159,12 +159,12 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexKlineUpdatesAsync(string pair, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceFuturesStreamIndexKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Mark Price of All Symbols of a Pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Mark-Price-of-All-Symbols-of-a-Pair" /></para>
+    /// Subscribes to mark-price updates for all symbols of a pair
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#mark-price-of-all-symbols-of-a-pair" /></para>
     /// </summary>
-    /// <param name="pair">Pair</param>
+    /// <param name="pair">The pair, for example `BTCUSD`</param>
     /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="updateInterval">Update Speed</param>
+    /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>
     /// <returns></returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMarkPriceUpdatesOfAllSymbolsOfPairAsync(string pair, int? updateInterval, Action<WebSocketDataEvent<List<BinanceFuturesCoinStreamMarkPrice>>> onMessage, CancellationToken ct = default);

@@ -45,10 +45,10 @@ internal partial class BinanceFuturesSocketClientUsd
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
         int? updateInterval,
-        Action<WebSocketDataEvent<List<BinanceFuturesUsdtStreamMarkPrice>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesStreamAllMarketMarkPrice>>> onMessage,
         CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesUsdtStreamMarkPrice>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamAllMarketMarkPrice>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
