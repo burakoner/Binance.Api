@@ -444,14 +444,17 @@ internal class Program
         var options_207 = await api.Options.GetRecentBlockTradesAsync("---SYMBOL---");
         var options_208 = await api.Options.GetIndexPriceAsync("---UNDERLYING---");
         var options_209 = await api.Options.GetKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay);
-        var options_210 = await api.Options.GetHistoricalTradesAsync("---SYMBOL---");
+        // UNDOCUMENTED: /eapi/v1/historicalTrades is absent from the current Options catalog and official connector. The public wrapper remains pending explicit lifecycle evidence.
+        // var options_210 = await api.Options.GetHistoricalTradesAsync("---SYMBOL---");
         var options_211 = await api.Options.GetMarkPriceAsync("---SYMBOL---");
 
         // European Options -> Account Methods (PRIVATE)
-        var options_301 = await api.Options.GetAccountAsync();
+        // UNDOCUMENTED: /eapi/v1/account is absent from the current Options catalog and official connector. Use GetMarginAccountAsync for the current documented margin-account contract.
+        // var options_301 = await api.Options.GetAccountAsync();
         var options_302 = await api.Options.GetAccountFundingFlowAsync("---CURRENCY---");
-        var options_303 = await api.Options.GetTransactionHistoryDownloadIdAsync();
-        var options_304 = await api.Options.GetTransactionHistoryDownloadLinkAsync(1_000_001);
+        // UNDOCUMENTED: /eapi/v1/income/asyn and /eapi/v1/income/asyn/id are absent from the current Options catalog and official connector. Public wrappers remain pending explicit lifecycle evidence.
+        // var options_303 = await api.Options.GetTransactionHistoryDownloadIdAsync();
+        // var options_304 = await api.Options.GetTransactionHistoryDownloadLinkAsync(1_000_001);
         var options_305 = await api.Options.GetMarginAccountAsync();
 
         // European Options -> Trade Methods (PRIVATE)
