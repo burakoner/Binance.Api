@@ -167,7 +167,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         };
     }
 
-    internal static BinanceSocketQuery CreateUnsubscribeRequest(int? subscriptionId)
+    internal static BinanceSocketQuery CreateUnsubscribeRequest(long? subscriptionId)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("subscriptionId", subscriptionId);
@@ -182,7 +182,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
     internal static CallResult<BinanceMarginUserDataStreamStatus> ParseSubscriptionResponse(JToken message)
     {
         var status = message["status"]?.Value<int>();
-        var subscriptionId = message["result"]?["subscriptionId"]?.Value<int>();
+        var subscriptionId = message["result"]?["subscriptionId"]?.Value<long>();
         var expirationTime = message["result"]?["expirationTime"]?.Value<long>();
         if (status == 200 && subscriptionId.HasValue && expirationTime.HasValue)
             return new CallResult<BinanceMarginUserDataStreamStatus>(
@@ -218,7 +218,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
         Action<WebSocketDataEvent<BinanceMarginStreamUpdate>>? onUserDataStreamTerminated)
     {
         var envelope = JToken.Parse(data.Data);
-        var subscriptionId = envelope["subscriptionId"]?.Value<int>();
+        var subscriptionId = envelope["subscriptionId"]?.Value<long>();
         var eventToken = envelope["event"];
         var eventType = eventToken?["e"]?.Value<string>();
         if (subscriptionId == null || eventToken == null || eventType == null)
@@ -286,7 +286,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
     {
         return request is BinanceMarginUserDataStreamRequest marginRequest
             && marginRequest.SubscriptionId.HasValue
-            && message["subscriptionId"]?.Value<int>() == marginRequest.SubscriptionId.Value
+            && message["subscriptionId"]?.Value<long>() == marginRequest.SubscriptionId.Value
             && message["event"] != null;
     }
 
@@ -310,7 +310,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
 
     private void DispatchEvent<T>(
         JToken eventToken,
-        int subscriptionId,
+        long subscriptionId,
         WebSocketDataEvent<string> source,
         Action<WebSocketDataEvent<T>>? handler,
         string eventName,
@@ -375,7 +375,7 @@ internal class BinanceMarginSocketClient : WebSocketApiClient, IBinanceMarginSoc
 
     private async Task<CallResult<bool>> SendUnsubscribeRequestAsync(
         WebSocketConnection connection,
-        int? subscriptionId,
+        long? subscriptionId,
         CancellationToken ct = default)
     {
         var guardResult = await Root.ServerRateLimitGuard.WaitAsync(ct).ConfigureAwait(false);

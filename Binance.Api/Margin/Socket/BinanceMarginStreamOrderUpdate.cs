@@ -95,9 +95,9 @@ public record BinanceMarginStreamOrderUpdate : BinanceMarginStreamUpdate
     [JsonProperty("t")]
     public long TradeId { get; set; }
 
-    /// <summary>Execution identifier.</summary>
+    /// <summary>The <c>I</c> field, which Binance documents as ignored.</summary>
     [JsonProperty("I")]
-    public long ExecutionId { get; set; }
+    public long IgnoredValueI { get; set; }
 
     /// <summary>Whether the order is on the order book.</summary>
     [JsonProperty("w")]

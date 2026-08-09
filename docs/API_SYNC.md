@@ -1368,6 +1368,25 @@ Two current user-data contract defects remain. First, every local Margin subscri
 
 All 59 Margin-focused tests and all 330 deterministic tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three known warnings. The measurable minimum after this inventory is seven turns and 5-16.5 active hours; it still excludes the unknown FIX/SBE implementation program and any implementation work discovered by the remaining inventories.
 
+## Slice 101: Margin listen-token identifier and execution-report semantics
+
+The two bounded defects from Slice 100 were corrected against the live Margin event schema, the shared current Spot WebSocket API user-data subscription contract, and official generated connector HEAD `d9be6628`. The public subscription state, internal request/status state, unsubscribe parameter, subscription-response parsing, envelope parsing, handler matching, and dispatched event state now carry `subscriptionId` as int64 end to end. A server identifier above the int32 boundary is covered through subscribe response, replacement-token state, single-subscription unsubscribe, execution-report routing, and termination-event routing.
+
+Margin `executionReport.I` is now exposed as `IgnoredValueI`, matching the live schema and generated model instead of assigning the false `ExecutionId` meaning. No historical alias was retained. This is an intentional public breaking correction: preserving the old name would continue to advertise unsupported financial semantics.
+
+The execution-report envelope regression now exercises the complete current conditional field family. String-encoded `d/D/j/J/v/A/B/u/U/a` values deserialize into the wrapper's typed int64, timestamp, and decimal properties; `Cs/pl/pL/pY/b/k/uS` retain their documented meanings and precision. The `I` value is also verified beyond the int32 range, and reflection coverage prevents the stale `ExecutionId` property from returning unnoticed.
+
+No REST route, listen-token lifecycle method, callback shape, transport, authentication, risk-data stream, README call site, or console call site changed. Seven exact lifecycle regressions, all 59 Margin-focused tests, and all 330 deterministic tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three known warnings.
+
+### Revised next order
+
+1. Slice 102: refresh the Convert and Algo closing inventories, keeping any confirmed implementation work product-separated and small.
+2. Slices 103-105: refresh USD-M, COIN-M, and Options closing inventories respectively.
+3. Backward Review 24: reconcile Slices 100-105, cross-product public API, documentation, release notes, and the living execution order.
+4. Slice 106: define the separate Spot FIX/SBE architecture and implementation execution contract; do not represent that slice as protocol implementation.
+
+The measurable minimum after this correction is six turns and 4.5-15 active hours. It still excludes the unknown FIX/SBE implementation program and any implementation slices produced by the remaining inventories.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1495,3 +1514,4 @@ All 59 Margin-focused tests and all 330 deterministic tests pass. A forced full 
 | 99 | Complete | Spot JSON user-data `executionReport.eR` expiry reason | Live event schema and official nine-value expiry-reason list, 2026-03-09 announcement effective 2026-03-26, connector HEAD `d9be6628`, exact wire-key and typed-enum regression, 41 Spot and 330 complete tests, forced rebuild |
 | Review 23 | Complete | Backward review of COIN-M price-kline alignment and Spot closing work; external-plan reconciliation | `fc60a22..9104788` diff review, live COIN-M and Spot schemas, Spot changelog and expiry-reason list, connector HEAD `d9be6628`, stale-surface and plan-consistency scans, 7 targeted and 330 complete tests, forced full multi-target rebuild |
 | 100 | Complete | Margin closing inventory across REST, listen-token WebSocket API, trade-data events, and Cross Margin risk data | Live 65-route catalog, changelog through 2026-07-10, current lifecycle guides and event schemas, connector HEAD `d9be6628`, 65/65 normalized REST match, five token events, two risk events, two bounded user-data defects, 59 Margin and 330 complete tests, forced rebuild |
+| 101 | Complete | Margin listen-token int64 subscription identifiers and `executionReport.I` ignored-field semantics | Live Margin event schema, shared current WebSocket API subscription contract, connector HEAD `d9be6628`, above-int32 lifecycle routing, complete conditional string-wire payload, 7 exact lifecycle, 59 Margin, and 330 complete tests, forced rebuild |

@@ -10,7 +10,7 @@ public sealed class BinanceMarginUserDataStreamSubscription
     /// <summary>
     /// Server-assigned subscription identifier. This can change after extension or reconnection.
     /// </summary>
-    public int SubscriptionId => request.SubscriptionId
+    public long SubscriptionId => request.SubscriptionId
         ?? throw new InvalidOperationException("The Margin user data stream subscription has not been confirmed by Binance.");
 
     /// <summary>

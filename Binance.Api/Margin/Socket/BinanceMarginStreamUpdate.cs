@@ -9,5 +9,5 @@ public record BinanceMarginStreamUpdate : BinanceSocketStreamEvent
     /// Server-assigned subscription identifier.
     /// </summary>
     [JsonIgnore]
-    public int SubscriptionId { get; internal set; }
+    public long SubscriptionId { get; internal set; }
 }

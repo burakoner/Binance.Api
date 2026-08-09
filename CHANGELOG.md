@@ -76,6 +76,7 @@
   * Replaced retired Spot listen-key REST and stream operations with signed WebSocket API user data subscriptions, subscription-ID routing, reconnect-safe signing, and current event models
   * Replaced the removed Margin listen-key documentation contract with API-key-issued listen tokens, WebSocket API subscriptions, replacement-token extension, and current Margin event models
   * Added the separate current Cross Margin risk-data listen-key lifecycle and `margin-stream.binance.com` margin-level/liability event stream
+  * Aligned Margin listen-token subscription identifiers with the current int64 WebSocket contract and corrected `executionReport.I` to explicit ignored-field semantics with complete conditional string-wire coverage
   * Aligned Margin order placement and cancellation contracts, including query-based DELETE requests, previously omitted order fields, side-effect-dependent weights, and complete OTO/OTOCO support
   * Enforced the documented GTC requirement for every Margin OTO/OTOCO iceberg leg
   * Added the current Margin manual-liquidation and liquidation-loan query, repayment, and repayment-history contracts
