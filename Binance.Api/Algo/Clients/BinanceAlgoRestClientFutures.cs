@@ -37,14 +37,17 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         BinanceOrderSide side,
         decimal quantity,
         BinanceUrgency urgency,
-        string? clientOrderId = null,
+        string? clientAlgoId = null,
         bool? reduceOnly = null,
         decimal? limitPrice = null,
         BinancePositionSide? positionSide = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdFutures, 36, _.RestOptions.AllowAppendingClientOrderId);
+        ValidateNewFuturesAlgoOrder(symbol, side, quantity, positionSide, reduceOnly);
+        if (urgency is not (BinanceUrgency.Low or BinanceUrgency.Medium or BinanceUrgency.High))
+            throw new ArgumentOutOfRangeException(nameof(urgency), "urgency must be LOW, MEDIUM, or HIGH");
+        clientAlgoId = PrepareClientAlgoId(clientAlgoId);
 
         var parameters = new ParameterCollection()
         {
@@ -54,12 +57,12 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         parameters.AddEnum("side", side);
         parameters.AddEnum("urgency", urgency);
         parameters.AddOptionalEnum("positionSide", positionSide);
-        parameters.AddOptional("clientAlgoId", clientOrderId);
+        parameters.AddOptional("clientAlgoId", clientAlgoId);
         parameters.AddOptional("reduceOnly", reduceOnly);
         parameters.AddOptional("limitPrice", limitPrice);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceAlgoOrderResult>(GetUrl(sapi, v1, "algo/futures/newOrderVp"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
+        return RequestAsync<BinanceAlgoOrderResult>(GetUrl(sapi, v1, "algo/futures/newOrderVp"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 300);
     }
 
     public Task<RestCallResult<BinanceAlgoOrderResult>> PlaceTimeWeightedAveragePriceOrderAsync(
@@ -67,14 +70,17 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         BinanceOrderSide side,
         decimal quantity,
         int duration,
-        string? clientOrderId = null,
+        string? clientAlgoId = null,
         bool? reduceOnly = null,
         decimal? limitPrice = null,
         BinancePositionSide? positionSide = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        clientOrderId = BinanceHelpers.ApplyBrokerId(clientOrderId, BinanceConstants.ClientOrderIdFutures, 36, _.RestOptions.AllowAppendingClientOrderId);
+        ValidateNewFuturesAlgoOrder(symbol, side, quantity, positionSide, reduceOnly);
+        if (duration is < 300 or > 86400)
+            throw new ArgumentOutOfRangeException(nameof(duration), "duration must be between 300 and 86400 seconds");
+        clientAlgoId = PrepareClientAlgoId(clientAlgoId);
 
         var parameters = new ParameterCollection()
         {
@@ -84,12 +90,47 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         };
         parameters.AddEnum("side", side);
         parameters.AddOptionalEnum("positionSide", positionSide);
-        parameters.AddOptional("clientAlgoId", clientOrderId);
+        parameters.AddOptional("clientAlgoId", clientAlgoId);
         parameters.AddOptional("reduceOnly", reduceOnly);
         parameters.AddOptional("limitPrice", limitPrice);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceAlgoOrderResult>(GetUrl(sapi, v1, "algo/futures/newOrderTwap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
+    }
+
+    private static void ValidateNewFuturesAlgoOrder(
+        string symbol,
+        BinanceOrderSide side,
+        decimal quantity,
+        BinancePositionSide? positionSide,
+        bool? reduceOnly)
+    {
+        symbol.ValidateBinanceSymbol();
+        if (side is not (BinanceOrderSide.Buy or BinanceOrderSide.Sell))
+            throw new ArgumentOutOfRangeException(nameof(side), "side must be BUY or SELL");
+        if (quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity), "quantity must be greater than zero");
+        if (positionSide is not null && positionSide is not (BinancePositionSide.Both or BinancePositionSide.Long or BinancePositionSide.Short))
+            throw new ArgumentOutOfRangeException(nameof(positionSide), "positionSide must be BOTH, LONG, or SHORT");
+        if (reduceOnly is not null && (positionSide == BinancePositionSide.Long || positionSide == BinancePositionSide.Short))
+            throw new ArgumentException("reduceOnly cannot be sent in Hedge Mode", nameof(reduceOnly));
+    }
+
+    private string PrepareClientAlgoId(string? clientAlgoId)
+    {
+        if (clientAlgoId is not null && clientAlgoId.Length != 32)
+            throw new ArgumentException("clientAlgoId must contain exactly 32 characters when provided", nameof(clientAlgoId));
+
+        return BinanceHelpers.ApplyBrokerId(clientAlgoId, BinanceConstants.ClientOrderIdFutures, 32, _.RestOptions.AllowAppendingClientOrderId);
+    }
+
+    private int? ValidateReceiveWindow(int? receiveWindow)
+    {
+        var normalizedReceiveWindow = _._.ReceiveWindow(receiveWindow);
+        if (normalizedReceiveWindow > 60000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), "receiveWindow cannot exceed 60000 milliseconds");
+
+        return normalizedReceiveWindow;
     }
 
     public Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoOrderId, int? receiveWindow = null, CancellationToken ct = default)

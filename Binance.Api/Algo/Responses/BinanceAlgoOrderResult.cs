@@ -9,7 +9,7 @@ public record BinanceAlgoOrderResult
     /// Result code
     /// </summary>
     [JsonProperty("code")]
-    public int Code { get; set; }
+    public long Code { get; set; }
 
     /// <summary>
     /// Message
@@ -20,7 +20,7 @@ public record BinanceAlgoOrderResult
     /// <summary>
     /// Successful
     /// </summary>
-    [JsonProperty("msg")]
+    [JsonProperty("success")]
     public bool Success { get; set; }
 
     /// <summary>

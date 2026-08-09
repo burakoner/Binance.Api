@@ -286,14 +286,23 @@ The inventory already exposes contract work that route counts hide. The wrapper 
 
 All 11 public Algo interface links still use obsolete noncanonical documentation paths, and the test project has no Algo request/model coverage. Parameter location, required/optional state, numeric bounds, time ranges, pagination, receive-window handling, response fields, and link replacement remain endpoint-level work. The official connector sends the current operations through query parameters, but that generated behavior will not override a canonical endpoint page without checking the page itself, following the same source-conflict rule used for Convert.
 
+## Slice 38: Futures Algo VP and TWAP new orders
+
+`POST /sapi/v1/algo/futures/newOrderVp` and `POST /sapi/v1/algo/futures/newOrderTwap` were compared against the live canonical Future Algo page, the current generated connector and response models, and the connector's 2026-07-13 changelog. Both remain signed TRADE operations whose business parameters are form-encoded in the request body. The live page's Request Body schemas and form-encoded curl examples conflict with the generated connector's query placement; the endpoint-specific live contract wins, so the wrapper retains body placement while the shared authentication layer places only the signature in the query.
+
+VP placement now uses the documented UID weight 300 instead of 3000; TWAP remains UID weight 3000. Both operations validate the required symbol, positive quantity, BUY/SELL side, BOTH/LONG/SHORT position side, and the 60000-millisecond receive-window ceiling, including configured defaults. VP restricts urgency to LOW, MEDIUM, or HIGH. TWAP enforces the documented duration range of 300 through 86400 seconds. Supplying `reduceOnly` with a LONG or SHORT position side is rejected because the field cannot be sent in Hedge Mode.
+
+All supplied `clientAlgoId` values must now contain exactly 32 characters. An omitted value is still generated with the broker prefix, but the generated value now respects the same exact 32-character contract instead of the obsolete 36-character order-ID ceiling. The shared placement result now reads the boolean `success` field instead of incorrectly deserializing it from `msg`, and its documented 64-bit `code` no longer narrows to `int32`. Both public interface links and parameter descriptions now target the live canonical catalog and warn that a successful submission does not guarantee execution.
+
+The client cannot safely pre-validate either endpoint's notional range because it depends on the current mark price, and it cannot know whether a `reduceOnly` request would open a position from request parameters alone. Binance remains authoritative for these state-dependent rules; the wrapper does not manufacture a stale price or account-state check. Four deterministic tests cover both signed form bodies, API-key headers, exact UID weights, generated and caller-supplied client IDs, closed enums, duration and receive-window boundaries, Hedge Mode rejection, 64-bit response codes, and the corrected success field. The full suite has 149 tests. No production Algo order was submitted.
+
 ### Revised next order
 
-1. Align the two Futures new-order mutations: VP and TWAP.
-2. Align the Spot TWAP new-order mutation as its own small slice.
-3. Perform Review 9 after implementation slices 35, 36, 38, and 39; review code, tests, documentation, and this execution order before continuing.
-4. Align the Spot and Futures cancellation mutations together if their canonical contracts remain symmetric.
-5. Align the three read-only Futures queries, then the three read-only Spot queries, in separate slices.
-6. Audit USDⓈ-M, COIN-M, and Options only after the Algo surface and Review 9 findings are closed.
+1. Align the Spot TWAP new-order mutation as its own small slice.
+2. Perform Review 9 after implementation slices 35, 36, 38, and 39; review code, tests, documentation, and this execution order before continuing.
+3. Align the Spot and Futures cancellation mutations together if their canonical contracts remain symmetric.
+4. Align the three read-only Futures queries, then the three read-only Spot queries, in separate slices.
+5. Audit USDⓈ-M, COIN-M, and Options only after the Algo surface and Review 9 findings are closed.
 
 ## Review log
 
@@ -344,3 +353,4 @@ All 11 public Algo interface links still use obsolete noncanonical documentation
 | 35 | Complete | Convert quote request and acceptance | Live canonical Trade page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/enum/response tests, 141 deterministic tests |
 | 36 | Complete | Convert limit-order placement and cancellation | Live canonical Trade and Market Data pages, 2026-01-27/2026-07-13 connector changelog, current connector/model source, signed form-body/weight/int64/validation/response tests, 145 deterministic tests |
 | 37 | Complete | Algo Trading REST route inventory | Current official Algo catalog and changelog, current generated connector routes/weights/models, normalized 11/11/11/0/0 comparison, bounded mutation/query follow-up groups |
+| 38 | Complete | Futures Algo VP and TWAP order placement | Live canonical Future Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/fixed-ID/response tests, 149 deterministic tests |
