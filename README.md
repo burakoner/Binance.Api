@@ -412,6 +412,7 @@ var futures_226 = await api.UsdFutures.GetOpenAlgoOrdersAsync(symbol: "---SYMBOL
 var futures_227 = await api.UsdFutures.GetAlgoOrdersAsync("---SYMBOL---");
 var futures_228 = await api.UsdFutures.CancelAlgoOrderAsync(algoId: 1_000_001L);
 var futures_229 = await api.UsdFutures.PlaceAlgoOrderAsync("---SYMBOL---", BinanceOrderSide.Sell, BinanceFuturesAlgoOrderType.StopMarket, triggerPrice: 50_000m);
+var futures_230 = await api.UsdFutures.CancelAllOpenAlgoOrdersAsync("---SYMBOL---");
 
 // USDⓈ-M Futures -> User Data Stream Methods (PRIVATE)
 var futures_301 = await api.UsdFutures.StartUserStreamAsync();

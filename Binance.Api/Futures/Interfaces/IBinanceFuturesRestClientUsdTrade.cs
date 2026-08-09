@@ -180,6 +180,16 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<BinanceFuturesAlgoOrderCancellationResult>> CancelAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Cancels all open native conditional Algo orders for a symbol, including TP/SL and trailing-stop orders
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#cancel-all-algo-open-orders" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The bulk cancellation result</returns>
+    Task<RestCallResult<BinanceFuturesAlgoOpenOrdersCancellationResult>> CancelAllOpenAlgoOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Gets a native conditional Algo order by exchange or client Algo ID
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-algo-order" /></para>
     /// </summary>

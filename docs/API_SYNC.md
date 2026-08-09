@@ -508,11 +508,18 @@ The shared time-in-force enum now includes current `RPI`, while endpoint validat
 
 Five deterministic tests cover the complete signed form request, absence of business query parameters, API-key authentication, exact IP weight 0, int64 response precision, all 25 response fields, GTD millisecond serialization, RPI, configured receive windows above 60 seconds, trailing-stop fields, close-all market behavior, exact client-ID preservation, and 25 pre-transport invalid cases. README, the safely gated console, and release notes expose the operation. The complete comparison is now 95 catalog routes, 92 wrapper routes, 92 exact matches, 3 catalog-only routes, and no wrapper-only route. Excluding the deprecated v1 price ticker leaves 94 active catalog routes, 92 exact matches, and 2 actionable gaps. Trade coverage reaches 30 exact matches out of 32. All 196 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 56: bulk native USDⓈ-M conditional Algo cancellation
+
+The 2025-11-06 USDⓈ-M changelog explicitly introduced `DELETE /fapi/v1/algoOpenOrders` for the 2025-12-09 conditional-order migration, and the live Trade catalog still exposes it without a deprecation marker. The current endpoint cancels every open conditional Algo order for one required symbol, including TP/SL and trailing-stop orders. It is a signed TRADE request with `symbol`, `timestamp`, and optional `recvWindow` in the query, no request body, a 60000-millisecond receive-window ceiling, and IP weight 1.
+
+`CancelAllOpenAlgoOrdersAsync` implements that exact request contract and rejects blank symbols plus explicit or configured receive windows above the published maximum before transport. The public two-field response retains both the documented message and the `int64` result code; returning only `bool` like the older standard-order bulk cancellation method would discard current endpoint data, while reusing the single-Algo cancellation shape would falsely add identifiers and change the code type.
+
+Three deterministic tests cover signed DELETE query placement, API-key authentication, absent request body and content type, exact weight 1, required symbol, explicit and configured receive windows, pre-transport rejection, the complete response, and int64 code precision. README, the safely gated console, and release notes expose the operation. The complete comparison is now 95 catalog routes, 93 wrapper routes, 93 exact matches, 2 catalog-only routes, and no wrapper-only route. Excluding the deprecated v1 price ticker leaves 94 active catalog routes, 93 exact matches, and 1 actionable gap. Trade coverage reaches 31 exact matches out of 32. All 199 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Implement only bulk native Algo cancellation `DELETE /fapi/v1/algoOpenOrders`.
-2. Perform Backward Review 12 after the fourth implementation slice since Review 11, then reassess the remaining TradFi agreement mutation `POST /fapi/v1/stock/contract`.
-3. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
+1. Perform Backward Review 12 now that four implementation slices have landed since Review 11, then reassess the remaining TradFi agreement mutation `POST /fapi/v1/stock/contract`.
+2. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
 
 ## Review log
 
@@ -584,3 +591,4 @@ Five deterministic tests cover the complete signed form request, absence of busi
 | 53 | Complete | Native USDⓈ-M single conditional Algo order cancellation | Live canonical Trade section, 2026-01-13 connector changelog, current connector/model, signed identifier/receive-window/weight/response tests, 191 deterministic tests |
 | 54 | Complete | Native USDⓈ-M conditional Algo placement contract decision | Live endpoint and general rules, 2025-11-06/2026-06-20 product changelog, current REST/WebSocket connector contracts, resolved placement/type/rate/validation/model decisions, no implementation |
 | 55 | Complete | Native USDⓈ-M conditional Algo order placement | Live canonical Trade section, 2025-11-06/2026-06-20 product changelog, current connector/model, signed form/enum/combination/rate/response tests, 196 deterministic tests |
+| 56 | Complete | Bulk native USDⓈ-M conditional Algo cancellation | Live canonical Trade section, 2025-11-06 migration changelog, signed symbol-query/receive-window/weight/int64-response tests, 199 deterministic tests |

@@ -450,6 +450,20 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesAlgoOrderCancellationResult>(GetUrl(fapi, v1, "algoOrder"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
+    public Task<RestCallResult<BinanceFuturesAlgoOpenOrdersCancellationResult>> CancelAllOpenAlgoOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty", nameof(symbol));
+
+        var parameters = new ParameterCollection
+        {
+            { "symbol", symbol }
+        };
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesAlgoOpenOrdersCancellationResult>(GetUrl(fapi, v1, "algoOpenOrders"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
+    }
+
     public Task<RestCallResult<BinanceFuturesAlgoOrder>> GetAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (clientAlgoId is not null && string.IsNullOrWhiteSpace(clientAlgoId))
