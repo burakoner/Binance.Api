@@ -8,7 +8,7 @@ public record BinanceAlgoSubOrderList
     /// <summary>
     /// Amount of sub orders
     /// </summary>
-    public int Total { get; set; }
+    public long Total { get; set; }
 
     /// <summary>
     /// Executed quantity
@@ -105,7 +105,7 @@ public record BinanceAlgoSubOrder
     /// <summary>
     /// Time in force
     /// </summary>
-    public BinanceTimeInForce TimeInForce { get; set; }
+    public string TimeInForce { get; set; } = string.Empty;
 
     /// <summary>
     /// Original quantity

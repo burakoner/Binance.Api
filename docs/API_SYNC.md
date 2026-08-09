@@ -326,13 +326,22 @@ Both public methods now use the canonical `algoId` name and link to the current 
 
 Three deterministic tests cover both signed query requests, absent bodies and content types, API-key headers, exact IP weight, query fields and signatures, 64-bit identifiers and response codes, plus explicit and configured receive-window violations. The full suite has 155 tests. No production Algo cancellation request was sent. Six untouched Algo query-interface links remain stale and belong to the next two read-only slices.
 
+## Slice 41: Read-only Futures Algo queries
+
+`GET /sapi/v1/algo/futures/openOrders`, `GET /sapi/v1/algo/futures/historicalOrders`, and `GET /sapi/v1/algo/futures/subOrders` were compared against all three live canonical Future Algo sections and the corresponding current official generated-connector operations and models. All remain signed USER_DATA queries with IP weight 1 and no request body. The wrapper's methods, paths, signing, parameter placement, and weights were already correct.
+
+The remaining contracts are now current. Every operation enforces the 60000-millisecond receive-window ceiling, and both paginated operations enforce `pageSize` from 1 through 100 while preserving the documented server default by omitting null values. The unbounded documented `page` is now 64-bit; no undocumented positive minimum was invented. Historical-order filters validate a supplied symbol and the closed BUY/SELL side set. Public pagination uses the canonical `pageSize` name, the historical operation no longer calls historical results “closed,” all three links target the current endpoint anchors, and the executable examples compile against the renamed method.
+
+Both aggregate `total` fields now retain the documented int64 range. The sub-order `timeInForce` response is represented as the documented string because the canonical example returns `IMMEDIATE_OR_CANCEL`, while the shared trading enum maps its different wire value `IOC`; manufacturing an undocumented endpoint enum would be unsafe. No time-range or ordering restriction was added because the current historical-query schema publishes neither one.
+
+Four deterministic tests cover all three signed GET queries, absent bodies, API-key headers, exact IP weights, complete filters and int64 pagination, receive-window and page-size rejection, configured receive-window rejection, int64 totals and identifiers, plus the canonical `IMMEDIATE_OR_CANCEL` response. The full suite has 159 tests. No production Futures Algo query was sent. The three untouched Spot Algo query links remain stale for the next slice.
+
 ### Revised next order
 
-1. Align the three read-only Futures Algo queries.
-2. Align the three read-only Spot Algo queries in a separate slice.
-3. Refresh the USDⓈ-M, COIN-M, and Options route inventories without mixing inventory and implementation work.
-4. Select and complete the first bounded derivative implementation group from that refreshed inventory.
-5. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
+1. Align the three read-only Spot Algo queries.
+2. Refresh the USDⓈ-M, COIN-M, and Options route inventories without mixing inventory and implementation work.
+3. Select and complete the first bounded derivative implementation group from that refreshed inventory.
+4. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
 
 ## Review log
 
@@ -387,3 +396,4 @@ Three deterministic tests cover both signed query requests, absent bodies and co
 | 39 | Complete | Spot Algo TWAP order placement | Live canonical Spot Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/fixed-ID/validation/removed-parameter tests, 152 deterministic tests |
 | Review 9 | Complete | Convert quote/limit mutations, Algo inventory and new-order mutations, documentation, and execution order | `e98e741..730f42e` diff review, refreshed 9/9 and 11/11 route comparisons, current canonical pages and generated connectors, residue/call-site scans, 152 tests, restored forced full multi-target build |
 | 40 | Complete | Spot and Futures Algo cancellation | Live canonical Future and Spot Algo pages, current official generated connector, signed DELETE query placement, receive-window/canonical-name/int64-response tests, 155 deterministic tests |
+| 41 | Complete | Read-only Futures Algo queries | Live canonical Future Algo query sections, current official generated connector and models, signed GET/pagination/validation/naming/int64-response tests, 159 deterministic tests |

@@ -243,7 +243,7 @@ internal class Program
         var algo_103 = await api.Algo.Futures.CancelAlgoOrderAsync(1_000_001L);
         var algo_104 = await api.Algo.Futures.GetAlgoSubOrdersAsync(1_000_001L);
         var algo_105 = await api.Algo.Futures.GetOpenAlgoOrdersAsync();
-        var algo_106 = await api.Algo.Futures.GetClosedAlgoOrdersAsync();
+        var algo_106 = await api.Algo.Futures.GetHistoricalAlgoOrdersAsync();
 
         // Algo > Spot Methods (PRIVATE)
         var algo_202 = await api.Algo.Spot.PlaceTimeWeightedAveragePriceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, 100.0m, 900);

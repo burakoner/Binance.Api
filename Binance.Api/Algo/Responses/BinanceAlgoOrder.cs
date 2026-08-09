@@ -8,7 +8,7 @@ public record BinanceAlgoOrders
     /// <summary>
     /// Total items
     /// </summary>
-    public int Total { get; set; }
+    public long Total { get; set; }
 
     /// <summary>
     /// Orders
