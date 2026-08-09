@@ -1083,6 +1083,9 @@ internal class Program
         var coinFutures_504 = await ws.CoinFutures.SubscribeToMarkPriceUpdatesAsync(["---SYMBOL---"], 3000, (data) => { });
         var coinFutures_505 = await ws.CoinFutures.SubscribeToAllMarkPriceUpdatesAsync((data) => { });
         var coinFutures_506 = await ws.CoinFutures.SubscribeToAllMarkPriceUpdatesOfAllSymbolsOfPairAsync("---PAIR---", 1000, (data) => { });
+        var coinFutures_507 = await ws.CoinFutures.SubscribeToBookTickerUpdatesAsync("---SYMBOL---", (data) => { });
+        var coinFutures_508 = await ws.CoinFutures.SubscribeToBookTickerUpdatesAsync(["---SYMBOL---"], (data) => { });
+        var coinFutures_509 = await ws.CoinFutures.SubscribeToAllBookTickerUpdatesAsync((data) => { });
 
         // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
         var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });

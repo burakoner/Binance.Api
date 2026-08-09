@@ -18,6 +18,12 @@ public record BinanceFuturesStreamBookPrice
     public string Symbol { get; set; } = "";
 
     /// <summary>
+    /// The pair
+    /// </summary>
+    [JsonProperty("ps")]
+    public string Pair { get; set; } = string.Empty;
+
+    /// <summary>
     /// Price of the best bid
     /// </summary>
     [JsonProperty("b")]
@@ -58,4 +64,10 @@ public record BinanceFuturesStreamBookPrice
     /// </summary>
     [JsonProperty("e")] 
     public string Event { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Symbol type after UM/CM integration: 1 = UM, 2 = CM
+    /// </summary>
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
 }

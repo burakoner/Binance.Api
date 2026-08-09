@@ -261,8 +261,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinTick>>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the book ticker update stream for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Individual-Symbol-Book-Ticker-Streams" /></para>
+    /// Subscribes to real-time book-ticker updates for the provided symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#individual-symbol-book-ticker-streams" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
@@ -271,8 +271,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickerUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to the book ticker update stream for the provided symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Individual-Symbol-Book-Ticker-Streams" /></para>
+    /// Subscribes to real-time book-ticker updates for the provided symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#individual-symbol-book-ticker-streams" /></para>
     /// </summary>
     /// <param name="symbols">The symbols, for example `BTCUSD_PERP`</param>
     /// <param name="onMessage">The event handler for the received data</param>
@@ -281,8 +281,8 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickerUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to all book ticker update streams
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/All-Market-Tickers-Streams" /></para>
+    /// Subscribes to real-time book-ticker updates for the merged UM and CM market
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#all-book-tickers-stream" /></para>
     /// </summary>
     /// <param name="onMessage">The event handler for the received data</param>
     /// <param name="ct">Cancellation token for closing this subscription</param>

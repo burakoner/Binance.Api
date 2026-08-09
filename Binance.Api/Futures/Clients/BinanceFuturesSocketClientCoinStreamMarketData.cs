@@ -328,14 +328,11 @@ internal partial class BinanceFuturesSocketClientCoin
         Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamBookPrice>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@bookTicker").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(BookTickerStreamTopics(symbols), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllBookTickerUpdatesAsync(
@@ -346,8 +343,27 @@ internal partial class BinanceFuturesSocketClientCoin
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!bookTicker"], false, handler, ct);
+        return SubscribeAsync([BookTickerAllMarketStreamTopic], false, handler, ct);
     }
+
+    internal static string[] BookTickerStreamTopics(IEnumerable<string> symbols)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        return symbolList
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@bookTicker")
+            .ToArray();
+    }
+
+    internal const string BookTickerAllMarketStreamTopic = "!bookTicker";
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationUpdatesAsync(
         string symbol,
