@@ -269,12 +269,31 @@ Two official source conflicts remain explicit. The Trade page tells callers to o
 
 Four deterministic test groups cover both signed form bodies, API-key headers, exact UID weights, 64-bit identifier precision, side/expiry/wallet serialization, base- and quote-amount variants, explicit and configured receive-window rejection, and both response schemas. README and gated console cancellation examples now use the current numeric identifier type. All nine current Convert REST routes are now contract-reviewed, the full suite has 145 tests, and no production order was placed or canceled.
 
+## Slice 37: Algo Trading REST route inventory
+
+The current official Algo catalog and the wrapper were normalized by HTTP method and literal path. Both contain the same 11 routes: 6 Futures and 5 Spot. The result is 11 official routes, 11 wrapper routes, 11 exact matches, no official-only candidate, and no wrapper-only candidate. This proves route presence only; none of the request or response contracts is considered aligned by this inventory.
+
+| Group | Current official operations | Security and generated-connector weight | Route result |
+| --- | --- | --- | --- |
+| Futures new orders | `POST /sapi/v1/algo/futures/newOrderVp`; `POST /sapi/v1/algo/futures/newOrderTwap` | TRADE; UID 300 and UID 3000 respectively | Both exact matches |
+| Futures cancellation | `DELETE /sapi/v1/algo/futures/order` | TRADE; IP 1 | Exact match |
+| Futures queries | `GET /sapi/v1/algo/futures/openOrders`; `GET /sapi/v1/algo/futures/historicalOrders`; `GET /sapi/v1/algo/futures/subOrders` | USER_DATA; IP 1 each | All three exact matches |
+| Spot new order | `POST /sapi/v1/algo/spot/newOrderTwap` | TRADE; UID 3000 | Exact match |
+| Spot cancellation | `DELETE /sapi/v1/algo/spot/order` | TRADE; IP 1 | Exact match |
+| Spot queries | `GET /sapi/v1/algo/spot/openOrders`; `GET /sapi/v1/algo/spot/historicalOrders`; `GET /sapi/v1/algo/spot/subOrders` | USER_DATA; IP 1 each | All three exact matches |
+
+The inventory already exposes contract work that route counts hide. The wrapper assigns UID weight 3000 to Futures VP placement while the current official generated connector publishes UID weight 300. Its 2026-07-13 changelog also makes `clientAlgoId` exactly 32 characters on all three placements and closes the `side`, Futures `positionSide`, and VP `urgency` enums. The wrapper's placement path still applies a broker-ID policy built around a 36-character ceiling, so the effective ID contract must be resolved against each canonical endpoint rather than inferred from the shared order helper. The placement response maps both `Message` and `Success` from `msg`, although the current official response schemas expose separate `msg` and boolean `success` fields. These are verified review targets, not changes made in this documentation-only slice.
+
+All 11 public Algo interface links still use obsolete noncanonical documentation paths, and the test project has no Algo request/model coverage. Parameter location, required/optional state, numeric bounds, time ranges, pagination, receive-window handling, response fields, and link replacement remain endpoint-level work. The official connector sends the current operations through query parameters, but that generated behavior will not override a canonical endpoint page without checking the page itself, following the same source-conflict rule used for Convert.
+
 ### Revised next order
 
-1. Inventory current Spot/Futures Algo Trading routes without mixing in implementation changes.
-2. Align Algo Trading in bounded endpoint groups selected from that inventory.
-3. Perform the next backward review after four further bounded slices and revise derivative scope from its findings.
-4. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
+1. Align the two Futures new-order mutations: VP and TWAP.
+2. Align the Spot TWAP new-order mutation as its own small slice.
+3. Perform Review 9 after implementation slices 35, 36, 38, and 39; review code, tests, documentation, and this execution order before continuing.
+4. Align the Spot and Futures cancellation mutations together if their canonical contracts remain symmetric.
+5. Align the three read-only Futures queries, then the three read-only Spot queries, in separate slices.
+6. Audit USDⓈ-M, COIN-M, and Options only after the Algo surface and Review 9 findings are closed.
 
 ## Review log
 
@@ -324,3 +343,4 @@ Four deterministic test groups cover both signed form bodies, API-key headers, e
 | Review 8 | Complete | Transport backoff, Convert inventory, Market Data, read-only Trade, documentation, and execution order | `ef488de..b4d8da5` diff review, live REST backoff recheck, regenerated 9/9/9/0/0 route comparison, order-status exclusivity correction, unsupported `fromIsBase` guidance removal, canonical-link and stale-call scans, 137 tests, forced full multi-target rebuild |
 | 35 | Complete | Convert quote request and acceptance | Live canonical Trade page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/enum/response tests, 141 deterministic tests |
 | 36 | Complete | Convert limit-order placement and cancellation | Live canonical Trade and Market Data pages, 2026-01-27/2026-07-13 connector changelog, current connector/model source, signed form-body/weight/int64/validation/response tests, 145 deterministic tests |
+| 37 | Complete | Algo Trading REST route inventory | Current official Algo catalog and changelog, current generated connector routes/weights/models, normalized 11/11/11/0/0 comparison, bounded mutation/query follow-up groups |
