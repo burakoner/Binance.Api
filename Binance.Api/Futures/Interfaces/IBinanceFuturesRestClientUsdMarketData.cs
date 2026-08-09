@@ -30,6 +30,23 @@ public interface IBinanceFuturesRestClientUsdMarketData
     Task<RestCallResult<BinanceFuturesUsdExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
 
     /// <summary>
+    /// Gets the ADL risk rating for a symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#adl-risk" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol to get the ADL risk rating for, for example `BTCUSDT`</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The ADL risk rating for the symbol</returns>
+    Task<RestCallResult<BinanceFuturesAdlRisk>> GetAdlRiskAsync(string symbol, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the ADL risk ratings for all symbols
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#adl-risk" /></para>
+    /// </summary>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The ADL risk ratings for all symbols</returns>
+    Task<RestCallResult<List<BinanceFuturesAdlRisk>>> GetAdlRisksAsync(CancellationToken ct = default);
+
+    /// <summary>
     /// Gets the order book for the provided symbol
     /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book" /></para>
     /// </summary>
@@ -38,6 +55,16 @@ public interface IBinanceFuturesRestClientUsdMarketData
     /// <param name="ct">Cancellation token</param>
     /// <returns>The order book for the symbol</returns>
     Task<RestCallResult<BinanceFuturesOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the order book including aggregated RPI orders for a symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#rpi-order-book" /></para>
+    /// </summary>
+    /// <param name="symbol">The symbol to get the RPI order book for, for example `BTCUSDT`</param>
+    /// <param name="limit">Result limit. The only currently supported value and server default is 1000</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The RPI order book for the symbol</returns>
+    Task<RestCallResult<BinanceFuturesRpiOrderBook>> GetRpiOrderBookAsync(string symbol, long? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get the most recent trades for a symbol

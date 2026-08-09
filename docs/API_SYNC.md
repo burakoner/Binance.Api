@@ -406,10 +406,20 @@ One documentation defect was found: Slice 46 changed and added public Options op
 
 The next bounded group is limited to endpoint-level validation of USDⓈ-M `GET /fapi/v1/rpiDepth` and `GET /fapi/v1/symbolAdlRisk`. They may share one implementation slice only if both current endpoint pages confirm unsigned, read-only Market Data contracts; otherwise they split. Native conditional Algo mutations, TradFi agreement mutations, breaking removals, version-coexistence decisions, and ambiguous Options lifecycle candidates remain outside that slice.
 
+## Slice 47: USDⓈ-M RPI order book and ADL risk
+
+`GET /fapi/v1/rpiDepth` and `GET /fapi/v1/symbolAdlRisk` were compared independently against their live Market Data sections, the current official generated connector and response models, and the dated connector changelog entries that introduced ADL risk on 2025-11-20 and the RPI order book on 2025-11-27. Both are unsigned, read-only GET operations with query parameters and no request body, so they remain one bounded implementation slice.
+
+The RPI order-book operation requires `symbol`, accepts an optional int64 `limit` whose only current valid value and server default are 1000, and consumes IP weight 20. The wrapper exposes `GetRpiOrderBookAsync`, rejects every explicit limit other than 1000 before transport, and preserves the response's int64 `lastUpdateId`, `E`, and `T` values without inventing an undocumented timestamp unit. Its dedicated response model keeps each bid and ask level as the documented two-item price/quantity tuple. It is intentionally separate from the standard depth model, which contains compatibility fields and timestamp conversions not published by this endpoint.
+
+The ADL-risk operation consumes IP weight 1 and accepts an optional `symbol`. Its response is shape-dependent: Binance returns one object when a symbol is supplied and an array when it is omitted. The wrapper represents those two documented contracts as `GetAdlRiskAsync(symbol)` and `GetAdlRisksAsync()` over one shared item model rather than exposing an ambiguous union or deserializing one variant incorrectly. `adlRisk` remains an open string because the current schema does not publish an enum, and `updateTime` remains the documented raw int64 value.
+
+Seven deterministic cases cover both paths, public signing state, exact IP weights, absent request bodies, required and omitted symbol behavior, accepted and rejected RPI limits, both ADL response variants, tuple decimals, and int64 response fields. README and console examples expose all three public method shapes. The complete USDⓈ-M route comparison is now 95 official routes, 85 wrapper routes, 85 exact method/path matches, 10 official-only candidates, and no wrapper-only route. Market Data improves from 30 to 32 exact matches out of 34; the remaining Market Data candidates are `GET /fapi/v1/ticker/price` and `GET /fapi/v1/tradingSchedule`. All 173 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Validate USDⓈ-M `GET /fapi/v1/rpiDepth` and `GET /fapi/v1/symbolAdlRisk` independently; implement them together only if both remain unsigned read-only Market Data operations with unambiguous current contracts.
-2. Reassess the remaining USDⓈ-M read-only candidates (`GET /fapi/v1/ticker/price`, `GET /fapi/v1/tradingSchedule`, and `GET /fapi/v2/balance`) after that bounded slice rather than pre-committing their order.
+1. Validate USDⓈ-M `GET /fapi/v1/ticker/price` and `GET /fapi/v1/tradingSchedule` independently; keep them separate if the v1/v2 price coexistence or the schedule contract makes a shared Market Data slice misleading.
+2. Keep `GET /fapi/v2/balance` in a separate Account/version-coexistence slice.
 3. Keep the COIN-M retired-operation removal, Options lifecycle candidates, version-coexistence decisions, conditional Algo mutations, and TradFi agreement mutations in separate endpoint-level slices.
 
 ## Review log
@@ -472,3 +482,4 @@ The next bounded group is limited to endpoint-level validation of USDⓈ-M `GET 
 | 45 | Complete | Options REST route inventory refresh | Live 44-operation catalog, current official generated connector, refreshed 44/45/41/3/4 comparison, dated addition evidence and explicit retirement uncertainty, no implementation |
 | 46 | Complete | Read-only Options account block trades and user commission | Live canonical Options catalog, dated changelog, current generated connector and models, route/signature/weight/receive-window/model tests, 166 deterministic tests |
 | Review 10 | Complete | Algo cancellations and queries, derivative inventories, first Options implementation, documentation, and execution order | `c793ab4..7732301` diff review, live 11-route Algo and 44-route Options catalogs, corrected `/futures/data`-aware 95/83/83/12/0 and 64/64/63/1/1 regeneration, 44/47/43/1/4 Options comparison, residue scans, 166 tests, forced full multi-target rebuild |
+| 47 | Complete | USDⓈ-M RPI order book and symbol-level ADL risk | Live canonical Market Data sections, 2025-11-20/2025-11-27 changelog entries, current generated connector and models, unsigned query/weight/variant/int64 tests, 173 deterministic tests |

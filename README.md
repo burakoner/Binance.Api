@@ -377,6 +377,9 @@ var futures_129 = await api.UsdFutures.GetBasisAsync("---SYMBOL---", BinanceFutu
 var futures_130 = await api.UsdFutures.GetCompositeIndexInfoAsync();
 var futures_131 = await api.UsdFutures.GetAssetIndexAsync("---SYMBOL---");
 var futures_132 = await api.UsdFutures.GetAssetIndexesAsync();
+var futures_133 = await api.UsdFutures.GetAdlRiskAsync("---SYMBOL---");
+var futures_134 = await api.UsdFutures.GetAdlRisksAsync();
+var futures_135 = await api.UsdFutures.GetRpiOrderBookAsync("---SYMBOL---");
 
 // USDⓈ-M Futures -> Trading Methods (PRIVATE)
 var futures_201 = await api.UsdFutures.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceFuturesOrderType.Market, 100.0m);

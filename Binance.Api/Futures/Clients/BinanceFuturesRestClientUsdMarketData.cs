@@ -36,6 +36,19 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         return result;
     }
 
+    public Task<RestCallResult<BinanceFuturesAdlRisk>> GetAdlRiskAsync(string symbol, CancellationToken ct = default)
+    {
+        symbol.ValidateNotNull(nameof(symbol));
+
+        var parameters = new ParameterCollection { { "symbol", symbol } };
+        return RequestAsync<BinanceFuturesAdlRisk>(GetUrl(fapi, v1, "symbolAdlRisk"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+    }
+
+    public Task<RestCallResult<List<BinanceFuturesAdlRisk>>> GetAdlRisksAsync(CancellationToken ct = default)
+    {
+        return RequestAsync<List<BinanceFuturesAdlRisk>>(GetUrl(fapi, v1, "symbolAdlRisk"), HttpMethod.Get, ct, requestWeight: 1);
+    }
+
     public async Task<RestCallResult<BinanceFuturesOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntValues(nameof(limit), 5, 10, 20, 50, 100, 500, 1000);
@@ -47,6 +60,18 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         if (result && string.IsNullOrEmpty(result.Data.Symbol)) result.Data.Symbol = symbol;
 
         return result.As(result.Data);
+    }
+
+    public Task<RestCallResult<BinanceFuturesRpiOrderBook>> GetRpiOrderBookAsync(string symbol, long? limit = null, CancellationToken ct = default)
+    {
+        symbol.ValidateNotNull(nameof(symbol));
+        if (limit.HasValue && limit.Value != 1000)
+            throw new ArgumentOutOfRangeException(nameof(limit), limit, "The only supported RPI order-book limit is 1000");
+
+        var parameters = new ParameterCollection { { "symbol", symbol } };
+        parameters.AddOptional("limit", limit);
+
+        return RequestAsync<BinanceFuturesRpiOrderBook>(GetUrl(fapi, v1, "rpiDepth"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 20);
     }
 
     public Task<RestCallResult<List<BinanceFuturesUsdTrade>>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
