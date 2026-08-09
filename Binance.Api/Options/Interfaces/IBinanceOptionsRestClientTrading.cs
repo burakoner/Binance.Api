@@ -179,6 +179,16 @@ public interface IBinanceOptionsRestClientTrading
     Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string? symbol = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Signs the TradFi Options agreement for the authenticated account
+    /// <para><b>Warning:</b> This is an explicit account-agreement mutation. Review the current Binance account UI and applicable terms before calling it. Binance does not publish a status or reversal endpoint.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#tradfi-options-contract" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
+    /// <param name="ct">Cancellation Token</param>
+    /// <returns>The agreement-signing result</returns>
+    Task<RestCallResult<BinanceOptionsTradFiAgreementResult>> SignTradFiOptionsAgreementAsync(int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Gets the account's Options commission rates.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#user-commission" /></para>
     /// </summary>

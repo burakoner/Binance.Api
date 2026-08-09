@@ -558,6 +558,8 @@ var options_409 = await api.Options.GetOpenOrdersAsync();
 var options_410 = await api.Options.GetPositionsAsync();
 var options_411 = await api.Options.GetUserExerciseRecordsAsync();
 var options_412 = await api.Options.GetUserTradesAsync();
+// WARNING: Explicitly signs the authenticated account's TradFi Options agreement. Review the current Binance account UI and applicable terms before use.
+// var options_413 = await api.Options.SignTradFiOptionsAgreementAsync();
 
 // TODO: European Options -> User Data Stream Methods (PRIVATE)
 

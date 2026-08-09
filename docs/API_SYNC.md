@@ -78,9 +78,9 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Spot | 48 | 47 | 47 | 1 | 0 |
 | USDⓈ-M Futures | 95 | 94 | 94 | 1 | 0 |
 | COIN-M Futures | 64 | 64 | 64 | 0 | 0 |
-| Options | 44 | 47 | 43 | 1 | 4 |
+| Options | 44 | 48 | 44 | 0 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/94/94/1/0; its only remaining raw catalog-only route is the explicitly deprecated v1 price ticker. Excluding that deprecated route, the active USDⓈ-M REST surface is 94/94 exact. The COIN-M row now excludes the retired `GET /dapi/v1/pmAccountInfo` and includes both current leverage-bracket routes: `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets. Its active method/path inventory is 64/64 exact. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/94/94/1/0; its only remaining raw catalog-only route is the explicitly deprecated v1 price ticker. Excluding that deprecated route, the active USDⓈ-M REST surface is 94/94 exact. The COIN-M row now excludes the retired `GET /dapi/v1/pmAccountInfo` and includes both current leverage-bracket routes: `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets. Its active method/path inventory is 64/64 exact. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, and Slice 62 added the TradFi Options agreement mutation, moving the current row to 44/48/44/0/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -590,6 +590,18 @@ The current `GET /eapi/v1/marginAccount` route is already implemented under the 
 2. Perform Backward Review 13 immediately after that implementation, covering code, tests, release notes, route inventories, sample safety, and the execution order since Review 12.
 3. Audit the complete current `/eapi/v1/marginAccount` contract and separately quarantine undocumented wrapper-only calls from executable samples; make no breaking lifecycle removal without explicit evidence or a separately authorized verification method.
 
+## Slice 62: explicit TradFi Options agreement signing
+
+`POST /eapi/v1/stock/contract` is implemented as the explicitly named `SignTradFiOptionsAgreementAsync` mutation locked in Slice 61. The method is caller-initiated only: it is not an order-placement prerequisite, is never called implicitly, and receives no endpoint-level retry. It sends the required signing timestamp plus optional receive window in the signed `application/x-www-form-urlencoded` body while the established mixed-payload transport keeps the signature in the query. The current IP weight 50 and the 60,000-millisecond ceiling are enforced for both explicit and client-default receive windows.
+
+The dedicated `BinanceOptionsTradFiAgreementResult` preserves the documented int64 `code` and string `msg` response. README and console calls are both commented and carry an explicit warning that the operation signs an account agreement; running the repository's other examples cannot invoke it as a side effect. Three deterministic tests cover method and path, signed form placement, API-key header, signature placement, exact request weight, int64 response precision, configured receive-window use, and pre-transport rejection above the ceiling. All 209 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent. The active Options route comparison is now 44 official routes, 48 wrapper routes, 44 exact matches, no official-only candidate, and the same four unresolved wrapper-only lifecycle candidates.
+
+### Revised next order
+
+1. Perform Backward Review 13 immediately, covering code, tests, release notes, route inventories, sample safety, and the execution order since Review 12.
+2. Audit the complete current `/eapi/v1/marginAccount` endpoint in its own bounded implementation slice, including client ownership, model fields, receive-window validation, canonical documentation, and the stale TODO.
+3. Quarantine the four undocumented wrapper-only Options calls from executable examples without claiming that sample removal proves server retirement.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -667,3 +679,4 @@ The current `GET /eapi/v1/marginAccount` route is already implemented under the 
 | 59 | Complete | Retired COIN-M Classic Portfolio Margin account-query removal | Live 2026-06-30 retirement notice, current connector absence, public/call-site/model dependency scan, 64/63/63/1/0 route comparison |
 | 60 | Complete | COIN-M pair-default and symbol-specific leverage brackets | Live Account sections, current connector and response types, signed query/parameter/dynamic-weight/receive-window/int64 tests, 64/64 active route comparison |
 | 61 | Complete | Options agreement scope and wrapper-only route lifecycle decisions | Live Account, Market Data, and Trade catalogs, dated Options changelog, current connector, route/model/call-site scans, no implementation |
+| 62 | Complete | Explicit TradFi Options agreement signing | Live Trade contract, 2026-07-09 changelog, current connector/model, signed form placement, weight/receive-window/int64-response tests, commented warning samples |
