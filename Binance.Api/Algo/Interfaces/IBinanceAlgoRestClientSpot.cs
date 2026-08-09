@@ -29,13 +29,13 @@ public interface IBinanceAlgoRestClientSpot
 
     /// <summary>
     /// Cancel a spot algo order
-    /// <para><a href="https://developers.binance.com/docs/algo/spot-algo/Cancel-Algo-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api/spot-algo#cancel-algo-order-spot-algo" /></para>
     /// </summary>
-    /// <param name="algoOrderId">Algo order id to cancel</param>
+    /// <param name="algoId">Algo order id to cancel</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoOrderId, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoId, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get algo sub orders overview

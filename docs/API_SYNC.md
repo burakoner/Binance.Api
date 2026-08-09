@@ -318,10 +318,18 @@ The next two mutations are confirmed as one coherent bounded slice. Both Spot an
 
 A full deterministic run remains at 152 passing tests. The first multi-target build attempt encountered genuinely missing files in the local NuGet cache rather than a source error; a normal solution restore repopulated the packages, after which the complete solution built with zero errors and the same three pre-existing warnings. No production API request was sent.
 
+## Slice 40: Spot and Futures Algo cancellation
+
+`DELETE /sapi/v1/algo/futures/order` and `DELETE /sapi/v1/algo/spot/order` were compared independently against their live canonical catalog sections and the current official generated connector. Both are signed TRADE operations with IP weight 1. Their required `algoId`, optional `recvWindow`, timestamp, and signature belong in the query; neither endpoint defines a request body. The wrapper now follows that placement instead of sending business parameters in a DELETE body.
+
+Both public methods now use the canonical `algoId` name and link to the current endpoint anchors. Explicit and globally configured receive windows are rejected above the documented 60000-millisecond ceiling. The shared cancellation response retains its 64-bit `algoId` and now also represents the documented 64-bit `code` without narrowing it to `int32`. The canonical schema does not publish a positive-value constraint for `algoId`, so the wrapper does not invent one.
+
+Three deterministic tests cover both signed query requests, absent bodies and content types, API-key headers, exact IP weight, query fields and signatures, 64-bit identifiers and response codes, plus explicit and configured receive-window violations. The full suite has 155 tests. No production Algo cancellation request was sent. Six untouched Algo query-interface links remain stale and belong to the next two read-only slices.
+
 ### Revised next order
 
-1. Align the Spot and Futures Algo cancellation mutations together.
-2. Align the three read-only Futures Algo queries, then the three read-only Spot Algo queries, in separate slices.
+1. Align the three read-only Futures Algo queries.
+2. Align the three read-only Spot Algo queries in a separate slice.
 3. Refresh the USDⓈ-M, COIN-M, and Options route inventories without mixing inventory and implementation work.
 4. Select and complete the first bounded derivative implementation group from that refreshed inventory.
 5. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
@@ -378,3 +386,4 @@ A full deterministic run remains at 152 passing tests. The first multi-target bu
 | 38 | Complete | Futures Algo VP and TWAP order placement | Live canonical Future Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/weight/validation/fixed-ID/response tests, 149 deterministic tests |
 | 39 | Complete | Spot Algo TWAP order placement | Live canonical Spot Algo page, 2026-07-13 generated-connector changelog, current connector/model source, signed form-body/fixed-ID/validation/removed-parameter tests, 152 deterministic tests |
 | Review 9 | Complete | Convert quote/limit mutations, Algo inventory and new-order mutations, documentation, and execution order | `e98e741..730f42e` diff review, refreshed 9/9 and 11/11 route comparisons, current canonical pages and generated connectors, residue/call-site scans, 152 tests, restored forced full multi-target build |
+| 40 | Complete | Spot and Futures Algo cancellation | Live canonical Future and Spot Algo pages, current official generated connector, signed DELETE query placement, receive-window/canonical-name/int64-response tests, 155 deterministic tests |

@@ -65,15 +65,24 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         return RequestAsync<BinanceAlgoOrderResult>(GetUrl(sapi, v1, "algo/spot/newOrderTwap"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 3000);
     }
 
-    public Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoOrderId, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoId, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
-            { "algoId", algoOrderId },
+            { "algoId", algoId },
         };
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceAlgoResult>(GetUrl(sapi, v1, "algo/spot/order"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceAlgoResult>(GetUrl(sapi, v1, "algo/spot/order"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
+    }
+
+    private int? ValidateReceiveWindow(int? receiveWindow)
+    {
+        var normalizedReceiveWindow = _._.ReceiveWindow(receiveWindow);
+        if (normalizedReceiveWindow > 60000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), "receiveWindow cannot exceed 60000 milliseconds");
+
+        return normalizedReceiveWindow;
     }
 
     public Task<RestCallResult<BinanceAlgoSubOrderList>> GetAlgoSubOrdersAsync(long algoId, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)

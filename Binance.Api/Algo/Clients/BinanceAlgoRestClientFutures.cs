@@ -133,15 +133,15 @@ internal class BinanceAlgoRestClientFutures(BinanceAlgoRestClient parent) : IBin
         return normalizedReceiveWindow;
     }
 
-    public Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoOrderId, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceAlgoResult>> CancelAlgoOrderAsync(long algoId, int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection()
         {
-            { "algoId", algoOrderId },
+            { "algoId", algoId },
         };
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceAlgoResult>(GetUrl(sapi, v1, "algo/futures/order"), HttpMethod.Delete, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceAlgoResult>(GetUrl(sapi, v1, "algo/futures/order"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
     public Task<RestCallResult<BinanceAlgoSubOrderList>> GetAlgoSubOrdersAsync(long algoId, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
