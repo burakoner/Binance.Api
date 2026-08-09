@@ -318,6 +318,7 @@ internal class Program
         var futures_225 = await api.UsdFutures.GetAlgoOrderAsync(algoId: 1_000_001L);
         var futures_226 = await api.UsdFutures.GetOpenAlgoOrdersAsync(symbol: "---SYMBOL---");
         var futures_227 = await api.UsdFutures.GetAlgoOrdersAsync("---SYMBOL---");
+        var futures_228 = await api.UsdFutures.CancelAlgoOrderAsync(algoId: 1_000_001L);
 
         // USDⓈ-M Futures -> User Data Stream Methods (PRIVATE)
         var futures_301 = await api.UsdFutures.StartUserStreamAsync();

@@ -141,6 +141,17 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<BinanceFuturesCountDownResult>> CancelAllOrdersAfterTimeoutAsync(string symbol, TimeSpan countDownTime, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Cancels an active native conditional Algo order by exchange or client Algo ID
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#cancel-algo-order" /></para>
+    /// </summary>
+    /// <param name="algoId">Exchange-assigned Algo order ID. At least one identifier must be provided</param>
+    /// <param name="clientAlgoId">Client-assigned Algo order ID. At least one identifier must be provided</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The cancellation result</returns>
+    Task<RestCallResult<BinanceFuturesAlgoOrderCancellationResult>> CancelAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Gets a native conditional Algo order by exchange or client Algo ID
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-algo-order" /></para>
     /// </summary>
