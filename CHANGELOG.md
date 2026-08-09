@@ -4,6 +4,7 @@
   * Fixed `CancelMarginOrderAsync` sending a GET request instead of the documented DELETE request
   * Fixed signed REST requests failing to generate a signature with RSA PEM credentials and omitting query parameters when a body is present
   * Fixed WebSocket API RSA and Ed25519 signatures, including UTF-8 parameter payloads
+  * Added the optional Spot `executionReport.eR` expiry reason to user-data stream order updates with current typed enum mapping
   * Fixed USDⓈ-M position ADL quantile requests sending GET parameters in the body and deserializing symbol-filtered array responses as an object
   * Fixed six USDⓈ-M futures-data methods using an invalid `/fapi/futures/data` path, corrected their request weights, and added the missing CoinMarketCap circulating-supply field
   * Added current USDⓈ-M RPI order-book and symbol-level ADL risk Market Data queries with exact weights, parameters, response variants, and 64-bit fields

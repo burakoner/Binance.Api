@@ -322,4 +322,10 @@ public record BinanceSpotStreamOrderUpdate: BinanceSpotUserDataStreamEvent
     /// </summary>
     [JsonProperty("gp")]
     public decimal? PeggedPrice { get; set; }
+
+    /// <summary>
+    /// Reason the order expired.
+    /// </summary>
+    [JsonProperty("eR"), JsonConverter(typeof(MapConverter))]
+    public BinanceSpotOrderExpiryReason? ExpiryReason { get; set; }
 }

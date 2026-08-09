@@ -201,7 +201,8 @@ public class BinanceSpotSocketClientUserDataStreamTests
                 "gP": "PRIMARY_PEG",
                 "gOT": "PRICE_LEVEL",
                 "gOV": 5,
-                "gp": "1.00000000"
+                "gp": "1.00000000",
+                "eR": "EXECUTION_RULE_PRICE_RANGE_EXCEEDED"
               }
             }
             """;
@@ -236,6 +237,7 @@ public class BinanceSpotSocketClientUserDataStreamTests
         Assert.Equal("PRICE_LEVEL", update.PeggedOffsetType);
         Assert.Equal(5, update.PeggedOffsetValue);
         Assert.Equal(1m, update.PeggedPrice);
+        Assert.Equal(BinanceSpotOrderExpiryReason.ExecutionRulePriceRangeExceeded, update.ExpiryReason);
     }
 
     [Fact]

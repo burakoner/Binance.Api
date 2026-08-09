@@ -1317,6 +1317,16 @@ The unchanged implementation baseline passes 41/41 Spot-focused tests and 330/33
 4. Slice 105 will produce the separate FIX/SBE architecture and implementation contract: package boundary, generated-schema strategy, credential/session safety, binary transport, deterministic conformance testing, and the smallest ordered implementation slices. It will not pretend to implement both protocols in one turn.
 5. Final project reconciliation cannot occur before the FIX/SBE decision and its resulting evidence-backed work are complete. The earlier 6-20 hour closing estimate covered only REST/JSON inventories and is no longer a project-completion estimate.
 
+## Slice 99: Spot execution-report expiry reason
+
+The missing Spot JSON user-data field found by Slice 98 was compared against the live `executionReport` schema, the 2026-03-09 Spot changelog announcement effective 2026-03-26, the current official Spot expiry-reason list, and generated Python connector HEAD `d9be6628`. The current event schema defines optional string wire field `eR`, present only when an order expires. The official expiry-reason list contains nine values, all already represented by `BinanceSpotOrderExpiryReason`.
+
+`BinanceSpotStreamOrderUpdate` now exposes nullable `ExpiryReason` mapped from exact case-sensitive wire key `eR` through `MapConverter`. The existing full execution-report regression payload now carries `EXECUTION_RULE_PRICE_RANGE_EXCEEDED` and verifies its typed value after the real user-data envelope dispatch path. The live schema currently shows `EXPIRED` only as an example while the authoritative expiry-reason list does not contain that value; no undocumented enum member was invented. Absence remains `null`, preserving the field's conditional contract.
+
+No subscription, callback, transport, authentication, README, or console call shape changed. This is an additive response-model correction. Backward Review 23 is next and must cover Slices 96-99 before Slice 100 begins.
+
+The exact execution-report regression, all 41 Spot-focused tests, and all 330 solution tests pass. A forced multi-target solution rebuild succeeds with zero errors and the same three pre-existing warnings.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1441,3 +1451,4 @@ The unchanged implementation baseline passes 41/41 Spot-focused tests and 330/33
 | 96 | Complete | Current COIN-M mark-price kline stream contract | Live canonical COIN-M stream catalog and read-only public payload sample, connector HEAD `d9be6628`, exact-topic/full-payload/ignore-semantics/public-surface tests, 327 deterministic tests, forced full multi-target rebuild |
 | 97 | Complete | Current COIN-M index-price kline stream contract | Live canonical COIN-M stream catalog and three read-only public payload samples, connector HEAD `d9be6628`, exact-topic/full-payload/placeholder-symbol/unit-safety/public-surface tests, 330 deterministic tests, forced full multi-target rebuild |
 | 98 | Complete | Spot closing inventory across REST, WebSocket API, JSON streams, user data, FIX, and SBE | Live catalogs and changelog through 2026-07-27, connector HEAD `d9be6628`, 48/47/47 REST and 55/54/54 WebSocket API reconciliation, 15/15 JSON stream families, 6/6 user-data event types, one missing `executionReport.eR` field, confirmed empty FIX/SBE implementation surfaces, 41 Spot and 330 complete tests, forced rebuild |
+| 99 | Complete | Spot JSON user-data `executionReport.eR` expiry reason | Live event schema and official nine-value expiry-reason list, 2026-03-09 announcement effective 2026-03-26, connector HEAD `d9be6628`, exact wire-key and typed-enum regression, 41 Spot and 330 complete tests, forced rebuild |
