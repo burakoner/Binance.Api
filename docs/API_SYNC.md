@@ -74,13 +74,13 @@ This is a method-and-path candidate inventory from the official generated API ca
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Algo Trading | 11 | 11 | 11 | 0 | 0 |
 | Convert | 9 | 9 | 9 | 0 | 0 |
-| Margin | 65 | 58 | 58 | 7 | 0 |
+| Margin | 65 | 65 | 65 | 0 | 0 |
 | Spot | 48 | 47 | 47 | 1 | 0 |
-| USDⓈ-M Futures | 95 | 83 | 83 | 12 | 0 |
+| USDⓈ-M Futures | 95 | 89 | 89 | 6 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 47 | 43 | 1 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/89/89/6/0; one of its six raw catalog-only routes is the explicitly deprecated v1 price ticker, leaving five active candidates. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -446,11 +446,21 @@ The two responses share a common order-information base but retain distinct publ
 
 Six deterministic cases cover both identifier paths, missing/blank identifiers, both dynamic weights, signed query placement, API-key authentication, absent request bodies, all filters, the endpoint-specific receive-window rule, and every field unique to both response shapes. README and console examples expose both methods. Regenerating the complete comparison gives 95 catalog routes, 89 wrapper routes, 89 exact matches, 6 catalog-only routes, and no wrapper-only route. Excluding the explicitly deprecated v1 price route gives 94 active catalog routes, 89 exact wrapper matches, and 5 actionable official-only routes. Trade coverage improves from 25 to 27 exact matches out of 32. All 185 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Backward Review 11 (after Slices 47-50)
+
+The complete `aaa8b96..22ad549` change set was re-read across production code, public interfaces, response models, deterministic tests, examples, release notes, and the execution contract. The live canonical Market Data, Account, and Trade sections were independently rechecked for all seven touched routes, and the current official generated connector was compared again by method, path, parameters, weights, response variants, and field names. No production-code or test defect requiring correction was found.
+
+All added operations use the documented HTTP method and literal path. The three Market Data methods are unsigned; both balance versions and both native Algo queries are signed. Every reviewed GET places parameters in the query and sends no request body. Exact weights remain RPI 20, ADL 1, trading schedule 5, balance v2/v3 5, Algo order 1, and open Algo orders 1 with a symbol or 40 without one. Receive-window validation remains endpoint-specific: both balance versions and open Algo orders enforce their explicit 60,000-millisecond ceilings, while the single Algo-order section publishes no ceiling and therefore does not inherit one by assumption.
+
+Response-schema regeneration found no missing or surplus published fields: RPI 5/5, ADL 3/3 for both object and array items, balance 9/9 for both versions, single Algo order 28/28, open Algo order 30/30, and trading schedule 2/2 root fields plus all 4/4 market groups and 3/3 session fields. Raw int64 fields remain raw where the endpoint schema publishes no time unit; the balance update time alone retains its documented millisecond conversion. Open strings remain strings where the schema does not publish an enum, and the Algo response keeps empty/literal-null-capable fields out of numeric types.
+
+The review found one documentation defect: the living REST inventory table still showed the Slice 43 USDⓈ-M baseline and the pre-completion Margin row. The current table now reflects the already verified 65/65/65/0/0 Margin and 95/89/89/6/0 USDⓈ-M states without rewriting historical slice snapshots. The normalized USDⓈ-M candidate set is exactly six raw catalog-only routes and no wrapper-only route; excluding the deprecated v1 price ticker leaves five active candidates. All 185 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Perform Backward Review 11 immediately across Slices 47-50, including code, tests, documentation, route counts, and the execution order; do not start another endpoint first.
-2. Subject to that review, validate the remaining read-only native USDⓈ-M `GET /fapi/v1/allAlgoOrders` contract in its own bounded slice.
-3. Keep native conditional Algo placement/cancellation, bulk cancellation, the TradFi agreement mutation, the COIN-M retired-operation removal, and Options lifecycle candidates in separate endpoint-level slices.
+1. Validate only the remaining read-only native USDⓈ-M `GET /fapi/v1/allAlgoOrders` contract in the next bounded implementation slice.
+2. Reassess native conditional Algo placement and single-order cancellation together only if both live mutation contracts form one coherent two-endpoint lifecycle; otherwise split them.
+3. Keep bulk Algo cancellation, the TradFi agreement mutation, the COIN-M retired-operation removal, and Options lifecycle candidates in separate endpoint-level slices.
 
 ## Review log
 
@@ -516,3 +526,4 @@ Six deterministic cases cover both identifier paths, missing/blank identifiers, 
 | 48 | Complete | USDⓈ-M trading schedule and deprecated-v1/current-v2 price decision | Live canonical Market Data sections, 2025-12-16/2026-07-16 changelog entries, explicit v1 deprecation evidence, current connector/models, unsigned query/weight/shape tests, 176 deterministic tests |
 | 49 | Complete | USDⓈ-M v2/v3 account balance coexistence | Live canonical Account sections, current generated connector and shared schema, signed query/weight/receive-window/full-model tests, 179 deterministic tests |
 | 50 | Complete | Native USDⓈ-M conditional Algo order and open-order queries | Live canonical Trade sections, current generated connector and distinct models, signed identifier/dynamic-weight/receive-window/full-shape tests, 185 deterministic tests |
+| Review 11 | Complete | Backward review of USDⓈ-M Market Data, balance-version coexistence, native Algo queries, documentation, and execution order | `aaa8b96..22ad549` diff review, live seven-route recheck, connector schema comparison, GET/signing/weight/receive-window scans, corrected living inventory, 185 tests, forced full multi-target rebuild |
