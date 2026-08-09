@@ -193,7 +193,25 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     }
     #endregion
 
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeMarketAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+        => SubscribeAsync(MarketStreamAddress, topics, authenticated, onData, ct);
+
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribePublicAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+        => SubscribeAsync(PublicStreamAddress, topics, authenticated, onData, ct);
+
     internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+        => SubscribeAsync(LegacyStreamAddress, topics, authenticated, onData, ct);
+
+    internal static string MarketStreamAddress
+        => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("market/stream");
+
+    internal static string PublicStreamAddress
+        => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("public/stream");
+
+    private static string LegacyStreamAddress
+        => BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("stream");
+
+    private Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(string address, IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     {
         var request = new BinanceSocketRequest
         {
@@ -202,7 +220,7 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.UsdFuturesSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
+        return SubscribeAsync(address, request, "", authenticated, onData, ct);
     }
 
     internal async Task<CallResult<bool>> SyncTimeAsync()

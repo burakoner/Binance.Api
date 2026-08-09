@@ -17,7 +17,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(AggregateTradeStreamTopics(symbols), false, handler, ct);
+        return SubscribeMarketAsync(AggregateTradeStreamTopics(symbols), false, handler, ct);
     }
 
     internal static string[] AggregateTradeStreamTopics(IEnumerable<string> symbols)
@@ -40,7 +40,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(MarkPriceStreamTopics(symbols, updateInterval), false, handler, ct);
+        return SubscribeMarketAsync(MarkPriceStreamTopics(symbols, updateInterval), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPricesAsync(
@@ -52,7 +52,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync([MarkPriceAllMarketStreamTopic(updateInterval)], false, handler, ct);
+        return SubscribeMarketAsync([MarkPriceAllMarketStreamTopic(updateInterval)], false, handler, ct);
     }
 
     internal static string[] MarkPriceStreamTopics(IEnumerable<string> symbols, int? updateInterval)
@@ -122,7 +122,7 @@ internal partial class BinanceFuturesSocketClientUsd
             onMessage(data.As(data.Data.Data.Kline));
         });
         symbols = symbols.SelectMany(a => intervals.Select(i => (premiumIndex ? "p" + a.ToUpper(BinanceConstants.CI) : a.ToLower(BinanceConstants.CI)) + "@kline_" + MapConverter.GetString(i))).ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToContinuousContractKlinesAsync(string pair,
@@ -144,7 +144,7 @@ internal partial class BinanceFuturesSocketClientUsd
             onMessage(data.As(data.Data.Data.Kline));
         });
         pairs = pairs.Select(a => a.ToLower(BinanceConstants.CI) + "_" + MapConverter.GetString(contractType)!.ToLower() + "@continuousKline_" + MapConverter.GetString(interval)).ToArray();
-        return SubscribeAsync(pairs, false, handler, ct);
+        return SubscribeMarketAsync(pairs, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default) => SubscribeToMiniTickersAsync(new[] { symbol }, onMessage, ct);
@@ -158,7 +158,7 @@ internal partial class BinanceFuturesSocketClientUsd
             onMessage(data.As(data.Data.Data));
         });
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@miniTicker").ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamTick>>> onMessage, CancellationToken ct = default)
@@ -167,7 +167,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!ticker@arr"], false, handler, ct);
+        return SubscribeMarketAsync(["!ticker@arr"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage, CancellationToken ct = default) => SubscribeToTickersAsync(new[] { symbol }, onMessage, ct);
@@ -181,7 +181,7 @@ internal partial class BinanceFuturesSocketClientUsd
             onMessage(data.As(data.Data.Data));
         });
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker").ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamMiniTick>>> onMessage, CancellationToken ct = default)
@@ -190,7 +190,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!miniTicker@arr"], false, handler, ct);
+        return SubscribeMarketAsync(["!miniTicker@arr"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(
@@ -211,7 +211,7 @@ internal partial class BinanceFuturesSocketClientUsd
             onMessage(data.As(data.Data.Data));
         });
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@bookTicker").ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribePublicAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(Action<WebSocketDataEvent<BinanceFuturesStreamBookPrice>> onMessage, CancellationToken ct = default)
@@ -220,7 +220,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!bookTicker"], false, handler, ct);
+        return SubscribePublicAsync(["!bookTicker"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(
@@ -241,7 +241,7 @@ internal partial class BinanceFuturesSocketClientUsd
             onMessage(data.As(data.Data.Data.Data));
         });
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@forceOrder").ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToLiquidationsAsync(Action<WebSocketDataEvent<BinanceFuturesStreamLiquidation>> onMessage, CancellationToken ct = default)
@@ -250,7 +250,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data.Data));
         });
-        return SubscribeAsync(["!forceOrder@arr"], false, handler, ct);
+        return SubscribeMarketAsync(["!forceOrder@arr"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(
@@ -279,7 +279,7 @@ internal partial class BinanceFuturesSocketClientUsd
         });
 
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribePublicAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(
@@ -301,7 +301,7 @@ internal partial class BinanceFuturesSocketClientUsd
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamOrderBookDepth>>>(data =>
             onMessage(data.As(data.Data.Data)));
         symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
+        return SubscribePublicAsync(symbols, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToCompositeIndexesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamCompositeIndex>> onMessage, CancellationToken ct = default)
@@ -310,7 +310,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync([symbol.ToLower(BinanceConstants.CI) + "@compositeIndex"], false, action, ct);
+        return SubscribeMarketAsync([symbol.ToLower(BinanceConstants.CI) + "@compositeIndex"], false, action, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToSymbolsAsync(
@@ -321,7 +321,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync([ContractInfoStreamTopic], false, handler, ct);
+        return SubscribeMarketAsync([ContractInfoStreamTopic], false, handler, ct);
     }
 
     internal const string ContractInfoStreamTopic = "!contractInfo";
@@ -335,7 +335,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync([symbol.ToLowerInvariant() + "@assetIndex"], false, handler, ct);
+        return SubscribeMarketAsync([symbol.ToLowerInvariant() + "@assetIndex"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(
@@ -346,7 +346,7 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!assetIndex@arr"], false, handler, ct);
+        return SubscribeMarketAsync(["!assetIndex@arr"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(string symbol,
