@@ -245,6 +245,123 @@ public class BinanceFuturesRestClientUsdAlgoQueryTests
         Assert.Null(configuredHandler.RequestUri);
     }
 
+    [Fact]
+    public async Task GetAlgoOrdersAsync_UsesCurrentSignedContractAndDeserializesListShape()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            [
+              {
+                "algoId": 2146760,
+                "clientAlgoId": "6B2I9XVcJpCjqPAJ4YoFX7",
+                "algoType": "CONDITIONAL",
+                "orderType": "TAKE_PROFIT",
+                "symbol": "BNBUSDT",
+                "side": "SELL",
+                "positionSide": "BOTH",
+                "timeInForce": "GTC",
+                "quantity": "0.01",
+                "algoStatus": "CANCELED",
+                "actualOrderId": "",
+                "actualPrice": "0.00000",
+                "triggerPrice": "750.000",
+                "price": "750.000",
+                "icebergQuantity": "null",
+                "tpTriggerPrice": "760.000",
+                "tpPrice": "759.500",
+                "slTriggerPrice": "740.000",
+                "slPrice": "739.500",
+                "tpOrderType": "",
+                "selfTradePreventionMode": "EXPIRE_MAKER",
+                "workingType": "CONTRACT_PRICE",
+                "priceMatch": "NONE",
+                "closePosition": false,
+                "priceProtect": false,
+                "reduceOnly": false,
+                "createTime": 1750485492076,
+                "updateTime": 1750514545091,
+                "triggerTime": 0,
+                "goodTillDate": 0
+              }
+            ]
+            """);
+        using var client = CreateClient(handler, limiter);
+        var startTime = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endTime = startTime.AddDays(6);
+
+        var result = await client.UsdFutures.GetAlgoOrdersAsync(
+            "BNBUSDT",
+            2146760,
+            startTime,
+            endTime,
+            1000,
+            70_000);
+
+        Assert.True(result.Success);
+        AssertSignedGet(handler, limiter, "/fapi/v1/allAlgoOrders", 5);
+        var query = DecodedQuery(handler);
+        Assert.Contains("symbol=BNBUSDT", query);
+        Assert.Contains("algoId=2146760", query);
+        Assert.Contains($"startTime={new DateTimeOffset(startTime).ToUnixTimeMilliseconds()}", query);
+        Assert.Contains($"endTime={new DateTimeOffset(endTime).ToUnixTimeMilliseconds()}", query);
+        Assert.Contains("limit=1000", query);
+        Assert.Contains("recvWindow=70000", query);
+
+        var order = Assert.Single(result.Data);
+        Assert.Equal(2146760, order.AlgoId);
+        Assert.Equal("6B2I9XVcJpCjqPAJ4YoFX7", order.ClientAlgoId);
+        Assert.Equal("CONDITIONAL", order.AlgoType);
+        Assert.Equal("CANCELED", order.Status);
+        Assert.Equal(string.Empty, order.ActualOrderId);
+        Assert.Equal(0m, order.ActualPrice);
+        Assert.Equal("null", order.IcebergQuantity);
+        Assert.Equal(760m, order.TakeProfitTriggerPrice);
+        Assert.Equal(759.5m, order.TakeProfitPrice);
+        Assert.Equal(740m, order.StopLossTriggerPrice);
+        Assert.Equal(739.5m, order.StopLossPrice);
+        Assert.Equal(1750485492076, order.CreateTime);
+        Assert.Equal(1750514545091, order.UpdateTime);
+    }
+
+    [Fact]
+    public async Task GetAlgoOrdersAsync_OmitsOptionalFilters()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var client = CreateClient(handler, limiter);
+
+        var result = await client.UsdFutures.GetAlgoOrdersAsync("BTCUSDT");
+
+        Assert.True(result.Success);
+        AssertSignedGet(handler, limiter, "/fapi/v1/allAlgoOrders", 5);
+        var query = DecodedQuery(handler);
+        Assert.Contains("symbol=BTCUSDT", query);
+        Assert.DoesNotContain("algoId=", query);
+        Assert.DoesNotContain("startTime=", query);
+        Assert.DoesNotContain("endTime=", query);
+        Assert.DoesNotContain("limit=", query);
+        Assert.DoesNotContain("recvWindow=", query);
+    }
+
+    [Fact]
+    public async Task GetAlgoOrdersAsync_RejectsInvalidRequiredAndRangeParameters()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var client = CreateClient(handler);
+        var startTime = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        await Assert.ThrowsAnyAsync<ArgumentException>(() => client.UsdFutures.GetAlgoOrdersAsync(null!));
+        await Assert.ThrowsAnyAsync<ArgumentException>(() => client.UsdFutures.GetAlgoOrdersAsync(""));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetAlgoOrdersAsync("BTCUSDT", limit: 1001));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetAlgoOrdersAsync("BTCUSDT", startTime: startTime, endTime: startTime));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetAlgoOrdersAsync("BTCUSDT", startTime: startTime, endTime: startTime.AddDays(7)));
+        Assert.Null(handler.RequestUri);
+    }
+
     private static void AssertSignedGet(
         RecordingHttpMessageHandler handler,
         RecordingRateLimiter limiter,

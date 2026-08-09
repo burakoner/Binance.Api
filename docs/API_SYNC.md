@@ -76,11 +76,11 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Convert | 9 | 9 | 9 | 0 | 0 |
 | Margin | 65 | 65 | 65 | 0 | 0 |
 | Spot | 48 | 47 | 47 | 1 | 0 |
-| USDⓈ-M Futures | 95 | 89 | 89 | 6 | 0 |
+| USDⓈ-M Futures | 95 | 90 | 90 | 5 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 47 | 43 | 1 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/89/89/6/0; one of its six raw catalog-only routes is the explicitly deprecated v1 price ticker, leaving five active candidates. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/90/90/5/0; one of its five raw catalog-only routes is the explicitly deprecated v1 price ticker, leaving four active candidates. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -456,11 +456,21 @@ Response-schema regeneration found no missing or surplus published fields: RPI 5
 
 The review found one documentation defect: the living REST inventory table still showed the Slice 43 USDⓈ-M baseline and the pre-completion Margin row. The current table now reflects the already verified 65/65/65/0/0 Margin and 95/89/89/6/0 USDⓈ-M states without rewriting historical slice snapshots. The normalized USDⓈ-M candidate set is exactly six raw catalog-only routes and no wrapper-only route; excluding the deprecated v1 price ticker leaves five active candidates. All 185 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 51: native USDⓈ-M all conditional Algo orders
+
+`GET /fapi/v1/allAlgoOrders` was compared against its live Trade section and the current official generated JavaScript connector. It is a signed `USER_DATA` GET operation with query parameters, no request body, and IP weight 5. `GetAlgoOrdersAsync` requires `symbol` and accepts optional int64 `algoId`, millisecond `startTime`/`endTime`, int64 `limit`, and `recvWindow`. When `algoId` is supplied Binance returns orders at or above that ID; otherwise it returns the most recent orders. The documented limit default is 500 and maximum is 1000.
+
+The endpoint requires a query period shorter than seven days, so equal/reversed boundaries and a full seven-day span are rejected before transport while a six-day span is accepted. Its endpoint section does not publish a receive-window maximum, so the method deliberately uses the normalized explicit or configured value without borrowing the 60,000-millisecond ceiling from different endpoints. The same server retention limits as the single-order query still apply: unfilled canceled/expired orders older than three days and every order older than 90 days may no longer be returned.
+
+The official all-orders and open-orders item schemas are exactly identical at 30 fields. Both methods now return the neutral `BinanceFuturesAlgoOrderListItem` instead of attaching an “open” semantic to a model that also represents canceled, triggered, and finished orders. No compatibility alias was retained because this surface has not been released and the project explicitly targets the current contract rather than preserving an accidental historical name. Field regeneration confirms 30 official/30 wrapper fields with no missing or extra names.
+
+Three deterministic cases cover the complete signed request, weight 5, required and omitted filters, int64 identifiers and limits, millisecond time serialization, strict time-range and limit validation, the absence of an invented receive-window ceiling, and representative list-item response fields. README, console examples, and release notes are current. The complete comparison is now 95 catalog routes, 90 wrapper routes, 90 exact matches, 5 catalog-only routes, and no wrapper-only route. Excluding the explicitly deprecated v1 price route gives 94 active catalog routes, 90 exact wrapper matches, and 4 actionable official-only routes. Trade coverage improves to 28 exact matches out of 32. All 188 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Validate only the remaining read-only native USDⓈ-M `GET /fapi/v1/allAlgoOrders` contract in the next bounded implementation slice.
-2. Reassess native conditional Algo placement and single-order cancellation together only if both live mutation contracts form one coherent two-endpoint lifecycle; otherwise split them.
-3. Keep bulk Algo cancellation, the TradFi agreement mutation, the COIN-M retired-operation removal, and Options lifecycle candidates in separate endpoint-level slices.
+1. Reassess native conditional Algo placement `POST /fapi/v1/algoOrder` and single-order cancellation `DELETE /fapi/v1/algoOrder` together only if both live mutation contracts form one coherent two-endpoint lifecycle; otherwise split them.
+2. Keep bulk Algo cancellation `DELETE /fapi/v1/algoOpenOrders` and the TradFi agreement mutation `POST /fapi/v1/stock/contract` in separate endpoint-level slices.
+3. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
 
 ## Review log
 
@@ -527,3 +537,4 @@ The review found one documentation defect: the living REST inventory table still
 | 49 | Complete | USDⓈ-M v2/v3 account balance coexistence | Live canonical Account sections, current generated connector and shared schema, signed query/weight/receive-window/full-model tests, 179 deterministic tests |
 | 50 | Complete | Native USDⓈ-M conditional Algo order and open-order queries | Live canonical Trade sections, current generated connector and distinct models, signed identifier/dynamic-weight/receive-window/full-shape tests, 185 deterministic tests |
 | Review 11 | Complete | Backward review of USDⓈ-M Market Data, balance-version coexistence, native Algo queries, documentation, and execution order | `aaa8b96..22ad549` diff review, live seven-route recheck, connector schema comparison, GET/signing/weight/receive-window scans, corrected living inventory, 185 tests, forced full multi-target rebuild |
+| 51 | Complete | Native USDⓈ-M all conditional Algo orders query | Live canonical Trade section, current generated connector and shared 30-field list schema, signed filter/range/limit/receive-window tests, 188 deterministic tests |

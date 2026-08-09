@@ -161,7 +161,21 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Current native conditional Algo open orders</returns>
-    Task<RestCallResult<List<BinanceFuturesOpenAlgoOrder>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesAlgoOrderListItem>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets all native conditional Algo orders for a symbol, including active, canceled, triggered, and finished orders
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-all-algo-orders" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
+    /// <param name="algoId">When provided, returns orders with an Algo ID greater than or equal to this value</param>
+    /// <param name="startTime">Optional query start time</param>
+    /// <param name="endTime">Optional query end time. The query period must be less than seven days</param>
+    /// <param name="limit">Maximum result count. The documented default is 500 and maximum is 1000</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Native conditional Algo orders for the symbol</returns>
+    Task<RestCallResult<List<BinanceFuturesAlgoOrderListItem>>> GetAlgoOrdersAsync(string symbol, long? algoId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.

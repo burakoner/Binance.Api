@@ -332,7 +332,7 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesAlgoOrder>(GetUrl(fapi, v1, "algoOrder"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesOpenAlgoOrder>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesAlgoOrderListItem>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
             throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
@@ -346,7 +346,30 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         var weight = symbol is null ? 40 : 1;
-        return RequestAsync<List<BinanceFuturesOpenAlgoOrder>>(GetUrl(fapi, v1, "openAlgoOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+        return RequestAsync<List<BinanceFuturesAlgoOrderListItem>>(GetUrl(fapi, v1, "openAlgoOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
+    }
+
+    public Task<RestCallResult<List<BinanceFuturesAlgoOrderListItem>>> GetAlgoOrdersAsync(string symbol, long? algoId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        symbol.ValidateNotNull(nameof(symbol));
+        if (limit > 1000)
+            throw new ArgumentOutOfRangeException(nameof(limit), limit, "limit cannot exceed 1000");
+        if (startTime.HasValue && endTime.HasValue)
+        {
+            if (endTime.Value <= startTime.Value)
+                throw new ArgumentOutOfRangeException(nameof(endTime), "endTime must be later than startTime");
+            if (endTime.Value - startTime.Value >= TimeSpan.FromDays(7))
+                throw new ArgumentOutOfRangeException(nameof(endTime), "The query time period must be less than 7 days");
+        }
+
+        var parameters = new ParameterCollection { { "symbol", symbol } };
+        parameters.AddOptional("algoId", algoId?.ToString(BinanceConstants.CI));
+        parameters.AddOptionalMilliseconds("startTime", startTime);
+        parameters.AddOptionalMilliseconds("endTime", endTime);
+        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<List<BinanceFuturesAlgoOrderListItem>>(GetUrl(fapi, v1, "allAlgoOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)

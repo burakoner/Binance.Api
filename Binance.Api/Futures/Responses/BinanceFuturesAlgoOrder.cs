@@ -181,9 +181,9 @@ public record BinanceFuturesAlgoOrder : BinanceFuturesAlgoOrderInfo
 }
 
 /// <summary>
-/// Native USD-M current conditional Algo open order
+/// Native USD-M conditional Algo order list item
 /// </summary>
-public record BinanceFuturesOpenAlgoOrder : BinanceFuturesAlgoOrderInfo
+public record BinanceFuturesAlgoOrderListItem : BinanceFuturesAlgoOrderInfo
 {
     /// <summary>
     /// Take-profit trigger price

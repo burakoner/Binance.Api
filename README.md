@@ -409,6 +409,7 @@ var futures_223 = await api.UsdFutures.GetPositionAdlQuantileEstimationAsync();
 var futures_224 = await api.UsdFutures.GetMarginChangeHistoryAsync("---SYMBOL---");
 var futures_225 = await api.UsdFutures.GetAlgoOrderAsync(algoId: 1_000_001L);
 var futures_226 = await api.UsdFutures.GetOpenAlgoOrdersAsync(symbol: "---SYMBOL---");
+var futures_227 = await api.UsdFutures.GetAlgoOrdersAsync("---SYMBOL---");
 
 // USDⓈ-M Futures -> User Data Stream Methods (PRIVATE)
 var futures_301 = await api.UsdFutures.StartUserStreamAsync();
