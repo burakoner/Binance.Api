@@ -1055,15 +1055,17 @@ internal class Program
         var futures_525 = await ws.UsdFutures.SubscribeToPartialOrderBooksAsync(["---SYMBOL---"], 20, null, (data) => { });
         var futures_526 = await ws.UsdFutures.SubscribeToOrderBooksAsync("---SYMBOL---", 500, (data) => { });
         var futures_527 = await ws.UsdFutures.SubscribeToOrderBooksAsync(["---SYMBOL---"], null, (data) => { });
-        var futures_528 = await ws.UsdFutures.SubscribeToCompositeIndexesAsync("---SYMBOL---", (data) => { });
-        var futures_529 = await ws.UsdFutures.SubscribeToSymbolsAsync((data) => { });
-        var futures_530 = await ws.UsdFutures.SubscribeToAssetIndexesAsync("---SYMBOL---", (data) => { });
-        var futures_531 = await ws.UsdFutures.SubscribeToAssetIndexesAsync((data) => { });
-        var futures_532 = await ws.UsdFutures.SubscribeToTradesAsync("---SYMBOL---", (data) => { });
-        var futures_533 = await ws.UsdFutures.SubscribeToTradesAsync(["---SYMBOL---"], (data) => { });
+        var futures_528 = await ws.UsdFutures.SubscribeToRpiOrderBooksAsync("---SYMBOL---", (data) => { _ = data.Data.Pair; _ = data.Data.SymbolType; });
+        var futures_529 = await ws.UsdFutures.SubscribeToRpiOrderBooksAsync(["---SYMBOL---"], (data) => { });
+        var futures_530 = await ws.UsdFutures.SubscribeToCompositeIndexesAsync("---SYMBOL---", (data) => { });
+        var futures_531 = await ws.UsdFutures.SubscribeToSymbolsAsync((data) => { });
+        var futures_532 = await ws.UsdFutures.SubscribeToAssetIndexesAsync("---SYMBOL---", (data) => { });
+        var futures_533 = await ws.UsdFutures.SubscribeToAssetIndexesAsync((data) => { });
+        var futures_534 = await ws.UsdFutures.SubscribeToTradesAsync("---SYMBOL---", (data) => { });
+        var futures_535 = await ws.UsdFutures.SubscribeToTradesAsync(["---SYMBOL---"], (data) => { });
 
         // USDⓈ-M Futures Web Socket Stream -> User Data Methods (PRIVATE)
-        var futures_534 = await ws.UsdFutures.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
+        var futures_536 = await ws.UsdFutures.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
             onAccountUpdated: (data) => { },
             onLeverageUpdated: (data) => { },
             onMarginUpdated: (data) => { },

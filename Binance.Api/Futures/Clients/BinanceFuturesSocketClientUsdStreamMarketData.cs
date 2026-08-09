@@ -304,6 +304,25 @@ internal partial class BinanceFuturesSocketClientUsd
     internal static string[] DiffDepthStreamTopics(IEnumerable<string> symbols, int? updateInterval)
         => DepthStreamTopics(symbols, "@depth", updateInterval);
 
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRpiOrderBooksAsync(
+        string symbol,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
+        CancellationToken ct = default)
+        => SubscribeToRpiOrderBooksAsync([symbol], onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRpiOrderBooksAsync(
+        IEnumerable<string> symbols,
+        Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage,
+        CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamOrderBookDepth>>>(data =>
+            onMessage(data.As(data.Data.Data)));
+        return SubscribePublicAsync(RpiDepthStreamTopics(symbols), false, handler, ct);
+    }
+
+    internal static string[] RpiDepthStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@rpiDepth@500ms");
+
     private static string[] DepthStreamTopics(IEnumerable<string> symbols, string suffix, int? updateInterval)
     {
         updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 500);

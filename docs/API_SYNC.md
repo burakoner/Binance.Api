@@ -1066,6 +1066,23 @@ Four deterministic regressions cover every partial/diff topic form for both prod
 3. Keep the undocumented `@trade` method and private/listen-key routing as separate lifecycle decisions.
 4. Revisit mini-ticker/ticker only after the review because merged UM/CM volume fields retain product-dependent meanings.
 
+## Slice 89: current USDⓈ-M RPI diff-depth stream
+
+The current RPI stream was compared against the live USDⓈ-M Public WebSocket Stream catalog, the USDⓈ-M changelog entry dated 2025-11-25, the effective UM/CM architecture-integration notice, the complete live COIN-M stream catalog, and official generated Go connector HEAD `a0c61d1`. The changelog introduced both `GET /fapi/v1/rpiDepth` and `<symbol>@rpiDepth@500ms` only for USDⓈ-M. The current stream has one fixed topic, `{symbol}@rpiDepth@500ms`, runs on `wss://fstream.binance.com/public/stream`, and pushes every 500 milliseconds. Unlike standard depth, it includes and aggregates RPI orders.
+
+Its complete current payload is `e/E/T/s/U/u/pu/b/a/ps/st`, identical in shape to the corrected shared standard-depth model from Slice 88. Pair `ps` and symbol type `st` were added by the architecture integration; current USDⓈ-M events use `st = 1`. Reusing `BinanceFuturesStreamOrderBookDepth` therefore preserves the contract without introducing a duplicate model. The catalog also defines a critical zero-quantity ambiguity: zero can mean all quotations at the price were filled or canceled, or that crossed RPI quantity is hidden. Both public overloads document this rather than allowing consumers to assume an unambiguous empty level.
+
+The integration notice lists `<symbol>@rpiDepth` among streams receiving `st` and the UM `@500ms` topic among streams receiving `ps`, but it does not declare cross-host subscription for this family. The current COIN-M catalog contains no RPI depth endpoint, and the generated connector contains only the USDⓈ-M RPI stream model and operation. The wrapper consequently exposes only USDⓈ-M single-symbol and multi-symbol subscriptions and does not infer a COIN-M method from integration-delta wording.
+
+The two overloads use the canonical Public transport path, exact fixed-speed topics, and the complete shared depth callback. The topic helper rejects null, empty, or blank symbol collections before transport. README and executable console examples expose pair and symbol type without adding a caller-selectable cadence that the endpoint does not support. Two deterministic regressions cover exact multi-symbol topics, invalid symbol collections, the complete current payload, int64 sequence boundaries, decimal price/quantity levels, timestamps, pair, symbol type, and a zero-quantity update. Both targeted tests and all 301 deterministic tests pass. A forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request or WebSocket connection was opened.
+
+### Revised next order
+
+1. Perform Backward Review 20 now, covering Slices 87-89 across implementation, tests, examples, release notes, and the execution contract before any Slice 90 implementation.
+2. Re-read the live affected stream catalogs and integration notice during that review; do not preselect the next implementation family before the risk ranking is refreshed.
+3. Keep the undocumented `@trade` methods and private/listen-key routing as separate lifecycle decisions.
+4. Keep mini-ticker/ticker volume semantics separate because merged UM/CM fields remain product-dependent.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1177,3 +1194,4 @@ Four deterministic regressions cover every partial/diff topic form for both prod
 | Review 19 | Complete | Backward review of COIN-M aggregate-trade, mark-price, book-ticker, and merged contract-info streams; USDⓈ-M Market/Public channel correction and forward stream-family re-ranking | `ba8f908..d64e944` diff review, live COIN-M and USDⓈ-M Market/Public stream catalogs, integration notice and changelog, connector HEAD `a0c61d1`, Market/Public routing and canonical-link correction, 20 targeted and 290 complete tests, forced full multi-target rebuild |
 | 87 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market liquidation stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded snapshot-description and COIN `st` example conflicts, topic/envelope/pair-location/symbol-type tests, 295 deterministic tests, forced full multi-target rebuild |
 | 88 | Complete | Current standard USDⓈ-M and COIN-M partial/diff depth stream contracts | Live canonical USDⓈ-M Public and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded explicit/default speed and COIN `st` example conflicts, topic/full-payload/int64/decimal tests, 299 deterministic tests, forced full multi-target rebuild |
+| 89 | Complete | Current USDⓈ-M RPI diff-depth stream contract and evidence-based COIN-M exclusion | Live canonical USDⓈ-M Public and complete COIN-M stream catalogs, 2025-11-25 USDⓈ-M changelog, 2026-06-10 integration notice, connector HEAD `a0c61d1`, exact-topic/full-payload/zero-quantity tests, 301 deterministic tests, forced full multi-target rebuild |

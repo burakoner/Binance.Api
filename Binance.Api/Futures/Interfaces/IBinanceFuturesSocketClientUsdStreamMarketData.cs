@@ -292,6 +292,28 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(IEnumerable<string> symbols, int? updateInterval, Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage, CancellationToken ct = default);
 
     /// <summary>
+    /// Subscribes to diff order-book depth updates including aggregated RPI orders for the provided symbol. Updates are pushed every 500 milliseconds
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/public#rpi-diff-book-depth-streams" /></para>
+    /// <para>A zero update quantity can mean all quotations at that price were filled or canceled, or that crossed RPI quantity is hidden</para>
+    /// </summary>
+    /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
+    /// <param name="onMessage">The event handler for the received data</param>
+    /// <param name="ct">Cancellation token for closing this subscription</param>
+    /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRpiOrderBooksAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
+    /// Subscribes to diff order-book depth updates including aggregated RPI orders for the provided symbols. Updates are pushed every 500 milliseconds
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/public#rpi-diff-book-depth-streams" /></para>
+    /// <para>A zero update quantity can mean all quotations at that price were filled or canceled, or that crossed RPI quantity is hidden</para>
+    /// </summary>
+    /// <param name="symbols">The symbols, for example `ETHUSDT`</param>
+    /// <param name="onMessage">The event handler for the received data</param>
+    /// <param name="ct">Cancellation token for closing this subscription</param>
+    /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToRpiOrderBooksAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
     /// Subscribes to composite index updates stream for a symbol
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#composite-index-symbol-information-streams" /></para>
     /// </summary>
