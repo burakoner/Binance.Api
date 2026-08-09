@@ -48,8 +48,10 @@ internal partial class BinanceConvertRestClient
 
     public Task<RestCallResult<BinanceConvertStatus>> GetStatusAsync(string? orderId = null, string? quoteId = null, CancellationToken ct = default)
     {
-        if (string.IsNullOrWhiteSpace(orderId) && string.IsNullOrWhiteSpace(quoteId))
-            throw new ArgumentException("Either orderId or quoteId must be provided.");
+        var hasOrderId = !string.IsNullOrWhiteSpace(orderId);
+        var hasQuoteId = !string.IsNullOrWhiteSpace(quoteId);
+        if (hasOrderId == hasQuoteId)
+            throw new ArgumentException("Either orderId or quoteId must be provided, but not both.");
         if (orderId != null && string.IsNullOrWhiteSpace(orderId))
             throw new ArgumentException("orderId cannot be empty.", nameof(orderId));
         if (quoteId != null && string.IsNullOrWhiteSpace(quoteId))

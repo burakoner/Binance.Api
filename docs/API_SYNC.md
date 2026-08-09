@@ -237,18 +237,27 @@ Both current Convert Market Data operations are aligned against their live canon
 
 The three current read-only Trade operations were compared against both the live canonical Trade page and Binance's auto-generated Convert connector source. The sparse connector changelog records the 2025-09-19 switch of `queryLimitOpenOrders` from POST to GET, which the wrapper already matched; it does not describe the other current contract differences found by the endpoint-level comparison.
 
-`GET /sapi/v1/convert/tradeFlow` remains a signed USER_DATA query with UID weight 3000 and now rejects reversed ranges, intervals over 30 days, limits over 1000, and receive windows over 60000 milliseconds. Its model now uses the documented source/destination terminology and preserves `orderStatus` as a string because this endpoint does not publish a closed status enum. `GET /sapi/v1/convert/orderStatus` now uses UID weight 100, requires at least one non-empty order or quote identifier, permits both because neither the current schema nor generated connector prohibits the combination, and no longer sends the undocumented `recvWindow` parameter. Its string status and full numeric/time fields are covered.
+`GET /sapi/v1/convert/tradeFlow` remains a signed USER_DATA query with UID weight 3000 and now rejects reversed ranges, intervals over 30 days, limits over 1000, and receive windows over 60000 milliseconds. Its model now uses the documented source/destination terminology and preserves `orderStatus` as a string because this endpoint does not publish a closed status enum. `GET /sapi/v1/convert/orderStatus` now uses UID weight 100, requires exactly one non-empty order or quote identifier, and no longer sends the undocumented `recvWindow` parameter. Its string status and full numeric/time fields are covered.
 
 `GET /sapi/v1/convert/limit/queryOpenOrders` is now exposed as `GetOpenLimitOrdersAsync` and deserializes into a dedicated `BinanceConvertOpenOrder` model rather than the obsolete limit-order submission model. The response now retains the documented 64-bit order ID, status, source/destination assets and amounts, ratios, creation time, and expiration time. Six deterministic tests cover all three signed GET requests, weights, query placement, boundary rejection, configured receive windows, large identifiers, envelopes, and response fields. The full suite has 137 tests. No production API request was sent.
 
+## Review 8: Transport backoff and current Convert work
+
+The backward review covers `ef488de..b4d8da5`, the four completed slices after Review 7. The server-backoff implementation was rechecked against the live Spot REST contract: HTTP 418/429 `Retry-After` remains a duration in seconds, while WebSocket API error data remains an absolute Unix-millisecond time. REST and WebSocket paths preserve the failed operation without replay, share the guard across each root client, propagate cancellation, and do not use the disabled proactive-limiter switch to bypass server-directed backoff. No transport correction was required.
+
+A fresh comparison against Binance's current generated Convert connector still yields 9 official routes, 9 wrapper routes, 9 exact method/path matches, no official-only route, and no wrapper-only route. Repository scans found no stale `GetLimitOrdersAsync` call, no old Convert source/base response-property use, no parameterless successful pair query, and no wrong method or weight residue in the five completed endpoints. The four remaining noncanonical Convert links belong exactly to the four untouched quote and limit-order mutations.
+
+The review did find one Slice 34 regression. The order-status wording requires either an order ID or quote ID, but the implementation had inferred that sending both was allowed from the generated connector's missing cross-field validation. That connector also publishes an invalid parameterless example, so absence of generated validation is not evidence of server support. The wrapper now requires exactly one non-empty identifier and tests order-only, quote-only, neither, empty, and both combinations.
+
+One forward documentation defect was also removed: the limit-order interface told callers to read `fromIsBase` from `exchangeInfo`, but that field is absent from both the live Market Data response and the current generated response model even though the Trade page still mentions it. The wrapper no longer repeats the unsupported instruction. The limit-order mutation slice must treat this as an official documentation conflict and must not manufacture base/quote orientation behavior. The full deterministic suite remains at 137 tests, the solution builds for all configured target frameworks, and no production API request was sent.
+
 ### Revised next order
 
-1. Perform the due backward review of slices 31-34 and revise code, documentation, and execution order from its findings.
-2. Align the quote request/accept workflow, treating quote acceptance as a balance-changing mutation.
-3. Align limit-order placement and cancellation as a separate two-mutation slice.
-4. Inventory and then align Spot/Futures Algo Trading in similarly bounded groups.
-5. Perform the next backward review after the Convert/Algo boundary and revise derivative scope from its findings.
-6. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
+1. Align the quote request/accept workflow, treating quote acceptance as a balance-changing mutation.
+2. Align limit-order placement and cancellation as a separate two-mutation slice; explicitly resolve the documented `fromIsBase` conflict without inventing behavior.
+3. Inventory and then align Spot/Futures Algo Trading in similarly bounded groups.
+4. Perform the next backward review after four further bounded slices and revise derivative scope from its findings.
+5. Audit USDⓈ-M, COIN-M, and Options only after that review closes the smaller surfaces.
 
 ## Review log
 
@@ -295,3 +304,4 @@ The three current read-only Trade operations were compared against both the live
 | 32 | Complete | Convert REST route inventory | Live Convert catalog and changelog, current official generated connector, normalized 9/9/9/0/0 route comparison, two verified weight defects, bounded follow-up groups |
 | 33 | Complete | Convert Market Data contracts | Live canonical Market Data page, pair-filter and signed-query tests, receive-window guards, exponent limit and 64-bit fraction models, 131 deterministic tests |
 | 34 | Complete | Read-only Convert Trade contracts | Live canonical Trade page, current official generated connector and changelog, history/status/open-limit-order request, validation, weight, naming, and response-model tests, 137 deterministic tests |
+| Review 8 | Complete | Transport backoff, Convert inventory, Market Data, read-only Trade, documentation, and execution order | `ef488de..b4d8da5` diff review, live REST backoff recheck, regenerated 9/9/9/0/0 route comparison, order-status exclusivity correction, unsupported `fromIsBase` guidance removal, canonical-link and stale-call scans, 137 tests, forced full multi-target rebuild |

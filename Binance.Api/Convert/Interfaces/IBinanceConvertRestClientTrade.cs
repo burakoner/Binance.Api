@@ -46,8 +46,8 @@ public interface IBinanceConvertRestClientTrade
     /// Get convert order status
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#order-status" /></para>
     /// </summary>
-    /// <param name="orderId">The order id. Either orderId or quoteId must be provided.</param>
-    /// <param name="quoteId">The quote id. Either orderId or quoteId must be provided.</param>
+    /// <param name="orderId">The order id. Exactly one of orderId or quoteId must be provided.</param>
+    /// <param name="quoteId">The quote id. Exactly one of orderId or quoteId must be provided.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<BinanceConvertStatus>> GetStatusAsync(string? orderId = null, string? quoteId = null, CancellationToken ct = default);
@@ -56,7 +56,7 @@ public interface IBinanceConvertRestClientTrade
     /// Enable users to place a limit order
     /// <para><a href="https://developers.binance.com/docs/convert/trade/Place-Order" /></para>
     /// </summary>
-    /// <param name="baseAsset">base asset (use the response fromIsBase from GET /sapi/v1/convert/exchangeInfo api to check which one is baseAsset )</param>
+    /// <param name="baseAsset">Base asset</param>
     /// <param name="quoteAsset">quote asset</param>
     /// <param name="limitPrice">Symbol limit price (from baseAsset to quoteAsset)</param>
     /// <param name="side">BUY or SELL</param>

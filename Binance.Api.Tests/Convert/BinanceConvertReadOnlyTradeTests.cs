@@ -64,7 +64,7 @@ public class BinanceConvertReadOnlyTradeTests
             """{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}""");
         using var client = CreateClient(handler, limiter, TimeSpan.FromMilliseconds(5000));
 
-        var result = await client.Convert.GetStatusAsync("order-1", "quote-1");
+        var result = await client.Convert.GetStatusAsync("order-1");
 
         Assert.True(result.Success);
         Assert.Equal(933_256_278_426_274_400L, result.Data.OrderId);
@@ -79,18 +79,26 @@ public class BinanceConvertReadOnlyTradeTests
         AssertSignedGet(handler, limiter, "/sapi/v1/convert/orderStatus", 100);
         var query = Uri.UnescapeDataString(handler.RequestUri!.Query);
         Assert.Contains("orderId=order-1", query);
-        Assert.Contains("quoteId=quote-1", query);
+        Assert.DoesNotContain("quoteId=", query);
         Assert.DoesNotContain("recvWindow=", query);
     }
 
     [Fact]
-    public async Task GetStatus_RequiresAtLeastOneNonEmptyIdentifier()
+    public async Task GetStatus_RequiresExactlyOneNonEmptyIdentifier()
     {
         using var client = CreateClient(new RecordingHttpMessageHandler("{}"));
 
         await Assert.ThrowsAsync<ArgumentException>(() => client.Convert.GetStatusAsync());
         await Assert.ThrowsAsync<ArgumentException>(() => client.Convert.GetStatusAsync(" ", "quote-1"));
         await Assert.ThrowsAsync<ArgumentException>(() => client.Convert.GetStatusAsync("order-1", " "));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.Convert.GetStatusAsync("order-1", "quote-1"));
+
+        var handler = new RecordingHttpMessageHandler("{}");
+        using var quoteClient = CreateClient(handler);
+        Assert.True((await quoteClient.Convert.GetStatusAsync(quoteId: "quote-1")).Success);
+        var query = Uri.UnescapeDataString(handler.RequestUri!.Query);
+        Assert.Contains("quoteId=quote-1", query);
+        Assert.DoesNotContain("orderId=", query);
     }
 
     [Fact]
