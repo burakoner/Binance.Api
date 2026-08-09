@@ -4,6 +4,10 @@
 /// Binance WebSocket API Client Options
 /// </summary>
 /// <remarks>
+/// No client-side request-weight or order-count limiter is installed for WebSocket API queries. Published
+/// per-method weights and returned rate-limit counters are not used for proactive request pacing. Applications
+/// must coordinate those limits at the correct IP and account scopes.
+///
 /// WebSocket API status 418 and 429 responses guard subsequent API requests on the same root client until the
 /// server-provided retryAfter time. The failed request is never retried automatically. Applications using
 /// multiple client instances or processes must coordinate server-directed backoff at their own network scope.
@@ -26,7 +30,7 @@ public class BinanceSocketApiClientOptions : WebSocketApiClientOptions
     public TimeSpan TimestampRecalculationInterval { get; set; } = TimeSpan.FromHours(1);
 
     /// <summary>
-    /// Whether to allow the client to adjust the clientOrderId parameter send by the user when placing orders to include a client reference. This reference is used by the exchange to allocate a small percentage of the paid trading fees to developer of this library. Defaults to false.<br />
+    /// Whether to allow the client to adjust the clientOrderId parameter send by the user when placing orders to include a client reference. This reference is used by the exchange to allocate a small percentage of the paid trading fees to developer of this library. Defaults to true.<br />
     /// Note that:<br />
     /// * It does not impact the amount of fees a user pays in any way<br />
     /// * It does not impact functionality. The reference is added just before sending the request and removed again during data deserialization<br />
