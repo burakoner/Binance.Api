@@ -6,13 +6,22 @@
 public interface IBinanceFuturesRestClientUsdAccount
 {
     /// <summary>
-    /// Gets account balances
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Futures-Account-Balance-V2" /></para>
+    /// Gets account balances using the v3 contract
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#futures-account-balance-v3" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The account information</returns>
     Task<RestCallResult<List<BinanceFuturesUsdAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets account balances using the v2 contract
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#futures-account-balance-v2" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The account information</returns>
+    Task<RestCallResult<List<BinanceFuturesUsdAccountBalance>>> GetBalancesV2Async(int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in response section for detail.

@@ -433,6 +433,7 @@ var futures_416 = await api.UsdFutures.GetDownloadIdForTradeHistoryAsync(DateTim
 var futures_417 = await api.UsdFutures.GetDownloadLinkForTradeHistoryAsync("---DOWNLOAD-ID---");
 var futures_418 = await api.UsdFutures.SetBnbBurnStatusAsync(true);
 var futures_419 = await api.UsdFutures.GetBnbBurnStatusAsync();
+var futures_420 = await api.UsdFutures.GetBalancesV2Async();
 
 // USDⓈ-M Futures -> Convert Methods (PRIVATE)
 var futures_501 = await api.UsdFutures.GetConvertSymbolsAsync();

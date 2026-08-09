@@ -426,11 +426,19 @@ The existing `GetPriceAsync` and `GetPricesAsync` operations already target v2 w
 
 Three new deterministic tests plus the two existing missing-symbol cases cover this slice. README, console examples, and release notes are current. Regenerating the complete catalog comparison gives 95 catalog routes, 86 wrapper routes, 86 exact matches, 9 catalog-only routes, and no wrapper-only route. Excluding the one explicitly deprecated v1 price route gives 94 active catalog routes, 86 exact wrapper matches, and 8 actionable official-only routes. The active Market Data surface is now complete at 33/33 exact matches; its raw 34-route catalog count differs only by the deprecated v1 price route. All 176 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 49: USDⓈ-M v2 and v3 account balance coexistence
+
+`GET /fapi/v2/balance` and the wrapper's existing `GET /fapi/v3/balance` were compared independently against their live Account sections and the current official generated JavaScript connector. Both versions remain published without a deprecation or replacement marker. They are signed `USER_DATA` GET operations with IP weight 5, a required timestamp, and an optional `recvWindow` capped at 60,000 milliseconds. Their currently published response fields and types are identical; the generated v3 response also directly reuses the v2 item type.
+
+The existing `GetBalancesAsync` remains the primary v3 operation and its stale v2 documentation link now targets the canonical v3 section. `GetBalancesV2Async` exposes the separately published v2 route without falsely marking it obsolete. Both methods reuse `BinanceFuturesUsdAccountBalance` because it already represents every current field: account alias, asset, wallet and cross-wallet balances, cross unrealized PnL, available and maximum-withdraw balances, multi-asset margin availability, and millisecond update time. Both explicit and client-default receive windows are rejected before transport when they exceed the documented ceiling.
+
+Three deterministic cases cover both route versions, signed query placement, API-key authentication, exact weight 5, absent request bodies, every published response field, millisecond time conversion, and explicit/default receive-window rejection. README and console examples expose the v2 method while preserving the v3 default. The complete USDⓈ-M comparison is now 95 catalog routes, 87 wrapper routes, 87 exact matches, 8 catalog-only routes, and no wrapper-only route. Excluding the explicitly deprecated v1 price route gives 94 active catalog routes, 87 exact wrapper matches, and 7 actionable official-only routes. The active Account surface is complete at 21/21 exact matches. All 179 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Validate USDⓈ-M `GET /fapi/v2/balance` independently against the existing v3 balance contract and current lifecycle evidence before changing the public Account surface.
-2. Reassess the seven native USDⓈ-M conditional Algo routes only after that Account/version slice; keep read-only queries separate from order mutations.
-3. Keep the COIN-M retired-operation removal, Options lifecycle candidates, conditional Algo mutations, and TradFi agreement mutations in separate endpoint-level slices.
+1. Validate only the read-only native USDⓈ-M `GET /fapi/v1/algoOrder` and `GET /fapi/v1/openAlgoOrders` contracts in the next bounded slice.
+2. Perform Backward Review 11 after that fourth post-review implementation slice, then decide whether `GET /fapi/v1/allAlgoOrders` remains separate or can join a revised read-only group.
+3. Keep native conditional Algo order placement/cancellation, bulk cancellation, the TradFi agreement mutation, the COIN-M retired-operation removal, and Options lifecycle candidates in separate endpoint-level slices.
 
 ## Review log
 
@@ -494,3 +502,4 @@ Three new deterministic tests plus the two existing missing-symbol cases cover t
 | Review 10 | Complete | Algo cancellations and queries, derivative inventories, first Options implementation, documentation, and execution order | `c793ab4..7732301` diff review, live 11-route Algo and 44-route Options catalogs, corrected `/futures/data`-aware 95/83/83/12/0 and 64/64/63/1/1 regeneration, 44/47/43/1/4 Options comparison, residue scans, 166 tests, forced full multi-target rebuild |
 | 47 | Complete | USDⓈ-M RPI order book and symbol-level ADL risk | Live canonical Market Data sections, 2025-11-20/2025-11-27 changelog entries, current generated connector and models, unsigned query/weight/variant/int64 tests, 173 deterministic tests |
 | 48 | Complete | USDⓈ-M trading schedule and deprecated-v1/current-v2 price decision | Live canonical Market Data sections, 2025-12-16/2026-07-16 changelog entries, explicit v1 deprecation evidence, current connector/models, unsigned query/weight/shape tests, 176 deterministic tests |
+| 49 | Complete | USDⓈ-M v2/v3 account balance coexistence | Live canonical Account sections, current generated connector and shared schema, signed query/weight/receive-window/full-model tests, 179 deterministic tests |

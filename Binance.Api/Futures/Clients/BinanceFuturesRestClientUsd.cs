@@ -40,6 +40,15 @@ internal partial class BinanceFuturesRestClientUsd(BinanceFuturesRestClient pare
         return new Uri(url);
     }
 
+    private int? ValidateReceiveWindow(int? receiveWindow)
+    {
+        var normalizedReceiveWindow = _._.ReceiveWindow(receiveWindow);
+        if (normalizedReceiveWindow > 60_000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), "receiveWindow cannot exceed 60000 milliseconds");
+
+        return normalizedReceiveWindow;
+    }
+
     internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, BinanceFuturesOrderType type, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, CancellationToken ct)
     {
         if (RestOptions.CoinFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
