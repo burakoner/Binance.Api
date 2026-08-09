@@ -12,6 +12,7 @@
   * Added native USDⓈ-M conditional Algo order and open-order queries with exact identifier, weight, receive-window, and response-shape contracts
   * Added the native USDⓈ-M all-conditional-Algo-orders query with current pagination, time-range, retention, and shared list-item response contracts
   * Added native USDⓈ-M single conditional Algo order cancellation with current identifiers, signed query placement, receive-window validation, weight, and response contract
+  * Added native USDⓈ-M conditional Algo order placement with the current five-type surface, signed form body, explicit combination guards, zero IP weight, RPI time-in-force, and complete response contract
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport

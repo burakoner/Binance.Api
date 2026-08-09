@@ -39,5 +39,11 @@ public enum BinanceTimeInForce : byte
     /// Good til date
     /// </summary>
     [Map("GTD")]
-    GoodTillDate = 6
+    GoodTillDate = 6,
+
+    /// <summary>
+    /// Retail Price Improvement order
+    /// </summary>
+    [Map("RPI")]
+    RetailPriceImprovement = 7
 }

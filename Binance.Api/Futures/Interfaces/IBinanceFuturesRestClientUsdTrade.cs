@@ -141,6 +141,34 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<BinanceFuturesCountDownResult>> CancelAllOrdersAfterTimeoutAsync(string symbol, TimeSpan countDownTime, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Places a native USD-M conditional Algo order
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#new-algo-order" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
+    /// <param name="side">Order side</param>
+    /// <param name="type">Conditional Algo order type</param>
+    /// <param name="positionSide">Position side; required by Binance in Hedge Mode</param>
+    /// <param name="timeInForce">Time in force</param>
+    /// <param name="quantity">Order quantity; cannot be sent with close-all</param>
+    /// <param name="price">Order price; cannot be sent with price matching</param>
+    /// <param name="triggerPrice">Trigger price</param>
+    /// <param name="workingType">Trigger working price type</param>
+    /// <param name="priceMatch">Price matching mode for STOP or TAKE_PROFIT</param>
+    /// <param name="closePosition">Whether to close the entire position</param>
+    /// <param name="priceProtect">Whether trigger-price protection is enabled</param>
+    /// <param name="reduceOnly">Whether the order only reduces a position</param>
+    /// <param name="activatePrice">Trailing-stop activation price</param>
+    /// <param name="callbackRate">Trailing-stop callback rate from 0.1 through 10</param>
+    /// <param name="clientAlgoId">Optional unique client Algo ID matching `^[\.A-Z\:/a-z0-9_-]{1,36}$`</param>
+    /// <param name="orderResponseType">ACK or RESULT response mode</param>
+    /// <param name="selfTradePreventionMode">Self-trade prevention mode</param>
+    /// <param name="goodTillDate">Cancel time for GTD orders; must be more than 600 seconds in the future</param>
+    /// <param name="receiveWindow">The receive window for which this request is active</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The placed native conditional Algo order</returns>
+    Task<RestCallResult<BinanceFuturesAlgoOrderPlacementResult>> PlaceAlgoOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesAlgoOrderType type, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, decimal? quantity = null, decimal? price = null, decimal? triggerPrice = null, BinanceFuturesWorkingType? workingType = null, BinanceFuturesPriceMatch? priceMatch = null, bool? closePosition = null, bool? priceProtect = null, bool? reduceOnly = null, decimal? activatePrice = null, decimal? callbackRate = null, string? clientAlgoId = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, DateTime? goodTillDate = null, int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Cancels an active native conditional Algo order by exchange or client Algo ID
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#cancel-algo-order" /></para>
     /// </summary>

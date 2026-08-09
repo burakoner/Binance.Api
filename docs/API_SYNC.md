@@ -76,7 +76,7 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Convert | 9 | 9 | 9 | 0 | 0 |
 | Margin | 65 | 65 | 65 | 0 | 0 |
 | Spot | 48 | 47 | 47 | 1 | 0 |
-| USDⓈ-M Futures | 95 | 91 | 91 | 4 | 0 |
+| USDⓈ-M Futures | 95 | 92 | 92 | 3 | 0 |
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 47 | 43 | 1 | 4 |
 
@@ -498,10 +498,20 @@ Implementation will enforce every explicit local constraint: nonblank symbol; th
 
 The 25-field placement response is not identical to any existing native Algo model: it omits the query model's triggered-order fields and list model's TP/SL fields while adding trailing activation/callback fields. A dedicated response is required; widening an existing model or forcing a false inheritance relationship would be overengineering. This is a decision-only slice: no source code or public API changed, route counts remain 95/91/91/4/0 raw and 94/91 with three actionable active gaps, and Slices 51 and 53 remain the only implementation slices since Backward Review 11. All 191 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 55: native USDⓈ-M conditional Algo order placement
+
+`POST /fapi/v1/algoOrder` was implemented under the source decisions locked in Slice 54. `PlaceAlgoOrderAsync` exposes only the five conditional types confirmed by the current endpoint introduction and the 2025-11-06 product migration changelog; `LIMIT` and `MARKET` from the contradictory overbroad request enum are not public native Algo choices. The one-value `algoType=CONDITIONAL` is injected, and every business parameter plus timestamp is sent in the signed `application/x-www-form-urlencoded` body. The signature remains in the query according to the wrapper's established mixed signed-payload transport contract.
+
+The method exposes every current optional field without inventing unpublished type-specific presence requirements. It rejects nonblank/enum violations and every explicit local conflict before transport: quantity with close-all; price with price matching; close-all or price protection on unsupported types; reduce-only with close-all or explicit Hedge Mode; invalid close-all side/position combinations; price matching outside STOP/TAKE_PROFIT; activation/callback fields outside trailing stops; callback rates outside 0.1 through 10; malformed client Algo IDs; unsupported shared response, time-in-force, price-match, position-side, working-type, and self-trade-prevention values; missing GTD cancel time; and published GTD lower/upper bound violations. Caller client IDs are preserved exactly, and the endpoint's absent receive-window ceiling is not invented.
+
+The shared time-in-force enum now includes current `RPI`, while endpoint validation excludes unrelated `GTE_GTC`. The transport receives the documented IP weight 0 rather than either account order-counter cost; the distinct one-per-10-second and one-per-minute costs remain published behavior that the transport's single weight dimension cannot represent honestly. `BinanceFuturesAlgoOrderPlacementResult` models all 25 current response fields, including int64 IDs/times, decimal string values, the literal-null-capable iceberg field, and empty-string-capable trailing activation/callback values.
+
+Five deterministic tests cover the complete signed form request, absence of business query parameters, API-key authentication, exact IP weight 0, int64 response precision, all 25 response fields, GTD millisecond serialization, RPI, configured receive windows above 60 seconds, trailing-stop fields, close-all market behavior, exact client-ID preservation, and 25 pre-transport invalid cases. README, the safely gated console, and release notes expose the operation. The complete comparison is now 95 catalog routes, 92 wrapper routes, 92 exact matches, 3 catalog-only routes, and no wrapper-only route. Excluding the deprecated v1 price ticker leaves 94 active catalog routes, 92 exact matches, and 2 actionable gaps. Trade coverage reaches 30 exact matches out of 32. All 196 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Implement only native conditional placement `POST /fapi/v1/algoOrder` under the locked request, enum, validation, rate-cost, and response decisions above.
-2. Keep bulk Algo cancellation `DELETE /fapi/v1/algoOpenOrders` and the TradFi agreement mutation `POST /fapi/v1/stock/contract` in separate endpoint-level slices.
+1. Implement only bulk native Algo cancellation `DELETE /fapi/v1/algoOpenOrders`.
+2. Perform Backward Review 12 after the fourth implementation slice since Review 11, then reassess the remaining TradFi agreement mutation `POST /fapi/v1/stock/contract`.
 3. After the active USDⓈ-M surface is complete, return to the COIN-M retired-operation removal and unresolved Options lifecycle candidates.
 
 ## Review log
@@ -573,3 +583,4 @@ The 25-field placement response is not identical to any existing native Algo mod
 | 52 | Complete | Native USDⓈ-M conditional Algo mutation scope decision | Live placement and single-cancel Trade sections, current generated connector and response models, documented source conflicts, no implementation |
 | 53 | Complete | Native USDⓈ-M single conditional Algo order cancellation | Live canonical Trade section, 2026-01-13 connector changelog, current connector/model, signed identifier/receive-window/weight/response tests, 191 deterministic tests |
 | 54 | Complete | Native USDⓈ-M conditional Algo placement contract decision | Live endpoint and general rules, 2025-11-06/2026-06-20 product changelog, current REST/WebSocket connector contracts, resolved placement/type/rate/validation/model decisions, no implementation |
+| 55 | Complete | Native USDⓈ-M conditional Algo order placement | Live canonical Trade section, 2025-11-06/2026-06-20 product changelog, current connector/model, signed form/enum/combination/rate/response tests, 196 deterministic tests |
