@@ -774,6 +774,21 @@ Four no-network tests lock both method/path/weight contracts, exact numeric requ
 2. Perform mandatory Backward Review 16 across Slices 71-75, including an explicit decision on the unconsumed Futures WebSocket weight metadata, before another implementation slice.
 3. Re-rank the 2026-08-05 All Orders and Force Orders response changes after Review 16.
 
+## Slice 75: current USDⓈ-M and COIN-M `ORDER_TRADE_UPDATE` event contracts
+
+The two `ORDER_TRADE_UPDATE` user-data events were compared field by field against their live official schemas, the combined derivatives changelog change effective 2026-07-30, and official generated JavaScript connector HEAD `092e4f2`. The changelog addition is nested `o.M`: the `modifyId` copied from the corresponding modification request and pushed only for an `AMENDMENT` event whose request supplied it. The stream schema explicitly publishes `M` as a string even though modification requests use int64. The wrapper therefore preserves the exact wire value as nullable `string` rather than guessing a numeric normalization or losing identifiers beyond JavaScript's safe-integer range.
+
+The complete event comparison exposed five additional gaps that the changelog alone did not mention. The shared event now retains the COIN-M top-level account alias `i` and nested margin asset `ma`, the USDⓈ-M ignored int64 strategy fields `si` and `ss`, and the product expiry-reason field `er`. The existing shared bid/ask values remain decimal but their public descriptions now state the product-specific meaning: notional for USDⓈ-M and base-asset quantity for COIN-M. Product-only fields are nullable so absence remains distinguishable and does not invent data for the other product.
+
+The same full-payload test also proved that the model's existing wire enums and millisecond timestamps were not self-deserializing: mapped values such as `GTC` failed under the model's direct JSON contract, while transaction, order-trade, and GTD times lacked the converters already used by other Futures stream models. The affected event properties now apply the established map and date converters explicitly. Both existing user-data-stream clients already route this event into the same shared model, so no callback or transport expansion was needed.
+
+Two deterministic no-network tests cover a complete USDⓈ-M amendment event, a COIN-M amendment with product fields, int64 precision, exact string `M`, conditional absence, product-only absence, enum mapping, and millisecond timestamp conversion. The complete suite now has 253 passing tests, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request or WebSocket connection was opened.
+
+### Revised next order
+
+1. Perform mandatory Backward Review 16 across Slices 71-75, including an explicit decision on the unconsumed Futures WebSocket weight metadata, before another implementation slice.
+2. Re-rank the 2026-08-05 All Orders and Force Orders response changes during Review 16.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -867,3 +882,4 @@ Four no-network tests lock both method/path/weight contracts, exact numeric requ
 | 72 | Complete | Current USDⓈ-M and COIN-M REST batch order modification contracts | Live Trade sections, 2026-06-30 architecture-integration notice, 2026-07-30 `modifyId` changelog, current generated connector, signed body/item-validation/numeric-serialization/per-item response tests, 243 deterministic tests |
 | 73 | Complete | Current USDⓈ-M and COIN-M REST order-modification history contracts | Live Trade sections, 2026-07-30 `modifyId` changelog, current generated connector, signed query/identity/filter/limit/retention/model tests, 247 deterministic tests |
 | 74 | Complete | Current USDⓈ-M and COIN-M WebSocket API order-modification contracts | Live WebSocket API Trade sections, 2026-07-30 `modifyId` changelog, current generated connector, method/path/numeric-parameter/validation/precision/response tests, 251 deterministic tests |
+| 75 | Complete | Current USDⓈ-M and COIN-M `ORDER_TRADE_UPDATE` event contracts | Live user-data-stream schemas, 2026-07-30 `M` changelog, current generated connector, full-field/model/converter tests, 253 deterministic tests |

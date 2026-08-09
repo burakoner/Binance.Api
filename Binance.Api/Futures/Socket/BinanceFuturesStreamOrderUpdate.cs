@@ -14,8 +14,14 @@ public record BinanceFuturesStreamOrderUpdate: BinanceFuturesStreamEvent
     /// <summary>
     /// Transaction time
     /// </summary>
-    [JsonProperty("T")]
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime TransactionTime { get; set; }
+
+    /// <summary>
+    /// The account alias. Only pushed by COIN-M
+    /// </summary>
+    [JsonProperty("i")]
+    public string? AccountAlias { get; set; }
 
     /// <summary>
     /// The listen key the update was for
@@ -43,19 +49,19 @@ public record BinanceFuturesStreamOrderUpdateData
     /// <summary>
     /// The side of the order
     /// </summary>
-    [JsonProperty("S")]
+    [JsonProperty("S"), JsonConverter(typeof(MapConverter))]
     public BinanceOrderSide Side { get; set; }
 
     /// <summary>
     /// The type of the order
     /// </summary>
-    [JsonProperty("o")]
+    [JsonProperty("o"), JsonConverter(typeof(MapConverter))]
     public BinanceFuturesOrderType Type { get; set; }
 
     /// <summary>
     /// The timespan the order is active
     /// </summary>
-    [JsonProperty("f")]
+    [JsonProperty("f"), JsonConverter(typeof(MapConverter))]
     public BinanceTimeInForce TimeInForce { get; set; }
 
     /// <summary>
@@ -85,13 +91,13 @@ public record BinanceFuturesStreamOrderUpdateData
     /// <summary>
     /// The execution type
     /// </summary>
-    [JsonProperty("x")]
+    [JsonProperty("x"), JsonConverter(typeof(MapConverter))]
     public BinanceFuturesExecutionType ExecutionType { get; set; }
 
     /// <summary>
     /// The status of the order
     /// </summary>
-    [JsonProperty("X")]
+    [JsonProperty("X"), JsonConverter(typeof(MapConverter))]
     public BinanceOrderStatus Status { get; set; }
 
     /// <summary>
@@ -99,6 +105,12 @@ public record BinanceFuturesStreamOrderUpdateData
     /// </summary>
     [JsonProperty("i")]
     public long OrderId { get; set; }
+
+    /// <summary>
+    /// The user-defined modification identifier from the corresponding order-modification request. Only pushed for amendment events when supplied
+    /// </summary>
+    [JsonProperty("M")]
+    public string? ModifyId { get; set; }
 
     /// <summary>
     /// The quantity of the last filled trade of this order
@@ -119,6 +131,12 @@ public record BinanceFuturesStreamOrderUpdateData
     public decimal PriceLastFilledTrade { get; set; }
 
     /// <summary>
+    /// The margin asset. Only pushed by COIN-M
+    /// </summary>
+    [JsonProperty("ma")]
+    public string? MarginAsset { get; set; }
+
+    /// <summary>
     /// The fee paid
     /// </summary>
     [JsonProperty("n")]
@@ -133,7 +151,7 @@ public record BinanceFuturesStreamOrderUpdateData
     /// <summary>
     /// The time of the update
     /// </summary>
-    [JsonProperty("T")]
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime UpdateTime { get; set; }
 
     /// <summary>
@@ -143,13 +161,13 @@ public record BinanceFuturesStreamOrderUpdateData
     public long TradeId { get; set; }
 
     /// <summary>
-    /// Bid Notional
+    /// Bid notional for USD-M or bid quantity of the base asset for COIN-M
     /// </summary>
     [JsonProperty("b")]
     public decimal BidNotional { get; set; }
 
     /// <summary>
-    /// Ask Notional
+    /// Ask notional for USD-M or ask quantity of the base asset for COIN-M
     /// </summary>
     [JsonProperty("a")]
     public decimal AskNotional { get; set; }
@@ -169,19 +187,19 @@ public record BinanceFuturesStreamOrderUpdateData
     /// <summary>
     /// Stop price working type
     /// </summary>
-    [JsonProperty("wt")]
+    [JsonProperty("wt"), JsonConverter(typeof(MapConverter))]
     public BinanceFuturesWorkingType StopPriceWorking { get; set; }
 
     /// <summary>
     /// Original Order Type
     /// </summary>
-    [JsonProperty("ot")]
+    [JsonProperty("ot"), JsonConverter(typeof(MapConverter))]
     public BinanceFuturesOrderType OriginalType { get; set; }
 
     /// <summary>
     /// Position side
     /// </summary>
-    [JsonProperty("ps")]
+    [JsonProperty("ps"), JsonConverter(typeof(MapConverter))]
     public BinancePositionSide PositionSide { get; set; }
 
     /// <summary>
@@ -215,20 +233,38 @@ public record BinanceFuturesStreamOrderUpdateData
     public bool PriceProtection { get; set; }
 
     /// <summary>
+    /// Strategy identifier. Currently documented as an ignored USD-M field
+    /// </summary>
+    [JsonProperty("si")]
+    public long? StrategyId { get; set; }
+
+    /// <summary>
+    /// Strategy status. Currently documented as an ignored USD-M field
+    /// </summary>
+    [JsonProperty("ss")]
+    public long? StrategyStatus { get; set; }
+
+    /// <summary>
     /// Self trade prevention mode
     /// </summary>
-    [JsonProperty("V")]
+    [JsonProperty("V"), JsonConverter(typeof(MapConverter))]
     public BinanceSelfTradePreventionMode SelfTradePrevention { get; set; }
 
     /// <summary>
     /// Price match mode
     /// </summary>
-    [JsonProperty("pm")]
+    [JsonProperty("pm"), JsonConverter(typeof(MapConverter))]
     public BinanceFuturesPriceMatch PriceMatchMode { get; set; }
 
     /// <summary>
     /// The GoodTillDate if GTD time in force
     /// </summary>
-    [JsonProperty("gtd")]
+    [JsonProperty("gtd"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime? GoodTillDate { get; set; }
+
+    /// <summary>
+    /// The expiry reason
+    /// </summary>
+    [JsonProperty("er")]
+    public string? ExpiryReason { get; set; }
 }

@@ -31,6 +31,7 @@
   * Aligned USDⓈ-M and COIN-M batch order modification with one-to-five-item validation, mandatory post-migration quantity and price, numeric JSON fields, int64 `modifyId`, per-item results, current IP weights, and receive-window limits
   * Aligned USDⓈ-M and COIN-M order-modification history with required order identity, inclusive time filters, current limit and retention guidance, exact weights, receive-window validation, int64 counts, and nested conditional `modifyId`
   * Aligned USDⓈ-M and COIN-M WebSocket API order modification with mandatory price, signed numeric parameters, int64 identities and `modifyId`, product-specific receive-window limits, and current IP-weight metadata
+  * Aligned USDⓈ-M and COIN-M `ORDER_TRADE_UPDATE` events with the conditional string `modifyId`, product-specific account, margin, strategy, and expiry fields, and reliable wire enum and timestamp conversion
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport
