@@ -2,6 +2,9 @@
 
 internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBinanceFuturesSocketClientCoin
 {
+    private bool hasApiKey;
+    private bool hasApiSecret;
+
     // Internal
     internal ILogger Logger { get => _logger; }
     internal TimeSyncState TimeSyncState { get; } = new("Binance Coin-M Futures WS");
@@ -23,9 +26,18 @@ internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBin
     {
         _ = root;
         __ = root._;
+        hasApiKey = HasApiKey(root.SocketOptions.ApiCredentials);
+        hasApiSecret = HasApiSecret(root.SocketOptions.ApiCredentials);
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
+    }
+
+    internal new void SetApiCredentials(ApiCredentials credentials)
+    {
+        hasApiKey = HasApiKey(credentials);
+        hasApiSecret = HasApiSecret(credentials);
+        base.SetApiCredentials(credentials);
     }
 
     #region Overrided Methods
@@ -231,25 +243,30 @@ internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBin
 
         if (authenticated)
         {
-            if (AuthenticationProvider == null)
+            if (!hasApiKey)
                 throw new InvalidOperationException("No credentials provided for authenticated endpoint");
-
-            var syncTask = SyncTimeAsync();
-            var timeSyncInfo = GetTimeSyncInfo();
-            if (timeSyncInfo.TimeSyncState.LastSyncTime == default)
-            {
-                // Initially with first request we'll need to wait for the time syncing, if it's not the first request we can just continue
-                var syncTimeResult = await syncTask.ConfigureAwait(false);
-                if (!syncTimeResult)
-                {
-                    //_logger.Log(LogLevel.Debug, $"[{requestId}] Failed to sync time, aborting request: " + syncTimeResult.Error);
-                    //return syncTimeResult.As<IRequest>(default);
-                }
-            }
+            if (sign && !hasApiSecret)
+                throw new InvalidOperationException("No API secret provided for signed endpoint");
 
             var authProvider = (BinanceAuthentication)AuthenticationProvider;
-            var timestamp = DateTime.UtcNow.Add(GetTimeOffset()).ConvertToMilliseconds();
-            if (sign) parameters = authProvider.AuthenticateSocketParameters(parameters, timestamp);
+            if (sign)
+            {
+                var syncTask = SyncTimeAsync();
+                var timeSyncInfo = GetTimeSyncInfo();
+                if (timeSyncInfo.TimeSyncState.LastSyncTime == default)
+                {
+                    // Initially with first request we'll need to wait for the time syncing, if it's not the first request we can just continue
+                    var syncTimeResult = await syncTask.ConfigureAwait(false);
+                    if (!syncTimeResult)
+                    {
+                        //_logger.Log(LogLevel.Debug, $"[{requestId}] Failed to sync time, aborting request: " + syncTimeResult.Error);
+                        //return syncTimeResult.As<IRequest>(default);
+                    }
+                }
+
+                var timestamp = DateTime.UtcNow.Add(GetTimeOffset()).ConvertToMilliseconds();
+                parameters = authProvider.AuthenticateSocketParameters(parameters, timestamp);
+            }
             else parameters.Add("apiKey", authProvider.Credentials.Key.GetString());
         }
 
@@ -267,6 +284,12 @@ internal partial class BinanceFuturesSocketClientCoin : WebSocketApiClient, IBin
 
         return result.As(result.Data.Result);
     }
+
+    private static bool HasApiKey(ApiCredentials? credentials)
+        => credentials != null && !string.IsNullOrWhiteSpace(credentials.Key.GetString());
+
+    private static bool HasApiSecret(ApiCredentials? credentials)
+        => credentials != null && !string.IsNullOrWhiteSpace(credentials.Secret.GetString());
 
     public async Task UnsubscribeAsync(WebSocketUpdateSubscription subscription, bool force = false, CancellationToken ct = default)
     {

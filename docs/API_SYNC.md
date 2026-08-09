@@ -916,6 +916,21 @@ Three deterministic no-network tests cover exact path, method, weight, API-key/s
 1. Slice 82: audit and implement only the equivalent COIN-M WebSocket API `userDataStream.start`, `userDataStream.ping`, and `userDataStream.stop` lifecycle against its own live contract.
 2. Perform mandatory Backward Review 18 across Slices 79-82 immediately after Slice 82; do not start another implementation slice before that review and re-ranking.
 
+## Slice 82: current COIN-M WebSocket API user-data-stream lifecycle
+
+The COIN-M lifecycle was audited independently against the live canonical COIN-M User Data Streams catalog and official generated Go connector HEAD `a0c61d1`; the USDⓈ-M implementation was not treated as evidence. All three operations use `wss://ws-dapi.binance.com/ws-dapi/v1`, consume IP weight 1, require an API key, and do not require a signature, timestamp, receive window, or caller-supplied listen key. Their exact method names are `userDataStream.start`, `userDataStream.ping`, and `userDataStream.stop`. The catalog request schemas and examples put `apiKey` in `params`, while the generated connector independently marks all three requests `WithAPIKey: true`, `Signed: false`, and `WithSessionLogon: false`.
+
+`userDataStream.start` returns the active `listenKey` and extends an existing stream for 60 minutes; `userDataStream.ping` extends it and returns the kept-alive `listenKey`; `userDataStream.stop` returns an empty result object. The current generated response models confirm both listen-key results and the empty close result. The catalog contains irrelevant generated descriptions such as `positionId`, combined-stream state, maximum orders, and 24-hour trade counts around these generic envelope fields; those prose fragments conflict with the actual examples and generated types and were not invented as response members. The combined derivatives changelog contains the 2024-04-19 `userDataStream.ping` response change only under USDⓈ-M and contains no equivalent COIN-M lifecycle entry, so that entry was deliberately not used as COIN-M proof.
+
+The public lifecycle is exposed through new `IBinanceFuturesSocketClientCoinQueryUserDataStream` methods `StartUserDataStreamAsync`, `KeepAliveUserDataStreamAsync`, and `StopUserDataStreamAsync`. The existing REST `/dapi/v1/listenKey` lifecycle remains intact, and the COIN-M stream subscription now documents that either lifecycle can supply its listen key. The COIN-M query transport had the same pre-existing missing-credential `NullReferenceException` and unnecessary time synchronization for unsigned API-key-only calls found in Slice 81. It now checks configured API-key and secret availability before provider creation and performs time synchronization/signing only for signed calls; existing signed COIN-M account and trade requests preserve their timestamp/signature path.
+
+Three deterministic no-network tests cover the exact path, methods, weight, API-key/signature metadata, interface exposure, controlled missing-key and missing-secret failures, both listen-key response shapes, the empty close result, and request-weight counters. All 275 deterministic tests pass, and a forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request or connection was opened.
+
+### Revised next order
+
+1. Perform mandatory Backward Review 18 across Slices 79-82, including code, tests, public documentation, execution records, and the paired USDⓈ-M/COIN-M transport changes.
+2. Re-rank the remaining live-contract gaps during Review 18; do not begin another implementation slice before that evidence-backed decision.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1018,3 +1033,4 @@ Three deterministic no-network tests cover exact path, method, weight, API-key/s
 | 79 | Complete | Current USDⓈ-M per-symbol and all-market mark-price stream contracts | Live canonical stream catalog, 2026-03-16 changelog, generated connector HEAD `a0c61d1`, topic/update-speed/full-payload tests, 267 deterministic tests, forced full multi-target rebuild |
 | 80 | Complete | Current USDⓈ-M aggregate-trade stream contract | Live canonical stream catalog, 2025-12-29 changelog, generated connector HEAD `a0c61d1`, topic/full-payload/stale-field tests, 269 deterministic tests, forced full multi-target rebuild |
 | 81 | Complete | Current USDⓈ-M WebSocket API user-data-stream lifecycle | Live canonical User Data Streams catalog, 2024-04-19 changelog, generated connector HEAD `a0c61d1`, API-key-only method/weight/envelope/credential-guard tests, 272 deterministic tests, forced full multi-target rebuild |
+| 82 | Complete | Current COIN-M WebSocket API user-data-stream lifecycle | Live canonical COIN-M User Data Streams catalog, recorded absence of a COIN-M-specific changelog entry, generated connector HEAD `a0c61d1`, API-key-only method/weight/envelope/credential-guard tests, 275 deterministic tests, forced full multi-target rebuild |

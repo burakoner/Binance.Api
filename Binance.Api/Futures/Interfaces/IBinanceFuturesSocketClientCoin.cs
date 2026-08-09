@@ -8,5 +8,6 @@ public interface IBinanceFuturesSocketClientCoin:
     IBinanceFuturesSocketClientCoinQueryGeneral,
     IBinanceFuturesSocketClientCoinQueryMarketData,
     IBinanceFuturesSocketClientCoinQueryTrade,
+    IBinanceFuturesSocketClientCoinQueryUserDataStream,
     IBinanceFuturesSocketClientCoinStreamMarketData,
     IBinanceFuturesSocketClientCoinStreamUserData;

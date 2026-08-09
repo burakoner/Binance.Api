@@ -6,10 +6,10 @@
 public interface IBinanceFuturesSocketClientCoinStreamUserData
 {
     /// <summary>
-    /// Subscribes to the account update stream. Prior to using this, the <see cref="IBinanceFuturesRestClientCoinUserDataStream.StartUserStreamAsync(CancellationToken)">restClient.CoinFuturesApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
+    /// Subscribes to the account update stream. Start the stream and obtain a listen key with <see cref="IBinanceFuturesSocketClientCoinQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientCoinUserDataStream.StartUserStreamAsync(CancellationToken)"/> first.
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams" /></para>
     /// </summary>
-    /// <param name="listenKey">Listen key retrieved by the <see cref="IBinanceFuturesRestClientCoinUserDataStream.StartUserStreamAsync(CancellationToken)">restClient.CoinFuturesApi.Account.StartUserStreamAsync</see> method</param>
+    /// <param name="listenKey">Listen key retrieved by <see cref="IBinanceFuturesSocketClientCoinQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientCoinUserDataStream.StartUserStreamAsync(CancellationToken)"/></param>
     /// <param name="onLeverageUpdated">The event handler for leverage changed update</param>
     /// <param name="onMarginUpdated">The event handler for whenever a margin has changed</param>
     /// <param name="onAccountUpdated">The event handler for whenever an account update is received</param>

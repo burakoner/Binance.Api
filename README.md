@@ -1025,6 +1025,11 @@ var futures_703 = await ws.CoinFutures.CancelOrderAsync("---SYMBOL---", orderId:
 var futures_704 = await ws.CoinFutures.GetOrderAsync("---SYMBOL---", orderId: 1_000_000L);
 var futures_705 = await ws.CoinFutures.GetPositionsAsync();
 
+// COIN-M Futures Web Socket API -> User Data Stream Methods (API KEY ONLY)
+var futures_801 = await ws.CoinFutures.StartUserDataStreamAsync();
+var futures_802 = await ws.CoinFutures.KeepAliveUserDataStreamAsync();
+var futures_803 = await ws.CoinFutures.StopUserDataStreamAsync();
+
 // Coin-M Futures -> Account Methods (PRIVATE)
 var futures_901 = await ws.CoinFutures.GetBalancesAsync();
 var futures_903 = await ws.CoinFutures.GetAccountInfoAsync();
