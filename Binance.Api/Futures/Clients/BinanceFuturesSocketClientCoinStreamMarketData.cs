@@ -272,21 +272,7 @@ internal partial class BinanceFuturesSocketClientCoin
     }
 
     internal static string[] MiniTickerStreamTopics(IEnumerable<string> symbols)
-    {
-        if (symbols == null)
-            throw new ArgumentNullException(nameof(symbols));
-
-        var symbolList = symbols.ToArray();
-        if (symbolList.Length == 0)
-            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
-        foreach (var symbol in symbolList)
-            if (string.IsNullOrWhiteSpace(symbol))
-                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
-
-        return symbolList
-            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + "@miniTicker")
-            .ToArray();
-    }
+        => SymbolStreamTopics(symbols, "@miniTicker");
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllMiniTickerUpdatesAsync(
         Action<WebSocketDataEvent<List<BinanceFuturesStreamMiniTick>>> onMessage,
@@ -303,34 +289,53 @@ internal partial class BinanceFuturesSocketClientCoin
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickerUpdatesAsync(
         string symbol,
-        Action<WebSocketDataEvent<BinanceFuturesStreamCoinTick>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage,
         CancellationToken ct = default)
         => SubscribeToTickerUpdatesAsync([symbol], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickerUpdatesAsync(
         IEnumerable<string> symbols,
-        Action<WebSocketDataEvent<BinanceFuturesStreamCoinTick>> onMessage,
+        Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage,
         CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamCoinTick>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTick>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeAsync(TickerStreamTopics(symbols), false, handler, ct);
     }
 
+    internal static string[] TickerStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@ticker");
+
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAllTickerUpdatesAsync(
-        Action<WebSocketDataEvent<List<BinanceFuturesStreamCoinTick>>> onMessage,
+        Action<WebSocketDataEvent<List<BinanceFuturesStreamTick>>> onMessage,
         CancellationToken ct = default)
     {
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamCoinTick>>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<List<BinanceFuturesStreamTick>>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeAsync(["!ticker@arr"], false, handler, ct);
+        return SubscribeAsync([TickerAllMarketStreamTopic], false, handler, ct);
+    }
+
+    internal const string TickerAllMarketStreamTopic = "!ticker@arr";
+
+    private static string[] SymbolStreamTopics(IEnumerable<string> symbols, string suffix)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        return symbolList
+            .Select(symbol => symbol.ToLower(BinanceConstants.CI) + suffix)
+            .ToArray();
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickerUpdatesAsync(

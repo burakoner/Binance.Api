@@ -150,7 +150,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamMiniTick>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to ticker updates stream for all symbols
+    /// Subscribes to the merged USDⓈ-M and COIN-M 24-hour ticker stream. Use <c>SymbolType</c> and the product-safe volume properties.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#all-market-tickers-streams" /></para>
     /// </summary>
     /// <param name="onMessage">The event handler for the received data</param>
@@ -159,7 +159,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamTick>>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to ticker updates stream for a specific symbol
+    /// Subscribes to 24-hour ticker updates for a USDⓈ-M symbol. Use the symbol-type-aware volume properties on the callback model.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#individual-symbol-ticker-streams" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to subscribe to, for example `ETHUSDT`</param>
@@ -169,7 +169,7 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribes to ticker updates stream for a specific symbol
+    /// Subscribes to 24-hour ticker updates for USDⓈ-M symbols. Use the symbol-type-aware volume properties on the callback model.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#individual-symbol-ticker-streams" /></para>
     /// </summary>
     /// <param name="symbols">The symbols to subscribe to, for example `ETHUSDT`</param>

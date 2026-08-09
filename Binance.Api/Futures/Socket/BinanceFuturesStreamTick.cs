@@ -1,167 +1,140 @@
-﻿namespace Binance.Api.Futures;
+namespace Binance.Api.Futures;
 
 /// <summary>
-/// Tick info
+/// Futures 24-hour ticker update
 /// </summary>
-public abstract record BinanceFuturesStreamTickBase: BinanceFuturesStreamEvent
-{        
+public record BinanceFuturesStreamTick : BinanceFuturesStreamEvent
+{
     /// <summary>
-    /// The symbol this data is for
+    /// The symbol
     /// </summary>
     [JsonProperty("s")]
     public string Symbol { get; set; } = string.Empty;
 
     /// <summary>
-    /// The price change of this symbol
+    /// The pair
+    /// </summary>
+    [JsonProperty("ps")]
+    public string Pair { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Price change
     /// </summary>
     [JsonProperty("p")]
     public decimal PriceChange { get; set; }
 
     /// <summary>
-    /// The price change percentage of this symbol
+    /// Price change percentage
     /// </summary>
     [JsonProperty("P")]
     public decimal PriceChangePercent { get; set; }
 
     /// <summary>
-    /// The weighted average
+    /// Weighted average price
     /// </summary>
     [JsonProperty("w")]
     public decimal WeightedAveragePrice { get; set; }
 
     /// <summary>
-    /// The close price of the previous day
-    /// </summary>
-    [JsonProperty("x")]
-    public decimal PrevDayClosePrice { get; set; }
-
-    /// <summary>
-    /// The current day close price. This is the latest price for this symbol.
+    /// Last price
     /// </summary>
     [JsonProperty("c")]
     public decimal LastPrice { get; set; }
 
     /// <summary>
-    /// The most recent trade quantity
+    /// Last quantity
     /// </summary>
     [JsonProperty("Q")]
     public decimal LastQuantity { get; set; }
 
     /// <summary>
-    /// The best bid price in the order book
-    /// </summary>
-    [JsonProperty("b")]
-    public decimal BestBidPrice { get; set; }
-
-    /// <summary>
-    /// The quantity of the best bid price in the order book
-    /// </summary>
-    [JsonProperty("B")]
-    public decimal BestBidQuantity { get; set; }
-
-    /// <summary>
-    /// The best ask price in the order book
-    /// </summary>
-    [JsonProperty("a")]
-    public decimal BestAskPrice { get; set; }
-
-    /// <summary>
-    /// The quantity of the best ask price in the order book
-    /// </summary>
-    [JsonProperty("A")]
-    public decimal BestAskQuantity { get; set; }
-
-    /// <summary>
-    /// Todays open price
+    /// Open price
     /// </summary>
     [JsonProperty("o")]
     public decimal OpenPrice { get; set; }
 
     /// <summary>
-    /// Todays high price
+    /// High price
     /// </summary>
     [JsonProperty("h")]
     public decimal HighPrice { get; set; }
 
     /// <summary>
-    /// Todays low price
+    /// Low price
     /// </summary>
     [JsonProperty("l")]
     public decimal LowPrice { get; set; }
 
     /// <summary>
-    /// Total traded volume in the base asset
+    /// Raw <c>v</c> field. This is base asset volume for USDⓈ-M events and contract volume for COIN-M events.
+    /// Use <see cref="BaseAssetVolume"/> or <see cref="ContractVolume"/> for product-safe access.
     /// </summary>
-    public abstract decimal Volume { get; set; }
+    [JsonProperty("v")]
+    public decimal RawVolume { get; set; }
 
     /// <summary>
-    /// Total traded volume in the quote asset
+    /// Raw <c>q</c> field. This is quote asset volume for USDⓈ-M events and base asset volume for COIN-M events.
+    /// Use <see cref="BaseAssetVolume"/> or <see cref="QuoteAssetVolume"/> for product-safe access.
     /// </summary>
-    public abstract decimal QuoteVolume { get; set; }
+    [JsonProperty("q")]
+    public decimal RawQuoteOrBaseAssetVolume { get; set; }
 
     /// <summary>
-    /// The first trade id of today
-    /// </summary>
-    [JsonProperty("F")]
-    public long FirstTradeId { get; set; }
-
-    /// <summary>
-    /// The last trade id of today
-    /// </summary>
-    [JsonProperty("L")]
-    public long LastTradeId { get; set; }
-
-    /// <summary>
-    /// The total trades of id
-    /// </summary>
-    [JsonProperty("n")]
-    public long TotalTrades { get; set; }
-
-    /// <summary>
-    /// The open time of these stats
+    /// Statistics open time
     /// </summary>
     [JsonProperty("O"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime OpenTime { get; set; }
 
     /// <summary>
-    /// The close time of these stats
+    /// Statistics close time
     /// </summary>
     [JsonProperty("C"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime CloseTime { get; set; }
-}
-
-/// <summary>
-/// Stream tick
-/// </summary>
-public record BinanceFuturesStreamTick: BinanceFuturesStreamTickBase
-{
-    /// <summary>
-    /// Total traded volume in the base asset
-    /// </summary>
-    [JsonProperty("v")]
-    public override decimal Volume { get; set; }
 
     /// <summary>
-    /// Total traded volume in the quote asset
+    /// First trade ID
     /// </summary>
-    [JsonProperty("q")]
-    public override decimal QuoteVolume { get; set; }
-}
-
-/// <summary>
-/// Stream tick
-/// </summary>
-public record BinanceFuturesStreamCoinTick : BinanceFuturesStreamTickBase
-{
-    /// <summary>
-    /// Total traded volume in the base asset
-    /// </summary>
-    [JsonProperty("q")]
-    public override decimal Volume { get; set; }
+    [JsonProperty("F")]
+    public long FirstTradeId { get; set; }
 
     /// <summary>
-    /// Total traded volume in the quote asset
+    /// Last trade ID
     /// </summary>
-    [JsonProperty("v")]
-    public override decimal QuoteVolume { get; set; }
+    [JsonProperty("L")]
+    public long LastTradeId { get; set; }
+
+    /// <summary>
+    /// Total number of trades
+    /// </summary>
+    [JsonProperty("n")]
+    public long TotalTrades { get; set; }
+
+    /// <summary>
+    /// Symbol type after UM/CM integration: 1 = USDⓈ-M, 2 = COIN-M
+    /// </summary>
+    [JsonProperty("st")]
+    public int SymbolType { get; set; }
+
+    /// <summary>
+    /// Total traded base asset volume, or <see langword="null"/> for an unknown symbol type
+    /// </summary>
+    [JsonIgnore]
+    public decimal? BaseAssetVolume => SymbolType switch
+    {
+        1 => RawVolume,
+        2 => RawQuoteOrBaseAssetVolume,
+        _ => null
+    };
+
+    /// <summary>
+    /// Total traded quote asset volume for USDⓈ-M events; COIN-M ticker events do not publish this value
+    /// </summary>
+    [JsonIgnore]
+    public decimal? QuoteAssetVolume => SymbolType == 1 ? RawQuoteOrBaseAssetVolume : null;
+
+    /// <summary>
+    /// Total traded contract volume for COIN-M events; USDⓈ-M ticker events do not publish this value
+    /// </summary>
+    [JsonIgnore]
+    public decimal? ContractVolume => SymbolType == 2 ? RawVolume : null;
 }

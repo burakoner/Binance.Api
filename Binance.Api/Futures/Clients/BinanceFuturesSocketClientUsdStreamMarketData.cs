@@ -167,22 +167,24 @@ internal partial class BinanceFuturesSocketClientUsd
         {
             onMessage(data.As(data.Data.Data));
         });
-        return SubscribeMarketAsync(["!ticker@arr"], false, handler, ct);
+        return SubscribeMarketAsync([TickerAllMarketStreamTopic], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage, CancellationToken ct = default) => SubscribeToTickersAsync(new[] { symbol }, onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamTick>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-
         var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTick>>>(data =>
         {
             onMessage(data.As(data.Data.Data));
         });
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@ticker").ToArray();
-        return SubscribeMarketAsync(symbols, false, handler, ct);
+        return SubscribeMarketAsync(TickerStreamTopics(symbols), false, handler, ct);
     }
+
+    internal static string[] TickerStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@ticker");
+
+    internal const string TickerAllMarketStreamTopic = "!ticker@arr";
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMiniTickersAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamMiniTick>>> onMessage, CancellationToken ct = default)
     {
