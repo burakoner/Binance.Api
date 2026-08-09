@@ -464,6 +464,14 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesAlgoOpenOrdersCancellationResult>(GetUrl(fapi, v1, "algoOpenOrders"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
+    public Task<RestCallResult<BinanceFuturesTradFiPerpsAgreementResult>> SignTradFiPerpsAgreementAsync(int? receiveWindow = null, CancellationToken ct = default)
+    {
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesTradFiPerpsAgreementResult>(GetUrl(fapi, v1, "stock/contract"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 50);
+    }
+
     public Task<RestCallResult<BinanceFuturesAlgoOrder>> GetAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (clientAlgoId is not null && string.IsNullOrWhiteSpace(clientAlgoId))

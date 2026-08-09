@@ -190,6 +190,16 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<BinanceFuturesAlgoOpenOrdersCancellationResult>> CancelAllOpenAlgoOrdersAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
+    /// Signs the USD-M TradFi Perps agreement for the authenticated account
+    /// <para><b>Warning:</b> This is an explicit account-agreement mutation. Review the current Binance account UI and applicable terms before calling it. Binance does not publish a status or reversal endpoint.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#futures-tradfi-perps-contract" /></para>
+    /// </summary>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The agreement-signing result</returns>
+    Task<RestCallResult<BinanceFuturesTradFiPerpsAgreementResult>> SignTradFiPerpsAgreementAsync(int? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
     /// Gets a native conditional Algo order by exchange or client Algo ID
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-algo-order" /></para>
     /// </summary>
