@@ -80,7 +80,7 @@ This is a method-and-path candidate inventory from the official generated API ca
 | COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
 | Options | 44 | 45 | 41 | 3 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The refreshed Options row still has the same 44/45/41/3/4 arithmetic, but its four wrapper-only routes have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -370,11 +370,25 @@ The wrapper-only route is `GET /dapi/v1/pmAccountInfo`. It is absent from both t
 
 Category comparison is Account 13 official/12 exact/1 official-only, Market Data 26/26, Trade 22/22, and User Data Streams 3/3. The sole wrapper-only route is outside those current official modules. Route counts do not prove parameter, weight, signing, response, or retirement correctness for the 63 matches. No source code or public API changed, no Binance endpoint was called, and the deterministic suite remains at 163 tests.
 
+## Slice 45: Options REST route inventory refresh
+
+The live Options REST catalog, its current official generated JavaScript connector, and every literal method/path pair in the wrapper's Options client were normalized independently. The live catalog and connector each expose 44 operations: 26 GET, 10 POST, 6 DELETE, and 2 PUT. The wrapper exposes 45 unique routes: 28 GET, 9 POST, 6 DELETE, and 2 PUT. Forty-one routes match exactly, leaving three official-only and four wrapper-only candidates. The existing 44/45/41/3/4 table row happened to remain numerically correct, but this slice re-established the candidate identities against the 2026-08-09 live surface.
+
+The three current official-only routes are:
+
+- Market Maker Block Trade: `GET /eapi/v1/block/user-trades`, introduced by the Options changelog on 2024-11-01.
+- Trade: `GET /eapi/v1/commission`, introduced on 2026-01-07.
+- Trade: `POST /eapi/v1/stock/contract`, introduced on 2026-07-09 for the TradFi Options agreement.
+
+The four wrapper-only routes are `GET /eapi/v1/account`, `GET /eapi/v1/historicalTrades`, `GET /eapi/v1/income/asyn`, and `GET /eapi/v1/income/asyn/id`. All four are absent from both the current live catalog and generated connector. That absence is not enough to call them retired: the changelog still records the two asynchronous income-download routes as additions on 2023-07-21 and mentions both `/account` and the still-current `/marginAccount` on 2023-08-29, but publishes no explicit removal notice for any of the four. They require endpoint-level lifecycle verification before a breaking public-API removal; this inventory does not guess their server availability.
+
+Category comparison is Account 2 official/2 exact, Market Data 12/12, Market Maker Block Trade 7/6, Market Maker Endpoints 6/6, Trade 14/12, and User Data Streams 3/3. The wrapper-only candidates sit outside those current official method/path sets. Route presence does not prove parameter placement, signing, weight, validation, response schema, or lifecycle correctness for the 41 matches. No source code or public API changed, and no Binance endpoint was called.
+
 ### Revised next order
 
-1. Refresh only the Options route inventory without implementation work.
-2. Select and complete the first bounded derivative implementation group from the three refreshed inventories.
-3. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
+1. Validate and implement the two read-only official Options additions, `GET /eapi/v1/block/user-trades` and `GET /eapi/v1/commission`, as the first bounded derivative group.
+2. Perform Review 10 after four implementation slices: Algo cancellations, Futures queries, Spot queries, and the first derivative implementation group.
+3. Reassess the three derivative inventories before sequencing breaking removals or financially distinct mutation endpoints.
 
 ## Review log
 
@@ -433,3 +447,4 @@ Category comparison is Account 13 official/12 exact/1 official-only, Market Data
 | 42 | Complete | Read-only Spot Algo queries | Live canonical Spot Algo query sections, current official generated connector and models, signed GET/pagination/validation/naming/shared-model tests, 163 deterministic tests |
 | 43 | Complete | USDⓈ-M Futures REST route inventory refresh | Live 95-operation catalog, current official generated connector, normalized 95/83/83/12/0 comparison, category and candidate-path verification, no implementation |
 | 44 | Complete | COIN-M Futures REST route inventory refresh | Live 64-operation catalog, current official generated connector, corrected 64/64/63/1/1 candidate identity, 2026-06-30 retirement evidence, no implementation |
+| 45 | Complete | Options REST route inventory refresh | Live 44-operation catalog, current official generated connector, refreshed 44/45/41/3/4 comparison, dated addition evidence and explicit retirement uncertainty, no implementation |
