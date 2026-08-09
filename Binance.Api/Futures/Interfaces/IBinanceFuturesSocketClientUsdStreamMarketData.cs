@@ -351,23 +351,4 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     /// <returns></returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamAssetIndexUpdate>>> onMessage, CancellationToken ct = default);
 
-    /// <summary>
-    /// Subscribe to individual trade update. NOTE: This endpoint stream isn't document and therefor might be changed or removed without prior notice
-    /// </summary>
-    /// <param name="symbol">Symbol to subscribe, for example `ETHUSDT`</param>
-    /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="filterOutNonTradeUpdates">Filter out any update which isn't a trade. Occasionally different updates (like INSURANCE_FUND updates) will occur on this stream. By default these are ignored</param>
-    /// <param name="ct">Cancellation token for closing this subscription</param>
-    /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage, bool filterOutNonTradeUpdates = true, CancellationToken ct = default);
-
-    /// <summary>
-    /// Subscribe to individual trade update. NOTE: This endpoint stream isn't document and therefor might be changed or removed without prior notice
-    /// </summary>
-    /// <param name="symbols">Symbols to subscribe, for example `ETHUSDT`</param>
-    /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="filterOutNonTradeUpdates">Filter out any update which isn't a trade. Occasionally different updates (like INSURANCE_FUND updates) will occur on this stream. By default these are ignored</param>
-    /// <param name="ct">Cancellation token for closing this subscription</param>
-    /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage, bool filterOutNonTradeUpdates = true, CancellationToken ct = default);
 }

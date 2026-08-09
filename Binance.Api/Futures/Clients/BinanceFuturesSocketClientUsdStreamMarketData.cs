@@ -379,28 +379,4 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeMarketAsync(["!assetIndex@arr"], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(string symbol,
-        Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage,
-        bool filterOutNonTradeUpdates = true,
-        CancellationToken ct = default)
-        => SubscribeToTradesAsync([symbol], onMessage, filterOutNonTradeUpdates, ct);
-
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(
-        IEnumerable<string> symbols,
-        Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage,
-        bool filterOutNonTradeUpdates = true,
-        CancellationToken ct = default)
-    {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTrade>>>(data =>
-        {
-            if (filterOutNonTradeUpdates && data.Data.Data.Type != "MARKET")
-                return;
-
-            onMessage(data.As(data.Data.Data));
-        });
-        symbols = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@trade").ToArray();
-        return SubscribeAsync(symbols, false, handler, ct);
-    }
 }

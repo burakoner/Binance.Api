@@ -1061,9 +1061,6 @@ internal class Program
         var futures_531 = await ws.UsdFutures.SubscribeToSymbolsAsync((data) => { });
         var futures_532 = await ws.UsdFutures.SubscribeToAssetIndexesAsync("---SYMBOL---", (data) => { });
         var futures_533 = await ws.UsdFutures.SubscribeToAssetIndexesAsync((data) => { });
-        var futures_534 = await ws.UsdFutures.SubscribeToTradesAsync("---SYMBOL---", (data) => { });
-        var futures_535 = await ws.UsdFutures.SubscribeToTradesAsync(["---SYMBOL---"], (data) => { });
-
         // USDⓈ-M Futures Web Socket Stream -> User Data Methods (PRIVATE)
         var futures_536 = await ws.UsdFutures.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
             onAccountUpdated: (data) => { },

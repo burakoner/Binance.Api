@@ -1137,6 +1137,21 @@ Five deterministic regressions cover both products' topic formation and validati
 2. Perform Backward Review 21 immediately after Slice 92 across the three shared market-data/lifecycle slices; do not begin another implementation before that review and fresh risk ranking.
 3. Keep private/listen-key stream routing separate from the public `@trade` lifecycle decision.
 
+## Slice 92: removal of unsupported raw Futures trade subscriptions
+
+The complete live USDⓈ-M and COIN-M WebSocket Stream catalogs, the current shared derivatives changelog, and official generated Go connector HEAD `a0c61d1` were checked for a Futures raw-trade market stream. Both catalogs expose `{symbol}@aggTrade` as the supported market-trade stream and contain no `{symbol}@trade` operation. The changelog contains no Futures lifecycle entry for `@trade`; its matching historical `@trade` entry belongs to Options. The generated connector's complete WebSocket Stream trees contain aggregate-trade market operations for both products, while their other trade-named models belong to authenticated user-data events rather than a raw public market stream.
+
+The local wrappers nevertheless exposed two USDⓈ-M `SubscribeToTradesAsync` overloads and two COIN-M `SubscribeToTradeUpdatesAsync` overloads. They subscribed to the unsupported `{symbol}@trade` topic and deserialized a shared `BinanceFuturesStreamTrade` shape that had no current official Futures schema. The stale model omitted event and trade timestamps, interpreted undocumented `X` as a trade type, and the USDⓈ-M implementation used the generic stream route instead of the current Market channel. Patching only the host or guessing a payload would still advertise an unsupported financial-data contract.
+
+All four public overloads, the stale shared model, and their executable README/console examples were removed under the current-contract-only policy. This is an intentional public breaking removal. The documented product-specific `{symbol}@aggTrade` subscriptions and models remain unchanged as the supported replacement; authenticated `ORDER_TRADE_UPDATE` handling is a separate private user-data lifecycle and was not modified.
+
+One deterministic public-surface regression proves that both unsupported method names and the stale model type are absent while both aggregate-trade subscription families remain available. The targeted regression and all 312 deterministic tests pass. A forced full multi-target solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request or WebSocket connection was opened.
+
+### Revised next order
+
+1. Perform Backward Review 21 now across Slices 90-92, including public breaking corrections, model semantics, transport routing, tests, examples, release notes, and this execution contract.
+2. Do not begin another implementation slice until Review 21 refreshes the remaining Futures stream and private/listen-key routing priorities.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1252,3 +1267,4 @@ Five deterministic regressions cover both products' topic formation and validati
 | Review 20 | Complete | Backward review of liquidation, standard depth, and RPI depth streams; merged mini-ticker semantic-risk re-ranking | `15a763d..3035e42` diff review, live USDⓈ-M Market/Public and COIN-M stream catalogs, integration notice and changelogs, connector HEAD `a0c61d1`, stale-call/channel/topic/model-tag scans, 11 targeted and 301 complete tests, forced full multi-target rebuild |
 | 90 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market mini-ticker stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded COIN `st` example conflicts, product-discriminated volume/topic/full-payload tests, 306 deterministic tests, forced full multi-target rebuild |
 | 91 | Complete | Current USDⓈ-M and COIN-M individual and merged all-market 24-hour ticker stream contracts | Live canonical USDⓈ-M and COIN-M stream catalogs, 2026-06-10 integration changelog/notice, connector HEAD `a0c61d1`, recorded COIN `st` example conflict, product-discriminated volume/current-field/topic/full-payload tests, 311 deterministic tests, forced full multi-target rebuild |
+| 92 | Complete | Removal of unsupported USDⓈ-M and COIN-M raw trade stream contracts | Complete live Futures stream catalogs, current derivatives changelog, connector HEAD `a0c61d1`, public-surface removal test, 312 deterministic tests, forced full multi-target rebuild |

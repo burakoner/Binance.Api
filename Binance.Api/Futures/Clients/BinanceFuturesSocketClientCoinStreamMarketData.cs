@@ -517,24 +517,4 @@ internal partial class BinanceFuturesSocketClientCoin
             .ToArray();
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradeUpdatesAsync(
-        string symbol,
-        Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage, CancellationToken ct = default)
-        => SubscribeToTradeUpdatesAsync([symbol], onMessage, ct);
-
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradeUpdatesAsync(
-        IEnumerable<string> symbols,
-        Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage,
-        CancellationToken ct = default)
-    {
-        symbols.ValidateNotNull(nameof(symbols));
-
-        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTrade>>>(data =>
-        {
-            onMessage(data.As(data.Data.Data));
-        });
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@trade").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
-    }
-
 }

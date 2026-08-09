@@ -109,4 +109,18 @@ public class BinanceFuturesStreamAggregatedTradeTests
         Assert.Null(typeof(BinanceFuturesCoinStreamAggregatedTrade).GetProperty("Ignore"));
         Assert.Null(typeof(BinanceFuturesCoinStreamAggregatedTrade).GetProperty("NormalQuantity"));
     }
+
+    [Fact]
+    public void PublicSurface_ExcludesUnsupportedRawTradeStreams()
+    {
+        var usdMethods = typeof(IBinanceFuturesSocketClientUsdStreamMarketData).GetMethods();
+        var coinMethods = typeof(IBinanceFuturesSocketClientCoinStreamMarketData).GetMethods();
+
+        Assert.DoesNotContain(usdMethods, method => method.Name == "SubscribeToTradesAsync");
+        Assert.DoesNotContain(coinMethods, method => method.Name == "SubscribeToTradeUpdatesAsync");
+        Assert.Contains(usdMethods, method => method.Name == "SubscribeToAggregatedTradesAsync");
+        Assert.Contains(coinMethods, method => method.Name == "SubscribeToAggregatedTradeUpdatesAsync");
+        Assert.Null(typeof(BinanceFuturesUsdtStreamAggregatedTrade).Assembly.GetType(
+            "Binance.Api.Futures.BinanceFuturesStreamTrade"));
+    }
 }

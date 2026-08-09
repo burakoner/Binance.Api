@@ -48,6 +48,7 @@
   * Added the current USDⓈ-M RPI diff-depth stream with its fixed 500-millisecond Public topic, complete pair/symbol-type payload, RPI aggregation semantics, canonical documentation, and deterministic coverage
   * Aligned USDⓈ-M and COIN-M individual and merged all-market mini-ticker streams with pair/symbol-type fields, exact topics and cadences, a shared product-discriminated model, and safe base/quote/contract volume access
   * Aligned USDⓈ-M and COIN-M individual and merged all-market 24-hour ticker streams with the complete current payload, product-safe volume semantics, exact topics/cadences, canonical documentation, and removal of stale previous-close and bid/ask fields
+  * Removed the unsupported USDⓈ-M and COIN-M raw `@trade` subscriptions and their stale shared model; current Futures market trade streaming remains available through the documented `@aggTrade` contracts
   * Added the USDⓈ-M WebSocket API user-data-stream start, keepalive, and stop lifecycle with API-key-only authentication, current weights, listen-key responses, and controlled missing-credential errors
   * Added the COIN-M WebSocket API user-data-stream start, keepalive, and stop lifecycle with API-key-only authentication, current weights, listen-key responses, and controlled missing-credential errors
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint

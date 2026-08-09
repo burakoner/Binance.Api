@@ -373,21 +373,4 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
     /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBookUpdatesAsync(IEnumerable<string> symbols, int? updateInterval, Action<WebSocketDataEvent<BinanceFuturesStreamOrderBookDepth>> onMessage, CancellationToken ct = default);
 
-    /// <summary>
-    /// Subscribe to individual trade update. NOTE: This endpoint stream isn't document and therefor might be changed or removed without prior notice
-    /// </summary>
-    /// <param name="symbol">Symbol to subscribe, for example `BTCUSD_PERP`</param>
-    /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="ct">Cancellation token for closing this subscription</param>
-    /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage, CancellationToken ct = default);
-
-    /// <summary>
-    /// Subscribe to individual trade update. NOTE: This endpoint stream isn't document and therefor might be changed or removed without prior notice
-    /// </summary>
-    /// <param name="symbols">Symbols to subscribe, for example `BTCUSD_PERP`</param>
-    /// <param name="onMessage">The event handler for the received data</param>
-    /// <param name="ct">Cancellation token for closing this subscription</param>
-    /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradeUpdatesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceFuturesStreamTrade>> onMessage, CancellationToken ct = default);
 }
