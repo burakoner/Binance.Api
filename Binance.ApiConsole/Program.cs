@@ -250,7 +250,7 @@ internal class Program
         var algo_203 = await api.Algo.Spot.CancelAlgoOrderAsync(1_000_001L);
         var algo_204 = await api.Algo.Spot.GetAlgoSubOrdersAsync(1_000_001L);
         var algo_205 = await api.Algo.Spot.GetOpenAlgoOrdersAsync();
-        var algo_206 = await api.Algo.Spot.GetClosedAlgoOrdersAsync();
+        var algo_206 = await api.Algo.Spot.GetHistoricalAlgoOrdersAsync();
 
         // USDⓈ-M Futures -> Market Data Methods (PUBLIC)
         var futures_101 = await api.UsdFutures.PingAsync();

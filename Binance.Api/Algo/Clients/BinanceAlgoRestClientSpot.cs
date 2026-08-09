@@ -85,15 +85,17 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
         return normalizedReceiveWindow;
     }
 
-    public Task<RestCallResult<BinanceAlgoSubOrderList>> GetAlgoSubOrdersAsync(long algoId, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceAlgoSubOrderList>> GetAlgoSubOrdersAsync(long algoId, long? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        pageSize?.ValidateIntBetween(nameof(pageSize), 1, 100);
+
         var parameters = new ParameterCollection()
         {
             { "algoId", algoId }
         };
         parameters.AddOptional("page", page);
-        parameters.AddOptional("pageSize", limit);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("pageSize", pageSize);
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceAlgoSubOrderList>(GetUrl(sapi, v1, "algo/spot/subOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
@@ -101,21 +103,27 @@ internal class BinanceAlgoRestClientSpot(BinanceAlgoRestClient parent) : IBinanc
     public Task<RestCallResult<BinanceAlgoOrders>> GetOpenAlgoOrdersAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceAlgoOrders>(GetUrl(sapi, v1, "algo/spot/openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<BinanceAlgoOrders>> GetClosedAlgoOrdersAsync(string? symbol = null, BinanceOrderSide? side = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceAlgoOrders>> GetHistoricalAlgoOrdersAsync(string? symbol = null, BinanceOrderSide? side = null, DateTime? startTime = null, DateTime? endTime = null, long? page = null, int? pageSize = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (symbol is not null)
+            symbol.ValidateBinanceSymbol();
+        if (side is not null && side is not (BinanceOrderSide.Buy or BinanceOrderSide.Sell))
+            throw new ArgumentOutOfRangeException(nameof(side), "side must be BUY or SELL");
+        pageSize?.ValidateIntBetween(nameof(pageSize), 1, 100);
+
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptionalEnum("side", side);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("page", page);
-        parameters.AddOptional("pageSize", limit);
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("pageSize", pageSize);
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceAlgoOrders>(GetUrl(sapi, v1, "algo/spot/historicalOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
