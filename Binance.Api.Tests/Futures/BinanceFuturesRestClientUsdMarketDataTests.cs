@@ -176,6 +176,97 @@ public class BinanceFuturesRestClientUsdMarketDataTests
     }
 
     [Fact]
+    public async Task GetFundingRatesAsync_OmitsOptionalQueryAndDeserializesCurrentResponse()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            [
+              {
+                "symbol": "BTCUSDT",
+                "fundingRate": "-0.03750000",
+                "fundingTime": 1570608000000,
+                "markPrice": "34287.54619963",
+                "rateType": "Regular"
+              },
+              {
+                "symbol": "STOCKUSDT",
+                "fundingRate": "0.00010000",
+                "fundingTime": 1570636800000,
+                "markPrice": null,
+                "rateType": "Special"
+              }
+            ]
+            """);
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient, limiter);
+
+        var result = await client.UsdFutures.GetFundingRatesAsync();
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v1/fundingRate", handler.RequestUri!.AbsolutePath);
+        Assert.Equal(string.Empty, handler.RequestUri.Query);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/fapi/v1/fundingRate" && !item.Signed);
+        Assert.Collection(
+            result.Data,
+            item =>
+            {
+                Assert.Equal("BTCUSDT", item.Symbol);
+                Assert.Equal(-0.03750000m, item.FundingRate);
+                Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1570608000000).UtcDateTime, item.FundingTime);
+                Assert.Equal(34287.54619963m, item.MarkPrice);
+                Assert.Equal("Regular", item.RateType);
+            },
+            item =>
+            {
+                Assert.Equal("STOCKUSDT", item.Symbol);
+                Assert.Equal("Special", item.RateType);
+                Assert.Null(item.MarkPrice);
+            });
+    }
+
+    [Fact]
+    public async Task GetFundingRatesAsync_SendsEveryProvidedFilterAsUnsignedQuery()
+    {
+        var startTime = DateTimeOffset.FromUnixTimeMilliseconds(1623319461670).UtcDateTime;
+        var endTime = DateTimeOffset.FromUnixTimeMilliseconds(1641782889000).UtcDateTime;
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient, limiter);
+
+        var result = await client.UsdFutures.GetFundingRatesAsync("BTCUSDT", startTime, endTime, 1000);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v1/fundingRate", handler.RequestUri!.AbsolutePath);
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains("symbol=BTCUSDT", query);
+        Assert.Contains("startTime=1623319461670", query);
+        Assert.Contains("endTime=1641782889000", query);
+        Assert.Contains("limit=1000", query);
+        Assert.DoesNotContain("timestamp=", query);
+        Assert.DoesNotContain("signature=", query);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/fapi/v1/fundingRate" && !item.Signed);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1001)]
+    public async Task GetFundingRatesAsync_RejectsLimitOutsideCurrentRange(int limit)
+    {
+        using var client = CreateClient(new HttpClient(new RecordingHttpMessageHandler("[]")));
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.UsdFutures.GetFundingRatesAsync(limit: limit));
+    }
+
+    [Fact]
     public async Task GetTradingScheduleAsync_UsesCurrentPublicContractAndDeserializesAllMarkets()
     {
         var limiter = new RecordingRateLimiter();

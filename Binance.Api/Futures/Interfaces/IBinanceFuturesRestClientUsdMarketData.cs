@@ -192,16 +192,20 @@ public interface IBinanceFuturesRestClientUsdMarketData
     Task<RestCallResult<List<BinanceFuturesMarkPrice>>> GetMarkPricesAsync(CancellationToken ct = default);
 
     /// <summary>
-    /// Get funding rate history for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Get-Funding-Rate-History" /></para>
+    /// Gets USDⓈ-M funding rate history, optionally filtered by symbol and inclusive time bounds. Results are returned in ascending order.
+    /// When both time bounds are omitted, Binance documents that the most recent 200 records are returned. The same page separately
+    /// publishes a default limit of 100, so an omitted <paramref name="limit"/> is not sent and server behavior is preserved.
+    /// This endpoint shares a 500-requests-per-five-minutes-per-IP limit with <c>GET /fapi/v1/fundingInfo</c>;
+    /// Binance does not publish that shared limit as a numeric per-call request weight.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#get-funding-rate-history" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
-    /// <param name="startTime">Start time to get funding rate history</param>
-    /// <param name="endTime">End time to get funding rate history</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="symbol">Optional symbol filter, for example <c>ETHUSDT</c>; omit to query all symbols.</param>
+    /// <param name="startTime">Optional inclusive start time.</param>
+    /// <param name="endTime">Optional inclusive end time.</param>
+    /// <param name="limit">Optional maximum number of results, from 1 through 1000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>The funding rate history for the provided symbol</returns>
-    Task<RestCallResult<List<BinanceFuturesFundingRate>>> GetFundingRatesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    /// <returns>The matching funding rate history.</returns>
+    Task<RestCallResult<List<BinanceFuturesFundingRate>>> GetFundingRatesAsync(string? symbol = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get funding rate info for symbols that had FundingRateCap/ FundingRateFloor / fundingIntervalHours adjustment

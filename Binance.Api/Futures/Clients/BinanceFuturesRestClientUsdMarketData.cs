@@ -206,17 +206,18 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         return RequestAsync<List<BinanceFuturesMarkPrice>>(GetUrl(fapi, v1, "premiumIndex"), HttpMethod.Get, ct, requestWeight: 10);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesFundingRate>>> GetFundingRatesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesFundingRate>>> GetFundingRatesAsync(string? symbol = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-        var parameters = new ParameterCollection {
-            { "symbol", symbol }
-        };
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("symbol", symbol);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("limit", limit);
 
-        return RequestAsync<List<BinanceFuturesFundingRate>>(GetUrl(fapi, v1, "fundingRate"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+        // Binance publishes only a shared 500 requests/5 minutes/IP cap with /fundingInfo,
+        // not a numeric per-call request weight. Do not encode 500 as a request weight here.
+        return RequestAsync<List<BinanceFuturesFundingRate>>(GetUrl(fapi, v1, "fundingRate"), HttpMethod.Get, ct, queryParameters: parameters);
     }
 
     public Task<RestCallResult<List<BinanceFuturesFundingInfo>>> GetFundingInfoAsync(CancellationToken ct = default)
