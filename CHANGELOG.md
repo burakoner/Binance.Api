@@ -15,6 +15,7 @@
   * Added native USDⓈ-M conditional Algo order placement with the current five-type surface, signed form body, explicit combination guards, zero IP weight, RPI time-in-force, and complete response contract
   * Added native USDⓈ-M bulk conditional Algo cancellation with the current symbol-scoped signed query, receive-window validation, weight, and complete response contract
   * Added explicit USDⓈ-M TradFi Perps agreement signing with the current signed form contract, receive-window ceiling, weight, response precision, and non-executable sample warning
+  * Removed the retired COIN-M Classic Portfolio Margin account-information operation; Binance directs clients to the active USDⓈ-M operation
   * Fixed USDⓈ-M position-margin history using the undocumented `/fapi/v3` path and added the current 30-day query-range constraint
   * Removed the retired Cross Margin Pro liability leverage-bracket operation and response types
   * Fixed `RateLimiterEnabled=false` being ignored by the underlying transport

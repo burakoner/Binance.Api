@@ -77,10 +77,10 @@ This is a method-and-path candidate inventory from the official generated API ca
 | Margin | 65 | 65 | 65 | 0 | 0 |
 | Spot | 48 | 47 | 47 | 1 | 0 |
 | USDⓈ-M Futures | 95 | 94 | 94 | 1 | 0 |
-| COIN-M Futures | 64 | 64 | 63 | 1 | 1 |
+| COIN-M Futures | 64 | 63 | 63 | 1 | 0 |
 | Options | 44 | 47 | 43 | 1 | 4 |
 
-The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/94/94/1/0; its only remaining raw catalog-only route is the explicitly deprecated v1 price ticker. Excluding that deprecated route, the active USDⓈ-M REST surface is 94/94 exact. The refreshed COIN-M catalog now lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper exposes only v2. Its unmatched `GET /dapi/v1/pmAccountInfo` route was retired on 2026-06-30. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
+The raw generated Margin catalog contains 65 routes, including the retired `GET /sapi/v1/margin/leverageBracket`, and does not yet contain the standalone `POST /sapi/v1/userListenToken` page. The current Margin row removes the retired route and adds the current token route, so the official total remains 65. The USDⓈ-M row has advanced from the Slice 43 baseline of 95/83/83/12/0 to 95/94/94/1/0; its only remaining raw catalog-only route is the explicitly deprecated v1 price ticker. Excluding that deprecated route, the active USDⓈ-M REST surface is 94/94 exact. The refreshed COIN-M catalog lists both `GET /dapi/v1/leverageBracket` for pair defaults and `GET /dapi/v2/leverageBracket` for symbol-specific brackets; the wrapper currently exposes only v2. Slice 59 removed the retired wrapper-only `GET /dapi/v1/pmAccountInfo`, leaving 64/63/63/1/0 until the current v1 leverage-bracket contract is implemented. The Options inventory started at 44/45/41/3/4; Slice 46 corrected the account block-trade route and added the commission query, moving the current row to 44/47/43/1/4. Its four wrapper-only routes still have no explicit retirement notice and therefore remain endpoint-level removal candidates rather than proven retired operations. These cases are concrete examples of why route candidates must be verified against endpoint pages and dated changelogs before code changes.
 
 ## Backward review 1 (after slices 1-4)
 
@@ -546,10 +546,18 @@ The dedicated response model preserves `code` as int64 and maps the documented s
 
 The regenerated raw inventory is 95 catalog/94 wrapper/94 exact/1 catalog-only/0 wrapper-only. The sole raw difference is the explicitly deprecated `GET /fapi/v1/ticker/price`; after excluding it, all 94 active USDⓈ-M REST routes match by method and path. Route equality is not a blanket claim that every untouched request and response field has been semantically audited, but the active route surface is complete. All 202 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
 
+## Slice 59: remove retired COIN-M Classic Portfolio Margin account query
+
+The retirement of `GET /dapi/v1/pmAccountInfo` was rechecked against the live COIN-M changelog on 2026-08-09 and the current official generated JavaScript connector. The dated 2026-06-30 entry states that the route is no longer in use and directs clients to `GET /fapi/v1/pmAccountInfo`; the current COIN-M connector contains no `pmAccountInfo` operation. Retaining the COIN-M method would therefore advertise an unsupported financial-account contract rather than provide useful historical compatibility.
+
+The retired `GetPortfolioMarginAccountInfoAsync` member, its one-member COIN-M sub-interface, and its implementation were removed. This is an intentional public breaking cleanup. The similarly named USDⓈ-M method remains active and unchanged, and its shared `BinanceFuturesPortfolioMarginAccount` response model remains necessary; deleting that model would have broken the documented replacement operation. Repository-wide scans found no README, console, test, or other source call site to remove. Historical release notes remain historical and were not rewritten.
+
+The current COIN-M route comparison is now 64 official/63 wrapper/63 exact/1 official-only/0 wrapper-only. The only remaining route gap is the current pair-default `GET /dapi/v1/leverageBracket`; the existing symbol-specific v2 operation remains valid and must not be replaced. All 202 deterministic tests pass, and a forced full solution rebuild succeeds with zero errors and the same three known warnings. No production Binance request was sent.
+
 ### Revised next order
 
-1. Recheck the current COIN-M changelog and live references, then remove only the retired `GET /dapi/v1/pmAccountInfo` public operation, orphaned model, and examples in one bounded breaking-cleanup slice.
-2. Implement the current pair-default `GET /dapi/v1/leverageBracket` separately from that removal; retain the existing symbol-specific v2 operation because the live catalog documents both contracts.
+1. Analyze and implement only the current pair-default `GET /dapi/v1/leverageBracket`; retain the existing symbol-specific v2 operation because the live catalog documents both contracts.
+2. Regenerate the COIN-M route inventory and declare method/path completeness only after the v1 request, dynamic weight, and response-shape contract is verified.
 3. Return to the unresolved Options lifecycle candidates only after the COIN-M inventory is exact.
 
 ## Review log
@@ -626,3 +634,4 @@ The regenerated raw inventory is 95 catalog/94 wrapper/94 exact/1 catalog-only/0
 | Review 12 | Complete | Backward review of native USDⓈ-M all-orders query and conditional Algo mutations, documentation, and execution order | `b6480ce..81456e3` diff review, live 95-route regeneration, four-route transport/weight/validation/model recheck, two documentation corrections, recorded `priceProtect` ambiguity, 199 tests, forced full multi-target rebuild |
 | 57 | Complete | USDⓈ-M TradFi Perps agreement mutation decision | Live canonical Trade section, 2025-12-11 changelog entry, current connector/response model, current product-risk material, explicit opt-in and sample-safety boundaries, no implementation |
 | 58 | Complete | Explicit USDⓈ-M TradFi Perps agreement signing | Live canonical Trade section, Slice 57 safety decisions, signed form placement, weight/receive-window/int64-response tests, commented warning samples, 94/94 active route comparison |
+| 59 | Complete | Retired COIN-M Classic Portfolio Margin account-query removal | Live 2026-06-30 retirement notice, current connector absence, public/call-site/model dependency scan, 64/63/63/1/0 route comparison |

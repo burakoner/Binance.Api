@@ -6,6 +6,5 @@
 public interface IBinanceFuturesRestClientCoin:
     IBinanceFuturesRestClientCoinAccount,
     IBinanceFuturesRestClientCoinMarketData,
-    IBinanceFuturesRestClientCoinPortfolioMargin,
     IBinanceFuturesRestClientCoinTrade,
     IBinanceFuturesRestClientCoinUserDataStream;
