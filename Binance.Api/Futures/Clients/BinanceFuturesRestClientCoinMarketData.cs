@@ -112,6 +112,9 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesCoinKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(symbol, nameof(symbol));
+        ValidateCoinKlineInterval(interval);
+        ValidateCoinKlineDateRange(startTime, endTime);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection
         {
@@ -122,12 +125,16 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("limit", limit);
 
-        var weight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
+        var weight = GetCoinKlineRequestWeight(limit);
         return RequestAsync<List<BinanceFuturesCoinKline>>(GetUrl(dapi, v1, "klines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
     }
 
     public Task<RestCallResult<List<BinanceFuturesCoinKline>>> GetContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(pair, nameof(pair));
+        ValidateCoinContractType(contractType, false);
+        ValidateCoinKlineInterval(interval);
+        ValidateCoinKlineDateRange(startTime, endTime);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection
         {
@@ -139,12 +146,15 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("limit", limit);
 
-        var weight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
+        var weight = GetCoinKlineRequestWeight(limit);
         return RequestAsync<List<BinanceFuturesCoinKline>>(GetUrl(dapi, v1, "continuousKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesPriceKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(pair, nameof(pair));
+        ValidateCoinKlineInterval(interval);
+        ValidateCoinKlineDateRange(startTime, endTime);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection
         {
@@ -155,12 +165,15 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("limit", limit);
 
-        var weight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        return RequestAsync<List<BinanceFuturesKline>>(GetUrl(dapi, v1, "indexPriceKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
+        var weight = GetCoinKlineRequestWeight(limit);
+        return RequestAsync<List<BinanceFuturesPriceKline>>(GetUrl(dapi, v1, "indexPriceKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesPriceKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(symbol, nameof(symbol));
+        ValidateCoinKlineInterval(interval);
+        ValidateCoinKlineDateRange(startTime, endTime);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
 
         var parameters = new ParameterCollection
@@ -173,12 +186,14 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
 
-        var weight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-        return RequestAsync<List<BinanceFuturesKline>>(GetUrl(dapi, v1, "markPriceKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
+        var weight = GetCoinKlineRequestWeight(limit);
+        return RequestAsync<List<BinanceFuturesPriceKline>>(GetUrl(dapi, v1, "markPriceKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
     }
 
     public Task<RestCallResult<List<BinanceFuturesKline>>> GetPremiumIndexKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(symbol, nameof(symbol));
+        ValidateCoinKlineInterval(interval);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection
         {
@@ -189,7 +204,7 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("limit", limit);
 
-        var weight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
+        var weight = GetCoinKlineRequestWeight(limit);
         return RequestAsync<List<BinanceFuturesKline>>(GetUrl(dapi, v1, "premiumIndexKlines"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: weight);
     }
 
@@ -235,6 +250,9 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesCoinOpenInterestHistory>>> GetOpenInterestHistoryAsync(string pair, BinanceFuturesContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(pair, nameof(pair));
+        ValidateCoinContractType(contractType, true);
+        ValidateCoinPeriodInterval(period);
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
         var parameters = new ParameterCollection
@@ -303,6 +321,9 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesCoinBuySellVolumeRatio>>> GetTakerBuySellVolumeRatioAsync(string pair, BinanceFuturesContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(pair, nameof(pair));
+        ValidateCoinContractType(contractType, true);
+        ValidateCoinPeriodInterval(period);
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
         var parameters = new ParameterCollection
@@ -321,6 +342,9 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesBasis>>> GetBasisAsync(string pair, BinanceFuturesContractType contractType, BinancePeriodInterval period, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
+        ValidateCoinRequiredIdentifier(pair, nameof(pair));
+        ValidateCoinContractType(contractType, false);
+        ValidateCoinPeriodInterval(period);
         limit?.ValidateIntBetween(nameof(limit), 1, 500);
 
         var parameters = new ParameterCollection
@@ -345,5 +369,52 @@ internal partial class BinanceFuturesRestClientCoin
         };
 
         return RequestAsync<BinanceFuturesIndexPriceConstituents>(GetUrl(dapi, v1, "constituents"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+    }
+
+    private static void ValidateCoinKlineInterval(BinanceKlineInterval interval)
+    {
+        if (!Enum.IsDefined(typeof(BinanceKlineInterval), interval)
+            || interval == BinanceKlineInterval.OneSecond)
+        {
+            throw new ArgumentOutOfRangeException(nameof(interval), interval, "Unsupported COIN-M kline interval");
+        }
+    }
+
+    private static int GetCoinKlineRequestWeight(int? limit)
+        => limit == null ? 5 : limit < 100 ? 1 : limit < 500 ? 2 : limit <= 1000 ? 5 : 10;
+
+    private static void ValidateCoinKlineDateRange(DateTime? startTime, DateTime? endTime)
+    {
+        if (!startTime.HasValue || !endTime.HasValue)
+            return;
+
+        if (endTime.Value < startTime.Value)
+            throw new ArgumentException("End time must be later than or equal to start time", nameof(endTime));
+
+        if (endTime.Value - startTime.Value > TimeSpan.FromDays(200))
+            throw new ArgumentException("The time range cannot exceed 200 days", nameof(endTime));
+    }
+
+    private static void ValidateCoinContractType(BinanceFuturesContractType contractType, bool allowAll)
+    {
+        if (contractType != BinanceFuturesContractType.Perpetual
+            && contractType != BinanceFuturesContractType.CurrentQuarter
+            && contractType != BinanceFuturesContractType.NextQuarter
+            && (!allowAll || contractType != BinanceFuturesContractType.All))
+        {
+            throw new ArgumentOutOfRangeException(nameof(contractType), contractType, "Unsupported COIN-M contract type");
+        }
+    }
+
+    private static void ValidateCoinPeriodInterval(BinancePeriodInterval period)
+    {
+        if (!Enum.IsDefined(typeof(BinancePeriodInterval), period))
+            throw new ArgumentOutOfRangeException(nameof(period), period, "Unsupported COIN-M period interval");
+    }
+
+    private static void ValidateCoinRequiredIdentifier(string value, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("Value is required", parameterName);
     }
 }

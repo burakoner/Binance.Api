@@ -44,6 +44,19 @@ public record BinanceFuturesKline
 }
 
 /// <summary>
+/// Index or mark price candlestick information
+/// </summary>
+[JsonConverter(typeof(ArrayConverter))]
+public record BinanceFuturesPriceKline : BinanceFuturesKline
+{
+    /// <summary>
+    /// Number of basic data points used for the candlestick
+    /// </summary>
+    [ArrayProperty(8)]
+    public int DataCount { get; set; }
+}
+
+/// <summary>
 /// Candlestick information for symbol
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
@@ -105,14 +118,14 @@ public record BinanceFuturesCoinKline : BinanceFuturesKline
     public int TradeCount { get; set; }
 
     /// <summary>
-    /// Taker buy quote asset volume
+    /// Taker buy volume
     /// </summary>
     [ArrayProperty(9)]
-    public  decimal TakerBuyQuoteVolume { get; set; }
+    public decimal TakerBuyVolume { get; set; }
 
     /// <summary>
     /// Taker buy base asset volume
     /// </summary>
     [ArrayProperty(10)]
-    public  decimal TakerBuyBaseVolume { get; set; }
+    public decimal TakerBuyBaseVolume { get; set; }
 }

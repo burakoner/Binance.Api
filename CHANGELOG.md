@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Fully aligned five COIN-M REST kline and three futures-data contracts, including exact weight boundaries, required identifiers, interval/date/period validation, operation-specific contract types, safe `ALL` support, breaking correction of transport-specific kline response fields, complete response reconciliation, and current Market Data documentation links
   * Aligned the COIN-M REST user-data-stream lifecycle with current parameterless API-key-only weight-one requests, returned the refreshed listen key from keepalive, handled the documented empty close response, and migrated the owned documentation links and executable call sites
   * Closed a Spot and USDⓈ-M reconnect-authentication race that could re-logon after logout or API-key revocation, and completed backward Review 27 across session transitions, USDⓈ-M WebSocket market data, and COIN-M inventory/history-download work
   * Aligned all six COIN-M history-download ID and link contracts with current request weights, int64 receive-window validation, required identifiers, response fields, tolerant expiry parsing, and exact Account documentation links

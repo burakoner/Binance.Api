@@ -64,4 +64,10 @@ public enum BinanceFuturesContractType : byte
     /// </summary>
     [Map("TRADIFI_PERPETUAL")]
     TradFiPerpetual,
+
+    /// <summary>
+    /// All contract types
+    /// </summary>
+    [Map("ALL")]
+    All,
 }

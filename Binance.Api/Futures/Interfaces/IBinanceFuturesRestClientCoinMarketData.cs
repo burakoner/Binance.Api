@@ -87,7 +87,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
     /// Get funding rate history for the provided symbol
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Rate-History-of-Perpetual-Futures" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
+    /// <param name="symbol">The COIN-M or USDⓈ-M symbol to get the data for</param>
     /// <param name="startTime">Start time to get funding rate history</param>
     /// <param name="endTime">End time to get funding rate history</param>
     /// <param name="limit">Max number of results</param>
@@ -105,12 +105,12 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get candlestick data for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#kline-candlestick-data" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
-    /// <param name="interval">The candlestick timespan</param>
-    /// <param name="startTime">Start time to get candlestick data</param>
-    /// <param name="endTime">End time to get candlestick data</param>
+    /// <param name="interval">The candlestick timespan; one minute through one month</param>
+    /// <param name="startTime">Start time to get candlestick data; the explicit range cannot exceed 200 days</param>
+    /// <param name="endTime">End time to get candlestick data; the explicit range cannot exceed 200 days</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The candlestick data for the provided symbol</returns>
@@ -118,13 +118,13 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get candlestick data for the provided pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#continuous-contract-kline-candlestick-data" /></para>
     /// </summary>
-    /// <param name="pair">The symbol to get the data for, for example `BTCUSD`</param>
-    /// <param name="contractType">The contract type</param>
-    /// <param name="interval">The candlestick timespan</param>
-    /// <param name="startTime">Start time to get candlestick data</param>
-    /// <param name="endTime">End time to get candlestick data</param>
+    /// <param name="pair">The COIN-M or USDⓈ-M pair to get the data for</param>
+    /// <param name="contractType">Perpetual, current-quarter, or next-quarter contract type</param>
+    /// <param name="interval">The candlestick timespan; one minute through one month</param>
+    /// <param name="startTime">Start time to get candlestick data; the explicit range cannot exceed 200 days</param>
+    /// <param name="endTime">End time to get candlestick data; the explicit range cannot exceed 200 days</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The candlestick data for the provided symbol</returns>
@@ -132,36 +132,36 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get candlestick data for the provided pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#index-price-kline-candlestick-data" /></para>
     /// </summary>
-    /// <param name="pair">The symbol to get the data for, for example `BTCUSD`</param>
-    /// <param name="interval">The candlestick timespan</param>
-    /// <param name="startTime">Start time to get candlestick data</param>
-    /// <param name="endTime">End time to get candlestick data</param>
+    /// <param name="pair">The COIN-M or USDⓈ-M pair to get the data for</param>
+    /// <param name="interval">The candlestick timespan; one minute through one month</param>
+    /// <param name="startTime">Start time to get candlestick data; the explicit range cannot exceed 200 days</param>
+    /// <param name="endTime">End time to get candlestick data; the explicit range cannot exceed 200 days</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The candlestick data for the provided symbol</returns>
-    Task<RestCallResult<List<BinanceFuturesKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesPriceKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
     /// <summary>
     /// Kline/candlestick bars for the mark price of a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#mark-price-kline-candlestick-data" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol get the data for, for example `BTCUSD_PERP`</param>
-    /// <param name="interval">The interval of the klines</param>
+    /// <param name="symbol">The COIN-M or USDⓈ-M symbol to get the data for</param>
+    /// <param name="interval">The kline interval; one minute through one month</param>
     /// <param name="limit">Max number of results</param>
-    /// <param name="startTime">Start time</param>
-    /// <param name="endTime">End time</param>
+    /// <param name="startTime">Start time; the explicit range cannot exceed 200 days</param>
+    /// <param name="endTime">End time; the explicit range cannot exceed 200 days</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceFuturesKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesPriceKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get premium index kline data for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#premium-index-kline-data" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
-    /// <param name="interval">The candlestick timespan</param>
+    /// <param name="symbol">The COIN-M or USDⓈ-M symbol to get the data for</param>
+    /// <param name="interval">The candlestick timespan; one minute through one month</param>
     /// <param name="startTime">Start time to get candlestick data</param>
     /// <param name="endTime">End time to get candlestick data</param>
     /// <param name="limit">Max number of results</param>
@@ -210,11 +210,11 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets Open Interest History
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest-Statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#open-interest-statistics" /></para>
     /// </summary>
     /// <param name="pair">The pair to get the data for, for example `BTCUSD`</param>
-    /// <param name="contractType">The contract type</param>
-    /// <param name="period">The period timespan</param>
+    /// <param name="contractType">All, perpetual, current-quarter, or next-quarter contract type</param>
+    /// <param name="period">The period timespan; 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, or 1d</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="startTime">Start time to get open interest history</param>
     /// <param name="endTime">End time to get open interest history</param>
@@ -227,7 +227,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
-    /// <param name="period">The period timespan</param>
+    /// <param name="period">The period timespan; 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, or 1d</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="startTime">Start time to get top trader long/short ratio (positions)</param>
     /// <param name="endTime">End time to get top trader long/short ratio (positions)</param>
@@ -240,7 +240,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
-    /// <param name="period">The period timespan</param>
+    /// <param name="period">The period timespan; 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, or 1d</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="startTime">Start time to get top trader long/short ratio (accounts)</param>
     /// <param name="endTime">End time to get top trader long/short ratio (accounts)</param>
@@ -263,10 +263,10 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets Taker Buy/Sell Volume Ratio
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Taker-Buy-Sell-Volume" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#taker-buy-sell-volume" /></para>
     /// </summary>
     /// <param name="pair">The pair to get the data for, for example `BTCUSD`</param>
-    /// <param name="contractType">The contract type</param>
+    /// <param name="contractType">All, perpetual, current-quarter, or next-quarter contract type</param>
     /// <param name="period">The period timespan</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="startTime">Start time to get taker buy/sell volume ratio</param>
@@ -277,10 +277,10 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets basis
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Basis" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#basis" /></para>
     /// </summary>
     /// <param name="pair">The pair to get the data for, for example `BTCUSD`</param>
-    /// <param name="contractType">The contract type</param>
+    /// <param name="contractType">Perpetual, current-quarter, or next-quarter contract type</param>
     /// <param name="period">The period timespan</param>
     /// <param name="limit">Max number of results</param>
     /// <param name="startTime">Start time</param>
