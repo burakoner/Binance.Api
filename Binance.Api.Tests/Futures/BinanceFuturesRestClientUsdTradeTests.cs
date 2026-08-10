@@ -1,10 +1,165 @@
 using Binance.Api.Futures;
 using Binance.Api.Shared;
+using Newtonsoft.Json.Linq;
 
 namespace Binance.Api.Tests.Futures;
 
 public class BinanceFuturesRestClientUsdTradeTests
 {
+    [Theory]
+    [InlineData(BinanceFuturesOrderType.Stop)]
+    [InlineData(BinanceFuturesOrderType.StopMarket)]
+    [InlineData(BinanceFuturesOrderType.TakeProfit)]
+    [InlineData(BinanceFuturesOrderType.TakeProfitMarket)]
+    [InlineData(BinanceFuturesOrderType.TrailingStopMarket)]
+    [InlineData(BinanceFuturesOrderType.Liquidation)]
+    [InlineData((BinanceFuturesOrderType)byte.MaxValue)]
+    public async Task PlaceOrderAsync_RejectsNonNormalTypesBeforeTransport(BinanceFuturesOrderType type)
+    {
+        var handler = new RecordingHttpMessageHandler("{}");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.UsdFutures.PlaceOrderAsync(
+            "BTCUSDT",
+            BinanceOrderSide.Buy,
+            type,
+            quantity: 1));
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Theory]
+    [InlineData(BinanceFuturesOrderType.Limit, "LIMIT")]
+    [InlineData(BinanceFuturesOrderType.Market, "MARKET")]
+    public async Task PlaceOrderAsync_AllowsCurrentNormalTypes(BinanceFuturesOrderType type, string wireType)
+    {
+        var handler = new RecordingHttpMessageHandler("{\"orderId\":1}");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+
+        var result = await client.UsdFutures.PlaceOrderAsync(
+            "BTCUSDT",
+            BinanceOrderSide.Buy,
+            type,
+            quantity: 1,
+            price: type == BinanceFuturesOrderType.Limit ? 50_000 : null,
+            timeInForce: type == BinanceFuturesOrderType.Limit ? BinanceTimeInForce.GoodTillCanceled : null);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Post, handler.Method);
+        Assert.Equal("/fapi/v1/order", handler.RequestUri!.AbsolutePath);
+        Assert.Contains($"type={wireType}", Uri.UnescapeDataString(handler.Body!));
+    }
+
+    [Fact]
+    public void PlaceOrderAsync_PublicContractDoesNotExposeConditionalParameters()
+    {
+        var parameterNames = typeof(IBinanceFuturesRestClientUsdTrade)
+            .GetMethod(nameof(IBinanceFuturesRestClientUsdTrade.PlaceOrderAsync))!
+            .GetParameters()
+            .Select(parameter => parameter.Name)
+            .ToList();
+
+        Assert.DoesNotContain("stopPrice", parameterNames);
+        Assert.DoesNotContain("activationPrice", parameterNames);
+        Assert.DoesNotContain("callbackRate", parameterNames);
+        Assert.DoesNotContain("workingType", parameterNames);
+        Assert.DoesNotContain("closePosition", parameterNames);
+        Assert.DoesNotContain("priceProtect", parameterNames);
+    }
+
+    [Theory]
+    [InlineData(BinanceFuturesOrderType.Stop)]
+    [InlineData(BinanceFuturesOrderType.StopMarket)]
+    [InlineData(BinanceFuturesOrderType.TakeProfit)]
+    [InlineData(BinanceFuturesOrderType.TakeProfitMarket)]
+    [InlineData(BinanceFuturesOrderType.TrailingStopMarket)]
+    [InlineData(BinanceFuturesOrderType.Liquidation)]
+    [InlineData((BinanceFuturesOrderType)byte.MaxValue)]
+    public async Task PlaceOrdersAsync_RejectsNonNormalTypesBeforeTransport(BinanceFuturesOrderType type)
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.UsdFutures.PlaceOrdersAsync(
+            [CreateBatchOrder(BinanceFuturesOrderType.Limit), CreateBatchOrder(type)]));
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(6)]
+    public async Task PlaceOrdersAsync_RejectsInvalidBatchSizeBeforeTransport(int count)
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+        var orders = Enumerable.Range(0, count).Select(_ => CreateBatchOrder(BinanceFuturesOrderType.Market));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.UsdFutures.PlaceOrdersAsync(orders));
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task PlaceOrdersAsync_RejectsConditionalParametersForNormalTypeBeforeTransport()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+        var order = CreateBatchOrder(BinanceFuturesOrderType.Limit);
+        order.StopPrice = 49_000;
+
+        await Assert.ThrowsAsync<ArgumentException>(() => client.UsdFutures.PlaceOrdersAsync([order]));
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task PlaceOrdersAsync_AllowsOneToFiveCurrentNormalOrders()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+
+        var result = await client.UsdFutures.PlaceOrdersAsync(
+            [CreateBatchOrder(BinanceFuturesOrderType.Limit), CreateBatchOrder(BinanceFuturesOrderType.Market)]);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Post, handler.Method);
+        Assert.Equal("/fapi/v1/batchOrders", handler.RequestUri!.AbsolutePath);
+        var body = ParseBody(handler);
+        var batch = JArray.Parse(body["batchOrders"]);
+        Assert.Equal("LIMIT", batch[0]!["type"]!.Value<string>());
+        Assert.Equal("MARKET", batch[1]!["type"]!.Value<string>());
+    }
+
+    [Fact]
+    public async Task PlaceTestOrderAsync_RetainsDocumentedConditionalTypeContract()
+    {
+        var handler = new RecordingHttpMessageHandler("{\"orderId\":1}");
+        using var httpClient = new HttpClient(handler);
+        using var client = CreateClient(httpClient);
+
+        var result = await client.UsdFutures.PlaceTestOrderAsync(
+            "BTCUSDT",
+            BinanceOrderSide.Buy,
+            BinanceFuturesOrderType.Stop,
+            quantity: 1,
+            price: 50_000,
+            stopPrice: 49_000,
+            timeInForce: BinanceTimeInForce.GoodTillCanceled);
+
+        Assert.True(result.Success);
+        Assert.Equal("/fapi/v1/order/test", handler.RequestUri!.AbsolutePath);
+        var body = ParseBody(handler);
+        Assert.Equal("STOP", body["type"]);
+        Assert.Equal("49000", body["stopPrice"]);
+    }
+
     [Fact]
     public async Task GetMarginChangeHistoryAsync_UsesV1QueryContractAndDeserializesResponse()
     {
@@ -122,4 +277,18 @@ public class BinanceFuturesRestClientUsdTradeTests
             HttpClient = httpClient,
             RateLimiterEnabled = false
         });
+
+    private static BinanceFuturesBatchOrderRequest CreateBatchOrder(BinanceFuturesOrderType type)
+        => new()
+        {
+            Symbol = "BTCUSDT",
+            Side = BinanceOrderSide.Buy,
+            Type = type,
+            Quantity = 1,
+            Price = type == BinanceFuturesOrderType.Limit ? 50_000 : null,
+            TimeInForce = type == BinanceFuturesOrderType.Limit ? BinanceTimeInForce.GoodTillCanceled : null
+        };
+
+    private static Dictionary<string, string> ParseBody(RecordingHttpMessageHandler handler)
+        => Uri.UnescapeDataString(handler.Body!).Split('&').Select(value => value.Split('=', 2)).ToDictionary(value => value[0], value => value[1]);
 }

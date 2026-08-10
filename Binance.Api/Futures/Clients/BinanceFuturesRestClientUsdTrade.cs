@@ -14,35 +14,23 @@ internal partial class BinanceFuturesRestClientUsd
         BinanceFuturesOrderType type,
         decimal? quantity,
         decimal? price = null,
-        decimal? stopPrice = null,
         string? newClientOrderId = null,
         BinancePositionSide? positionSide = null,
         BinanceTimeInForce? timeInForce = null,
         BinanceOrderResponseType? orderResponseType = null,
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         BinanceFuturesPriceMatch? priceMatch = null,
-        BinanceFuturesWorkingType? workingType = null,
         bool? reduceOnly = null,
-        bool? closePosition = null,
-        bool? priceProtect = null,
-        decimal? activationPrice = null,
-        decimal? callbackRate = null,
         DateTime? goodTillDate = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (closePosition == true && positionSide != null)
-        {
-            if (positionSide == BinancePositionSide.Short && side == BinanceOrderSide.Sell)
-                throw new ArgumentException("Can't close short position with order side sell");
-            if (positionSide == BinancePositionSide.Long && side == BinanceOrderSide.Buy)
-                throw new ArgumentException("Can't close long position with order side buy");
-        }
+        ValidateNormalOrderType(type);
 
         if (orderResponseType == BinanceOrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
-        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, null, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -51,7 +39,6 @@ internal partial class BinanceFuturesRestClientUsd
 
         quantity = rulesCheck.Quantity;
         price = rulesCheck.Price;
-        stopPrice = rulesCheck.StopPrice;
 
         var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
@@ -64,15 +51,9 @@ internal partial class BinanceFuturesRestClientUsd
         parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("timeInForce", timeInForce);
         parameters.AddOptionalEnum("positionSide", positionSide);
-        parameters.AddOptional("stopPrice", stopPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("activationPrice", activationPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("callbackRate", callbackRate?.ToString(BinanceConstants.CI));
-        parameters.AddOptionalEnum("workingType", workingType);
         parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLower());
-        parameters.AddOptional("closePosition", closePosition?.ToString().ToLower());
         parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
         parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
-        parameters.AddOptional("priceProtect", priceProtect?.ToString().ToUpper());
         parameters.AddOptionalEnum("priceMatch", priceMatch);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
         parameters.AddOptionalMilliseconds("goodTillDate", goodTillDate);
@@ -85,11 +66,27 @@ internal partial class BinanceFuturesRestClientUsd
 
     public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (orders == null)
+            throw new ArgumentNullException(nameof(orders));
+
+        var orderList = orders.ToList();
+        if (orderList.Count is < 1 or > 5)
+            throw new ArgumentOutOfRangeException(nameof(orders), orderList.Count, "Between one and five orders must be provided");
+
+        foreach (var order in orderList)
+        {
+            if (order == null)
+                throw new ArgumentException("Orders cannot contain null items", nameof(orders));
+
+            ValidateNormalOrderType(order.Type);
+            ValidateNormalBatchOrderParameters(order);
+        }
+
         if (RestOptions.UsdtFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
         {
-            foreach (var order in orders)
+            foreach (var order in orderList)
             {
-                var rulesCheck = await CheckTradingRulesAsync(order.Symbol, order.Type, order.Quantity, null, order.Price, order.StopPrice, ct).ConfigureAwait(false);
+                var rulesCheck = await CheckTradingRulesAsync(order.Symbol, order.Type, order.Quantity, null, order.Price, null, ct).ConfigureAwait(false);
                 if (!rulesCheck.Passed)
                 {
                     Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -98,14 +95,12 @@ internal partial class BinanceFuturesRestClientUsd
 
                 order.Quantity = rulesCheck.Quantity;
                 order.Price = rulesCheck.Price;
-                order.StopPrice = rulesCheck.StopPrice;
             }
         }
 
         var parameters = new ParameterCollection();
         var parameterOrders = new List<Dictionary<string, object>>();
-        int i = 0;
-        foreach (var order in orders)
+        foreach (var order in orderList)
         {
             var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
@@ -121,16 +116,10 @@ internal partial class BinanceFuturesRestClientUsd
             orderParameters.AddOptionalEnum("timeInForce", order.TimeInForce);
             orderParameters.AddOptionalEnum("positionSide", order.PositionSide);
             orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptional("stopPrice", order.StopPrice?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptional("activationPrice", order.ActivationPrice?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptional("callbackRate", order.CallbackRate?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptionalEnum("workingType", order.WorkingType);
             orderParameters.AddOptional("reduceOnly", order.ReduceOnly?.ToString().ToLower());
-            orderParameters.AddOptional("priceProtect", order.PriceProtect?.ToString().ToUpper());
             orderParameters.AddOptionalEnum("priceMatch", order.PriceMatch);
             orderParameters.AddOptionalEnum("selfTradePreventionMode", order.SelfTradePreventionMode);
             parameterOrders.Add(orderParameters);
-            i++;
         }
 
         parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
@@ -154,6 +143,18 @@ internal partial class BinanceFuturesRestClientUsd
         }
 
         return response.As(result);
+    }
+
+    private static void ValidateNormalOrderType(BinanceFuturesOrderType type)
+    {
+        if (type is not BinanceFuturesOrderType.Limit and not BinanceFuturesOrderType.Market)
+            throw new ArgumentOutOfRangeException(nameof(type), type, "USD-M normal order endpoints support only Limit and Market orders; use PlaceAlgoOrderAsync for conditional orders");
+    }
+
+    private static void ValidateNormalBatchOrderParameters(BinanceFuturesBatchOrderRequest order)
+    {
+        if (order.StopPrice != null || order.ActivationPrice != null || order.CallbackRate != null || order.WorkingType != null || order.PriceProtect != null)
+            throw new ArgumentException("Conditional order parameters are not supported by USD-M normal order endpoints; use PlaceAlgoOrderAsync");
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(

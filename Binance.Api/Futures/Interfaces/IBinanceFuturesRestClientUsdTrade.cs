@@ -6,48 +6,42 @@
 public interface IBinanceFuturesRestClientUsdTrade
 {
     /// <summary>
-    /// Event triggered when an order is placed via this client. Only available for Spot orders
+    /// Event triggered when an order is placed via this client
     /// </summary>
     event Action<long>? OnOrderPlaced;
 
     /// <summary>
-    /// Event triggered when an order is canceled via this client. Note that this does not trigger when using CancelAllOrdersAsync. Only available for Spot orders
+    /// Event triggered when an order is canceled via this client. Note that this does not trigger when using CancelAllOrdersAsync
     /// </summary>
     event Action<long>? OnOrderCanceled;
 
     /// <summary>
-    /// Places a new order
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/convert" /></para>
+    /// Places a new LIMIT or MARKET order. Conditional order types have moved to the Algo Service and must use PlaceAlgoOrderAsync
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#new-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>
-    /// <param name="type">The order type</param>
+    /// <param name="type">The order type; only Limit and Market are supported</param>
     /// <param name="timeInForce">Lifetime of the order (GoodTillCancel/ImmediateOrCancel/FillOrKill)</param>
     /// <param name="quantity">The quantity of the base symbol</param>
     /// <param name="positionSide">The position side</param>
     /// <param name="reduceOnly">Specify as true if the order is intended to only reduce the position</param>
     /// <param name="price">The price to use</param>
     /// <param name="newClientOrderId">Unique id for order</param>
-    /// <param name="stopPrice">Used for stop orders</param>
-    /// <param name="activationPrice">Used with TRAILING_STOP_MARKET orders, default as the latest price（supporting different workingType)</param>
-    /// <param name="callbackRate">Used with TRAILING_STOP_MARKET orders</param>
-    /// <param name="workingType">stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE"</param>
-    /// <param name="closePosition">Close-All，used with STOP_MARKET or TAKE_PROFIT_MARKET.</param>
     /// <param name="orderResponseType">The response type. Default Acknowledge</param>
-    /// <param name="priceProtect">If true when price reaches stopPrice, difference between "MARK_PRICE" and "CONTRACT_PRICE" cannot be larger than "triggerProtect" of the symbol.</param>
-    /// <param name="priceMatch">Only available for Limit/Stop/TakeProfit order</param>
+    /// <param name="priceMatch">Only available for Limit orders; cannot be sent together with price</param>
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
     /// <param name="goodTillDate">Order cancel time for timeInForce GoodTillDate</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Id's for the placed order</returns>
-    Task<RestCallResult<BinanceFuturesOrder>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesOrderType type, decimal? quantity, decimal? price = null, decimal? stopPrice = null, string? newClientOrderId = null, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceFuturesPriceMatch? priceMatch = null, BinanceFuturesWorkingType? workingType = null, bool? reduceOnly = null, bool? closePosition = null, bool? priceProtect = null, decimal? activationPrice = null, decimal? callbackRate = null, DateTime? goodTillDate = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceFuturesOrder>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesOrderType type, decimal? quantity, decimal? price = null, string? newClientOrderId = null, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceFuturesPriceMatch? priceMatch = null, bool? reduceOnly = null, DateTime? goodTillDate = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Place multiple orders in one call
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Place-Multiple-Orders" /></para>
+    /// Places between one and five LIMIT or MARKET orders in one call. Conditional order types have moved to the Algo Service
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#place-multiple-orders" /></para>
     /// </summary>
-    /// <param name="orders">The orders to place</param>
+    /// <param name="orders">Between one and five normal orders to place; each order type must be Limit or Market</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Returns a list of call results, one for each order. The order the results are in is the order the orders were sent</returns>
@@ -55,7 +49,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Modifies an existing LIMIT order and moves it to the back of the match queue
-    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#modify-order-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#modify-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="side">The existing order side</param>
@@ -82,7 +76,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Modifies between one and five existing LIMIT orders concurrently
-    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#modify-multiple-orders-trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#modify-multiple-orders" /></para>
     /// </summary>
     /// <param name="orders">One to five amendments. Every item requires symbol, side, quantity, price, and either OrderId or OriginalClientOrderId</param>
     /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
@@ -107,7 +101,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Cancels a pending order
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#cancel-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -119,7 +113,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Cancels multiple orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Multiple-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#cancel-multiple-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="orderIdList">The list of order ids to cancel</param>
@@ -131,7 +125,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Cancels all open orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Open-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#cancel-all-open-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -142,7 +136,7 @@ public interface IBinanceFuturesRestClientUsdTrade
     /// <summary>
     /// Cancel all open orders of the specified symbol at the end of the specified countdown. This rest endpoint means to ensure your open orders are canceled in case of an outage. The endpoint should be called repeatedly as heartbeats
     /// so that the existing countdown time can be canceled and replaced by a new one.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Auto-Cancel-All-Open-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#auto-cancel-all-open-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="countDownTime">The time after which all open orders should cancel, or 0 to cancel an existing timer</param>
@@ -249,7 +243,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -277,7 +271,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Gets a list of open orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Open-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#current-all-open-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get open orders for, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -287,7 +281,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Retrieves data for a specific open order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Current-Open-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#query-current-open-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -332,7 +326,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Change the margin type for an open position
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Margin-Type" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#change-margin-type" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to change the position type for, for example `ETHUSDT`</param>
     /// <param name="marginType">The type of margin to use</param>
@@ -343,7 +337,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Position-Mode" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#change-position-mode" /></para>
     /// </summary>
     /// <param name="dualPositionSide">User position mode</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -353,7 +347,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Requests to change the initial leverage of the given symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Initial-Leverage" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#change-initial-leverage" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to change the initial leverage for, for example `ETHUSDT`</param>
     /// <param name="leverage">The amount of initial leverage to change to</param>
@@ -364,7 +358,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Set user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Multi-Assets-Mode" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#change-multi-assets-mode" /></para>
     /// </summary>
     /// <param name="enabled">Enabled or not</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -374,7 +368,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Change the margin on an open position
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Modify-Isolated-Position-Margin" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#modify-isolated-position-margin" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to adjust the position margin for, for example `ETHUSDT`</param>
     /// <param name="quantity">The amount of margin to be used</param>
@@ -387,7 +381,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// DEPRECATED; USE GetPositionsAsync INSTEAD
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Position-Information-V2" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#position-information-v2" /></para>
     /// </summary>
     /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -397,7 +391,7 @@ public interface IBinanceFuturesRestClientUsdTrade
 
     /// <summary>
     /// Get position information
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Position-Information-V3" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#position-information-v3" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -430,8 +424,8 @@ public interface IBinanceFuturesRestClientUsdTrade
     Task<RestCallResult<List<BinanceFuturesMarginChangeHistoryResult>>> GetMarginChangeHistoryAsync(string symbol, BinanceFuturesMarginChangeDirectionType? type = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Testing order request, this order will not be submitted to matching engine
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Order-Test" /></para>
+    /// Tests an order request without submitting it to the matching engine. The test contract retains the documented normal and conditional order types
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/trade#test-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSDT`</param>
     /// <param name="side">The order side (buy/sell)</param>

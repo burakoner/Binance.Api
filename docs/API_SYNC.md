@@ -1542,6 +1542,32 @@ Six deterministic regressions cover all five pre-transport `1s` guards, undefine
 
 After this correction, the measurable remaining minimum is eleven small turns and approximately 9-25 active hours: nine numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 106: USDⓈ-M REST normal-order Algo migration
+
+USDⓈ-M normal single and batch order placement was aligned with the conditional-order migration that became effective on 2025-12-09. The current unified Trade catalog is internally stale: its formal `POST /fapi/v1/order` and `POST /fapi/v1/batchOrders` schemas still list all seven historical order types. The newer dated migration entry explicitly says those two endpoints block `STOP_MARKET`, `TAKE_PROFIT_MARKET`, `STOP`, `TAKE_PROFIT`, and `TRAILING_STOP_MARKET`, and the current error catalog still publishes `-4120 STOP_ORDER_SWITCH_ALGO` directing callers to the Algo Order API. The dated operational migration plus current error contract therefore take precedence over the stale generated enum list; this conflict is recorded rather than hidden.
+
+`PlaceOrderAsync` and `PlaceOrdersAsync` now accept only `LIMIT` and `MARKET`. The five migrated conditional types, response-only `LIQUIDATION`, and undefined enum casts are rejected before trade-rule evaluation or transport. The conditional-only `stopPrice`, `activationPrice`, `callbackRate`, `workingType`, `closePosition`, and `priceProtect` parameters were removed from the USDⓈ-M single-order public contract rather than preserved as a historical surface. The batch request model remains shared with COIN-M, where those fields are still current; USDⓈ-M batch placement therefore rejects any conditional field instead of emitting it. Batch input is materialized once, must contain one through five non-null items, and is completely validated before trade-rule adjustment can mutate an earlier item or any HTTP request can start.
+
+The test-order contract remains deliberately separate. The migration notice names only `/fapi/v1/order` and `/fapi/v1/batchOrders`; the live `POST /fapi/v1/order/test` schema still lists normal and conditional types. `PlaceTestOrderAsync` therefore retains conditional serialization, with an exact `STOP` request regression proving that the normal-order guard did not leak into the test endpoint.
+
+All seventeen retired USDⓈ-M documentation URLs in the owned REST Trade interface were migrated to the live unified catalog with exact DOM heading anchors. Two already-migrated modify links also had stale `-trade` fragments and were corrected to the live `modify-order` and `modify-multiple-orders` anchors. The repository-wide old-URL residue is now 21; those occurrences remain in interface files explicitly assigned to Slices 107, 108, 111, and the three COIN-M cross-product links assigned to Slice 112.
+
+Twenty-two new deterministic cases cover both allowed normal types, every blocked/invalid type on both single and batch placement, removal of the conditional single-order surface, the batch-size bounds, conditional batch-parameter rejection, batch serialization, and preserved test-order conditional serialization. All 26 focused Trade tests and all 364 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No authenticated Binance endpoint, account operation, order, cancellation, or mutation was sent.
+
+### Revised next order
+
+1. Slice 107: add WebSocket native Algo place/cancel, fully align normal `order.place`, and migrate the owned WebSocket Trade links.
+2. Slice 108: add the three current v1 WebSocket account/balance/position contracts alongside v2 and migrate the owned WebSocket Account links.
+3. Backward Review 25: review Slices 104-108 before continuing.
+4. Slice 109: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound and reconnect-safe state.
+5. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+6. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+7. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+8. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+9. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum is ten small turns and approximately 8-22.5 active hours: eight numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1675,3 +1701,4 @@ After this correction, the measurable remaining minimum is eleven small turns an
 | Review 24 | Complete | Backward review of Margin, Convert/Algo, and USDⓈ-M closing work; cross-product trade-rule and XML-link ownership reconciliation | `c3edf19..b1eeef5` diff review, live connector HEAD verification, regenerated 95/94 REST, 18/13 WebSocket API, 20/19 stream and 79-link inventories, Margin int64/ignored-field scans, confirmed USDⓈ-M/COIN-M/Options trade-rule option isolation defects, 50 targeted and 330 complete tests, forced full multi-target rebuild |
 | 104 | Complete | Cross-product USDⓈ-M, COIN-M, and Options trade-rule configuration safety | Product-specific REST behavior and refresh settings, Futures socket explicit-setting paths, corrected USDⓈ-M REST-client selection, Options batch gate, 6 exact safety, 186 Futures-and-Options, and 336 complete tests, forced full multi-target rebuild |
 | 105 | Complete | Read-only USDⓈ-M REST kline, continuous-contract, income-enum, and owned documentation contracts | Live unified Market Data and Account catalogs, exact DOM anchors, generated connector HEAD `a0c61d1`, five interval guards, exact four contract types, three income mappings, 44 canonical links, 34 focused and 342 complete tests, forced full multi-target rebuild |
+| 106 | Complete | USDⓈ-M REST normal single/batch order Algo migration and owned Trade documentation contracts | Live unified Trade catalog, effective 2025-12-09 migration notice, current `-4120` error contract, exact DOM anchors, removed conditional single-order surface, pre-transport type/batch guards, preserved test-order contract, 26 focused and 364 complete tests, forced full multi-target rebuild |

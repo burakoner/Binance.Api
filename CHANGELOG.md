@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Migrated USDⓈ-M REST normal single and batch order placement to the post-2025 Algo contract, retaining only LIMIT/MARKET orders, removing conditional-only single-order parameters, rejecting conditional batch parameters and invalid batch sizes before transport, preserving the separate test-order contract, and migrating all owned Trade documentation links
   * Aligned read-only USDⓈ-M REST kline intervals, continuous-contract types, and income types with the current contract, and migrated the owned Account and Market Data documentation links
   * Isolated USDⓈ-M, COIN-M, and Options trade-rule settings across REST and Futures WebSocket order validation, including the USDⓈ-M invalid client cast and Options batch gate
   * Fixed `CancelMarginOrderAsync` sending a GET request instead of the documented DELETE request
