@@ -40,6 +40,9 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesSymbolBracket>>> GetBracketsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));

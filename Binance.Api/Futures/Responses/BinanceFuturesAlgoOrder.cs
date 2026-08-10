@@ -1,7 +1,7 @@
 namespace Binance.Api.Futures;
 
 /// <summary>
-/// Shared native USD-M conditional Algo order information
+/// Shared native Futures conditional Algo order information
 /// </summary>
 public record BinanceFuturesAlgoOrderInfo
 {

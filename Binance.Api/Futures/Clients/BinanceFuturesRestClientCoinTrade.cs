@@ -513,6 +513,11 @@ internal partial class BinanceFuturesRestClientCoin
 
     public Task<RestCallResult<List<BinanceFuturesOrder>>> GetOpenOrdersAsync(string? symbol = null, string? pair = null, int? receiveWindow = null, CancellationToken ct = default)
     {
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+        if (pair is not null && string.IsNullOrWhiteSpace(pair))
+            throw new ArgumentException("pair cannot be empty when provided", nameof(pair));
+
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
         parameters.AddOptional("symbol", symbol);

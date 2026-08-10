@@ -248,6 +248,22 @@ public class BinanceFuturesRestClientCoinReadContractsTests
         Assert.Null(configuredHandler.RequestUri);
     }
 
+    [Fact]
+    public async Task DynamicWeightQueries_RejectBlankIdentifiersBeforeSending()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var client = CreateClient(handler);
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.CoinFutures.GetBracketsAsync(symbol: " "));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.CoinFutures.GetOpenOrdersAsync(symbol: " "));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.CoinFutures.GetOpenOrdersAsync(pair: " "));
+
+        Assert.Null(handler.RequestUri);
+    }
+
     private static string DecodedQuery(RecordingHttpMessageHandler handler)
         => Uri.UnescapeDataString(handler.RequestUri!.Query);
 

@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Completed Backward Review 28 across COIN-M REST listen-key, market-data, income, signed-read, and normal/Algo order changes; prevented blank symbol filters from selecting lower dynamic request weights, rejected blank open-order pair filters, and corrected shared Futures Algo model documentation
   * Migrated COIN-M REST normal order placement to LIMIT/MARKET-only contracts, removed historical conditional fields from single and shared batch requests, added the three current DAPI conditional Algo placement/cancellation/open-order operations with shared complete models and fail-closed validation, and updated owned Trade documentation and examples
   * Aligned remaining signed COIN-M REST receive-window ceilings, current Account Information and Position Information response shapes, the Current All Open Orders pair filter and weights, and the three owned Account/Trade documentation links
   * Fully aligned COIN-M Income History with its exact seven-value income domain, int64 pagination and receive window, documented range boundary, string transaction identifier, dedicated response type, and current Account documentation link
