@@ -331,7 +331,7 @@ public sealed class BinanceRestApiClient : RestApiClient
         ArraySerialization? serialization = null, JsonSerializer? deserializer = null, bool ignoreRatelimit = false, int requestWeight = 1) where T : class
     {
         var result = await SendRequestAsync<T>(uri, method, cancellationToken, signed, queryParameters ?? [], bodyParameters ?? [], headerParameters ?? [], serialization, deserializer, ignoreRatelimit || !ApiOptions.RateLimiterEnabled, requestWeight).ConfigureAwait(false);
-        if (!result && result.Error!.Code == -1021 && ApiOptions.AutoTimestamp)
+        if (!result && result.Error?.Code == -1021 && ApiOptions.AutoTimestamp)
         {
             Logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
             TimeSyncState.LastSyncTime = DateTime.MinValue;

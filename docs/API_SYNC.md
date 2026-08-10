@@ -1732,6 +1732,26 @@ Eight deterministic tests cover all four routes, authentication classification, 
 
 The measurable remaining minimum is seven small turns and approximately 4.5-15 active hours. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 113: current USDⓈ-M REST user-data-stream lifecycle
+
+The complete REST listen-key lifecycle was compared against the current rendered User Data Streams catalog, the 2024-04-19 product changelog entry effective 2024-04-25, and the OpenAPI-derived official generated connector at HEAD `8d3256f`. `POST`, `PUT`, and `DELETE /fapi/v1/listenKey` are all API-key-only unsigned USER_STREAM requests with IP weight 1 and no query or body parameters. Start returns the active listen key and extends an already-active key for 60 minutes. Keepalive is parameterless and returns the key that was extended. Close is parameterless and returns no response data.
+
+The wrapper previously required a listen key for keepalive and close, sent it in form bodies, charged weight 2 to both requests, and discarded the keepalive response behind `RestCallResult<bool>`. The public methods now match the current parameterless contract, keepalive returns `RestCallResult<string>`, and all three requests record unsigned weight 1. The README and explicitly gated console call sites were migrated without changing the separate COIN-M, Options, REST risk-stream, or WebSocket API lifecycle contracts. Public guidance now reflects Binance's current recommendation to keep the stream alive about every 60 minutes rather than the stale 30-minute interval.
+
+The documented empty 2xx close response exposed a transport defect that an object-shaped fake response had previously hidden. ApiSharp records the HTTP request as successful but the generic result boolean is false when no response object exists; `BinanceRestApiClient.RequestAsync` then dereferenced a null `Error` while checking for timestamp error `-1021`. The check is now null-safe. No broader response normalization or retry behavior was added, and the endpoint continues to return success through its existing explicit boolean projection.
+
+Three deterministic tests cover start, keepalive, and a genuinely empty close response using API-key-only credentials, exact HTTP methods and route, absent query/body/signature/timestamp data, required API-key header, unsigned weight 1, and both listen-key response values. The complete suite passes 422/422 tests. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live Binance endpoint, WebSocket connection, authenticated account, listen-key creation/extension/closure, order, cancellation, conversion, or other mutation request was sent.
+
+### Revised next order
+
+1. Backward Review 26: review Slices 109-113 across code, tests, documentation, source conflicts, safety, and execution order before continuing.
+2. Slice 114: align the complete current USDⓈ-M WebSocket API Market Data depth, ticker, weight, validation, model, and documentation contracts.
+3. Slices 115-116: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+4. Slice 117: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+5. Backward Review 27: review Slices 114-117 and reconcile the final measured scope.
+
+The measurable remaining minimum is six small turns and approximately 4-13.5 active hours. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1873,3 +1893,4 @@ The measurable remaining minimum is seven small turns and approximately 4.5-15 a
 | 110 | Complete | Routed USDⓈ-M TradFi trading-session market stream | Current WebSocket Market Streams catalog and 2025-12-11, 2026-06-02, and 2026-07-16 changelog entries, exact unauthenticated market topic, complete event/session coverage, typed combined-stream callback, 13 focused and 411 complete tests, forced full multi-target rebuild |
 | 111 | Complete | Final owned USDⓈ-M canonical XML links and touched-endpoint reconciliation | Rendered current REST Convert, REST User Data Streams, and WebSocket API Market Data catalog hrefs, exact 12-link migration, zero retired-link residue in USDⓈ-M interfaces, three bounded remediation groups, 411 complete tests, forced full multi-target rebuild |
 | 112 | Complete | Current USDⓈ-M Futures Convert request, authentication, response, and validation contracts | Current rendered Convert catalog, 2024-08-26 product changelog entry, official generated connector HEAD `8d3256f`, recorded amount/identifier source conflicts, exact four-route tests, 8 focused and 419 complete tests, forced full multi-target rebuild |
+| 113 | Complete | Current parameterless USDⓈ-M REST listen-key lifecycle | Current rendered User Data Streams catalog, 2024-04-19 changelog effective 2024-04-25, official generated connector HEAD `8d3256f`, API-key-only weight-one requests, refreshed keepalive key, real empty-response transport coverage, 3 focused and 422 complete tests, forced full multi-target rebuild |

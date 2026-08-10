@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned the USDⓈ-M REST user-data-stream lifecycle with current parameterless API-key-only weight-one requests, returned the refreshed listen key from keepalive, handled the documented empty close response safely, and updated executable call sites
   * Aligned all four USDⓈ-M Futures Convert REST contracts, including public exchange-info authentication, signed request fields and weights, receive-window ceilings, string valid-time and order-status fields, response precision, and removal of the obsolete Futures Convert enums
   * Migrated the final twelve owned USDⓈ-M REST Convert, REST User Data Stream, and WebSocket API Market Data XML documentation links to their current canonical endpoint anchors
   * Added the routed USDⓈ-M `tradingSession` market stream with its exact topic, typed combined-stream callback, one-second session payload, and complete current U.S., commodity, Korean, and Hong Kong market event coverage

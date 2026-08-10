@@ -429,8 +429,8 @@ var futures_230 = await api.UsdFutures.CancelAllOpenAlgoOrdersAsync("---SYMBOL--
 
 // USDⓈ-M Futures -> User Data Stream Methods (PRIVATE)
 var futures_301 = await api.UsdFutures.StartUserStreamAsync();
-var futures_302 = await api.UsdFutures.KeepAliveUserStreamAsync("---LISTEN-KEY---");
-var futures_303 = await api.UsdFutures.StopUserStreamAsync("---LISTEN-KEY---");
+var futures_302 = await api.UsdFutures.KeepAliveUserStreamAsync();
+var futures_303 = await api.UsdFutures.StopUserStreamAsync();
 
 // USDⓈ-M Futures -> Account Methods (PRIVATE)
 var futures_401 = await api.UsdFutures.GetBalancesAsync();
