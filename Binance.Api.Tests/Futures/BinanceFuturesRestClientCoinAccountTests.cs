@@ -2,6 +2,7 @@ using ApiSharp.Authentication;
 using ApiSharp.Models;
 using ApiSharp.Security;
 using ApiSharp.Throttling;
+using Binance.Api.Shared;
 using Microsoft.Extensions.Logging;
 
 namespace Binance.Api.Tests.Futures;
@@ -146,6 +147,135 @@ public class BinanceFuturesRestClientCoinAccountTests
             configuredClient.CoinFutures.GetPairBracketsAsync());
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             configuredClient.CoinFutures.GetBracketsAsync());
+        Assert.Null(configuredHandler.RequestUri);
+    }
+
+    [Theory]
+    [InlineData("transaction", "/dapi/v1/income/asyn")]
+    [InlineData("order", "/dapi/v1/order/asyn")]
+    [InlineData("trade", "/dapi/v1/trade/asyn")]
+    public async Task HistoryDownloadIdQueries_UseCurrentSignedWeightAndParameters(string historyType, string expectedPath)
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            {
+              "avgCostTimestampOfLast30d": 7241837,
+              "downloadId": "546975389218332672"
+            }
+            """);
+        using var client = CreateClient(handler, limiter);
+        var startTime = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endTime = startTime.AddMonths(6);
+        long receiveWindow = 60_000;
+
+        var result = historyType switch
+        {
+            "transaction" => await client.CoinFutures.GetDownloadIdForTransactionHistoryAsync(startTime, endTime, receiveWindow),
+            "order" => await client.CoinFutures.GetDownloadIdForOrderHistoryAsync(startTime, endTime, receiveWindow),
+            "trade" => await client.CoinFutures.GetDownloadIdForTradeHistoryAsync(startTime, endTime, receiveWindow),
+            _ => throw new ArgumentOutOfRangeException(nameof(historyType))
+        };
+
+        Assert.True(result.Success);
+        Assert.Equal(expectedPath, handler.RequestUri!.AbsolutePath);
+        Assert.True(handler.Headers.TryGetValue("X-MBX-APIKEY", out var values));
+        Assert.Equal("api-key", Assert.Single(values!));
+
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains($"startTime={new DateTimeOffset(startTime).ToUnixTimeMilliseconds()}", query);
+        Assert.Contains($"endTime={new DateTimeOffset(endTime).ToUnixTimeMilliseconds()}", query);
+        Assert.Contains("recvWindow=60000", query);
+        Assert.Contains("timestamp=", query);
+        Assert.Contains("signature=", query);
+        Assert.Contains(limiter.Requests, item =>
+            item.Endpoint == expectedPath && item.Weight == 1000 && item.Signed);
+
+        Assert.Equal(7_241_837, result.Data!.AverageCostTimestampOfLast30Days);
+        Assert.Equal("546975389218332672", result.Data.DownloadId);
+    }
+
+    [Theory]
+    [InlineData("transaction", "/dapi/v1/income/asyn/id")]
+    [InlineData("order", "/dapi/v1/order/asyn/id")]
+    [InlineData("trade", "/dapi/v1/trade/asyn/id")]
+    public async Task HistoryDownloadLinkQueries_UseCurrentSignedWeightAndResponse(string historyType, string expectedPath)
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            {
+              "downloadId": "545923594199212032",
+              "status": "completed",
+              "url": "https://example.test/history.zip",
+              "notified": true,
+              "expirationTimestamp": 1750000000000,
+              "isExpired": "null"
+            }
+            """);
+        using var client = CreateClient(handler, limiter);
+        long receiveWindow = 60_000;
+
+        var result = historyType switch
+        {
+            "transaction" => await client.CoinFutures.GetDownloadLinkForTransactionHistoryAsync("545923594199212032", receiveWindow),
+            "order" => await client.CoinFutures.GetDownloadLinkForOrderHistoryAsync("545923594199212032", receiveWindow),
+            "trade" => await client.CoinFutures.GetDownloadLinkForTradeHistoryAsync("545923594199212032", receiveWindow),
+            _ => throw new ArgumentOutOfRangeException(nameof(historyType))
+        };
+
+        Assert.True(result.Success);
+        Assert.Equal(expectedPath, handler.RequestUri!.AbsolutePath);
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains("downloadId=545923594199212032", query);
+        Assert.Contains("recvWindow=60000", query);
+        Assert.Contains("timestamp=", query);
+        Assert.Contains("signature=", query);
+        Assert.Contains(limiter.Requests, item =>
+            item.Endpoint == expectedPath && item.Weight == 5 && item.Signed);
+
+        Assert.Equal(BinanceDownloadStatus.Completed, result.Data!.Status);
+        Assert.True(result.Data.Notified);
+        Assert.Null(result.Data.IsExpired);
+    }
+
+    [Fact]
+    public async Task HistoryDownloadQueries_RejectInvalidIdentifiersAndReceiveWindowsBeforeSending()
+    {
+        var handler = new RecordingHttpMessageHandler("{}");
+        using var client = CreateClient(handler);
+        var startTime = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endTime = startTime.AddMonths(6);
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.CoinFutures.GetDownloadLinkForTransactionHistoryAsync(null!));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.CoinFutures.GetDownloadLinkForOrderHistoryAsync(string.Empty));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            client.CoinFutures.GetDownloadLinkForTradeHistoryAsync("   "));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.CoinFutures.GetDownloadIdForTransactionHistoryAsync(startTime, endTime, 60_001L));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.CoinFutures.GetDownloadIdForOrderHistoryAsync(startTime, endTime, 60_001L));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.CoinFutures.GetDownloadIdForTradeHistoryAsync(startTime, endTime, 60_001L));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.CoinFutures.GetDownloadLinkForTransactionHistoryAsync("download-id", 60_001L));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.CoinFutures.GetDownloadLinkForOrderHistoryAsync("download-id", 60_001L));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.CoinFutures.GetDownloadLinkForTradeHistoryAsync("download-id", 60_001L));
+
+        Assert.Null(handler.RequestUri);
+
+        var configuredHandler = new RecordingHttpMessageHandler("{}");
+        using var configuredClient = CreateClient(
+            configuredHandler,
+            defaultReceiveWindow: TimeSpan.FromMilliseconds(60_001));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            configuredClient.CoinFutures.GetDownloadIdForTransactionHistoryAsync(startTime, endTime));
         Assert.Null(configuredHandler.RequestUri);
     }
 

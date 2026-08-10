@@ -24,6 +24,12 @@ public record BinanceFuturesDownloadLink
     public string Url { get; set; } = string.Empty;
 
     /// <summary>
+    /// Whether the download notification was sent; Binance documents this field as ignorable
+    /// </summary>
+    [JsonProperty("notified")]
+    public bool Notified { get; set; }
+
+    /// <summary>
     /// Link expiration time
     /// </summary>
     [JsonProperty("expirationTimestamp")]
@@ -34,5 +40,6 @@ public record BinanceFuturesDownloadLink
     /// Is expired
     /// </summary>
     [JsonProperty("isExpired")]
+    [JsonConverter(typeof(BinanceNullableBooleanConverter))]
     public bool? IsExpired { get; set; }
 }

@@ -70,66 +70,74 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<List<BinanceFuturesIncomeHistory>>(GetUrl(dapi, v1, "income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
-    public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForTransactionHistoryAsync(DateTime startTime, DateTime endTime, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForTransactionHistoryAsync(DateTime startTime, DateTime endTime, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddMilliseconds("startTime", startTime);
         parameters.AddMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesDownloadIdInfo>(GetUrl(dapi, v1, "income/asyn"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<BinanceFuturesDownloadIdInfo>(GetUrl(dapi, v1, "income/asyn"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1000);
     }
 
-    public Task<RestCallResult<BinanceFuturesDownloadLink>> GetDownloadLinkForTransactionHistoryAsync(string downloadId, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesDownloadLink>> GetDownloadLinkForTransactionHistoryAsync(string downloadId, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
-            { "downloadId", downloadId }
+            { "downloadId", ValidateDownloadId(downloadId) }
         };
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesDownloadLink>(GetUrl(dapi, v1, "income/asyn/id"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<BinanceFuturesDownloadLink>(GetUrl(dapi, v1, "income/asyn/id"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForOrderHistoryAsync(DateTime startTime, DateTime endTime, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForOrderHistoryAsync(DateTime startTime, DateTime endTime, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddMilliseconds("startTime", startTime);
         parameters.AddMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesDownloadIdInfo>(GetUrl(dapi, v1, "order/asyn"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<BinanceFuturesDownloadIdInfo>(GetUrl(dapi, v1, "order/asyn"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1000);
     }
 
-    public Task<RestCallResult<BinanceFuturesDownloadLink>> GetDownloadLinkForOrderHistoryAsync(string downloadId, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesDownloadLink>> GetDownloadLinkForOrderHistoryAsync(string downloadId, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
-            { "downloadId", downloadId }
+            { "downloadId", ValidateDownloadId(downloadId) }
         };
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesDownloadLink>(GetUrl(dapi, v1, "order/asyn/id"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForTradeHistoryAsync(DateTime startTime, DateTime endTime, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForTradeHistoryAsync(DateTime startTime, DateTime endTime, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddMilliseconds("startTime", startTime);
         parameters.AddMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesDownloadIdInfo>(GetUrl(dapi, v1, "trade/asyn"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+        return RequestAsync<BinanceFuturesDownloadIdInfo>(GetUrl(dapi, v1, "trade/asyn"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1000);
     }
 
-    public Task<RestCallResult<BinanceFuturesDownloadLink>> GetDownloadLinkForTradeHistoryAsync(string downloadId, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceFuturesDownloadLink>> GetDownloadLinkForTradeHistoryAsync(string downloadId, long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection
         {
-            { "downloadId", downloadId }
+            { "downloadId", ValidateDownloadId(downloadId) }
         };
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesDownloadLink>(GetUrl(dapi, v1, "trade/asyn/id"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+    }
+
+    private static string ValidateDownloadId(string downloadId)
+    {
+        if (string.IsNullOrWhiteSpace(downloadId))
+            throw new ArgumentException("downloadId cannot be null or whitespace", nameof(downloadId));
+
+        return downloadId;
     }
 }
