@@ -162,6 +162,12 @@ public record BinanceFuturesAccountInfoV3Asset
     public decimal MaxWithdrawQuantity { get; set; }
 
     /// <summary>
+    /// Whether the asset can be used as margin in Multi-Assets mode
+    /// </summary>
+    [JsonProperty("marginAvailable")]
+    public bool? MarginAvailable { get; set; }
+
+    /// <summary>
     /// Update time
     /// </summary>
     [JsonProperty("updateTime")]

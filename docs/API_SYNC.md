@@ -1593,6 +1593,32 @@ Seventeen deterministic tests cover the public surface, exact path/method/weight
 
 The measurable remaining minimum is nine small turns and approximately 7-19.5 active hours: seven numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 108: coexisting USDⓈ-M WebSocket account-query contracts
+
+The three missing current USDⓈ-M WebSocket API methods were added: signed `account.status`, `account.balance`, and `account.position`, all on `ws-fapi/v1` with the current catalog's IP weight 5. Their existing `v2/account.status`, `v2/account.balance`, and `v2/account.position` counterparts remain active. This closes the live product WebSocket API route inventory from the Slice 103 baseline of 18/13 through Slice 107's two native Algo additions to 18/18 exact methods.
+
+The source history is contradictory and remains explicit. The 2024-07-24 changelog introduced the v2 methods, announced that the three v1 methods would be deprecated in coming months, and provided no exact removal date. A 2024-08-07 entry also scheduled the v1 IP weights to change from 5 to 10. The 2026-08-10 live catalog still lists all six methods without a v1 deprecation label and currently publishes IP weight 5 for every method. No later decommissioning or route-removal evidence was found. The live endpoint contracts therefore control executable metadata; the older intention is preserved as a public warning to prefer v2, not misrepresented as retirement evidence.
+
+Existing unversioned `GetBalancesAsync`, `GetAccountAsync`, and `GetPositionsAsync` calls keep their established v2 wire behavior. The new current-v1 contracts use explicit `GetBalancesV1Async`, `GetAccountV1Async`, and `GetPositionsV1Async` names, avoiding a financially unsafe silent rebinding of existing callers. All six touched methods now serialize the formally int64 `recvWindow` as `long`; position queries retain the optional symbol filter. Account and balance remain in the Account interface, while position remains in the Trade interface according to the live catalog ownership.
+
+Response comparison found more than missing routes. The shared v1 account shape was missing unrealized profit, break-even price, and the two documented ignored notional placeholders in its positions; `feeTier` and `tradeGroupId` were narrowed from int64. The v2 account asset omitted `marginAvailable`. The v1 position model omitted `unRealizedProfit`, and the v2 position model represented the integer int64 `adl` field as decimal. These fields and widths are now complete. The balance v1/v2 methods deliberately share one model because the live schemas are identical; the account and position methods retain their distinct response models.
+
+The two retired URLs in the owned WebSocket Account interface were replaced with the four exact live Account anchors verified from the rendered DOM: `account-information`, `account-information-v2`, `futures-account-balance`, and `futures-account-balance-v2`. The new v1 position method uses the exact `position-information` Trade anchor, while the existing v2 link already used `position-information-v2`. The repository-wide retired USDⓈ-M URL residue is now 15: twelve assigned to Slice 111 and three COIN-M cross-product links assigned to Slice 112.
+
+Five deterministic tests cover all six public method surfaces, exact paths/methods/weights, int64 request serialization, the complete distinct v1/v2 account and position envelopes, the shared balance envelope, ignored-field semantics, nullable margin availability, enum conversion, decimal precision, int64 ADL precision, and rate-limit envelopes. All 16 focused account/authentication tests and all 386 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No authenticated Binance endpoint or live account request was sent.
+
+### Revised next order
+
+1. Backward Review 25: review Slices 104-108 across code, tests, documentation, source conflicts, and execution order before more implementation.
+2. Slice 109: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound and reconnect-safe state.
+3. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+4. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+5. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+6. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+7. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum is eight small turns and approximately 6-17.5 active hours: six numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1728,3 +1754,4 @@ The measurable remaining minimum is nine small turns and approximately 7-19.5 ac
 | 105 | Complete | Read-only USDⓈ-M REST kline, continuous-contract, income-enum, and owned documentation contracts | Live unified Market Data and Account catalogs, exact DOM anchors, generated connector HEAD `a0c61d1`, five interval guards, exact four contract types, three income mappings, 44 canonical links, 34 focused and 342 complete tests, forced full multi-target rebuild |
 | 106 | Complete | USDⓈ-M REST normal single/batch order Algo migration and owned Trade documentation contracts | Live unified Trade catalog, effective 2025-12-09 migration notice, current `-4120` error contract, exact DOM anchors, removed conditional single-order surface, pre-transport type/batch guards, preserved test-order contract, 26 focused and 364 complete tests, forced full multi-target rebuild |
 | 107 | Complete | USDⓈ-M WebSocket normal and native Algo order migration plus owned Trade documentation contracts | Live unified WebSocket Trade catalog, effective 2025-12-09 migration notice, exact DOM anchors, normal/Algo public-surface separation, numeric/int64 serialization, source-conflict guards, 55 focused and 381 complete tests, forced full multi-target rebuild |
+| 108 | Complete | Coexisting USDⓈ-M WebSocket v1/v2 account, balance, and position query contracts | Live unified Account and Trade catalogs, 2024 introduction/deprecation-intent and weight changelog conflicts, exact DOM anchors, six signed methods, complete distinct response shapes, int64 request/response fields, 16 focused and 386 complete tests, forced full multi-target rebuild |

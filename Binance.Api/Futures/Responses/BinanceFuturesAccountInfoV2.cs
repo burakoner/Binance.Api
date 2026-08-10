@@ -39,13 +39,13 @@ public record BinanceFuturesAccountInfoV2
     /// Trade group id
     /// </summary>
     [JsonProperty("tradeGroupId")]
-    public int TradeGroupId { get; set; }
+    public long TradeGroupId { get; set; }
 
     /// <summary>
     /// Fee tier
     /// </summary>
     [JsonProperty("feeTier")]
-    public int FeeTier { get; set; }
+    public long FeeTier { get; set; }
 
     /// <summary>
     /// Maximum withdraw quantity

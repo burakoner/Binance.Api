@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added the current coexisting USDⓈ-M WebSocket API v1 account, balance, and position queries alongside v2, aligning int64 request fields, complete response models, source-conflict guidance, and canonical documentation links
   * Migrated USDⓈ-M WebSocket order placement to the current normal/Algo split, added native conditional Algo placement and cancellation, aligned validation, numeric and int64 serialization, weights, response envelopes, and owned Trade documentation links
   * Migrated USDⓈ-M REST normal single and batch order placement to the post-2025 Algo contract, retaining only LIMIT/MARKET orders, removing conditional-only single-order parameters, rejecting conditional batch parameters and invalid batch sizes before transport, preserving the separate test-order contract, and migrating all owned Trade documentation links
   * Aligned read-only USDⓈ-M REST kline intervals, continuous-contract types, and income types with the current contract, and migrated the owned Account and Market Data documentation links

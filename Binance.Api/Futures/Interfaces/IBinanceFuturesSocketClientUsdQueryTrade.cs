@@ -108,11 +108,23 @@ public interface IBinanceFuturesSocketClientUsdQueryTrade
     Task<CallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Get position information
+    /// Gets v1 position information for all symbols or a requested symbol
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#position-information" /></para>
+    /// </summary>
+    /// <remarks>Binance announced future deprecation without a removal date in 2024; the endpoint remains in the current catalog. Prefer v2 unless the full v1 contract is required.</remarks>
+    /// <param name="symbol">Optional symbol filter, for example `ETHUSDT`</param>
+    /// <param name="receiveWindow">The receive window for which this request is active</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>The v1 position details</returns>
+    Task<CallResult<List<BinanceFuturesUsdtPosition>>> GetPositionsV1Async(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets v2 position information for symbols with a position or open orders
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#position-information-v2" /></para>
     /// </summary>
-    /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
+    /// <param name="symbol">Optional symbol filter, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    Task<CallResult<List<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The v2 position information</returns>
+    Task<CallResult<List<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default);
 }

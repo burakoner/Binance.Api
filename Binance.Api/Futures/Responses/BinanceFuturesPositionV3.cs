@@ -105,7 +105,7 @@ public record BinanceFuturesPositionV3
     /// Auto deleverage
     /// </summary>
     [JsonProperty("adl")]
-    public decimal Adl { get; set; }
+    public long Adl { get; set; }
 
     /// <summary>
     /// Bid notional

@@ -95,10 +95,34 @@ public record BinanceFuturesPositionInfoBase: BinanceFuturesPositionBase
 public record BinanceFuturesUsdPositionInfo : BinanceFuturesPositionInfoBase
 {
     /// <summary>
+    /// Unrealized profit
+    /// </summary>
+    [JsonProperty("unrealizedProfit")]
+    public decimal UnrealizedProfit { get; set; }
+
+    /// <summary>
     /// Max notional
     /// </summary>
     [JsonProperty("maxNotional")]
     public decimal MaxNotional { get; set; }
+
+    /// <summary>
+    /// Average break-even price
+    /// </summary>
+    [JsonProperty("breakEvenPrice")]
+    public decimal BreakEvenPrice { get; set; }
+
+    /// <summary>
+    /// Bid notional placeholder; Binance documents this field as ignored
+    /// </summary>
+    [JsonProperty("bidNotional")]
+    public decimal IgnoredBidNotional { get; set; }
+
+    /// <summary>
+    /// Ask notional placeholder; Binance documents this field as ignored
+    /// </summary>
+    [JsonProperty("askNotional")]
+    public decimal IgnoredAskNotional { get; set; }
 }
 
 /// <summary>
@@ -179,6 +203,12 @@ public record BinanceFuturesPositionDetailsBase: BinanceFuturesPositionBase
 /// </summary>
 public record BinanceFuturesUsdtPosition : BinanceFuturesPositionDetailsBase
 {
+    /// <summary>
+    /// Unrealized profit
+    /// </summary>
+    [JsonProperty("unRealizedProfit")]
+    public decimal UnrealizedProfit { get; set; }
+
     /// <summary>
     /// Max notional
     /// </summary>

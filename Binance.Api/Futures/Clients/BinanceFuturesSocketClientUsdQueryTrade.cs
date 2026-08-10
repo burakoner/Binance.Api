@@ -11,6 +11,10 @@ internal partial class BinanceFuturesSocketClientUsd
     internal const string CancelAlgoOrderPath = "ws-fapi/v1";
     internal const string CancelAlgoOrderMethod = "algoOrder.cancel";
     internal const int CancelAlgoOrderIpWeight = 1;
+    internal const string PositionQueryPath = "ws-fapi/v1";
+    internal const string GetPositionsV1Method = "account.position";
+    internal const string GetPositionsV2Method = "v2/account.position";
+    internal const int PositionQueryIpWeight = 5;
     internal const string ModifyOrderPath = "ws-fapi/v1";
     internal const string ModifyOrderMethod = "order.modify";
     internal const int ModifyOrderIpWeight = 0;
@@ -457,13 +461,33 @@ internal partial class BinanceFuturesSocketClientUsd
         return RequestAsync<BinanceFuturesOrder>("ws-fapi/v1", $"order.status", parameters, true, true, weight: 1, ct: ct);
     }
 
-    public Task<CallResult<List<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<List<BinanceFuturesUsdtPosition>>> GetPositionsV1Async(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default)
+        => RequestAsync<List<BinanceFuturesUsdtPosition>>(
+            PositionQueryPath,
+            GetPositionsV1Method,
+            CreatePositionQueryParameters(symbol, __.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: PositionQueryIpWeight,
+            ct: ct);
+
+    public Task<CallResult<List<BinanceFuturesPositionV3>>> GetPositionsAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default)
+        => RequestAsync<List<BinanceFuturesPositionV3>>(
+            PositionQueryPath,
+            GetPositionsV2Method,
+            CreatePositionQueryParameters(symbol, __.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: PositionQueryIpWeight,
+            ct: ct);
+
+    internal static ParameterCollection CreatePositionQueryParameters(string? symbol, long? receiveWindow)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", receiveWindow);
 
-        return RequestAsync<List<BinanceFuturesPositionV3>>("ws-fapi/v1", $"v2/account.position", parameters, true, true, weight: 5, ct: ct);
+        return parameters;
     }
 
 }
