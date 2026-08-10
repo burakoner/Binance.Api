@@ -256,6 +256,8 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     {
         if (!sessions.TryGetValue(connection.Id, out var session))
             return new CallResult<bool>(new InvalidOperationError("No Spot WebSocket API session is registered for this connection."));
+        if (!session.AuthenticationRequired)
+            return new CallResult<bool>(true);
 
         var guardResult = await _.ServerRateLimitGuard.WaitAsync(CancellationToken.None).ConfigureAwait(false);
         if (!guardResult)

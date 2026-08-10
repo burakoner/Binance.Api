@@ -56,6 +56,7 @@ public sealed class BinanceSpotWebSocketSession
 
     internal WebSocketConnection Connection => connection;
     internal WebSocketSubscription LifecycleSubscription { get; }
+    internal bool AuthenticationRequired => LifecycleSubscription.Authenticated;
     internal decimal? ReceiveWindow { get; set; }
 
     internal BinanceSpotWebSocketSession(

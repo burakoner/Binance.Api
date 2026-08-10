@@ -173,6 +173,7 @@ public class BinanceFuturesSocketClientUsdAuthenticationTests
         Assert.False(session.Authenticated);
         Assert.Equal("old-key", session.LastStatus.ApiKey);
         Assert.True(lifecycle.Authenticated);
+        Assert.True(session.AuthenticationRequired);
 
         session.MarkAuthenticationPending();
 
@@ -180,6 +181,7 @@ public class BinanceFuturesSocketClientUsdAuthenticationTests
         Assert.Null(session.LastStatus.ApiKey);
         Assert.Null(session.LastStatus.AuthorizedSince);
         Assert.True(lifecycle.Authenticated);
+        Assert.True(session.AuthenticationRequired);
 
         BinanceFuturesUsdWebSocketSessionRevocation? receivedRevocation = null;
         session.AuthenticationRevoked += revocation => receivedRevocation = revocation;
@@ -193,6 +195,7 @@ public class BinanceFuturesSocketClientUsdAuthenticationTests
         session.MarkAuthenticationRevoked(expectedRevocation);
 
         Assert.False(lifecycle.Authenticated);
+        Assert.False(session.AuthenticationRequired);
         Assert.Same(expectedRevocation, receivedRevocation);
         webSocketClient.Dispose();
     }

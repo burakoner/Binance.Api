@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Closed a Spot and USDⓈ-M reconnect-authentication race that could re-logon after logout or API-key revocation, and completed backward Review 27 across session transitions, USDⓈ-M WebSocket market data, and COIN-M inventory/history-download work
   * Aligned all six COIN-M history-download ID and link contracts with current request weights, int64 receive-window validation, required identifiers, response fields, tolerant expiry parsing, and exact Account documentation links
   * Inventoried the complete current COIN-M REST, WebSocket API, market-stream, and user-data surfaces, recorded the post-integration remediation queue, and corrected three cross-product WebSocket Trade documentation links
   * Aligned the complete USDⓈ-M WebSocket API Market Data contract, including the default and discrete order-book limit weights, required-symbol validation, WebSocket-specific int64 book-ticker update IDs, and documented RPI exclusions

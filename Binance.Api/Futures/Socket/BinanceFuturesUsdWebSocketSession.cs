@@ -67,6 +67,7 @@ public sealed class BinanceFuturesUsdWebSocketSession
 
     internal WebSocketConnection Connection => connection;
     internal WebSocketSubscription LifecycleSubscription { get; }
+    internal bool AuthenticationRequired => LifecycleSubscription.Authenticated;
     internal long? ReceiveWindow { get; set; }
 
     internal BinanceFuturesUsdWebSocketSession(

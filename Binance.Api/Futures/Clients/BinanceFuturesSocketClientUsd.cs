@@ -168,6 +168,8 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     {
         if (!sessions.TryGetValue(connection.Id, out var session))
             return new CallResult<bool>(new InvalidOperationError("No USDⓈ-M WebSocket API session is registered for this connection."));
+        if (!session.AuthenticationRequired)
+            return new CallResult<bool>(true);
 
         session.MarkAuthenticationPending();
 

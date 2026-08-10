@@ -1,5 +1,6 @@
 using System.Text;
 using ApiSharp.Authentication;
+using ApiSharp.WebSocket;
 using Binance.Api.Shared;
 using Binance.Api.Spot;
 using Newtonsoft.Json.Linq;
@@ -104,5 +105,29 @@ public class BinanceSpotSocketClientAuthenticationTests
         Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1_649_730_611_671).UtcDateTime, response.Data.Result.ServerTime);
         Assert.False(response.Data.Result.ReturnRateLimits);
         Assert.False(response.Data.Result.UserDataStream);
+    }
+
+    [Fact]
+    public void LoggedOutSessionDoesNotRequireReconnectAuthentication()
+    {
+        var root = new BinanceSocketApiClient();
+        var client = Assert.IsType<BinanceSpotSocketClient>(root.Spot);
+        var webSocketClient = new WebSocketClient(
+            root.Logger,
+            new WebSocketParameters(new Uri("wss://example.test/ws-api/v3"), true));
+        var connection = new WebSocketConnection(root.Logger, client, webSocketClient, "session-test");
+        var lifecycle = WebSocketSubscription.CreateForIdentifier(1, "session-test", true, true, _ => { });
+        var session = new BinanceSpotWebSocketSession(
+            connection,
+            lifecycle,
+            new BinanceSpotWebSocketSessionStatus(),
+            5_000);
+
+        Assert.True(session.AuthenticationRequired);
+
+        lifecycle.Authenticated = false;
+
+        Assert.False(session.AuthenticationRequired);
+        webSocketClient.Dispose();
     }
 }
