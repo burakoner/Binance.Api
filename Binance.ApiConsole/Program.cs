@@ -487,7 +487,10 @@ internal class Program
         // WARNING: Explicitly signs the authenticated account's TradFi Options agreement. Review the current Binance account UI and applicable terms before use.
         // var options_413 = await api.Options.SignTradFiOptionsAgreementAsync();
 
-        // TODO: European Options -> User Data Stream Methods (PRIVATE)
+        // European Options -> User Data Stream Methods (PRIVATE)
+        var options_501 = await api.Options.StartUserStreamAsync();
+        var options_502 = await api.Options.KeepAliveUserStreamAsync();
+        var options_503 = await api.Options.StopUserStreamAsync();
 
         // European Options -> Market Maker Endpoints (PRIVATE)
         var options_601 = await api.Options.MarketMaker.GetProtectionAsync("---UNDERLYING---");
