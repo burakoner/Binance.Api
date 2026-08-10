@@ -1568,6 +1568,31 @@ Twenty-two new deterministic cases cover both allowed normal types, every blocke
 
 The measurable remaining minimum is ten small turns and approximately 8-22.5 active hours: eight numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 107: USDⓈ-M WebSocket normal and native Algo order migration
+
+The live unified WebSocket Trade catalog now gives a coherent post-migration split that the wrapper did not expose. Signed `order.place` accepts only `LIMIT` and `MARKET` with IP weight 0, while signed `algoOrder.place` owns the five conditional types with IP weight 0 and `algoOrder.cancel` cancels those orders by int64 exchange ID or client Algo ID with IP weight 1. This current catalog and the migration effective on 2025-12-09 agree; unlike the stale REST placement schema recorded in Slice 106, the WebSocket normal-order type enum itself contains only the two current types.
+
+`PlaceOrderAsync` no longer exposes the six historical conditional-only parameters. It validates the documented symbol, side, type, quantity, client ID, position side, time in force, response type, price matching, self-trade prevention, reduce-only/Hedge Mode, GTD, and LIMIT/MARKET combinations before trade-rule evaluation or transport. The formal schema simultaneously says that LIMIT requires `price` and that `priceMatch` cannot be sent with `price`; the only executable interpretation is that price matching substitutes for a literal LIMIT price. That inference is explicit in the validator and tests rather than silently emitting an impossible combination. WebSocket numeric fields remain JSON numbers, documented boolean enums remain lowercase strings, and the formally int64 `recvWindow` is no longer narrowed to int32 on this touched endpoint.
+
+`PlaceAlgoOrderAsync` and `CancelAlgoOrderAsync` were added to the public USDⓈ-M WebSocket Trade interface with the current method names, path, authentication flags, IP weights, int64 fields, parameter shapes, and existing complete placement/cancellation response models. REST and WebSocket Algo placement share the already-audited business validation so the two transports cannot drift on close-all, Hedge Mode, type-specific fields, callback bounds, IDs, response modes, self-trade prevention, and GTD bounds; extracting that helper did not change the REST wire contract. The WebSocket catalog has an internal time-in-force conflict: its formal enum lists only IOC/GTC/FOK, but the same endpoint documents mandatory `goodTillDate` for GTD and says STP is effective with GTD. The WebSocket validator therefore accepts the separately specified GTD contract, rejects unrelated GTX/RPI values, and records the source conflict instead of guessing that the GTD paragraphs are dead text.
+
+All seven links in the owned WebSocket Trade interface now target the live unified catalog with exact current DOM heading anchors, including the new normal/Algo placement and Algo cancellation sections. The repository-wide retired USDⓈ-M URL residue is 17: two owned by Slice 108, twelve owned by Slice 111, and three COIN-M cross-product links assigned to Slice 112.
+
+Seventeen deterministic tests cover the public surface, exact path/method/weight metadata, numeric and boolean serialization, normal LIMIT/MARKET rules, every rejected historical type, price-match substitution, GTD bounds, native Algo variants and transport-specific time-in-force rules, int64 cancellation identity and receive window, shared validation, and complete WebSocket response envelopes. All 55 focused Trade/Algo/modify tests and all 381 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No authenticated Binance endpoint, account operation, order, cancellation, or mutation was sent.
+
+### Revised next order
+
+1. Slice 108: add the three current v1 WebSocket account/balance/position contracts alongside v2 and migrate the owned WebSocket Account links.
+2. Backward Review 25: review Slices 104-108 before continuing.
+3. Slice 109: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound and reconnect-safe state.
+4. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+5. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+6. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+7. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+8. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum is nine small turns and approximately 7-19.5 active hours: seven numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1702,3 +1727,4 @@ The measurable remaining minimum is ten small turns and approximately 8-22.5 act
 | 104 | Complete | Cross-product USDⓈ-M, COIN-M, and Options trade-rule configuration safety | Product-specific REST behavior and refresh settings, Futures socket explicit-setting paths, corrected USDⓈ-M REST-client selection, Options batch gate, 6 exact safety, 186 Futures-and-Options, and 336 complete tests, forced full multi-target rebuild |
 | 105 | Complete | Read-only USDⓈ-M REST kline, continuous-contract, income-enum, and owned documentation contracts | Live unified Market Data and Account catalogs, exact DOM anchors, generated connector HEAD `a0c61d1`, five interval guards, exact four contract types, three income mappings, 44 canonical links, 34 focused and 342 complete tests, forced full multi-target rebuild |
 | 106 | Complete | USDⓈ-M REST normal single/batch order Algo migration and owned Trade documentation contracts | Live unified Trade catalog, effective 2025-12-09 migration notice, current `-4120` error contract, exact DOM anchors, removed conditional single-order surface, pre-transport type/batch guards, preserved test-order contract, 26 focused and 364 complete tests, forced full multi-target rebuild |
+| 107 | Complete | USDⓈ-M WebSocket normal and native Algo order migration plus owned Trade documentation contracts | Live unified WebSocket Trade catalog, effective 2025-12-09 migration notice, exact DOM anchors, normal/Algo public-surface separation, numeric/int64 serialization, source-conflict guards, 55 focused and 381 complete tests, forced full multi-target rebuild |
