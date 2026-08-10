@@ -1409,6 +1409,47 @@ No confirmed endpoint, request, response, authentication, model, validation, doc
 
 The measurable minimum after this inventory is five turns and 4-13 active hours. It still excludes the unknown FIX/SBE implementation program and any implementation work discovered by the remaining three inventories.
 
+## Slice 103: USDⓈ-M Futures closing inventory
+
+The complete USDⓈ-M surface was refreshed on 2026-08-10 against the live REST, WebSocket API, routed WebSocket Stream, and User Data Stream catalogs, the product changelog through 2026-08-07, the WebSocket route-migration notice, WebSocket API general information, and official generated Go connector HEAD `a0c61d1ef7539023322e3b138a16cc077f9ea1d1`. This was an evidence-only inventory: no production account request, session logon, order, cancellation, or other mutation was sent and no implementation was changed.
+
+The top-level catalog contains 133 USDⓈ-M entries: 95 REST operations, 18 WebSocket API methods, and 20 market-stream families. The wrapper contains 94 REST method/path pairs and matches 94 generated pairs exactly. The only generated-only pair is `GET /fapi/v1/ticker/price`, which the current Market Data catalog explicitly marks deprecated; the wrapper already exposes only the current v2 price ticker. The active REST route inventory is therefore 94/94 exact, with no wrapper-only route.
+
+Route equality does not close the REST request contracts. All five USDⓈ-M kline queries still accept shared `BinanceKlineInterval.OneSecond`, although the current endpoint schemas and generated connector remove `1s`. Continuous-contract klines also accept shared contract values that the current USDⓈ-M operation excludes; its allowed set is `PERPETUAL`, `CURRENT_QUARTER`, `NEXT_QUARTER`, and `TRADIFI_PERPETUAL`. The separate basis query already restricts its narrower three-value set correctly. The income response enum is missing the current `STRATEGY_UMFUTURES_TRANSFER`, `FEE_RETURN`, and `BFUSD_REWARD` values.
+
+A higher-risk REST defect follows from the dated Algo migration rather than the stale generated REST order enum. Binance announced that `STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, and `TRAILING_STOP_MARKET` moved to the Algo Service effective 2025-12-09 and that `/fapi/v1/order` plus `/fapi/v1/batchOrders` reject those types with `-4120 STOP_ORDER_SWITCH_ALGO`. The wrapper's single and batch normal-order paths still accept and serialize those conditional types and their conditional-only parameters. The current REST Trade page still advertises part of the superseded shape, so the source conflict must remain explicit; the newer dated operational migration and native Algo endpoints are decisive. `POST /fapi/v1/order/test` was not named in the block notice and will not be changed without endpoint-specific evidence.
+
+The current WebSocket API catalog has 18 methods while the wrapper has 13 exact methods. It is missing `account.status`, `account.balance`, and `account.position` alongside the already implemented `v2/account.status`, `v2/account.balance`, and `v2/account.position`. The live Account and Trade catalogs publish both versions without a deprecation label, and their response shapes differ, so the three v1 methods are current coexistence contracts rather than aliases. The other two missing methods are native conditional `algoOrder.place` and `algoOrder.cancel`.
+
+The WebSocket migration is also incomplete on the existing normal `order.place` method. The live method schema and current generated connector restrict it to `LIMIT` and `MARKET` and omit conditional-only stop, working-type, close-position, price-protection, activation-price, and callback-rate parameters. The wrapper still exposes and sends the old combined shape. Native Algo placement/cancellation and normal-order cleanup must be implemented together so that removing the blocked path does not strand WebSocket users without the replacement.
+
+Three connection-scoped protocol methods are documented separately from the 18-method product catalog: `session.logon`, `session.status`, and `session.logout`. They are absent locally. Logon is Ed25519-only and changes whether later authenticated requests must carry per-request API-key/signature fields; a correct wrapper therefore needs explicit connection-bound session state and reconnect behavior, not three context-free request helpers. The existing Futures `AuthenticateAsync` currently returns success without authenticating and contains unreachable `NotImplementedException` code. Spot's existing session lifecycle is the local reference implementation, but reuse must preserve product-specific connection state.
+
+Nineteen of the twenty market-stream families are present. The only missing family is the routed `tradingSession` topic, whose current event carries `e/E/t/T/S` for event type/time, session start/end, and session type. The official changelog introduced the stream on 2025-12-11 and subsequently added Korean- and Hong Kong-equity schedules. The private stream already uses the current `/private/stream` route with JSON listen-key subscription and reconnect resubscription.
+
+All ten currently listed User Data Stream event names are dispatched, including the current `ALGO_UPDATE` fields corrected in Slices 69-70. `GRID_UPDATE` is labeled deprecated by its live page, and the dated changelog deprecates `CONDITIONAL_ORDER_TRIGGER_REJECT` in favor of `ALGO_UPDATE`, but both event pages remain in the current catalog and no retirement/decommissioning evidence was found. Removing active deprecated callbacks would create data loss, so this inventory retains them while recording the deprecation; deprecation is not treated as proof of removal.
+
+The public XML documentation surface has a separate mechanical defect: 79 USDⓈ-M interface links across eight files still use the retired `/docs/derivatives/usds-margined-futures/...` hierarchy instead of the current canonical catalog. Three additional old USD links found in COIN-M interfaces are deliberately left for the COIN-M inventory because their endpoint ownership must be resolved there.
+
+No additional response, identifier-width, decimal-precision, request-weight, route, private-stream, or user-data-event difference was confirmed. Batch cancellation already enforces the current ten-identifier ceilings; current order-query fields including `priceMatch`, `goodTillDate`, and self-trade-prevention mode are present. The inventory creates only the bounded work below and does not mix any of it into this evidence turn.
+
+### Revised next order
+
+1. Backward Review 24: review Slices 100-103 across code, tests, documentation, and the living execution order before implementation. Four turns have elapsed since Review 23.
+2. Slice 104: correct only read-only REST request/response contracts: five kline interval guards, continuous-contract type guards, and the three current income types.
+3. Slice 105: migrate USDⓈ-M REST single and batch normal-order placement away from the five server-blocked conditional types without changing the separately documented test-order contract.
+4. Slice 106: add WebSocket native Algo place/cancel and fully align normal `order.place` with its current `LIMIT`/`MARKET` contract.
+5. Slice 107: add the three current v1 WebSocket account/balance/position query contracts alongside their distinct v2 contracts.
+6. Slice 108: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound state and reconnect-safe behavior.
+7. Backward Review 25: review Slices 104-108 before continuing.
+8. Slice 109: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+9. Slice 110: migrate the 79 USDⓈ-M public XML links to current canonical pages without changing endpoint behavior.
+10. Slices 111-112: refresh the COIN-M and Options closing inventories, keeping any newly confirmed implementation work separate.
+11. Backward Review 26: reconcile Slices 109-112, cross-product public API, documentation, release notes, and the next execution order.
+12. Slice 113: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum after this inventory is thirteen small turns and approximately 10-28.5 active hours: ten numbered slices plus Reviews 24-26. It excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program. The earlier 5-turn estimate is invalidated by seven confirmed USDⓈ-M remediation slices; preserving it would be knowingly false.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1538,3 +1579,4 @@ The measurable minimum after this inventory is five turns and 4-13 active hours.
 | 100 | Complete | Margin closing inventory across REST, listen-token WebSocket API, trade-data events, and Cross Margin risk data | Live 65-route catalog, changelog through 2026-07-10, current lifecycle guides and event schemas, connector HEAD `d9be6628`, 65/65 normalized REST match, five token events, two risk events, two bounded user-data defects, 59 Margin and 330 complete tests, forced rebuild |
 | 101 | Complete | Margin listen-token int64 subscription identifiers and `executionReport.I` ignored-field semantics | Live Margin event schema, shared current WebSocket API subscription contract, connector HEAD `d9be6628`, above-int32 lifecycle routing, complete conditional string-wire payload, 7 exact lifecycle, 59 Margin, and 330 complete tests, forced rebuild |
 | 102 | Complete | Convert and Algo closing inventories across all current REST endpoints | Live catalog and canonical endpoint pages, product changelogs through the 2026-01-15 signing change, connector HEAD `a0c61d1`, exact 9/9 Convert and 11/11 Algo route comparisons, endpoint-level contract matrix, canonical-link scan, 18 Convert, 18 Algo, exact encoded-signature, and 330 complete tests, forced rebuild |
+| 103 | Complete | USDⓈ-M closing inventory across REST, WebSocket API, market/private streams, and user data | Live 133-entry catalog, changelog through 2026-08-07, route-migration and WebSocket general contracts, connector HEAD `a0c61d1`, active 94/94 REST reconciliation, 18/13 WebSocket API and 20/19 stream comparisons, complete ten-event user-data dispatch, seven bounded remediation slices, 330 complete tests, forced rebuild |
