@@ -13,6 +13,15 @@ internal partial class BinanceFuturesSocketClientUsd
         CancellationToken ct = default)
     {
         var normalizedReceiveWindow = ValidateSessionCredentials(receiveWindow);
+        return await sessionTransitions.ExecuteAsync(
+            () => LogonSessionAsync(normalizedReceiveWindow, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceFuturesUsdWebSocketSession>> LogonSessionAsync(
+        long? receiveWindow,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceFuturesUsdWebSocketSession>(new CancellationRequestedError());
 
@@ -28,14 +37,14 @@ internal partial class BinanceFuturesSocketClientUsd
         if (!connectionResult)
             return connectionResult.As<BinanceFuturesUsdWebSocketSession>(null);
 
-        var statusResult = await SendSessionLogonAsync(connectionResult.Data, normalizedReceiveWindow, ct).ConfigureAwait(false);
+        var statusResult = await SendSessionLogonAsync(connectionResult.Data, receiveWindow, ct).ConfigureAwait(false);
         if (!statusResult)
             return statusResult.As<BinanceFuturesUsdWebSocketSession>(null);
 
         if (sessions.TryGetValue(connectionResult.Data.Id, out var existingSession))
         {
             existingSession.LastStatus = statusResult.Data;
-            existingSession.ReceiveWindow = normalizedReceiveWindow;
+            existingSession.ReceiveWindow = receiveWindow;
             existingSession.LifecycleSubscription.Authenticated = true;
             return statusResult.As(existingSession);
         }
@@ -54,7 +63,7 @@ internal partial class BinanceFuturesSocketClientUsd
             connectionResult.Data,
             lifecycleSubscription,
             statusResult.Data,
-            normalizedReceiveWindow);
+            receiveWindow);
         sessions[connectionResult.Data.Id] = session;
         connectionResult.Data.ConnectionClosed += () => sessions.TryRemove(connectionResult.Data.Id, out var removedSession);
         return statusResult.As(session);
@@ -67,6 +76,16 @@ internal partial class BinanceFuturesSocketClientUsd
     {
         ValidateSession(session);
         var normalizedReceiveWindow = ValidateSessionCredentials(receiveWindow);
+        return await sessionTransitions.ExecuteAsync(
+            () => LogonSessionAsync(session, normalizedReceiveWindow, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceFuturesUsdWebSocketSessionStatus>> LogonSessionAsync(
+        BinanceFuturesUsdWebSocketSession session,
+        long? receiveWindow,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceFuturesUsdWebSocketSessionStatus>(new CancellationRequestedError());
 
@@ -78,11 +97,11 @@ internal partial class BinanceFuturesSocketClientUsd
         if (!syncResult)
             return syncResult.As<BinanceFuturesUsdWebSocketSessionStatus>(null);
 
-        var result = await SendSessionLogonAsync(session.Connection, normalizedReceiveWindow, ct).ConfigureAwait(false);
+        var result = await SendSessionLogonAsync(session.Connection, receiveWindow, ct).ConfigureAwait(false);
         if (result)
         {
             session.LastStatus = result.Data;
-            session.ReceiveWindow = normalizedReceiveWindow;
+            session.ReceiveWindow = receiveWindow;
             session.LifecycleSubscription.Authenticated = true;
         }
 
@@ -94,6 +113,15 @@ internal partial class BinanceFuturesSocketClientUsd
         CancellationToken ct = default)
     {
         ValidateSession(session);
+        return await sessionTransitions.ExecuteAsync(
+            () => GetSessionStatusAsyncCore(session, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceFuturesUsdWebSocketSessionStatus>> GetSessionStatusAsyncCore(
+        BinanceFuturesUsdWebSocketSession session,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceFuturesUsdWebSocketSessionStatus>(new CancellationRequestedError());
 
@@ -112,6 +140,15 @@ internal partial class BinanceFuturesSocketClientUsd
         CancellationToken ct = default)
     {
         ValidateSession(session);
+        return await sessionTransitions.ExecuteAsync(
+            () => LogoutSessionAsync(session, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceFuturesUsdWebSocketSessionStatus>> LogoutSessionAsync(
+        BinanceFuturesUsdWebSocketSession session,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceFuturesUsdWebSocketSessionStatus>(new CancellationRequestedError());
 

@@ -7,6 +7,7 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     private bool hasApiKey;
     private bool hasApiSecret;
     private readonly System.Collections.Concurrent.ConcurrentDictionary<int, BinanceFuturesUsdWebSocketSession> sessions = new();
+    private readonly BinanceWebSocketSessionTransitionGate sessionTransitions = new();
 
     // Internal
     internal ILogger Logger { get => _logger; }
@@ -158,7 +159,12 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
         return identifier == SessionRevokedHandler && GetSessionRevocationPayload(message) != null;
     }
 
-    protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+    protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+        => sessionTransitions.ExecuteAsync(
+            () => AuthenticateSessionAsync(connection),
+            CancellationToken.None);
+
+    private async Task<CallResult<bool>> AuthenticateSessionAsync(WebSocketConnection connection)
     {
         if (!sessions.TryGetValue(connection.Id, out var session))
             return new CallResult<bool>(new InvalidOperationError("No USDⓈ-M WebSocket API session is registered for this connection."));

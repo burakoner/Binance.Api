@@ -1773,6 +1773,24 @@ Thirty-two focused tests for session authentication, Trading Session Stream, Fut
 
 The measurable remaining minimum is six small turns and approximately 4-13 active hours. The numbered queue is now 113/118 complete. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 114: cross-product WebSocket session transition safety
+
+The race proven by Backward Review 26 is closed for both Spot and USDⓈ-M without changing general WebSocket query concurrency. Each socket client now owns one cancellation-aware session-transition gate. Parameterless and connection-specific logon, session status, logout, and reconnect authentication all pass through that gate. The gate is acquired before connection selection and remains held through response handling and session-dictionary registration, so two concurrent initial logons cannot select the same unregistered connection and create duplicate authenticated lifecycle subscriptions. Logout and reconnect authentication are ordered against the same state, preventing reconnect from observing stale authentication intent while logout is in progress.
+
+Public validation still runs before waiting on the gate, cancellation while waiting returns the existing `CancellationRequestedError`, and a canceled waiter neither executes its transition nor poisons later work. The implementation does not alter ApiSharp's connection-selection semaphore, unrelated signed queries, subscription combining, request schemas, or public method signatures. The Spot and USDⓈ-M restored-event documentation now states the actual lifecycle: successful re-authentication precedes session restoration only while authentication remains active; after intentional logout, and after USDⓈ-M key revocation, connection restoration does not imply session re-authentication.
+
+Three deterministic gate regressions prove mutual exclusion, cancellation recovery, and logout-before-reconnect authentication ordering. The 25 focused Spot/USDⓈ-M authentication and user-data-stream tests pass, the complete suite passes 425/425 tests, and a forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live WebSocket connection, Binance endpoint, authenticated account, session logon/logout, order, cancellation, or other mutation request was sent.
+
+### Revised next order
+
+1. Slice 115: align the complete current USDⓈ-M WebSocket API Market Data depth, ticker, weight, validation, model, and documentation contracts.
+2. Slice 116: refresh the COIN-M closing inventory and reconcile the three cross-product retired Query Trade links, splitting any implementation findings by risk.
+3. Slice 117: refresh the Options closing inventory, splitting any implementation findings by risk.
+4. Slice 118: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+5. Backward Review 27: review Slices 114-118 and reconcile the final measured scope.
+
+The measurable remaining minimum is five small turns and approximately 3.5-11.5 active hours. The numbered queue is now 114/118 complete. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1916,3 +1934,4 @@ The measurable remaining minimum is six small turns and approximately 4-13 activ
 | 112 | Complete | Current USDⓈ-M Futures Convert request, authentication, response, and validation contracts | Current rendered Convert catalog, 2024-08-26 product changelog entry, official generated connector HEAD `8d3256f`, recorded amount/identifier source conflicts, exact four-route tests, 8 focused and 419 complete tests, forced full multi-target rebuild |
 | 113 | Complete | Current parameterless USDⓈ-M REST listen-key lifecycle | Current rendered User Data Streams catalog, 2024-04-19 changelog effective 2024-04-25, official generated connector HEAD `8d3256f`, API-key-only weight-one requests, refreshed keepalive key, real empty-response transport coverage, 3 focused and 422 complete tests, forced full multi-target rebuild |
 | Review 26 | Complete | Backward review of USDⓈ-M session authentication, Trading Session Stream, final owned links, Futures Convert, and REST listen-key lifecycle; cross-product session-transition race discovery | `249473f..f6c15a6` diff review, current WebSocket General Info, Trading Session, Convert, and User Data Streams catalogs, pinned ApiSharp 4.5.1 source commit `310244c`, exact three-link residue, 32 focused and 422 complete tests, forced full multi-target rebuild |
+| 114 | Complete | Cross-product Spot and USDⓈ-M WebSocket session-transition serialization | Review 26 race proof, pinned ApiSharp lifecycle model, shared cancellation-aware transition gate, exact logon/status/logout/reconnect ordering, corrected restoration guidance, 3 exact gate tests, 25 focused and 425 complete tests, forced full multi-target rebuild |

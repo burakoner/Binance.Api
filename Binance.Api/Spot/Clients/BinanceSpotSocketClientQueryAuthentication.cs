@@ -5,6 +5,15 @@ internal partial class BinanceSpotSocketClient
     public async Task<CallResult<BinanceSpotWebSocketSession>> LogonAsync(decimal? receiveWindow = null, CancellationToken ct = default)
     {
         ValidateSessionCredentials(receiveWindow);
+        return await sessionTransitions.ExecuteAsync(
+            () => LogonSessionAsync(receiveWindow, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceSpotWebSocketSession>> LogonSessionAsync(
+        decimal? receiveWindow,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceSpotWebSocketSession>(new CancellationRequestedError());
 
@@ -59,6 +68,16 @@ internal partial class BinanceSpotSocketClient
     {
         ValidateSession(session);
         ValidateSessionCredentials(receiveWindow);
+        return await sessionTransitions.ExecuteAsync(
+            () => LogonSessionAsync(session, receiveWindow, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceSpotWebSocketSessionStatus>> LogonSessionAsync(
+        BinanceSpotWebSocketSession session,
+        decimal? receiveWindow,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceSpotWebSocketSessionStatus>(new CancellationRequestedError());
 
@@ -85,6 +104,15 @@ internal partial class BinanceSpotSocketClient
         CancellationToken ct = default)
     {
         ValidateSession(session);
+        return await sessionTransitions.ExecuteAsync(
+            () => GetSessionStatusAsyncCore(session, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceSpotWebSocketSessionStatus>> GetSessionStatusAsyncCore(
+        BinanceSpotWebSocketSession session,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceSpotWebSocketSessionStatus>(new CancellationRequestedError());
 
@@ -102,6 +130,15 @@ internal partial class BinanceSpotSocketClient
         CancellationToken ct = default)
     {
         ValidateSession(session);
+        return await sessionTransitions.ExecuteAsync(
+            () => LogoutSessionAsync(session, ct),
+            ct).ConfigureAwait(false);
+    }
+
+    private async Task<CallResult<BinanceSpotWebSocketSessionStatus>> LogoutSessionAsync(
+        BinanceSpotWebSocketSession session,
+        CancellationToken ct)
+    {
         if (ct.IsCancellationRequested)
             return new CallResult<BinanceSpotWebSocketSessionStatus>(new CancellationRequestedError());
 

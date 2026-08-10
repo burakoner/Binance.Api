@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Serialized Spot and USDⓈ-M WebSocket API session logon, status, logout, and reconnect-authentication transitions to prevent concurrent logon from registering duplicate lifecycle subscriptions, with cancellation-safe ordering and corrected restoration guidance
   * Aligned the USDⓈ-M REST user-data-stream lifecycle with current parameterless API-key-only weight-one requests, returned the refreshed listen key from keepalive, handled the documented empty close response safely, and updated executable call sites
   * Aligned all four USDⓈ-M Futures Convert REST contracts, including public exchange-info authentication, signed request fields and weights, receive-window ceilings, string valid-time and order-status fields, response precision, and removal of the obsolete Futures Convert enums
   * Migrated the final twelve owned USDⓈ-M REST Convert, REST User Data Stream, and WebSocket API Market Data XML documentation links to their current canonical endpoint anchors

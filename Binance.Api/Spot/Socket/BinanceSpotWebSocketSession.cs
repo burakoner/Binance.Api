@@ -45,7 +45,8 @@ public sealed class BinanceSpotWebSocketSession
     }
 
     /// <summary>
-    /// Raised after the connection is restored and the session is authenticated again.
+    /// Raised after the underlying connection is restored. While session authentication remains active,
+    /// restoration is reported only after re-authentication succeeds. After logout, only the connection is restored.
     /// </summary>
     public event Action<TimeSpan> ConnectionRestored
     {

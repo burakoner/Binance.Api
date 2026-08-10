@@ -6,6 +6,7 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
     private ApiCredentialsType? apiCredentialsType;
     private bool hasApiCredentials;
     private readonly System.Collections.Concurrent.ConcurrentDictionary<int, BinanceSpotWebSocketSession> sessions = new();
+    private readonly BinanceWebSocketSessionTransitionGate sessionTransitions = new();
 
     /// <inheritdoc />
     public event Action<WebSocketDataEvent<BinanceSpotServerShutdown>>? ServerShutdown;
@@ -246,7 +247,12 @@ internal partial class BinanceSpotSocketClient : WebSocketApiClient, IBinanceSpo
             : null;
     }
 
-    protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+    protected override Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
+        => sessionTransitions.ExecuteAsync(
+            () => AuthenticateSessionAsync(connection),
+            CancellationToken.None);
+
+    private async Task<CallResult<bool>> AuthenticateSessionAsync(WebSocketConnection connection)
     {
         if (!sessions.TryGetValue(connection.Id, out var session))
             return new CallResult<bool>(new InvalidOperationError("No Spot WebSocket API session is registered for this connection."));

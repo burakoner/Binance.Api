@@ -55,7 +55,9 @@ public sealed class BinanceFuturesUsdWebSocketSession
     }
 
     /// <summary>
-    /// Raised after the connection is restored and the session is authenticated again.
+    /// Raised after the underlying connection is restored. While session authentication remains active,
+    /// restoration is reported only after re-authentication succeeds. After logout or API-key revocation,
+    /// only the connection is restored.
     /// </summary>
     public event Action<TimeSpan> ConnectionRestored
     {
