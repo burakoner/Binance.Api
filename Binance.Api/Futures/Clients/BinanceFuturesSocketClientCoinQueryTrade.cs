@@ -28,7 +28,7 @@ internal partial class BinanceFuturesSocketClientCoin
             ct);
     }
 
-    public async Task<CallResult<BinanceFuturesOrder>> PlaceOrderAsync(
+    public async Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> PlaceOrderAsync(
         string symbol,
         BinanceOrderSide side,
         BinanceFuturesOrderType type,
@@ -65,7 +65,7 @@ internal partial class BinanceFuturesSocketClientCoin
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
-            return new RestCallResult<BinanceFuturesOrder>(new ArgumentError(rulesCheck.ErrorMessage!));
+            return new RestCallResult<BinanceFuturesCoinSocketOrderAcknowledgement>(new ArgumentError(rulesCheck.ErrorMessage!));
         }
 
         quantity = rulesCheck.Quantity;
@@ -95,10 +95,10 @@ internal partial class BinanceFuturesSocketClientCoin
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
         parameters.AddOptional("priceProtect", priceProtect?.ToString().ToUpper());
 
-        return await RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.place", parameters, true, true, weight: 0, ct: ct).ConfigureAwait(false);
+        return await RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>("ws-dapi/v1", $"order.place", parameters, true, true, weight: 0, ct: ct).ConfigureAwait(false);
     }
 
-    public Task<CallResult<BinanceFuturesOrder>> ModifyOrderAsync(
+    public Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
@@ -121,7 +121,7 @@ internal partial class BinanceFuturesSocketClientCoin
             modifyId,
             __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesOrder>(ModifyOrderPath, ModifyOrderMethod, parameters, true, true, weight: ModifyOrderIpWeight, ct: ct);
+        return RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>(ModifyOrderPath, ModifyOrderMethod, parameters, true, true, weight: ModifyOrderIpWeight, ct: ct);
     }
 
     internal static ParameterCollection CreateModifyOrderParameters(
@@ -167,7 +167,7 @@ internal partial class BinanceFuturesSocketClientCoin
         return parameters;
     }
 
-    public Task<CallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
@@ -178,7 +178,7 @@ internal partial class BinanceFuturesSocketClientCoin
         parameters.AddOptional("origClientOrderId", origClientOrderId);
         parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.cancel", parameters, true, true, weight: 1, ct: ct);
+        return RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>("ws-dapi/v1", $"order.cancel", parameters, true, true, weight: 1, ct: ct);
     }
 
     public Task<CallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)

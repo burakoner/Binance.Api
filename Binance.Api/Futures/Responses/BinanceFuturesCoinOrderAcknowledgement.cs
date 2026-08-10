@@ -1,0 +1,182 @@
+namespace Binance.Api.Futures;
+
+/// <summary>
+/// Common fields returned by COIN-M order placement, modification and cancellation acknowledgements
+/// </summary>
+public abstract record BinanceFuturesCoinOrderAcknowledgement
+{
+    /// <summary>
+    /// The symbol the order is for
+    /// </summary>
+    [JsonProperty("symbol")]
+    public string Symbol { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The pair the order is for
+    /// </summary>
+    [JsonProperty("pair")]
+    public string Pair { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The order id as assigned by Binance
+    /// </summary>
+    [JsonProperty("orderId")]
+    public long Id { get; set; }
+
+    /// <summary>
+    /// The order id as assigned by the client
+    /// </summary>
+    [JsonProperty("clientOrderId")]
+    public string ClientOrderId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// User-defined modification identifier, returned only when supplied on an order modification request
+    /// </summary>
+    [JsonProperty("modifyId")]
+    public long? ModifyId { get; set; }
+
+    /// <summary>
+    /// The order id as assigned by the client without the broker prefix
+    /// </summary>
+    public string RequestClientOrderId => BinanceHelpers.RemoveBrokerId(ClientOrderId);
+
+    /// <summary>
+    /// The price of the order
+    /// </summary>
+    [JsonProperty("price")]
+    public decimal Price { get; set; }
+
+    /// <summary>
+    /// Quantity that has been filled
+    /// </summary>
+    [JsonProperty("executedQty")]
+    public decimal QuantityFilled { get; set; }
+
+    /// <summary>
+    /// Cumulative filled quantity
+    /// </summary>
+    [JsonProperty("cumQty")]
+    public decimal CumulativeQuantity { get; set; }
+
+    /// <summary>
+    /// The original quantity of the order
+    /// </summary>
+    [JsonProperty("origQty")]
+    public decimal Quantity { get; set; }
+
+    /// <summary>
+    /// Whether the order is reduce-only
+    /// </summary>
+    [JsonProperty("reduceOnly")]
+    public bool ReduceOnly { get; set; }
+
+    /// <summary>
+    /// Whether the order closes the position
+    /// </summary>
+    [JsonProperty("closePosition")]
+    public bool ClosePosition { get; set; }
+
+    /// <summary>
+    /// The side of the order
+    /// </summary>
+    [JsonProperty("side")]
+    public BinanceOrderSide Side { get; set; }
+
+    /// <summary>
+    /// The current status of the order
+    /// </summary>
+    [JsonProperty("status")]
+    public BinanceOrderStatus Status { get; set; }
+
+    /// <summary>
+    /// Stop price for the order
+    /// </summary>
+    [JsonProperty("stopPrice")]
+    public decimal? StopPrice { get; set; }
+
+    /// <summary>
+    /// For what time the order lasts
+    /// </summary>
+    [JsonProperty("timeInForce")]
+    public BinanceTimeInForce TimeInForce { get; set; }
+
+    /// <summary>
+    /// The type of the order
+    /// </summary>
+    [JsonProperty("type")]
+    public BinanceFuturesOrderType Type { get; set; }
+
+    /// <summary>
+    /// The original type of the order
+    /// </summary>
+    [JsonProperty("origType")]
+    public BinanceFuturesOrderType OriginalType { get; set; }
+
+    /// <summary>
+    /// The time the order was updated
+    /// </summary>
+    [JsonProperty("updateTime"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime UpdateTime { get; set; }
+
+    /// <summary>
+    /// The working type
+    /// </summary>
+    [JsonProperty("workingType")]
+    public BinanceFuturesWorkingType WorkingType { get; set; }
+
+    /// <summary>
+    /// The position side of the order
+    /// </summary>
+    [JsonProperty("positionSide")]
+    public BinancePositionSide PositionSide { get; set; }
+
+    /// <summary>
+    /// Whether conditional-order trigger protection is enabled
+    /// </summary>
+    [JsonProperty("priceProtect")]
+    public bool PriceProtect { get; set; }
+}
+
+/// <summary>
+/// COIN-M REST order placement, modification or cancellation acknowledgement
+/// </summary>
+public record BinanceFuturesCoinRestOrderAcknowledgement : BinanceFuturesCoinOrderAcknowledgement
+{
+    /// <summary>
+    /// Activation price, returned for trailing-stop orders
+    /// </summary>
+    [JsonProperty("activatePrice")]
+    public decimal? ActivatePrice { get; set; }
+
+    /// <summary>
+    /// Callback rate, returned for trailing-stop orders
+    /// </summary>
+    [JsonProperty("priceRate")]
+    public decimal? CallbackRate { get; set; }
+
+    /// <summary>
+    /// Price match mode
+    /// </summary>
+    [JsonProperty("priceMatch")]
+    public BinanceFuturesPriceMatch PriceMatch { get; set; }
+
+    /// <summary>
+    /// Self-trade prevention mode
+    /// </summary>
+    [JsonProperty("selfTradePreventionMode")]
+    public BinanceSelfTradePreventionMode SelfTradePreventionMode { get; set; }
+}
+
+/// <summary>
+/// COIN-M WebSocket order placement, modification or cancellation acknowledgement
+/// </summary>
+public record BinanceFuturesCoinSocketOrderAcknowledgement : BinanceFuturesCoinOrderAcknowledgement;
+
+internal record BinanceFuturesCoinRestOrderAcknowledgementResult : BinanceFuturesCoinRestOrderAcknowledgement
+{
+    [JsonProperty("code")]
+    public int Code { get; set; }
+
+    [JsonProperty("msg")]
+    public string Message { get; set; } = string.Empty;
+}

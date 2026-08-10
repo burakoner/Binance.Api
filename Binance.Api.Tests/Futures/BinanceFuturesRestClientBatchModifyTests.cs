@@ -186,9 +186,7 @@ public class BinanceFuturesRestClientBatchModifyTests
         Assert.Equal(BinancePositionSide.Short, order.PositionSide);
         Assert.Equal(BinanceFuturesWorkingType.Mark, order.WorkingType);
         Assert.Equal(BinanceSelfTradePreventionMode.ExpireMaker, order.SelfTradePreventionMode);
-        Assert.Null(order.GoodTillDate);
-        Assert.Null(order.QuoteQuantityFilled);
-        Assert.Null(order.BaseQuantityFilled);
+        Assert.IsAssignableFrom<BinanceFuturesCoinRestOrderAcknowledgement>(order);
     }
 
     [Fact]

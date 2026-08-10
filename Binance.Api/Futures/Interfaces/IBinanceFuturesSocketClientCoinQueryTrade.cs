@@ -29,7 +29,8 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    Task<CallResult<BinanceFuturesOrder>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesOrderType type, decimal? quantity, decimal? price = null, decimal? stopPrice = null, string? newClientOrderId = null, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceFuturesPriceMatch? priceMatch = null, BinanceFuturesWorkingType? workingType = null, bool? reduceOnly = null, bool? closePosition = null, bool? priceProtect = null, decimal? activationPrice = null, decimal? callbackRate = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The immediate placement acknowledgement. Fill-derived average and cumulative base values are not part of this response</returns>
+    Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> PlaceOrderAsync(string symbol, BinanceOrderSide side, BinanceFuturesOrderType type, decimal? quantity, decimal? price = null, decimal? stopPrice = null, string? newClientOrderId = null, BinancePositionSide? positionSide = null, BinanceTimeInForce? timeInForce = null, BinanceOrderResponseType? orderResponseType = null, BinanceSelfTradePreventionMode? selfTradePreventionMode = null, BinanceFuturesPriceMatch? priceMatch = null, BinanceFuturesWorkingType? workingType = null, bool? reduceOnly = null, bool? closePosition = null, bool? priceProtect = null, decimal? activationPrice = null, decimal? callbackRate = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Modifies an existing LIMIT order. The amended order is reordered in the match queue
@@ -47,7 +48,7 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
     /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The current modification acknowledgement. Immediate modify responses do not contain fill-derived average or cumulative quote/base values</returns>
-    Task<CallResult<BinanceFuturesOrder>> ModifyOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal price, long? orderId = null, string? origClientOrderId = null, BinanceFuturesPriceMatch? priceMatch = null, long? modifyId = null, long? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> ModifyOrderAsync(string symbol, BinanceOrderSide side, decimal quantity, decimal price, long? orderId = null, string? origClientOrderId = null, BinanceFuturesPriceMatch? priceMatch = null, long? modifyId = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels a pending order
@@ -58,8 +59,8 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
     /// <param name="origClientOrderId">The client order id of the order</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>Id's for canceled order</returns>
-    Task<CallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The immediate cancellation acknowledgement. Fill-derived average and cumulative base values are not part of this response</returns>
+    Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.

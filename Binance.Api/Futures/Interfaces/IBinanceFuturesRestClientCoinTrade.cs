@@ -33,8 +33,8 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="selfTradePreventionMode">Self trade prevention mode</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>Id's for the placed order</returns>
-    Task<RestCallResult<BinanceFuturesOrder>> PlaceOrderAsync(
+    /// <returns>The immediate placement acknowledgement. Fill-derived average and cumulative base values are not part of this response</returns>
+    Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>> PlaceOrderAsync(
        string symbol,
        BinanceOrderSide side,
        BinanceFuturesOrderType type,
@@ -57,8 +57,8 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="orders">The normal LIMIT or MARKET orders to place</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>Returns a list of call results, one for each order. The order the results are in is the order the orders were sent</returns>
-    Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>One immediate acknowledgement result per request item, in request order</returns>
+    Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Modifies an existing LIMIT order and moves it to the back of the match queue
@@ -75,7 +75,7 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The current modification acknowledgement. Immediate modify responses do not contain fill-derived average or cumulative quote/base values</returns>
-    Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
+    Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
@@ -94,8 +94,8 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="orders">One to five amendments. Every item requires symbol, side, quantity, price, and either OrderId or OriginalClientOrderId</param>
     /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>One result per request item in request order. Matching itself is concurrent and its order is not guaranteed</returns>
-    Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>One immediate acknowledgement result per request item in request order. Matching itself is concurrent and its order is not guaranteed</returns>
+    Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the modification history for one order. History older than three months is unavailable
@@ -121,8 +121,8 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="origClientOrderId">The client order id of the order</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>Id's for canceled order</returns>
-    Task<RestCallResult<BinanceFuturesOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>The immediate cancellation acknowledgement. Fill-derived average and cumulative base values are not part of this response</returns>
+    Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels multiple orders
@@ -133,8 +133,8 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="origClientOrderIdList">The list of client order ids to cancel</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>Id's for canceled order</returns>
-    Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> CancelOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default);
+    /// <returns>One immediate cancellation acknowledgement result per requested order</returns>
+    Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>> CancelOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancels all open orders

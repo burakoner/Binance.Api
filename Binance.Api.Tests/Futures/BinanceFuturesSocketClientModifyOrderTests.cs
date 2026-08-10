@@ -161,7 +161,7 @@ public class BinanceFuturesSocketClientModifyOrderTests
         Assert.Null(usdResponse.Data.Result.BaseQuantityFilled);
 
         var coinClient = Assert.IsType<BinanceFuturesSocketClientCoin>(root.CoinFutures);
-        var coinResponse = coinClient.Deserializer<BinanceResultWithRateLimits<BinanceFuturesOrder>>(
+        var coinResponse = coinClient.Deserializer<BinanceResultWithRateLimits<BinanceFuturesCoinSocketOrderAcknowledgement>>(
             JToken.Parse("""
                 {
                   "id":"coin-request",
@@ -186,8 +186,6 @@ public class BinanceFuturesSocketClientModifyOrderTests
                     "workingType":"MARK_PRICE",
                     "priceProtect":true,
                     "origType":"LIMIT",
-                    "priceMatch":"NONE",
-                    "selfTradePreventionMode":"EXPIRE_MAKER",
                     "updateTime":1750489200456
                   },
                   "rateLimits":[]
@@ -204,7 +202,7 @@ public class BinanceFuturesSocketClientModifyOrderTests
         Assert.Equal(BinanceFuturesWorkingType.Mark, coinResponse.Data.Result.WorkingType);
         Assert.True(coinResponse.Data.Result.ReduceOnly);
         Assert.True(coinResponse.Data.Result.PriceProtect);
-        Assert.Null(coinResponse.Data.Result.GoodTillDate);
+        Assert.IsType<BinanceFuturesCoinSocketOrderAcknowledgement>(coinResponse.Data.Result);
     }
 
     private static ParameterCollection Usd(
