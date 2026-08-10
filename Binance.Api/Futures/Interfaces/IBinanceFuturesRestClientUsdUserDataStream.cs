@@ -7,7 +7,7 @@ public interface IBinanceFuturesRestClientUsdUserDataStream
 {
     /// <summary>
     /// Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client. The stream will close after 60 minutes unless <see cref="KeepAliveUserStreamAsync">KeepAliveUserStreamAsync</see> is called.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Start-User-Data-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/user-data-streams#start-user-data-stream" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -15,7 +15,7 @@ public interface IBinanceFuturesRestClientUsdUserDataStream
 
     /// <summary>
     /// Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Keepalive-User-Data-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/user-data-streams#keepalive-user-data-stream" /></para>
     /// </summary>
     /// <param name="listenKey">The listen key to keep alive</param>
     /// <param name="ct">Cancellation token</param>
@@ -24,7 +24,7 @@ public interface IBinanceFuturesRestClientUsdUserDataStream
 
     /// <summary>
     /// Stop the user stream, no updates will be send anymore
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Close-User-Data-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/user-data-streams#close-user-data-stream" /></para>
     /// </summary>
     /// <param name="listenKey">The listen key to stop</param>
     /// <param name="ct">Cancellation token</param>

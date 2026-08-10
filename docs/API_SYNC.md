@@ -1687,6 +1687,30 @@ Thirteen deterministic tests cover the exact topic, combined envelope and comple
 
 The measurable remaining minimum is five small turns and approximately 3.5-11 active hours: four numbered slices plus Review 26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 111: remaining USDⓈ-M canonical XML links and contract reconciliation
+
+The twelve USDⓈ-M XML documentation links intentionally left after Slices 105-108 were regenerated against the current rendered catalog rather than inferred from retired paths. Four REST Convert links now target `list-all-convert-pairs`, `send-quote-request`, `accept-the-offered-quote`, and `order-status`; three REST User Data Stream links target the exact start, keepalive, and close anchors; five WebSocket API Market Data links target order book, symbol price ticker, and symbol order book ticker. The rendered navigation supplied every exact `href`. A repository-wide residue scan now finds no retired USDⓈ-M link in a USDⓈ-M interface. The three remaining retired USDⓈ-M URLs are cross-product links inside the COIN-M WebSocket Query Trade interface and remain owned by the COIN-M closing work.
+
+The required endpoint-level comparison prevented this from being treated as evidence that the underlying methods are current. It found three bounded remediation groups:
+
+1. Futures Convert: `GET /fapi/v1/convert/exchangeInfo` is public in the current catalog but the wrapper marks it signed. Quote and accept publish an optional `recvWindow` with a 60,000-millisecond ceiling that the public methods do not expose. The current quote page publishes only `10s` for `validTime`, while the wrapper serializes four historical values. Required amount and identifier combinations also lack deterministic pre-transport coverage.
+2. REST User Data Stream: current keepalive and close requests take no listen key parameter and each consume weight 1; the wrapper requires and sends a listen key and records weight 2. Binance's 2024-04-19 changelog and the current keepalive response both expose the refreshed listen key, while the wrapper discards it behind a boolean result.
+3. WebSocket API Market Data: a depth request with omitted limit defaults to 500 and therefore weight 10, but nullable comparisons currently select weight 20. The discrete documented limits are not validated before transport, and the current `ticker.book` response contains `lastUpdateId`, which the USDⓈ-M response model drops. The current RPI exclusion note is also absent from these public method comments.
+
+No behavior or model change was mixed into this documentation slice. Each confirmed group is promoted ahead of the product closing inventories as a separate small remediation slice. All 411 solution tests still pass, and a forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live endpoint, WebSocket connection, authenticated account, order, cancellation, conversion, or mutation request was sent.
+
+### Revised next order
+
+1. Slice 112: align the complete current USDⓈ-M Futures Convert request, authentication, receive-window, validation, response, and test contracts.
+2. Slice 113: align the complete current USDⓈ-M REST listen-key start, keepalive, close, response, weight, and public API contracts.
+3. Backward Review 26: review Slices 109-113 across code, tests, documentation, source conflicts, and execution order before continuing.
+4. Slice 114: align the complete current USDⓈ-M WebSocket API Market Data depth, ticker, weight, validation, model, and documentation contracts.
+5. Slices 115-116: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+6. Slice 117: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+7. Backward Review 27: review Slices 114-117 and reconcile the final measured scope.
+
+The measurable remaining minimum is eight small turns and approximately 5.5-17.5 active hours. This increase is real work exposed by current endpoint reconciliation, not padding. It still excludes new implementation slices that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1826,3 +1850,4 @@ The measurable remaining minimum is five small turns and approximately 3.5-11 ac
 | Review 25 | Complete | Backward review of USDⓈ-M cross-product trade-rule isolation, read-only contracts, normal/Algo REST and WebSocket migration, and account-query coexistence; REST account and income corrections | `317aa2f..7a49fc4` diff review, live unified Market Data, REST/WebSocket Trade, and REST/WebSocket Account catalogs, rendered 22-value income-enum verification, exact 15-link residue, 92 focused and 390 complete tests, forced full multi-target rebuild |
 | 109 | Complete | Connection-scoped USDⓈ-M WebSocket API session authentication and revocation lifecycle | Current WebSocket API General Info modified 2026-08-08, recorded catalog/changelog absence and invalid hex-signature example conflict, Ed25519-only logon/status/logout, exact weight and response state, reconnect re-authentication, typed `-2015` revocation, signed-query connection-state correction, 30 related and 398 complete tests, forced full multi-target rebuild |
 | 110 | Complete | Routed USDⓈ-M TradFi trading-session market stream | Current WebSocket Market Streams catalog and 2025-12-11, 2026-06-02, and 2026-07-16 changelog entries, exact unauthenticated market topic, complete event/session coverage, typed combined-stream callback, 13 focused and 411 complete tests, forced full multi-target rebuild |
+| 111 | Complete | Final owned USDⓈ-M canonical XML links and touched-endpoint reconciliation | Rendered current REST Convert, REST User Data Streams, and WebSocket API Market Data catalog hrefs, exact 12-link migration, zero retired-link residue in USDⓈ-M interfaces, three bounded remediation groups, 411 complete tests, forced full multi-target rebuild |

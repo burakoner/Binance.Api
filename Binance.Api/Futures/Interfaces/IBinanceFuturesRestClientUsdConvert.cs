@@ -7,7 +7,7 @@ public interface IBinanceFuturesRestClientUsdConvert
 {
     /// <summary>
     /// Get list of convert symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/convert" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/convert#list-all-convert-pairs" /></para>
     /// </summary>
     /// <param name="fromAsset">From asset</param>
     /// <param name="toAsset">To asset</param>
@@ -16,7 +16,7 @@ public interface IBinanceFuturesRestClientUsdConvert
 
     /// <summary>
     /// Get a convert quote
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/convert/Send-quote-request" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/convert#send-quote-request" /></para>
     /// </summary>
     /// <param name="fromAsset">The from asset, for example `ETH`</param>
     /// <param name="toAsset">The to asset, for example `USD`</param>
@@ -28,7 +28,7 @@ public interface IBinanceFuturesRestClientUsdConvert
 
     /// <summary>
     /// Accept a convert quote
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/convert/Accept-Quote" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/convert#accept-the-offered-quote" /></para>
     /// </summary>
     /// <param name="quoteId">Quote id previously requested</param>
     /// <param name="ct">Cancellation token</param>
@@ -36,7 +36,7 @@ public interface IBinanceFuturesRestClientUsdConvert
 
     /// <summary>
     /// Get status of a convert order
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/convert/Order-Status" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/convert#order-status" /></para>
     /// </summary>
     /// <param name="quoteId">The quote id. Either this or orderId should be provided</param>
     /// <param name="orderId">The order id. Either this or quoteId should be provided</param>

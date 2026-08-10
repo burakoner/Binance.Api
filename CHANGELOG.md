@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Migrated the final twelve owned USDⓈ-M REST Convert, REST User Data Stream, and WebSocket API Market Data XML documentation links to their current canonical endpoint anchors
   * Added the routed USDⓈ-M `tradingSession` market stream with its exact topic, typed combined-stream callback, one-second session payload, and complete current U.S., commodity, Korean, and Hong Kong market event coverage
   * Added Ed25519-only USDⓈ-M WebSocket API session logon, status, logout, reconnect re-authentication, and API-key-revocation state, while preventing individually signed queries from being misclassified as connection-authenticated
   * Corrected USDⓈ-M account information and income-history contracts found by Backward Review 25, including current request weights and receive-window guards, typed income filters, int64 pagination and transaction identifiers, string trade identifiers, and the v2 `feeBurn` response field
