@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned the COIN-M REST user-data-stream lifecycle with current parameterless API-key-only weight-one requests, returned the refreshed listen key from keepalive, handled the documented empty close response, and migrated the owned documentation links and executable call sites
   * Closed a Spot and USDⓈ-M reconnect-authentication race that could re-logon after logout or API-key revocation, and completed backward Review 27 across session transitions, USDⓈ-M WebSocket market data, and COIN-M inventory/history-download work
   * Aligned all six COIN-M history-download ID and link contracts with current request weights, int64 receive-window validation, required identifiers, response fields, tolerant expiry parsing, and exact Account documentation links
   * Inventoried the complete current COIN-M REST, WebSocket API, market-stream, and user-data surfaces, recorded the post-integration remediation queue, and corrected three cross-product WebSocket Trade documentation links

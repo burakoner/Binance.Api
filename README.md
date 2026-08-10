@@ -510,8 +510,8 @@ var futures_719 = await api.CoinFutures.GetMarginChangeHistoryAsync("---SYMBOL--
 
 // Coin-M Futures -> User Data Stream Methods (PRIVATE)
 var futures_801 = await api.CoinFutures.StartUserStreamAsync();
-var futures_802 = await api.CoinFutures.KeepAliveUserStreamAsync("---LISTEN-KEY---");
-var futures_803 = await api.CoinFutures.StopUserStreamAsync("---LISTEN-KEY---");
+var futures_802 = await api.CoinFutures.KeepAliveUserStreamAsync();
+var futures_803 = await api.CoinFutures.StopUserStreamAsync();
 
 // Coin-M Futures -> Account Methods (PRIVATE)
 var futures_901 = await api.CoinFutures.GetBalancesAsync();

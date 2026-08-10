@@ -8,28 +8,15 @@ internal partial class BinanceFuturesRestClientCoin
         return result.As(result.Data?.ListenKey!);
     }
 
-    public async Task<RestCallResult<bool>> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default)
+    public async Task<RestCallResult<string>> KeepAliveUserStreamAsync(CancellationToken ct = default)
     {
-        listenKey.ValidateNotNull(nameof(listenKey));
-
-        var parameters = new ParameterCollection
-        {
-            { "listenKey", listenKey }
-        };
-
-        var result = await RequestAsync<object>(GetUrl(dapi, v1, "listenKey"), HttpMethod.Put, ct, false, bodyParameters: parameters, requestWeight: 2);
-        return result.As(result.Success);
+        var result = await RequestAsync<BinanceListenKey>(GetUrl(dapi, v1, "listenKey"), HttpMethod.Put, ct, false, requestWeight: 1);
+        return result.As(result.Data?.ListenKey!);
     }
 
-    public async Task<RestCallResult<bool>> StopUserStreamAsync(string listenKey, CancellationToken ct = default)
+    public async Task<RestCallResult<bool>> StopUserStreamAsync(CancellationToken ct = default)
     {
-        listenKey.ValidateNotNull(nameof(listenKey));
-        var parameters = new ParameterCollection
-        {
-            { "listenKey", listenKey }
-        };
-
-        var result = await RequestAsync<object>(GetUrl(dapi, v1, "listenKey"), HttpMethod.Delete, ct, false, bodyParameters: parameters, requestWeight: 2);
+        var result = await RequestAsync<object>(GetUrl(dapi, v1, "listenKey"), HttpMethod.Delete, ct, false, requestWeight: 1);
         return result.As(result.Success);
     }
 }

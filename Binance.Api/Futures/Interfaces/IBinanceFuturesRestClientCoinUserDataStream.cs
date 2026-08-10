@@ -6,28 +6,26 @@
 public interface IBinanceFuturesRestClientCoinUserDataStream
 {
     /// <summary>
-    /// Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client.The stream will close after 60 minutes unless <see cref="KeepAliveUserStreamAsync">KeepAliveUserStreamAsync</see> is called.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Start-User-Data-Stream" /></para>
+    /// Starts a user stream. If a stream is already active for the configured API key, its listen key is returned and its validity is extended for 60 minutes. The stream will close after 60 minutes unless <see cref="KeepAliveUserStreamAsync">KeepAliveUserStreamAsync</see> is called.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/user-data-streams#start-user-data-stream" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
     Task<RestCallResult<string>> StartUserStreamAsync(CancellationToken ct = default);
 
     /// <summary>
-    /// Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Keepalive-User-Data-Stream" /></para>
+    /// Extends the user stream associated with the configured API key for another 60 minutes
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/user-data-streams#keepalive-user-data-stream" /></para>
     /// </summary>
-    /// <param name="listenKey">The listen key to keep alive</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<RestCallResult<bool>> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default);
+    /// <returns>The listen key that was kept alive</returns>
+    Task<RestCallResult<string>> KeepAliveUserStreamAsync(CancellationToken ct = default);
 
     /// <summary>
-    /// Stop the user stream, no updates will be send anymore
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Close-User-Data-Stream" /></para>
+    /// Stops the user stream associated with the configured API key
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/user-data-streams#close-user-data-stream" /></para>
     /// </summary>
-    /// <param name="listenKey">The listen key to stop</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns></returns>
-    Task<RestCallResult<bool>> StopUserStreamAsync(string listenKey, CancellationToken ct = default);
+    /// <returns>Whether the user stream was stopped successfully</returns>
+    Task<RestCallResult<bool>> StopUserStreamAsync(CancellationToken ct = default);
 }
