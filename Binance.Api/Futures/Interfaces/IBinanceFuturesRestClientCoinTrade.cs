@@ -75,7 +75,7 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The current modification acknowledgement. Immediate modify responses do not contain fill-derived average or cumulative quote/base values</returns>
-    Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>> ModifyOrderAsync(
+    Task<RestCallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
@@ -95,7 +95,7 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <param name="receiveWindow">The receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>One immediate acknowledgement result per request item in request order. Matching itself is concurrent and its order is not guaranteed</returns>
-    Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the modification history for one order. History older than three months is unavailable

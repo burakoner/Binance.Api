@@ -25,6 +25,7 @@ public class BinanceFuturesCoinOrderAcknowledgementTests
         {
             var propertyNames = acknowledgementType.GetProperties().Select(property => property.Name).ToHashSet();
             Assert.All(removedProperties, propertyName => Assert.DoesNotContain(propertyName, propertyNames));
+            Assert.DoesNotContain(nameof(BinanceFuturesCoinRestOrderModificationAcknowledgement.ModifyId), propertyNames);
         }
 
         var queryPropertyNames = typeof(BinanceFuturesOrder).GetProperties().Select(property => property.Name).ToHashSet();
@@ -49,6 +50,14 @@ public class BinanceFuturesCoinOrderAcknowledgementTests
             .GetProperties()
             .Select(property => property.Name)
             .ToHashSet();
+        var restModificationProperties = typeof(BinanceFuturesCoinRestOrderModificationAcknowledgement)
+            .GetProperties()
+            .Select(property => property.Name)
+            .ToHashSet();
+        var socketModificationProperties = typeof(BinanceFuturesCoinSocketOrderModificationAcknowledgement)
+            .GetProperties()
+            .Select(property => property.Name)
+            .ToHashSet();
 
         Assert.Contains(nameof(BinanceFuturesCoinRestOrderAcknowledgement.ActivatePrice), restProperties);
         Assert.Contains(nameof(BinanceFuturesCoinRestOrderAcknowledgement.CallbackRate), restProperties);
@@ -59,6 +68,10 @@ public class BinanceFuturesCoinOrderAcknowledgementTests
         Assert.DoesNotContain(nameof(BinanceFuturesCoinRestOrderAcknowledgement.CallbackRate), socketProperties);
         Assert.DoesNotContain(nameof(BinanceFuturesCoinRestOrderAcknowledgement.PriceMatch), socketProperties);
         Assert.DoesNotContain(nameof(BinanceFuturesCoinRestOrderAcknowledgement.SelfTradePreventionMode), socketProperties);
+        Assert.DoesNotContain(nameof(BinanceFuturesCoinRestOrderModificationAcknowledgement.ModifyId), restProperties);
+        Assert.DoesNotContain(nameof(BinanceFuturesCoinSocketOrderModificationAcknowledgement.ModifyId), socketProperties);
+        Assert.Contains(nameof(BinanceFuturesCoinRestOrderModificationAcknowledgement.ModifyId), restModificationProperties);
+        Assert.Contains(nameof(BinanceFuturesCoinSocketOrderModificationAcknowledgement.ModifyId), socketModificationProperties);
     }
 
     [Fact]
@@ -72,10 +85,10 @@ public class BinanceFuturesCoinOrderAcknowledgementTests
             typeof(Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>>));
         AssertReturnType<IBinanceFuturesRestClientCoinTrade>(
             nameof(IBinanceFuturesRestClientCoinTrade.ModifyOrderAsync),
-            typeof(Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>>));
+            typeof(Task<RestCallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>));
         AssertReturnType<IBinanceFuturesRestClientCoinTrade>(
             nameof(IBinanceFuturesRestClientCoinTrade.ModifyOrdersAsync),
-            typeof(Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>>));
+            typeof(Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>>>));
         AssertReturnType<IBinanceFuturesRestClientCoinTrade>(
             nameof(IBinanceFuturesRestClientCoinTrade.CancelOrderAsync),
             typeof(Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>>));
@@ -92,7 +105,7 @@ public class BinanceFuturesCoinOrderAcknowledgementTests
             typeof(Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>>));
         AssertReturnType<IBinanceFuturesSocketClientCoinQueryTrade>(
             nameof(IBinanceFuturesSocketClientCoinQueryTrade.ModifyOrderAsync),
-            typeof(Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>>));
+            typeof(Task<CallResult<BinanceFuturesCoinSocketOrderModificationAcknowledgement>>));
         AssertReturnType<IBinanceFuturesSocketClientCoinQueryTrade>(
             nameof(IBinanceFuturesSocketClientCoinQueryTrade.CancelOrderAsync),
             typeof(Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>>));

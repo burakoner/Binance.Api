@@ -30,12 +30,6 @@ public abstract record BinanceFuturesCoinOrderAcknowledgement
     public string ClientOrderId { get; set; } = string.Empty;
 
     /// <summary>
-    /// User-defined modification identifier, returned only when supplied on an order modification request
-    /// </summary>
-    [JsonProperty("modifyId")]
-    public long? ModifyId { get; set; }
-
-    /// <summary>
     /// The order id as assigned by the client without the broker prefix
     /// </summary>
     public string RequestClientOrderId => BinanceHelpers.RemoveBrokerId(ClientOrderId);
@@ -168,11 +162,44 @@ public record BinanceFuturesCoinRestOrderAcknowledgement : BinanceFuturesCoinOrd
 }
 
 /// <summary>
+/// COIN-M REST order modification acknowledgement
+/// </summary>
+public record BinanceFuturesCoinRestOrderModificationAcknowledgement : BinanceFuturesCoinRestOrderAcknowledgement
+{
+    /// <summary>
+    /// User-defined modification identifier, returned only when supplied on the modification request
+    /// </summary>
+    [JsonProperty("modifyId")]
+    public long? ModifyId { get; set; }
+}
+
+/// <summary>
 /// COIN-M WebSocket order placement, modification or cancellation acknowledgement
 /// </summary>
 public record BinanceFuturesCoinSocketOrderAcknowledgement : BinanceFuturesCoinOrderAcknowledgement;
 
+/// <summary>
+/// COIN-M WebSocket order modification acknowledgement
+/// </summary>
+public record BinanceFuturesCoinSocketOrderModificationAcknowledgement : BinanceFuturesCoinSocketOrderAcknowledgement
+{
+    /// <summary>
+    /// User-defined modification identifier, returned only when supplied on the modification request
+    /// </summary>
+    [JsonProperty("modifyId")]
+    public long? ModifyId { get; set; }
+}
+
 internal record BinanceFuturesCoinRestOrderAcknowledgementResult : BinanceFuturesCoinRestOrderAcknowledgement
+{
+    [JsonProperty("code")]
+    public int Code { get; set; }
+
+    [JsonProperty("msg")]
+    public string Message { get; set; } = string.Empty;
+}
+
+internal record BinanceFuturesCoinRestOrderModificationAcknowledgementResult : BinanceFuturesCoinRestOrderModificationAcknowledgement
 {
     [JsonProperty("code")]
     public int Code { get; set; }

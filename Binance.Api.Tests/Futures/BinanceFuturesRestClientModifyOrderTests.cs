@@ -157,7 +157,7 @@ public class BinanceFuturesRestClientModifyOrderTests
         Assert.Equal(BinanceSelfTradePreventionMode.ExpireMaker, result.Data.SelfTradePreventionMode);
         Assert.True(result.Data.ReduceOnly);
         Assert.True(result.Data.PriceProtect);
-        Assert.IsType<BinanceFuturesCoinRestOrderAcknowledgement>(result.Data);
+        Assert.IsType<BinanceFuturesCoinRestOrderModificationAcknowledgement>(result.Data);
     }
 
     [Fact]

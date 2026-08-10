@@ -147,7 +147,7 @@ internal partial class BinanceFuturesRestClientCoin
             throw new ArgumentOutOfRangeException(nameof(type), type, "COIN-M normal order endpoints support only Limit and Market orders; use PlaceAlgoOrderAsync for conditional orders");
     }
 
-    public Task<RestCallResult<BinanceFuturesCoinRestOrderAcknowledgement>> ModifyOrderAsync(
+    public Task<RestCallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
@@ -186,10 +186,10 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("modifyId", modifyId?.ToString(BinanceConstants.CI));
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesCoinRestOrderAcknowledgement>(GetUrl(dapi, v1, "order"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceFuturesCoinRestOrderModificationAcknowledgement>(GetUrl(dapi, v1, "order"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
+    public async Task<RestCallResult<List<CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>>> ModifyOrdersAsync(IEnumerable<BinanceFuturesBatchModifyRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
         if (orders == null)
             throw new ArgumentNullException(nameof(orders));
@@ -236,18 +236,18 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        var response = await RequestAsync<List<BinanceFuturesCoinRestOrderAcknowledgementResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
-        if (!response.Success) return response.As<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>([]);
+        var response = await RequestAsync<List<BinanceFuturesCoinRestOrderModificationAcknowledgementResult>>(GetUrl(dapi, v1, "batchOrders"), HttpMethod.Put, ct, true, bodyParameters: parameters, requestWeight: 5).ConfigureAwait(false);
+        if (!response.Success) return response.As<List<CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>>([]);
 
-        var result = new List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>();
+        var result = new List<CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>();
         foreach (var item in response.Data)
         {
             result.Add(item.Code != 0
-                ? new CallResult<BinanceFuturesCoinRestOrderAcknowledgement>(new ServerError(item.Code, item.Message))
-                : new CallResult<BinanceFuturesCoinRestOrderAcknowledgement>(item));
+                ? new CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>(new ServerError(item.Code, item.Message))
+                : new CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>(item));
         }
 
-        return response.As<List<CallResult<BinanceFuturesCoinRestOrderAcknowledgement>>>(result);
+        return response.As<List<CallResult<BinanceFuturesCoinRestOrderModificationAcknowledgement>>>(result);
     }
 
     public Task<RestCallResult<List<BinanceFuturesOrderModifyHistory>>> GetOrderModifyHistoryAsync(string symbol, long? orderId = null, string? origClientOrderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)

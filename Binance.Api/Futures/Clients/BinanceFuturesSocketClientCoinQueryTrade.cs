@@ -210,7 +210,7 @@ internal partial class BinanceFuturesSocketClientCoin
         }
     }
 
-    public Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> ModifyOrderAsync(
+    public Task<CallResult<BinanceFuturesCoinSocketOrderModificationAcknowledgement>> ModifyOrderAsync(
         string symbol,
         BinanceOrderSide side,
         decimal quantity,
@@ -233,7 +233,7 @@ internal partial class BinanceFuturesSocketClientCoin
             modifyId,
             __.ReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>(ModifyOrderPath, ModifyOrderMethod, parameters, true, true, weight: ModifyOrderIpWeight, ct: ct);
+        return RequestAsync<BinanceFuturesCoinSocketOrderModificationAcknowledgement>(ModifyOrderPath, ModifyOrderMethod, parameters, true, true, weight: ModifyOrderIpWeight, ct: ct);
     }
 
     internal static ParameterCollection CreateModifyOrderParameters(
