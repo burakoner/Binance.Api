@@ -48,6 +48,12 @@ public record BinanceFuturesAccountInfoV2
     public long FeeTier { get; set; }
 
     /// <summary>
+    /// Whether the BNB fee discount is enabled; not returned by every contract using this shared model
+    /// </summary>
+    [JsonProperty("feeBurn")]
+    public bool? FeeBurn { get; set; }
+
+    /// <summary>
     /// Maximum withdraw quantity
     /// </summary>
     [JsonProperty("maxWithdrawAmount")]

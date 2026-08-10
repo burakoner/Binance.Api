@@ -1619,6 +1619,29 @@ Five deterministic tests cover all six public method surfaces, exact paths/metho
 
 The measurable remaining minimum is eight small turns and approximately 6-17.5 active hours: six numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Backward Review 25: USDⓈ-M financial read-contract reconciliation
+
+Slices 104-108 were reviewed backward across production code, deterministic tests, public XML documentation, release notes, the external tracking contract, and the current official USDⓈ-M REST Market Data, REST Trade, WebSocket Trade, REST Account, and WebSocket Account catalogs. Product-specific trade-rule isolation, kline and continuous-contract guards, the normal/Algo order split, native WebSocket Algo methods, and the six coexisting WebSocket account-query methods remain internally consistent. The retired USDⓈ-M documentation residue also remains exactly 15: twelve files owned by Slice 111 and three COIN-M cross-product links owned by Slice 112.
+
+The review found that Slice 105 had overclaimed completion of the income-history contract. Its public request still accepted an arbitrary income-type string and narrowed the documented int64 `page` to int32; its response silently discarded the documented int64 `tranId` and string `tradeId`. The rendered official REST Account parameter table was expanded in the in-app browser and confirmed all 22 currently published income values, including Binance's exact `DELIVERED_SETTELMENT` spelling. The existing enum already contained all 22 exact wire mappings, so the request now uses that enum directly, `page` is int64, and both identifiers are preserved by the response model.
+
+The same account audit found two further executable metadata defects. Both REST account-information methods still declared IP weight 10 although the current v2 and v3 catalog entries publish weight 5, and they bypassed the documented 60,000-millisecond receive-window ceiling. Both now use weight 5 and the shared ceiling validator. The v2 response model also now exposes the documented `feeBurn` boolean as nullable because the same model is shared with a WebSocket v1 response that does not publish that field.
+
+No additional normal or Algo order validator was invented. The live WebSocket Trade catalog defines the normal `LIMIT`/`MARKET` combinations used by the current implementation, but its Algo schema and own request example do not provide enough consistent evidence to promote every type-dependent field to a new client-side mandatory rule. Guessing stricter financial-order behavior would be less safe than retaining the exchange-documented surface until Binance publishes an unambiguous constraint.
+
+The new account tests cover the exact signed paths, current weights, the receive-window boundary and pre-transport rejection, typed 22-value-capable income serialization, above-int32 pagination, near-int64 transaction precision, string trade identifiers, and nullable v2 fee-burn data. All 92 focused Slice 104-108 tests and all 390 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No authenticated Binance endpoint, live account, order, cancellation, or mutation request was sent.
+
+### Revised next order
+
+1. Slice 109: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound and reconnect-safe state.
+2. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+3. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+4. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+5. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+6. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum is seven small turns and approximately 5.5-15.5 active hours: six numbered slices plus Review 26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1755,3 +1778,4 @@ The measurable remaining minimum is eight small turns and approximately 6-17.5 a
 | 106 | Complete | USDⓈ-M REST normal single/batch order Algo migration and owned Trade documentation contracts | Live unified Trade catalog, effective 2025-12-09 migration notice, current `-4120` error contract, exact DOM anchors, removed conditional single-order surface, pre-transport type/batch guards, preserved test-order contract, 26 focused and 364 complete tests, forced full multi-target rebuild |
 | 107 | Complete | USDⓈ-M WebSocket normal and native Algo order migration plus owned Trade documentation contracts | Live unified WebSocket Trade catalog, effective 2025-12-09 migration notice, exact DOM anchors, normal/Algo public-surface separation, numeric/int64 serialization, source-conflict guards, 55 focused and 381 complete tests, forced full multi-target rebuild |
 | 108 | Complete | Coexisting USDⓈ-M WebSocket v1/v2 account, balance, and position query contracts | Live unified Account and Trade catalogs, 2024 introduction/deprecation-intent and weight changelog conflicts, exact DOM anchors, six signed methods, complete distinct response shapes, int64 request/response fields, 16 focused and 386 complete tests, forced full multi-target rebuild |
+| Review 25 | Complete | Backward review of USDⓈ-M cross-product trade-rule isolation, read-only contracts, normal/Algo REST and WebSocket migration, and account-query coexistence; REST account and income corrections | `317aa2f..7a49fc4` diff review, live unified Market Data, REST/WebSocket Trade, and REST/WebSocket Account catalogs, rendered 22-value income-enum verification, exact 15-link residue, 92 focused and 390 complete tests, forced full multi-target rebuild |

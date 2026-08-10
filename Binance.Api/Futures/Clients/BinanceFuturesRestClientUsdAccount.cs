@@ -21,17 +21,17 @@ internal partial class BinanceFuturesRestClientUsd
     public Task<RestCallResult<BinanceFuturesAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesAccountInfo>(GetUrl(fapi, v3, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<BinanceFuturesAccountInfo>(GetUrl(fapi, v3, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<BinanceFuturesAccountInfoV2>> GetAccountInfoV2Async(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesAccountInfoV2>(GetUrl(fapi, v2, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 10);
+        return RequestAsync<BinanceFuturesAccountInfoV2>(GetUrl(fapi, v2, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
     public Task<RestCallResult<BinanceFuturesAccountUserCommissionRate>> GetUserCommissionRateAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default)
@@ -95,13 +95,13 @@ internal partial class BinanceFuturesRestClientUsd
         return RequestAsync<BinanceFuturesPositionMode>(GetUrl(fapi, v1, "positionSide/dual"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, BinanceFuturesIncomeType? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, long? page = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
     {
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("incomeType", incomeType);
+        parameters.AddOptionalEnum("incomeType", incomeType);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
         parameters.AddOptional("page", page);

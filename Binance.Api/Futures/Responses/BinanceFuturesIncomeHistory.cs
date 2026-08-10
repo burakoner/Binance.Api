@@ -43,20 +43,17 @@
         [JsonProperty("time")]
         public DateTime Timestamp { get; set; }
 
-        /*
         /// <summary>
         /// Transaction id if relevant
         /// </summary>
         [JsonProperty("tranId")]
-        [JsonConverter(typeof(NumberStringConverter))]
-        public string TransactionId { get; set; } = string.Empty;
+        public long TransactionId { get; set; }
+
         /// <summary>
         /// Trade id if existing
         /// </summary>
         [JsonProperty("tradeId")]
-        [JsonConverter(typeof(NumberStringConverter))]
         public string? TradeId { get; set; }
-        */
     }
 
 }

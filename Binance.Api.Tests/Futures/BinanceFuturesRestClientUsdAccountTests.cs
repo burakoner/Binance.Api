@@ -24,6 +24,96 @@ public class BinanceFuturesRestClientUsdAccountTests
         Assert.Equal(incomeType, response!.IncomeType);
     }
 
+    [Fact]
+    public async Task IncomeHistory_UsesTypedInt64QueryAndPreservesCurrentIdentifiers()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            [
+              {
+                "symbol": "BTCUSDT",
+                "incomeType": "BFUSD_REWARD",
+                "income": "1.25",
+                "asset": "BFUSD",
+                "info": "reward",
+                "time": 1770736694138,
+                "tranId": 9223372036854775805,
+                "tradeId": "trade-42"
+              }
+            ]
+            """);
+        using var client = CreateClient(handler, limiter);
+
+        var result = await client.UsdFutures.GetIncomeHistoryAsync(
+            "BTCUSDT",
+            BinanceFuturesIncomeType.BfusdReward,
+            page: 3_000_000_000L,
+            limit: 1000,
+            receiveWindow: 60_000);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/fapi/v1/income", handler.RequestUri!.AbsolutePath);
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains("symbol=BTCUSDT", query);
+        Assert.Contains("incomeType=BFUSD_REWARD", query);
+        Assert.Contains("page=3000000000", query);
+        Assert.Contains("limit=1000", query);
+        Assert.Contains("recvWindow=60000", query);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == "/fapi/v1/income" && item.Weight == 30 && item.Signed);
+
+        var income = Assert.Single(result.Data);
+        Assert.Equal(BinanceFuturesIncomeType.BfusdReward, income.IncomeType);
+        Assert.Equal(9_223_372_036_854_775_805L, income.TransactionId);
+        Assert.Equal("trade-42", income.TradeId);
+    }
+
+    [Theory]
+    [InlineData(false, "/fapi/v3/account")]
+    [InlineData(true, "/fapi/v2/account")]
+    public async Task AccountInfoQueries_UseCurrentWeightReceiveWindowAndModel(bool useV2, string expectedPath)
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler("{\"feeBurn\":true}");
+        using var client = CreateClient(handler, limiter);
+
+        if (useV2)
+        {
+#pragma warning disable CS0618 // The obsolete v2 route remains public and needs regression coverage.
+            var result = await client.UsdFutures.GetAccountInfoV2Async(60_000);
+#pragma warning restore CS0618
+            Assert.True(result.Success);
+            Assert.True(result.Data.FeeBurn);
+        }
+        else
+        {
+            var result = await client.UsdFutures.GetAccountInfoAsync(60_000);
+            Assert.True(result.Success);
+        }
+
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal(expectedPath, handler.RequestUri!.AbsolutePath);
+        Assert.Contains("recvWindow=60000", handler.RequestUri.Query);
+        Assert.Contains(limiter.Requests, item => item.Endpoint == expectedPath && item.Weight == 5 && item.Signed);
+    }
+
+    [Fact]
+    public async Task AccountInfoQueries_RejectReceiveWindowAboveCurrentMaximum()
+    {
+        var handler = new RecordingHttpMessageHandler("{}");
+        using var client = CreateClient(handler);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetAccountInfoAsync(60_001));
+#pragma warning disable CS0618 // The obsolete v2 route remains public and needs regression coverage.
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetAccountInfoV2Async(60_001));
+#pragma warning restore CS0618
+
+        Assert.Null(handler.RequestUri);
+    }
+
     [Theory]
     [InlineData(false, "/fapi/v3/balance")]
     [InlineData(true, "/fapi/v2/balance")]
