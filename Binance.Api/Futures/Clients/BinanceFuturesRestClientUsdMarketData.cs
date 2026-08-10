@@ -117,6 +117,7 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
 
     public Task<RestCallResult<List<BinanceFuturesUsdKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateUsdKlineInterval(interval);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection {
             { "symbol", symbol },
@@ -132,6 +133,8 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
 
     public Task<RestCallResult<List<BinanceFuturesUsdKline>>> GetContinuousContractKlinesAsync(string pair, BinanceFuturesContractType contractType, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateUsdContinuousKlineContractType(contractType);
+        ValidateUsdKlineInterval(interval);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection {
             { "pair", pair },
@@ -148,6 +151,7 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
 
     public Task<RestCallResult<List<BinanceFuturesKline>>> GetIndexPriceKlinesAsync(string pair, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateUsdKlineInterval(interval);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection {
             { "pair", pair },
@@ -163,6 +167,7 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
 
     public Task<RestCallResult<List<BinanceFuturesKline>>> GetMarkPriceKlinesAsync(string symbol, BinanceKlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
     {
+        ValidateUsdKlineInterval(interval);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
 
         var parameters = new ParameterCollection {
@@ -180,6 +185,7 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
 
     public Task<RestCallResult<List<BinanceFuturesKline>>> GetPremiumIndexKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
     {
+        ValidateUsdKlineInterval(interval);
         limit?.ValidateIntBetween(nameof(limit), 1, 1500);
         var parameters = new ParameterCollection {
             { "symbol", symbol },
@@ -429,5 +435,31 @@ internal partial class BinanceFuturesRestClientUsd : IBinanceFuturesRestClientUs
         parameters.AddOptional("symbol", symbol);
 
         return RequestAsync<BinanceFuturesInsuranceFundBalances>(GetUrl(fapi, v1, "insuranceBalance"), HttpMethod.Get, ct, queryParameters: parameters, requestWeight: 1);
+    }
+
+    private static void ValidateUsdKlineInterval(BinanceKlineInterval interval)
+    {
+        if (!Enum.IsDefined(typeof(BinanceKlineInterval), interval)
+            || interval == BinanceKlineInterval.OneSecond)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(interval),
+                interval,
+                "USDⓈ-M REST kline endpoints do not support the provided interval");
+        }
+    }
+
+    private static void ValidateUsdContinuousKlineContractType(BinanceFuturesContractType contractType)
+    {
+        if (contractType != BinanceFuturesContractType.Perpetual
+            && contractType != BinanceFuturesContractType.CurrentQuarter
+            && contractType != BinanceFuturesContractType.NextQuarter
+            && contractType != BinanceFuturesContractType.TradFiPerpetual)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(contractType),
+                contractType,
+                "Supported values are Perpetual, CurrentQuarter, NextQuarter, and TradFiPerpetual");
+        }
     }
 }

@@ -11,6 +11,88 @@ namespace Binance.Api.Tests.Futures;
 public class BinanceFuturesRestClientUsdMarketDataTests
 {
     [Fact]
+    public async Task KlineQueries_RejectUnsupportedIntervalsBeforeTransport()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var client = CreateClient(new HttpClient(handler));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetKlinesAsync("BTCUSDT", BinanceKlineInterval.OneSecond));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetContinuousContractKlinesAsync(
+                "BTCUSDT",
+                BinanceFuturesContractType.Perpetual,
+                BinanceKlineInterval.OneSecond));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetIndexPriceKlinesAsync("BTCUSDT", BinanceKlineInterval.OneSecond));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetMarkPriceKlinesAsync("BTCUSDT", BinanceKlineInterval.OneSecond));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetPremiumIndexKlinesAsync("BTCUSDT", BinanceKlineInterval.OneSecond));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.UsdFutures.GetKlinesAsync("BTCUSDT", (BinanceKlineInterval)12345));
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task ContinuousKlines_AllowOnlyDocumentedContractTypes()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var client = CreateClient(new HttpClient(handler));
+        var supportedContractTypes = new Dictionary<BinanceFuturesContractType, string>
+        {
+            [BinanceFuturesContractType.Perpetual] = "PERPETUAL",
+            [BinanceFuturesContractType.CurrentQuarter] = "CURRENT_QUARTER",
+            [BinanceFuturesContractType.NextQuarter] = "NEXT_QUARTER",
+            [BinanceFuturesContractType.TradFiPerpetual] = "TRADIFI_PERPETUAL"
+        };
+
+        foreach (var contractType in supportedContractTypes)
+        {
+            var result = await client.UsdFutures.GetContinuousContractKlinesAsync(
+                "BTCUSDT",
+                contractType.Key,
+                BinanceKlineInterval.OneMinute);
+
+            Assert.True(result.Success);
+            var query = Uri.UnescapeDataString(handler.RequestUri!.Query);
+            Assert.Contains($"contractType={contractType.Value}", query);
+            Assert.Contains("interval=1m", query);
+        }
+
+        Assert.Equal(supportedContractTypes.Count, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task ContinuousKlines_RejectUndocumentedContractTypesBeforeTransport()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using var client = CreateClient(new HttpClient(handler));
+        var supportedContractTypes = new HashSet<BinanceFuturesContractType>
+        {
+            BinanceFuturesContractType.Perpetual,
+            BinanceFuturesContractType.CurrentQuarter,
+            BinanceFuturesContractType.NextQuarter,
+            BinanceFuturesContractType.TradFiPerpetual
+        };
+        var unsupportedContractTypes = Enum.GetValues<BinanceFuturesContractType>()
+            .Where(contractType => !supportedContractTypes.Contains(contractType))
+            .Append((BinanceFuturesContractType)255);
+
+        foreach (var contractType in unsupportedContractTypes)
+        {
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+                client.UsdFutures.GetContinuousContractKlinesAsync(
+                    "BTCUSDT",
+                    contractType,
+                    BinanceKlineInterval.OneMinute));
+        }
+
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
     public async Task GetRpiOrderBookAsync_UsesCurrentPublicContractAndDeserializesResponse()
     {
         var limiter = new RecordingRateLimiter();

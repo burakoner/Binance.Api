@@ -15,6 +15,7 @@
         /// Type of income as string
         /// </summary>
         [JsonProperty("incomeType")]
+        [JsonConverter(typeof(MapConverter))]
         public BinanceFuturesIncomeType? IncomeType { get; set; }
 
         /// <summary>

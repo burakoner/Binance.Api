@@ -7,7 +7,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 {
     /// <summary>
     /// Pings the Binance Futures API
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>True if successful ping, false if no response</returns>
@@ -15,7 +15,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Requests the server for the local time. This function also determines the offset between server and local time and uses this for subsequent API calls
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Check-Server-Time" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#check-server-time" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Server time</returns>
@@ -23,7 +23,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get's information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#exchange-information" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Exchange info</returns>
@@ -48,7 +48,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets the order book for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#order-book" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the order book for, for example `ETHUSDT`</param>
     /// <param name="limit">Max number of results</param>
@@ -76,7 +76,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get the most recent trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Recent-Trades-List" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#recent-trades-list" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get trades for, for example `ETHUSDT`</param>
     /// <param name="limit">Max amount of results</param>
@@ -97,7 +97,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#compressed-aggregate-trades-list" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the trades for, for example `ETHUSDT`</param>
     /// <param name="fromId">ID to get aggregate trades from INCLUSIVE.</param>
@@ -110,7 +110,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get klines for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#kline-candlestick-data" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="interval">The kline interval</param>
@@ -123,7 +123,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get candlestick data for the provided pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#continuous-contract-kline-candlestick-data" /></para>
     /// </summary>
     /// <param name="pair">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="contractType">The contract type</param>
@@ -137,7 +137,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get Kline/candlestick data for the index price of a pair.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#index-price-kline-candlestick-data" /></para>
     /// </summary>
     /// <param name="pair">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="interval">The candlestick timespan</param>
@@ -150,7 +150,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Kline/candlestick bars for the mark price of a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#mark-price-kline-candlestick-data" /></para>
     /// </summary>
     /// <param name="symbol">The symbol get the data for, for example `ETHUSDT`</param>
     /// <param name="interval">The interval of the klines</param>
@@ -163,7 +163,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get premium index klines for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Premium-Index-Kline-Data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#premium-index-kline-data" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="interval">The kline interval</param>
@@ -176,7 +176,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get Mark Price and Funding Rate for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#mark-price" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -185,7 +185,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get Mark Price and Funding Rate for all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#mark-price" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
@@ -209,7 +209,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get funding rate info for symbols that had FundingRateCap/ FundingRateFloor / fundingIntervalHours adjustment
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Get-Funding-Rate-Info" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#get-funding-rate-info" /></para>
     /// </summary>
     /// <param name="ct"></param>
     /// <returns></returns>
@@ -217,7 +217,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours change
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#ticker24hr-price-change-statistics" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -226,7 +226,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours change
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#ticker24hr-price-change-statistics" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Data over the last 24 hours</returns>
@@ -251,7 +251,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets the best price/quantity on the order book for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#symbol-order-book-ticker" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get book price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -260,7 +260,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets the best price/quantity on the order book.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#symbol-order-book-ticker" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of book prices</returns>
@@ -268,7 +268,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Latest price for a symbol or symbols.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Delivery-Price" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#quarterly-contract-settlement-price" /></para>
     /// </summary>
     /// <param name="pair">Pair</param>
     /// <param name="ct">Cancellation token</param>
@@ -277,7 +277,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get present open interest of a specific symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#open-interest" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -364,7 +364,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Gets composite index info
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Composite-Index-Symbol-Information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#composite-index-symbol-information" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -373,7 +373,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get asset index for Multi-Assets mode for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Multi-Assets-Mode-Asset-Index" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#asset-index" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
@@ -382,7 +382,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Get asset indexes for Multi-Assets mode for all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Multi-Assets-Mode-Asset-Index" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#asset-index" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -390,7 +390,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Query index price constituents
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Constituents" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#query-index-price-constituents" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="ct">Cancellation token</param>
@@ -399,7 +399,7 @@ public interface IBinanceFuturesRestClientUsdMarketData
 
     /// <summary>
     /// Query Insurance Fund Balance Snapshot
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Insurance-Fund-Balance" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data#query-insurance-fund-balance-snapshot" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="ct">Cancellation token</param>

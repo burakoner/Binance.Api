@@ -25,7 +25,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in response section for detail.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Account-Information-V3" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#account-information-v3" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -34,7 +34,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get account information, including position and balances
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Account-Information-V2" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#account-information-v2" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -44,7 +44,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Gets account commission rates
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/User-Commission-Rate" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#user-commission-rate" /></para>
     /// </summary>
     /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -54,7 +54,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get user account configuration
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Account-Config" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#futures-account-configuration" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -62,7 +62,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get user symbol configuration
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Symbol-Config" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#symbol-configuration" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -71,7 +71,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get the order rate limits
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Query-Rate-Limit" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#query-user-rate-limit" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -80,7 +80,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Gets Notional and Leverage Brackets.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Notional-and-Leverage-Brackets" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#notional-and-leverage-brackets" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `ETHUSDT`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -90,7 +90,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Current-Multi-Assets-Mode" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-current-multi-assets-mode" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -99,7 +99,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Current-Position-Mode" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-current-position-mode" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -108,7 +108,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Gets the income history for the futures account
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Income-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-income-history" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get income history from, for example `ETHUSDT`</param>
     /// <param name="incomeType">The income type filter to apply to the request</param>
@@ -123,7 +123,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Gets the current status of the trading rules for the account
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Futures-Trading-Quantitative-Rules-Indicators" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#futures-trading-quantitative-rules-indicators" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>
@@ -132,7 +132,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get download id for downloading transaction history
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Transaction-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-download-id-for-futures-transaction-history" /></para>
     /// </summary>
     /// <param name="startTime">Start time of the data to download</param>
     /// <param name="endTime">End time of the data to download</param>
@@ -143,7 +143,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get the download link for transaction history by download id
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Transaction-History-Download-Link-by-Id" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-futures-transaction-history-download-link-by-id" /></para>
     /// </summary>
     /// <param name="downloadId">The download id as requested by <see cref="GetDownloadIdForTransactionHistoryAsync" /></param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -153,7 +153,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get download id for downloading order history
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Order-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-download-id-for-futures-order-history" /></para>
     /// </summary>
     /// <param name="startTime">Start time of the data to download</param>
     /// <param name="endTime">End time of the data to download</param>
@@ -164,7 +164,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get the download link for order history by download id
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-futures-order-history-download-link-by-id" /></para>
     /// </summary>
     /// <param name="downloadId">The download id as requested by <see cref="GetDownloadIdForOrderHistoryAsync" /></param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -174,7 +174,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get download id for downloading trade history
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Trade-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-download-id-for-futures-trade-history" /></para>
     /// </summary>
     /// <param name="startTime">Start time of the data to download</param>
     /// <param name="endTime">End time of the data to download</param>
@@ -185,7 +185,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get the download link for order history by download id
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Trade-Download-Link-by-Id" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-futures-trade-download-link-by-id" /></para>
     /// </summary>
     /// <param name="downloadId">The download id as requested by <see cref="GetDownloadIdForTradeHistoryAsync" /></param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -195,7 +195,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Set BNB burn for fee discount status
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Toggle-BNB-Burn-On-Futures-Trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#toggle-bnb-burn-on-futures-trade" /></para>
     /// </summary>
     /// <param name="feeBurn">Fee burn status</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -205,7 +205,7 @@ public interface IBinanceFuturesRestClientUsdAccount
 
     /// <summary>
     /// Get BNB burn for fee discount status
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-BNB-Burn-Status" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/account#get-bnb-burn-status" /></para>
     /// </summary>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
     /// <param name="ct">Cancellation token</param>

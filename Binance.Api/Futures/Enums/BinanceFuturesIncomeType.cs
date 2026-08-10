@@ -117,5 +117,23 @@ public enum BinanceFuturesIncomeType : byte
     /// Position limit increase fee
     /// </summary>
     [Map("POSITION_LIMIT_INCREASE_FEE")]
-    PositionLimitIncreaseFee
+    PositionLimitIncreaseFee,
+
+    /// <summary>
+    /// Strategy USDⓈ-M Futures transfer
+    /// </summary>
+    [Map("STRATEGY_UMFUTURES_TRANSFER")]
+    StrategyUmFuturesTransfer,
+
+    /// <summary>
+    /// Fee return
+    /// </summary>
+    [Map("FEE_RETURN")]
+    FeeReturn,
+
+    /// <summary>
+    /// BFUSD reward
+    /// </summary>
+    [Map("BFUSD_REWARD")]
+    BfusdReward
 }

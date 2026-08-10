@@ -1513,6 +1513,35 @@ Six deterministic regressions prove product-specific throw/auto-comply selection
 
 After this correction, the measurable remaining minimum is twelve small turns and approximately 9.5-26.5 active hours: ten numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 105: read-only USDⓈ-M REST contract corrections
+
+The bounded read-only REST differences from the USDⓈ-M closing inventory were corrected against the live unified Market Data and Account catalogs and official generated Go connector HEAD `a0c61d1ef7539023322e3b138a16cc077f9ea1d1`. No order, account mutation, authentication, response shape, or route changed.
+
+All five USDⓈ-M REST kline operations now reject `1s` and undefined interval values before transport. The current standard, continuous-contract, index-price, mark-price, and premium-index schemas expose the same fifteen-value interval set beginning at `1m`; the shared `BinanceKlineInterval.OneSecond` member remains available for products and stream contracts that officially support it. The continuous-contract operation now accepts exactly `PERPETUAL`, `CURRENT_QUARTER`, `NEXT_QUARTER`, and `TRADIFI_PERPETUAL`; broader shared Futures contract types can no longer be serialized into this narrower operation.
+
+`BinanceFuturesIncomeType` now includes the three current values missing from the local nineteen-value set: `STRATEGY_UMFUTURES_TRANSFER`, `FEE_RETURN`, and `BFUSD_REWARD`. `BinanceFuturesIncomeHistory.IncomeType` now uses the map converter required to deserialize those wire strings instead of relying on CLR enum names. Their bidirectional mappings are covered without changing historical enum values.
+
+The official portal moved these operations into unified catalog pages while this remediation was executed. All 44 stale public XML links in the owned USDⓈ-M Account and Market Data interfaces were migrated to the live catalog base pages and exact DOM heading anchors. This includes non-obvious current anchors such as `ticker24hr-price-change-statistics` and `asset-index`; no guessed legacy slug was retained. README and console call surfaces require no change.
+
+The repository-wide residue scan now finds 38 old USDⓈ-M URL occurrences rather than the 35 implied by Backward Review 24's 79-link inventory. The additional three are cross-product links inside the COIN-M WebSocket Query Trade interface. They are outside this slice's owned files and are assigned to the COIN-M closing inventory in Slice 112, where the current post-integration documentation target can be verified instead of mechanically changing product ownership. This corrects the link inventory without adding another minimum turn.
+
+Six deterministic regressions cover all five pre-transport `1s` guards, undefined intervals, the exact four allowed continuous-contract values, every shared but unsupported contract value, and the three new income mappings. All 34 focused Account and Market Data tests and all 342 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No authenticated Binance request, account operation, order, cancellation, or mutation was sent.
+
+### Revised next order
+
+1. Slice 106: migrate USDⓈ-M REST single and batch normal-order placement away from the five server-blocked conditional types, keep test-order evidence separate, and migrate the owned REST Trade links.
+2. Slice 107: add WebSocket native Algo place/cancel, fully align normal `order.place`, and migrate the owned WebSocket Trade links.
+3. Slice 108: add the three current v1 WebSocket account/balance/position contracts alongside v2 and migrate the owned WebSocket Account links.
+4. Backward Review 25: review Slices 104-108 before continuing.
+5. Slice 109: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound and reconnect-safe state.
+6. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+7. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+8. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+9. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+10. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+After this correction, the measurable remaining minimum is eleven small turns and approximately 9-25 active hours: nine numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1645,3 +1674,4 @@ After this correction, the measurable remaining minimum is twelve small turns an
 | 103 | Complete | USDⓈ-M closing inventory across REST, WebSocket API, market/private streams, and user data | Live 133-entry catalog, changelog through 2026-08-07, route-migration and WebSocket general contracts, connector HEAD `a0c61d1`, active 94/94 REST reconciliation, 18/13 WebSocket API and 20/19 stream comparisons, complete ten-event user-data dispatch, seven bounded remediation slices, 330 complete tests, forced rebuild |
 | Review 24 | Complete | Backward review of Margin, Convert/Algo, and USDⓈ-M closing work; cross-product trade-rule and XML-link ownership reconciliation | `c3edf19..b1eeef5` diff review, live connector HEAD verification, regenerated 95/94 REST, 18/13 WebSocket API, 20/19 stream and 79-link inventories, Margin int64/ignored-field scans, confirmed USDⓈ-M/COIN-M/Options trade-rule option isolation defects, 50 targeted and 330 complete tests, forced full multi-target rebuild |
 | 104 | Complete | Cross-product USDⓈ-M, COIN-M, and Options trade-rule configuration safety | Product-specific REST behavior and refresh settings, Futures socket explicit-setting paths, corrected USDⓈ-M REST-client selection, Options batch gate, 6 exact safety, 186 Futures-and-Options, and 336 complete tests, forced full multi-target rebuild |
+| 105 | Complete | Read-only USDⓈ-M REST kline, continuous-contract, income-enum, and owned documentation contracts | Live unified Market Data and Account catalogs, exact DOM anchors, generated connector HEAD `a0c61d1`, five interval guards, exact four contract types, three income mappings, 44 canonical links, 34 focused and 342 complete tests, forced full multi-target rebuild |

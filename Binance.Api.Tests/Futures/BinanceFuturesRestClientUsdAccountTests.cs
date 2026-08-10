@@ -1,13 +1,29 @@
 using ApiSharp.Authentication;
+using ApiSharp.Converters;
 using ApiSharp.Models;
 using ApiSharp.Security;
 using ApiSharp.Throttling;
+using Binance.Api.Futures;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Binance.Api.Tests.Futures;
 
 public class BinanceFuturesRestClientUsdAccountTests
 {
+    [Theory]
+    [InlineData(BinanceFuturesIncomeType.StrategyUmFuturesTransfer, "STRATEGY_UMFUTURES_TRANSFER")]
+    [InlineData(BinanceFuturesIncomeType.FeeReturn, "FEE_RETURN")]
+    [InlineData(BinanceFuturesIncomeType.BfusdReward, "BFUSD_REWARD")]
+    public void IncomeTypes_MapCurrentWireValuesBidirectionally(BinanceFuturesIncomeType incomeType, string expected)
+    {
+        Assert.Equal(expected, MapConverter.GetString(incomeType));
+
+        var response = JsonConvert.DeserializeObject<BinanceFuturesIncomeHistory>(
+            $$"""{"incomeType":"{{expected}}"}""");
+        Assert.Equal(incomeType, response!.IncomeType);
+    }
+
     [Theory]
     [InlineData(false, "/fapi/v3/balance")]
     [InlineData(true, "/fapi/v2/balance")]
