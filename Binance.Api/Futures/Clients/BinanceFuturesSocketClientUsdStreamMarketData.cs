@@ -387,4 +387,17 @@ internal partial class BinanceFuturesSocketClientUsd
         return SubscribeMarketAsync(["!assetIndex@arr"], false, handler, ct);
     }
 
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradingSessionsAsync(
+        Action<WebSocketDataEvent<BinanceFuturesStreamTradingSessionUpdate>> onMessage,
+        CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceFuturesStreamCombinedStream<BinanceFuturesStreamTradingSessionUpdate>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data));
+        });
+        return SubscribeMarketAsync([TradingSessionStreamTopic], false, handler, ct);
+    }
+
+    internal const string TradingSessionStreamTopic = "tradingSession";
+
 }

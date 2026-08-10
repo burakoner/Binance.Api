@@ -353,4 +353,13 @@ public interface IBinanceFuturesSocketClientUsdStreamMarketData
     /// <returns></returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToAssetIndexesAsync(Action<WebSocketDataEvent<List<BinanceFuturesStreamAssetIndexUpdate>>> onMessage, CancellationToken ct = default);
 
+    /// <summary>
+    /// Subscribes to one-second trading session updates for the U.S. equity, commodity, Korean equity, and Hong Kong equity markets underlying TradFi perpetual contracts
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market#trading-session-stream" /></para>
+    /// </summary>
+    /// <param name="onMessage">The event handler for received trading session updates</param>
+    /// <param name="ct">Cancellation token for closing this subscription</param>
+    /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradingSessionsAsync(Action<WebSocketDataEvent<BinanceFuturesStreamTradingSessionUpdate>> onMessage, CancellationToken ct = default);
+
 }

@@ -1668,6 +1668,25 @@ Eight deterministic session tests cover exact methods and weight, int64 receive-
 
 The measurable remaining minimum is six small turns and approximately 4-12.5 active hours: five numbered slices plus Review 26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 110: routed USDⓈ-M trading-session market stream
+
+The current USDⓈ-M WebSocket Market Streams catalog publishes `tradingSession` on the unauthenticated `wss://fstream.binance.com/market/stream` route. Raw and combined URL forms use the same case-sensitive topic, and request-based subscriptions send that topic in `params`. Updates arrive once per second and contain only event type (`e`), event time (`E`), session start (`t`), session end (`T`), and session type (`S`).
+
+The current event set is `EquityUpdate`, `CommodityUpdate`, `KR_EquityUpdate`, and `HK_EquityUpdate`. U.S. equity session values are `PRE_MARKET`, `REGULAR`, `AFTER_MARKET`, `OVERNIGHT`, and `NO_TRADING`; commodity, Korean equity, and Hong Kong equity use `REGULAR` and `NO_TRADING`. The 2025-12-11 changelog called the original addition a “Websocket API”, but the executable current catalog classifies it as a market stream. The 2026-06-02 and 2026-07-16 changelog entries corroborate the Korean and Hong Kong event additions. Routing and implementation therefore follow the current endpoint page rather than the older changelog label.
+
+The USDⓈ-M market-data interface now exposes `SubscribeToTradingSessionsAsync`. It subscribes without authentication through the existing routed market connection, unwraps the combined-stream envelope, and invokes a typed `BinanceFuturesStreamTradingSessionUpdate` callback. The model maps the exact five-field payload and uses the same millisecond-to-UTC conversion as other Futures stream timestamps. `SessionType` remains the raw official string, consistent with the existing REST trading-schedule model and forward-compatible with newly published session values. COIN-M does not expose this USDⓈ-M-only subscription.
+
+Thirteen deterministic tests cover the exact topic, combined envelope and complete five-field payload, every currently documented event/session-value combination, typed public callback surface, and COIN-M exclusion. All 411 solution tests pass, and a forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live WebSocket connection, authenticated Binance endpoint, account, order, cancellation, or mutation request was sent.
+
+### Revised next order
+
+1. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+2. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+3. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+4. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum is five small turns and approximately 3.5-11 active hours: four numbered slices plus Review 26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1806,3 +1825,4 @@ The measurable remaining minimum is six small turns and approximately 4-12.5 act
 | 108 | Complete | Coexisting USDⓈ-M WebSocket v1/v2 account, balance, and position query contracts | Live unified Account and Trade catalogs, 2024 introduction/deprecation-intent and weight changelog conflicts, exact DOM anchors, six signed methods, complete distinct response shapes, int64 request/response fields, 16 focused and 386 complete tests, forced full multi-target rebuild |
 | Review 25 | Complete | Backward review of USDⓈ-M cross-product trade-rule isolation, read-only contracts, normal/Algo REST and WebSocket migration, and account-query coexistence; REST account and income corrections | `317aa2f..7a49fc4` diff review, live unified Market Data, REST/WebSocket Trade, and REST/WebSocket Account catalogs, rendered 22-value income-enum verification, exact 15-link residue, 92 focused and 390 complete tests, forced full multi-target rebuild |
 | 109 | Complete | Connection-scoped USDⓈ-M WebSocket API session authentication and revocation lifecycle | Current WebSocket API General Info modified 2026-08-08, recorded catalog/changelog absence and invalid hex-signature example conflict, Ed25519-only logon/status/logout, exact weight and response state, reconnect re-authentication, typed `-2015` revocation, signed-query connection-state correction, 30 related and 398 complete tests, forced full multi-target rebuild |
+| 110 | Complete | Routed USDⓈ-M TradFi trading-session market stream | Current WebSocket Market Streams catalog and 2025-12-11, 2026-06-02, and 2026-07-16 changelog entries, exact unauthenticated market topic, complete event/session coverage, typed combined-stream callback, 13 focused and 411 complete tests, forced full multi-target rebuild |
