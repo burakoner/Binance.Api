@@ -42,6 +42,18 @@ public record BinanceFuturesBookTicker
 }
 
 /// <summary>
+/// Information about the best price/quantity available for a USDⓈ-M Futures symbol from the WebSocket API
+/// </summary>
+public record BinanceFuturesWebSocketBookTicker : BinanceFuturesBookTicker
+{
+    /// <summary>
+    /// Last update id
+    /// </summary>
+    [JsonProperty("lastUpdateId")]
+    public long LastUpdateId { get; set; }
+}
+
+/// <summary>
 /// Information about the best price/quantity available for a Coin-M Futures symbol
 /// </summary>
 public record BinanceFuturesCoinBookTicker: BinanceFuturesBookTicker

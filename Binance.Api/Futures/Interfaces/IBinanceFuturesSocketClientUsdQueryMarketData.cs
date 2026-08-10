@@ -6,11 +6,11 @@
 public interface IBinanceFuturesSocketClientUsdQueryMarketData
 {
     /// <summary>
-    /// Gets the order book for the provided symbol
+    /// Gets the standard order book for the provided symbol. Retail Price Improvement (RPI) orders are excluded from the response
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/market-data#order-book" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the order book for, for example `ETHUSDT`</param>
-    /// <param name="limit">Max number of results</param>
+    /// <param name="limit">Max number of results. Valid values are 5, 10, 20, 50, 100, 500, and 1000; defaults to 500</param>
     /// <param name="ct">Cancellation token</param>
     Task<CallResult<BinanceFuturesOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
@@ -32,19 +32,19 @@ public interface IBinanceFuturesSocketClientUsdQueryMarketData
     Task<CallResult<List<BinanceFuturesPrice>>> GetPricesAsync(CancellationToken ct = default);
 
     /// <summary>
-    /// Gets the best price/quantity on the order book for a symbol.
+    /// Gets the best price/quantity on the standard order book for a symbol. Retail Price Improvement (RPI) orders are excluded from the response.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/market-data#symbol-order-book-ticker" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get book price for, for example `ETHUSDT`</param>
     /// <param name="ct">Cancellation token</param>
-    /// <returns>List of book prices</returns>
-    Task<CallResult<BinanceFuturesBookTicker>> GetBookPriceAsync(string symbol, CancellationToken ct = default);
+    /// <returns>Book price</returns>
+    Task<CallResult<BinanceFuturesWebSocketBookTicker>> GetBookPriceAsync(string symbol, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets the best price/quantity on the order book for all symbols.
+    /// Gets the best price/quantity on the standard order book for all symbols. Retail Price Improvement (RPI) orders are excluded from the response.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/market-data#symbol-order-book-ticker" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>List of book prices</returns>
-    Task<CallResult<List<BinanceFuturesBookTicker>>> GetBookPricesAsync(CancellationToken ct = default);
+    Task<CallResult<List<BinanceFuturesWebSocketBookTicker>>> GetBookPricesAsync(CancellationToken ct = default);
 }

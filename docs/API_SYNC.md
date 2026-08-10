@@ -1791,6 +1791,25 @@ Three deterministic gate regressions prove mutual exclusion, cancellation recove
 
 The measurable remaining minimum is five small turns and approximately 3.5-11.5 active hours. The numbered queue is now 114/118 complete. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 115: current USDⓈ-M WebSocket API Market Data contracts
+
+The complete current rendered WebSocket API Market Data catalog publishes exactly three operations on `wss://ws-fapi.binance.com/ws-fapi/v1`: `depth`, `ticker.book`, and `ticker.price`. The wrapper's five single-symbol/all-symbol methods already cover all three operations, use the canonical path and method names, and preserve the documented price-ticker weights of 1/2 and book-ticker weights of 2/5. Price-ticker request and response fields, the depth int64 sequence/timestamps and two-value decimal levels, and the single/all response variants remain correct.
+
+The verified depth defect is closed. An omitted limit now follows the documented default of 500 and consumes weight 10 instead of falling through nullable comparisons to weight 20. Explicit limits are restricted before transport to the exact current set `[5, 10, 20, 50, 100, 500, 1000]`, mapping to weights 2, 5, 10, and 20 as published. The rendered schema labels the integer as int64, but its closed domain ends at 1000; the existing nullable int represents every accepted wire value, so widening it would expose no additional valid request and was not done. All three single-symbol methods reject null, empty, or blank required symbols before opening transport. Public depth guidance now records the 500 default and both depth and book-ticker guidance state that Retail Price Improvement orders are excluded.
+
+The current WebSocket `ticker.book` result adds int64 `lastUpdateId`, while the current REST `/fapi/v1/ticker/bookTicker` result does not. Adding that field to the shared REST model would expose an undocumented default zero to REST consumers. The WebSocket methods therefore now return a dedicated `BinanceFuturesWebSocketBookTicker` subtype containing `lastUpdateId`; the common bid/ask/symbol/time fields remain inherited from the exact REST-compatible base model. This is an intentional public return-type correction rather than historical signature preservation.
+
+Four deterministic regressions cover every valid and representative invalid depth limit, the omitted-limit weight, required-symbol guards, the WebSocket-specific public return types, and complete current depth/price/book response deserialization with int64 identifiers and timestamps. The complete suite passes 429/429 tests, and a forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live WebSocket connection, Binance endpoint, authenticated account, market-data query, order, cancellation, or other mutation request was sent.
+
+### Revised next order
+
+1. Slice 116: refresh the COIN-M closing inventory and reconcile the three cross-product retired Query Trade links, splitting any implementation findings by risk.
+2. Slice 117: refresh the Options closing inventory, splitting any implementation findings by risk.
+3. Slice 118: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+4. Backward Review 27: review Slices 114-118 and reconcile the final measured scope.
+
+The measurable remaining minimum is four small turns and approximately 3-10 active hours. The numbered queue is now 115/118 complete. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1935,3 +1954,4 @@ The measurable remaining minimum is five small turns and approximately 3.5-11.5 
 | 113 | Complete | Current parameterless USDⓈ-M REST listen-key lifecycle | Current rendered User Data Streams catalog, 2024-04-19 changelog effective 2024-04-25, official generated connector HEAD `8d3256f`, API-key-only weight-one requests, refreshed keepalive key, real empty-response transport coverage, 3 focused and 422 complete tests, forced full multi-target rebuild |
 | Review 26 | Complete | Backward review of USDⓈ-M session authentication, Trading Session Stream, final owned links, Futures Convert, and REST listen-key lifecycle; cross-product session-transition race discovery | `249473f..f6c15a6` diff review, current WebSocket General Info, Trading Session, Convert, and User Data Streams catalogs, pinned ApiSharp 4.5.1 source commit `310244c`, exact three-link residue, 32 focused and 422 complete tests, forced full multi-target rebuild |
 | 114 | Complete | Cross-product Spot and USDⓈ-M WebSocket session-transition serialization | Review 26 race proof, pinned ApiSharp lifecycle model, shared cancellation-aware transition gate, exact logon/status/logout/reconnect ordering, corrected restoration guidance, 3 exact gate tests, 25 focused and 425 complete tests, forced full multi-target rebuild |
+| 115 | Complete | Complete current USDⓈ-M WebSocket API Market Data depth and ticker contracts | Current rendered three-operation WebSocket catalog and REST book-ticker comparison, exact default/discrete depth weights, required-symbol guards, RPI guidance, WebSocket-specific int64 update-ID model, 4 exact and 429 complete tests, forced full multi-target rebuild |
