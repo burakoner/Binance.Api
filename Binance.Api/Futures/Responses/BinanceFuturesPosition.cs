@@ -153,6 +153,12 @@ public record BinanceFuturesCoinPositionInfo : BinanceFuturesPositionInfoBase
     /// </summary>
     [JsonProperty("notionalValue")]
     public decimal NotionalValue { get; set; }
+
+    /// <summary>
+    /// Isolated wallet balance
+    /// </summary>
+    [JsonProperty("isolatedWallet")]
+    public decimal IsolatedWallet { get; set; }
 }
 
 /// <summary>
@@ -246,6 +252,12 @@ public record BinanceFuturesUsdtPosition : BinanceFuturesPositionDetailsBase
 public record BinanceFuturesCoinPosition : BinanceFuturesPositionDetailsBase
 {
     /// <summary>
+    /// Unrealized profit
+    /// </summary>
+    [JsonProperty("unRealizedProfit")]
+    public decimal UnrealizedProfit { get; set; }
+
+    /// <summary>
     /// Notional value
     /// </summary>
     [JsonProperty("notionalValue")]
@@ -256,6 +268,12 @@ public record BinanceFuturesCoinPosition : BinanceFuturesPositionDetailsBase
     /// </summary>
     [JsonProperty("maxQty")]
     public decimal MaxQuantity { get; set; }
+
+    /// <summary>
+    /// Isolated wallet balance
+    /// </summary>
+    [JsonProperty("isolatedWallet")]
+    public decimal IsolatedWallet { get; set; }
 }
 
 /// <summary>

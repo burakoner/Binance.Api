@@ -7,18 +7,18 @@ public interface IBinanceFuturesSocketClientCoinQueryAccount
 {
     /// <summary>
     /// Gets account balances
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/websocket-api" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/account#futures-account-balance" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The int64 receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The account information</returns>
-    Task<CallResult<List<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get account information, including position and balances
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/websocket-api/Account-Information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/account#account-information" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The int64 receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
-    Task<CallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default);
 }

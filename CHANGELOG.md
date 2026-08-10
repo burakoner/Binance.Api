@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned the five remaining COIN-M WebSocket API account, balance, cancel, query-order, and position contracts with current int64 request fields and ceilings, exact position filters and response models, fail-closed validation, and canonical Account documentation links
   * Migrated COIN-M WebSocket API normal order placement to the effective LIMIT/MARKET-only contract, removed conditional-only request fields, aligned numeric and int64 serialization, added fail-closed parameter validation, and moved the owned Trade documentation link to its current canonical anchor
   * Separated all six COIN-M REST and three WebSocket immediate order mutation responses from query-order models, removing impossible average, cumulative quote/base, creation-time, and good-till-date fields while preserving the complete read-order contract
   * Completed Backward Review 28 across COIN-M REST listen-key, market-data, income, signed-read, and normal/Algo order changes; prevented blank symbol filters from selecting lower dynamic request weights, rejected blank open-order pair filters, and corrected shared Futures Algo model documentation

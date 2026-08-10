@@ -35,7 +35,7 @@ public class BinanceFuturesCoinOrderAcknowledgementTests
             typeof(Task<RestCallResult<BinanceFuturesOrder>>));
         AssertReturnType<IBinanceFuturesSocketClientCoinQueryTrade>(
             nameof(IBinanceFuturesSocketClientCoinQueryTrade.GetOrderAsync),
-            typeof(Task<CallResult<BinanceFuturesOrder>>));
+            typeof(Task<CallResult<BinanceFuturesCoinSocketOrder>>));
     }
 
     [Fact]

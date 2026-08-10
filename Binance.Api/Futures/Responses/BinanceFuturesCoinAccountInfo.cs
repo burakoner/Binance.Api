@@ -33,7 +33,7 @@ public record BinanceFuturesCoinAccountInfo
     /// Account assets
     /// </summary>
     [JsonProperty("assets")]
-    public List<BinanceFuturesAccountAsset> Assets { get; set; } = [];
+    public List<BinanceFuturesCoinAccountAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Account positions

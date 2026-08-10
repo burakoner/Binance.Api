@@ -2,19 +2,41 @@
 
 internal partial class BinanceFuturesSocketClientCoin
 {
-    public Task<CallResult<List<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
+    internal const string AccountQueryPath = "ws-dapi/v1";
+    internal const string GetBalancesMethod = "account.balance";
+    internal const string GetAccountMethod = "account.status";
+    internal const int AccountQueryIpWeight = 5;
+
+    public Task<CallResult<List<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(long? receiveWindow = null, CancellationToken ct = default)
+        => RequestAsync<List<BinanceFuturesCoinAccountBalance>>(
+            AccountQueryPath,
+            GetBalancesMethod,
+            CreateAccountQueryParameters(__.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: AccountQueryIpWeight,
+            ct: ct);
+
+    public Task<CallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default)
+        => RequestAsync<BinanceFuturesCoinAccountInfo>(
+            AccountQueryPath,
+            GetAccountMethod,
+            CreateAccountQueryParameters(__.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: AccountQueryIpWeight,
+            ct: ct);
+
+    internal static ParameterCollection CreateAccountQueryParameters(long? receiveWindow)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateQueryReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceFuturesCoinAccountBalance>>("ws-dapi/v1", $"account.balance", parameters, true, true, weight: 5, ct: ct);
+        return parameters;
     }
 
-    public Task<CallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default)
-    {
-        var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
-
-        return RequestAsync<BinanceFuturesCoinAccountInfo>("ws-dapi/v1", $"account.status", parameters, true, true, weight: 5, ct: ct);
-    }
+    internal static long? ValidateQueryReceiveWindow(long? receiveWindow)
+        => receiveWindow > 60_000
+            ? throw new ArgumentOutOfRangeException(nameof(receiveWindow), receiveWindow, "receiveWindow cannot exceed 60000 milliseconds")
+            : receiveWindow;
 }

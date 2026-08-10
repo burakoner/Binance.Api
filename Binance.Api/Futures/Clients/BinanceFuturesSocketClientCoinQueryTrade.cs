@@ -8,6 +8,15 @@ internal partial class BinanceFuturesSocketClientCoin
     internal const string ModifyOrderPath = "ws-dapi/v1";
     internal const string ModifyOrderMethod = "order.modify";
     internal const int ModifyOrderIpWeight = 1;
+    internal const string CancelOrderPath = "ws-dapi/v1";
+    internal const string CancelOrderMethod = "order.cancel";
+    internal const int CancelOrderIpWeight = 1;
+    internal const string GetOrderPath = "ws-dapi/v1";
+    internal const string GetOrderMethod = "order.status";
+    internal const int GetOrderIpWeight = 1;
+    internal const string PositionQueryPath = "ws-dapi/v1";
+    internal const string GetPositionsMethod = "account.position";
+    internal const int PositionQueryIpWeight = 5;
 
     internal Task<BinanceTradeRuleResult> CheckTradingRulesAsync(
         string symbol,
@@ -270,42 +279,89 @@ internal partial class BinanceFuturesSocketClientCoin
         return parameters;
     }
 
-    public Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> CancelOrderAsync(
+        string symbol,
+        long? orderId = null,
+        string? origClientOrderId = null,
+        long? receiveWindow = null,
+        CancellationToken ct = default)
+        => RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>(
+            CancelOrderPath,
+            CancelOrderMethod,
+            CreateOrderIdentityParameters(symbol, orderId, origClientOrderId, __.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: CancelOrderIpWeight,
+            ct: ct);
+
+    public Task<CallResult<BinanceFuturesCoinSocketOrder>> GetOrderAsync(
+        string symbol,
+        long? orderId = null,
+        string? origClientOrderId = null,
+        long? receiveWindow = null,
+        CancellationToken ct = default)
+        => RequestAsync<BinanceFuturesCoinSocketOrder>(
+            GetOrderPath,
+            GetOrderMethod,
+            CreateOrderIdentityParameters(symbol, orderId, origClientOrderId, __.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: GetOrderIpWeight,
+            ct: ct);
+
+    internal static ParameterCollection CreateOrderIdentityParameters(
+        string symbol,
+        long? orderId,
+        string? origClientOrderId,
+        long? receiveWindow)
     {
-        if (!orderId.HasValue && string.IsNullOrEmpty(origClientOrderId))
-            throw new ArgumentException("Either orderId or origClientOrderId must be sent");
-
-        var parameters = new ParameterCollection();
-        parameters.AddParameter("symbol", symbol);
-        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
-
-        return RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>("ws-dapi/v1", $"order.cancel", parameters, true, true, weight: 1, ct: ct);
-    }
-
-    public Task<CallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
-    {
-        if (orderId == null && origClientOrderId == null)
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("Symbol is required", nameof(symbol));
+        if (origClientOrderId is not null && string.IsNullOrWhiteSpace(origClientOrderId))
+            throw new ArgumentException("Original client order id cannot be empty", nameof(origClientOrderId));
+        if (!orderId.HasValue && origClientOrderId is null)
             throw new ArgumentException("Either orderId or origClientOrderId must be sent");
 
         var parameters = new ParameterCollection
         {
             { "symbol", symbol }
         };
-        parameters.AddOptional("orderId", orderId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("origClientOrderId", origClientOrderId);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateQueryReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceFuturesOrder>("ws-dapi/v1", $"order.status", parameters, true, true, weight: 1, ct: ct);
+        return parameters;
     }
 
-    public Task<CallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
-    {
-        var parameters = new ParameterCollection();
-        parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+    public Task<CallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(
+        long? receiveWindow = null,
+        string? marginAsset = null,
+        string? pair = null,
+        CancellationToken ct = default)
+        => RequestAsync<List<BinanceFuturesCoinPosition>>(
+            PositionQueryPath,
+            GetPositionsMethod,
+            CreatePositionQueryParameters(marginAsset, pair, __.ReceiveWindow(receiveWindow)),
+            true,
+            true,
+            weight: PositionQueryIpWeight,
+            ct: ct);
 
-        return RequestAsync<List<BinanceFuturesCoinPosition>>("ws-dapi/v1", $"account.position", parameters, true, true, weight: 5, ct: ct);
+    internal static ParameterCollection CreatePositionQueryParameters(
+        string? marginAsset,
+        string? pair,
+        long? receiveWindow)
+    {
+        if (marginAsset is not null && string.IsNullOrWhiteSpace(marginAsset))
+            throw new ArgumentException("Margin asset cannot be empty", nameof(marginAsset));
+        if (pair is not null && string.IsNullOrWhiteSpace(pair))
+            throw new ArgumentException("Pair cannot be empty", nameof(pair));
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("marginAsset", marginAsset);
+        parameters.AddOptional("pair", pair);
+        parameters.AddOptional("recvWindow", ValidateQueryReceiveWindow(receiveWindow));
+
+        return parameters;
     }
 }

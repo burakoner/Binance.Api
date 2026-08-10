@@ -51,10 +51,10 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
     /// <param name="symbol">The symbol the order is for, for example `ETHUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
     /// <param name="origClientOrderId">The client order id of the order</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The int64 receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The immediate cancellation acknowledgement. Fill-derived average and cumulative base values are not part of this response</returns>
-    Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> CancelOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.
@@ -63,17 +63,18 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
     /// <param name="symbol">The symbol the order is for, for example `ETHUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
     /// <param name="origClientOrderId">The client order id of the order</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The int64 receive window in milliseconds; cannot exceed 60000</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The specific order</returns>
-    Task<CallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<BinanceFuturesCoinSocketOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get position information
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/trade#position-information" /></para>
     /// </summary>
-    /// <param name="symbol">Filter by symbol, for example `ETHUSD_PERP`</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">The int64 receive window in milliseconds; cannot exceed 60000</param>
+    /// <param name="marginAsset">Optional margin asset filter. Use this as a named argument</param>
+    /// <param name="pair">Optional pair filter, for example `BTCUSD`. Use this as a named argument</param>
     /// <param name="ct">Cancellation token</param>
-    Task<CallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<CallResult<List<BinanceFuturesCoinPosition>>> GetPositionsAsync(long? receiveWindow = null, string? marginAsset = null, string? pair = null, CancellationToken ct = default);
 }
