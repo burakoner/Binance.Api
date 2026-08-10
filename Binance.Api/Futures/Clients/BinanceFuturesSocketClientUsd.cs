@@ -2,8 +2,11 @@
 
 internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBinanceFuturesSocketClientUsd
 {
+    private const string SessionRevokedHandler = "usd-futures-session-revoked";
+    private ApiCredentialsType? apiCredentialsType;
     private bool hasApiKey;
     private bool hasApiSecret;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<int, BinanceFuturesUsdWebSocketSession> sessions = new();
 
     // Internal
     internal ILogger Logger { get => _logger; }
@@ -26,15 +29,18 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
     {
         _ = root;
         __ = root._;
+        apiCredentialsType = root.SocketOptions.ApiCredentials?.Type;
         hasApiKey = HasApiKey(root.SocketOptions.ApiCredentials);
         hasApiSecret = HasApiSecret(root.SocketOptions.ApiCredentials);
 
         RateLimitPerConnectionPerSecond = 4;
         SetDataInterpreter((data) => string.Empty, null);
+        AddGenericHandler(SessionRevokedHandler, HandleSessionRevocation);
     }
 
     internal new void SetApiCredentials(ApiCredentials credentials)
     {
+        apiCredentialsType = credentials.Type;
         hasApiKey = HasApiKey(credentials);
         hasApiSecret = HasApiSecret(credentials);
         base.SetApiCredentials(credentials);
@@ -149,14 +155,41 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
 
     protected override bool MessageMatchesHandler(WebSocketConnection connection, JToken message, string identifier)
     {
-        return true;
+        return identifier == SessionRevokedHandler && GetSessionRevocationPayload(message) != null;
     }
 
     protected override async Task<CallResult<bool>> AuthenticateAsync(WebSocketConnection connection)
     {
-        await Task.CompletedTask;
-        return new CallResult<bool>(true);
-        throw new NotImplementedException();
+        if (!sessions.TryGetValue(connection.Id, out var session))
+            return new CallResult<bool>(new InvalidOperationError("No USDⓈ-M WebSocket API session is registered for this connection."));
+
+        session.MarkAuthenticationPending();
+
+        var guardResult = await __.ServerRateLimitGuard.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+        if (!guardResult)
+            return guardResult;
+
+        var syncResult = await SyncTimeAsync().ConfigureAwait(false);
+        if (!syncResult)
+            return syncResult;
+
+        CallResult<BinanceFuturesUsdWebSocketSessionStatus> result;
+        try
+        {
+            result = await SendSessionLogonAsync(connection, session.ReceiveWindow).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is ArgumentException
+            || exception is InvalidOperationException
+            || exception is NotSupportedException)
+        {
+            return new CallResult<bool>(new InvalidOperationError(exception.Message));
+        }
+
+        if (!result)
+            return result.As(false);
+
+        session.LastStatus = result.Data;
+        return result.As(true);
     }
 
     protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
@@ -296,7 +329,9 @@ internal partial class BinanceFuturesSocketClientUsd : WebSocketApiClient, IBina
         };
 
         var address = url.StartsWith("wss://") ? url : BinanceAddress.Default.UsdFuturesSocketApiQueryAddress.AppendPath(url);
-        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, sign).ConfigureAwait(false);
+        // Individually signed requests do not authenticate the underlying connection. Only
+        // session.logon creates connection-bound authentication that must be restored.
+        var result = await base.QueryAsync<BinanceResultWithRateLimits<T>>(address, request, false).ConfigureAwait(false);
         if (!result.Success)
             return result.AsError<T>(result.Error!);
 

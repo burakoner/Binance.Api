@@ -1642,6 +1642,32 @@ The new account tests cover the exact signed paths, current weights, the receive
 
 The measurable remaining minimum is seven small turns and approximately 5.5-15.5 active hours: six numbered slices plus Review 26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 109: connection-scoped USDⓈ-M WebSocket API authentication
+
+The current USDⓈ-M WebSocket API General Info page, last modified 2026-08-08, documents `session.logon`, `session.status`, and `session.logout` even though the generated endpoint catalog navigation does not list an Authentication group. No explicit session-authentication entry was found in the product changelog. Catalog absence is therefore not retirement evidence: the current product guide is the executable source for this connection-level contract.
+
+All three methods consume weight 2. `session.logon` is signed, accepts `apiKey`, optional integer `recvWindow`, `timestamp`, and `signature`, and supports only Ed25519 API keys. Status and logout take no parameters. Their shared response exposes nullable `apiKey` and `authorizedSince`, plus `connectedSince`, `returnRateLimits`, and `serverTime`. Logout forgets the authenticated key without closing the underlying connection; a later logon can authenticate that same session again.
+
+The public USDⓈ-M client now exposes a connection-scoped session handle with logon, status, logout, close, connection lifecycle events, current authentication state, and last status. Successful logon registers an authenticated lifecycle subscription so ApiSharp replays `session.logon` before reporting a restored connection. Re-authentication first clears the local authenticated state; a failed reconnect cannot leave a stale API key reported as active. Repeating logon replaces the connection's API key only after a successful response, while logout disables automatic re-authentication without closing the socket.
+
+The current guide also defines the asynchronous `id: null`, HTTP-style status 401, Binance code `-2015` revocation notification. The client now recognizes only that exact connection message, clears local authentication, disables unsafe automatic reconnect authentication with the invalid key, and exposes a typed `AuthenticationRevoked` event. A later explicit logon can restore the lifecycle after credentials are corrected.
+
+One existing transport flag was financially unsafe once real session authentication existed. Individually signed account and trade queries were passing their signature requirement to ApiSharp as if the underlying connection were authenticated. Those requests continue to carry their own `apiKey`, timestamp, and signature, but no longer register the pooled query connection for session re-authentication. Only a successful `session.logon` creates connection-bound authentication.
+
+The official page contains a recorded source defect: the `session.logon` example shows a short HMAC-like hexadecimal signature despite stating that only Ed25519 keys are accepted, while the same page's Ed25519 signing section correctly requires the 64-byte Ed25519 signature to be Base64 encoded. The implementation follows the explicit Ed25519 algorithm section and the existing cryptographically verified Base64 signer; it does not reproduce the impossible example value.
+
+Eight deterministic session tests cover exact methods and weight, int64 receive-window serialization and configured defaults, missing/HMAC credential rejection, the 60,000-millisecond boundary, cryptographic Ed25519 verification, nullable status fields, public surface exposure, reconnect state clearing, and exact revocation-message discrimination. The 30 related USDⓈ-M authentication/account/order/rate tests and all 398 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live WebSocket connection, authenticated Binance endpoint, account, order, cancellation, or mutation request was sent.
+
+### Revised next order
+
+1. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+2. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+3. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+4. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+5. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+The measurable remaining minimum is six small turns and approximately 4-12.5 active hours: five numbered slices plus Review 26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1779,3 +1805,4 @@ The measurable remaining minimum is seven small turns and approximately 5.5-15.5
 | 107 | Complete | USDⓈ-M WebSocket normal and native Algo order migration plus owned Trade documentation contracts | Live unified WebSocket Trade catalog, effective 2025-12-09 migration notice, exact DOM anchors, normal/Algo public-surface separation, numeric/int64 serialization, source-conflict guards, 55 focused and 381 complete tests, forced full multi-target rebuild |
 | 108 | Complete | Coexisting USDⓈ-M WebSocket v1/v2 account, balance, and position query contracts | Live unified Account and Trade catalogs, 2024 introduction/deprecation-intent and weight changelog conflicts, exact DOM anchors, six signed methods, complete distinct response shapes, int64 request/response fields, 16 focused and 386 complete tests, forced full multi-target rebuild |
 | Review 25 | Complete | Backward review of USDⓈ-M cross-product trade-rule isolation, read-only contracts, normal/Algo REST and WebSocket migration, and account-query coexistence; REST account and income corrections | `317aa2f..7a49fc4` diff review, live unified Market Data, REST/WebSocket Trade, and REST/WebSocket Account catalogs, rendered 22-value income-enum verification, exact 15-link residue, 92 focused and 390 complete tests, forced full multi-target rebuild |
+| 109 | Complete | Connection-scoped USDⓈ-M WebSocket API session authentication and revocation lifecycle | Current WebSocket API General Info modified 2026-08-08, recorded catalog/changelog absence and invalid hex-signature example conflict, Ed25519-only logon/status/logout, exact weight and response state, reconnect re-authentication, typed `-2015` revocation, signed-query connection-state correction, 30 related and 398 complete tests, forced full multi-target rebuild |

@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added Ed25519-only USDⓈ-M WebSocket API session logon, status, logout, reconnect re-authentication, and API-key-revocation state, while preventing individually signed queries from being misclassified as connection-authenticated
   * Corrected USDⓈ-M account information and income-history contracts found by Backward Review 25, including current request weights and receive-window guards, typed income filters, int64 pagination and transaction identifiers, string trade identifiers, and the v2 `feeBurn` response field
   * Added the current coexisting USDⓈ-M WebSocket API v1 account, balance, and position queries alongside v2, aligning int64 request fields, complete response models, source-conflict guidance, and canonical documentation links
   * Migrated USDⓈ-M WebSocket order placement to the current normal/Algo split, added native conditional Algo placement and cancellation, aligned validation, numeric and int64 serialization, weights, response envelopes, and owned Trade documentation links

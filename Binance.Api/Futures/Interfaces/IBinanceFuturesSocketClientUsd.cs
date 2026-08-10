@@ -5,6 +5,7 @@
 /// </summary>
 public interface IBinanceFuturesSocketClientUsd:
     IBinanceFuturesSocketClientUsdQueryAccount,
+    IBinanceFuturesSocketClientUsdQueryAuthentication,
     IBinanceFuturesSocketClientUsdQueryGeneral,
     IBinanceFuturesSocketClientUsdQueryMarketData,
     IBinanceFuturesSocketClientUsdQueryTrade,
