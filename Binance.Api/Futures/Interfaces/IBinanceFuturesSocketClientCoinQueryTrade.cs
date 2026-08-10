@@ -51,7 +51,7 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
 
     /// <summary>
     /// Cancels a pending order
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Cancel-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/trade#cancel-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -63,7 +63,7 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Query-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/trade#query-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `ETHUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -75,7 +75,7 @@ public interface IBinanceFuturesSocketClientCoinQueryTrade
 
     /// <summary>
     /// Get position information
-    /// <para><a href="https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Position-Info-V2" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/trade#position-information" /></para>
     /// </summary>
     /// <param name="symbol">Filter by symbol, for example `ETHUSD_PERP`</param>
     /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
