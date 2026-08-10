@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned all six Options order mutation contracts with the current REST schemas: required quantities, ten-order batches, optional ACK/RESULT and self-trade-prevention modes, int64 receive windows, exact query serialization and weights, complete order fields, and endpoint-specific cancel-all acknowledgements
   * Aligned the Options REST user-data-stream lifecycle with the current parameterless API-key-only weight-one POST/PUT/DELETE contracts, exposed the start response's int64 expiration, handled empty keepalive/close responses, and updated executable call sites and endpoint documentation
   * Completed Backward Review 29 across the final COIN-M and Options inventory work; moved `modifyId` out of placement/cancellation acknowledgement surfaces into exact REST/WebSocket modification result types, and split and risk-reordered the remaining Options execution contract into smaller slices
   * Inventoried the complete current Options REST, public/market WebSocket stream, and user-data surfaces; confirmed exact coverage of all 44 current REST method/routes but exposed stale request weights, parameters, response models, listen-key lifecycle, WebSocket routing/topics/events, four unsupported wrapper-only routes, and ten bounded remediation slices

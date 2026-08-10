@@ -6,9 +6,24 @@
 public record BinanceOptionsBatchOrderRequest
 {
     /// <summary>
+    /// Creates a new Options batch order request
+    /// </summary>
+    /// <param name="symbol">Option symbol</param>
+    /// <param name="side">Buy or sell side</param>
+    /// <param name="type">Order type; only LIMIT is supported</param>
+    /// <param name="quantity">Order quantity</param>
+    public BinanceOptionsBatchOrderRequest(string symbol, BinanceOrderSide side, BinanceOptionsOrderType type, decimal quantity)
+    {
+        Symbol = symbol;
+        Side = side;
+        Type = type;
+        Quantity = quantity;
+    }
+
+    /// <summary>
     /// Symbol of the order
     /// </summary>
-    public string Symbol { get; set; } = string.Empty;
+    public string Symbol { get; set; }
 
     /// <summary>
     /// Side of the order
@@ -25,7 +40,7 @@ public record BinanceOptionsBatchOrderRequest
     /// <summary>
     /// Quantity
     /// </summary>
-    public decimal? Quantity { get; set; }
+    public decimal Quantity { get; set; }
 
     /// <summary>
     /// Price
@@ -57,4 +72,16 @@ public record BinanceOptionsBatchOrderRequest
     /// Is MMP Order
     /// </summary>
     public bool? MMP { get; set; }
+
+    /// <summary>
+    /// Response type. ACK or RESULT; default is ACK
+    /// </summary>
+    [JsonConverter(typeof(MapConverter))]
+    public BinanceOrderResponseType? OrderResponseType { get; set; }
+
+    /// <summary>
+    /// Self-trade prevention mode
+    /// </summary>
+    [JsonConverter(typeof(MapConverter))]
+    public BinanceSelfTradePreventionMode? SelfTradePreventionMode { get; set; }
 }

@@ -18,7 +18,7 @@ public interface IBinanceOptionsRestClientTrading
 
     /// <summary>
     /// Send a new order.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#new-order" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="side">Buy/sell direction: SELL, BUY</param>
@@ -30,6 +30,8 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="reduceOnly">Reduce Only(Default false)</param>
     /// <param name="postOnly">Post Only (Default false)</param>
     /// <param name="isMmp">is market maker protection order, true/false</param>
+    /// <param name="orderResponseType">Response type. ACK or RESULT; default is ACK</param>
+    /// <param name="selfTradePreventionMode">Self-trade prevention mode</param>
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
@@ -37,29 +39,31 @@ public interface IBinanceOptionsRestClientTrading
         string symbol,
         BinanceOrderSide side,
         BinanceOptionsOrderType type,
-        decimal? quantity = null,
+        decimal quantity,
         decimal? price = null,
         BinanceTimeInForce? timeInForce = null,
         string? clientOrderId = null,
         bool? reduceOnly = null,
         bool? postOnly = null,
         bool? isMmp = null,
-        int? receiveWindow = null,
+        long? receiveWindow = null,
+        BinanceOrderResponseType? orderResponseType = null,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         CancellationToken ct = default);
 
     /// <summary>
     /// Send multiple option orders.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Place-Multiple-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#place-multiple-orders" /></para>
     /// </summary>
-    /// <param name="orders">order list. Max 5 orders</param>
+    /// <param name="orders">Order list. Maximum 10 orders</param>
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsOrder>>> PlaceOrdersAsync(IEnumerable<BinanceOptionsBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsOrder>>> PlaceOrdersAsync(IEnumerable<BinanceOptionsBatchOrderRequest> orders, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel an active order.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Cancel-Option-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-option-order" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="orderId">Order ID, e.g 4611875134427365377</param>
@@ -67,11 +71,11 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceOptionsOrder>> CancelOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel multiple orders.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Cancel-Multiple-Option-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-multiple-option-orders" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="orderIdList">Order ID, e.g [4611875134427365377,4611875134427365378]</param>
@@ -79,27 +83,27 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsOrder>>> CancelOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsOrder>>> CancelOrdersAsync(string symbol, IEnumerable<long>? orderIdList = null, IEnumerable<string>? origClientOrderIdList = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all active orders on specified underlying.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Cancel-All-Option-Orders-By-Underlying" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-all-option-orders-by-underlying" /></para>
     /// </summary>
     /// <param name="underlying">Option underlying, e.g BTCUSDT</param>
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<long>> CancelOrdersByUnderlyingAsync(string underlying, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceOptionsCancelAllOrdersByUnderlyingResult>> CancelOrdersByUnderlyingAsync(string underlying, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Cancel all active order on a symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Cancel-all-Option-orders-on-specific-symbol" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-all-option-orders-on-specific-symbol" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<bool>> CancelOrdersBySymbolAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceOptionsCancelAllOrdersBySymbolResult>> CancelOrdersBySymbolAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Check an order status.

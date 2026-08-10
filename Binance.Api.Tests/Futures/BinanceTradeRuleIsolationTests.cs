@@ -136,13 +136,11 @@ public class BinanceTradeRuleIsolationTests
 
         var result = await client.Options.PlaceOrdersAsync(
         [
-            new BinanceOptionsBatchOrderRequest
-            {
-                Symbol = "BTC-260925-50000-C",
-                Side = BinanceOrderSide.Buy,
-                Type = BinanceOptionsOrderType.Limit,
-                Quantity = 1.5m
-            }
+            new BinanceOptionsBatchOrderRequest(
+                "BTC-260925-50000-C",
+                BinanceOrderSide.Buy,
+                BinanceOptionsOrderType.Limit,
+                1.5m)
         ]);
 
         Assert.False(result.Success);

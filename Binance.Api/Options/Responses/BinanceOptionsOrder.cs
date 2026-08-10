@@ -68,6 +68,13 @@ public record BinanceOptionsOrder
     [JsonConverter(typeof(DateTimeConverter))]
     public DateTime? CreateTime { get; set; }
 
+    [JsonProperty("createDate")]
+    [JsonConverter(typeof(DateTimeConverter))]
+    private DateTime? CancelCreateTime
+    {
+        set => CreateTime ??= value;
+    }
+
     /// <summary>
     /// Update Time
     /// </summary>
@@ -115,4 +122,14 @@ public record BinanceOptionsOrder
     /// Is Maker Maker Protection Order
     /// </summary>
     public bool? MMP { get; set; }
+
+    /// <summary>
+    /// Order source
+    /// </summary>
+    public string Source { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Self-trade prevention mode
+    /// </summary>
+    public BinanceSelfTradePreventionMode? SelfTradePreventionMode { get; set; }
 }

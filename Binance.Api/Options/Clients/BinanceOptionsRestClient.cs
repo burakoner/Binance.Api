@@ -35,7 +35,7 @@ internal partial class BinanceOptionsRestClient : IBinanceOptionsRestClient
         int requestWeight = 1) where T : class
         => _.RequestAsync<T>(uri, method, cancellationToken, signed, queryParameters, bodyParameters, headerParameters, serialization, deserializer, ignoreRatelimit, requestWeight);
 
-    internal int? ValidateReceiveWindow(int? receiveWindow)
+    internal long? ValidateReceiveWindow(long? receiveWindow)
     {
         var normalizedReceiveWindow = _.ReceiveWindow(receiveWindow);
         if (normalizedReceiveWindow > 60_000)
