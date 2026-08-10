@@ -15,7 +15,7 @@ public record BinanceFuturesConvertStatus
     /// Order status
     /// </summary>
     [JsonProperty("orderStatus")]
-    public BinanceFuturesConvertOrderStatus Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 
     /// <summary>
     /// From asset

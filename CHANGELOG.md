@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned all four USDⓈ-M Futures Convert REST contracts, including public exchange-info authentication, signed request fields and weights, receive-window ceilings, string valid-time and order-status fields, response precision, and removal of the obsolete Futures Convert enums
   * Migrated the final twelve owned USDⓈ-M REST Convert, REST User Data Stream, and WebSocket API Market Data XML documentation links to their current canonical endpoint anchors
   * Added the routed USDⓈ-M `tradingSession` market stream with its exact topic, typed combined-stream callback, one-second session payload, and complete current U.S., commodity, Korean, and Hong Kong market event coverage
   * Added Ed25519-only USDⓈ-M WebSocket API session logon, status, logout, reconnect re-authentication, and API-key-revocation state, while preventing individually signed queries from being misclassified as connection-authenticated

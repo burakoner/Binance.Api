@@ -21,5 +21,5 @@ public record BinanceFuturesConvertQuoteResult
     /// Order status
     /// </summary>
     [JsonProperty("orderStatus")]
-    public BinanceFuturesConvertOrderStatus Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 }

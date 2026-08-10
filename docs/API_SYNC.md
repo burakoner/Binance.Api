@@ -1711,6 +1711,27 @@ No behavior or model change was mixed into this documentation slice. Each confir
 
 The measurable remaining minimum is eight small turns and approximately 5.5-17.5 active hours. This increase is real work exposed by current endpoint reconciliation, not padding. It still excludes new implementation slices that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
 
+## Slice 112: current USDⓈ-M Futures Convert contracts
+
+All four USDⓈ-M Futures Convert operations were compared endpoint by endpoint against the current rendered catalog, the product changelog, and the OpenAPI-derived official generated connector at HEAD `8d3256f`. `GET /fapi/v1/convert/exchangeInfo` is now an unsigned public weight-20 request rather than a signed USER_DATA request. `POST /fapi/v1/convert/getQuote` remains a signed form request with weight 50 and now exposes the documented optional `recvWindow` with the 60,000-millisecond ceiling. `POST /fapi/v1/convert/acceptQuote` remains a signed form request with weight 200 and now exposes the same ceiling. `GET /fapi/v1/convert/orderStatus` remains a signed weight-50 query and does not invent a `recvWindow` absent from its current endpoint contract.
+
+The stale shared `BinanceValidTime` abstraction serialized four historical values even though the current Futures endpoint describes `validTime` as a string and publishes only `10s` with a `10s` default. The public parameter now follows the current string schema and the endpoint-only obsolete enum was removed. Both Convert response `orderStatus` fields are likewise unrestricted strings in the current schema; the four-value `BinanceFuturesConvertOrderStatus` enum was removed so a newly introduced server status cannot fail deserialization. The documented string order identifier returned by quote acceptance and int64 order identifier returned by status lookup remain distinct. String-encoded amounts and ratios continue to deserialize to decimal values, and millisecond timestamps continue to deserialize to UTC `DateTime` values.
+
+Two source conflicts were deliberately not converted into guessed client restrictions. The rendered quote note says either `fromAmount` or `toAmount` should be sent, while its generated request example sends neither and the current official connector tests both neither and both. The status note says either `orderId` or `quoteId` is required, while the generated official connector example and success test send neither and its optional-parameter test sends both. The current generated connector surface contains no combination constraint for either pair. The wrapper therefore forwards all four generated-connector combinations unchanged and records this explicitly in the public API remarks instead of silently choosing an exclusivity rule.
+
+Eight deterministic tests cover all four routes, authentication classification, query/form placement, weights, both receive-window paths and ceilings, schema-permitted ambiguous combinations, int64/string identifier separation, decimal precision, timestamps, and response status strings. The complete suite passes 419/419 tests. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No live Binance endpoint, authenticated account, quote, conversion acceptance, order, cancellation, or other mutation request was sent.
+
+### Revised next order
+
+1. Slice 113: align the complete current USDⓈ-M REST listen-key start, keepalive, close, response, weight, and public API contracts.
+2. Backward Review 26: review Slices 109-113 across code, tests, documentation, source conflicts, and execution order before continuing.
+3. Slice 114: align the complete current USDⓈ-M WebSocket API Market Data depth, ticker, weight, validation, model, and documentation contracts.
+4. Slices 115-116: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+5. Slice 117: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+6. Backward Review 27: review Slices 114-117 and reconcile the final measured scope.
+
+The measurable remaining minimum is seven small turns and approximately 4.5-15 active hours. It still excludes implementation work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1851,3 +1872,4 @@ The measurable remaining minimum is eight small turns and approximately 5.5-17.5
 | 109 | Complete | Connection-scoped USDⓈ-M WebSocket API session authentication and revocation lifecycle | Current WebSocket API General Info modified 2026-08-08, recorded catalog/changelog absence and invalid hex-signature example conflict, Ed25519-only logon/status/logout, exact weight and response state, reconnect re-authentication, typed `-2015` revocation, signed-query connection-state correction, 30 related and 398 complete tests, forced full multi-target rebuild |
 | 110 | Complete | Routed USDⓈ-M TradFi trading-session market stream | Current WebSocket Market Streams catalog and 2025-12-11, 2026-06-02, and 2026-07-16 changelog entries, exact unauthenticated market topic, complete event/session coverage, typed combined-stream callback, 13 focused and 411 complete tests, forced full multi-target rebuild |
 | 111 | Complete | Final owned USDⓈ-M canonical XML links and touched-endpoint reconciliation | Rendered current REST Convert, REST User Data Streams, and WebSocket API Market Data catalog hrefs, exact 12-link migration, zero retired-link residue in USDⓈ-M interfaces, three bounded remediation groups, 411 complete tests, forced full multi-target rebuild |
+| 112 | Complete | Current USDⓈ-M Futures Convert request, authentication, response, and validation contracts | Current rendered Convert catalog, 2024-08-26 product changelog entry, official generated connector HEAD `8d3256f`, recorded amount/identifier source conflicts, exact four-route tests, 8 focused and 419 complete tests, forced full multi-target rebuild |
