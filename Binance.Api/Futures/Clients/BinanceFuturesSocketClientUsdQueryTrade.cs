@@ -297,7 +297,7 @@ internal partial class BinanceFuturesSocketClientUsd
         DateTime? goodTillDate,
         long? receiveWindow)
     {
-        BinanceFuturesUsdAlgoOrderValidation.ValidatePlacement(
+        BinanceFuturesAlgoOrderValidation.ValidatePlacement(
             symbol,
             side,
             type,
@@ -356,7 +356,7 @@ internal partial class BinanceFuturesSocketClientUsd
 
     internal static ParameterCollection CreateCancelAlgoOrderParameters(long? algoId, string? clientAlgoId, long? receiveWindow)
     {
-        BinanceFuturesUsdAlgoOrderValidation.ValidateCancellation(algoId, clientAlgoId);
+        BinanceFuturesAlgoOrderValidation.ValidateCancellation(algoId, clientAlgoId);
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("algoId", algoId);

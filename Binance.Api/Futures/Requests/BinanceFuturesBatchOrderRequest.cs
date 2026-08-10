@@ -1,7 +1,7 @@
 ﻿namespace Binance.Api.Futures;
 
 /// <summary>
-/// Parameters for a new futures batch order
+/// Parameters for a normal LIMIT or MARKET futures batch order
 /// </summary>
 public record BinanceFuturesBatchOrderRequest
 {
@@ -23,7 +23,7 @@ public record BinanceFuturesBatchOrderRequest
     public BinancePositionSide? PositionSide { get; set; }
 
     /// <summary>
-    /// Order type
+    /// Normal order type: LIMIT or MARKET
     /// </summary>
     [JsonConverter(typeof(MapConverter))]
     public BinanceFuturesOrderType Type { get; set; }
@@ -53,31 +53,6 @@ public record BinanceFuturesBatchOrderRequest
     /// A unique id among open orders. Automatically generated if not sent.
     /// </summary>
     public string NewClientOrderId { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Used with Stop/StopMarket or TakeProfit/TakeProfitMarket orders.
-    /// </summary>
-    public decimal? StopPrice { get; set; }
-
-    /// <summary>
-    /// Used with TrailingStopMarket orders, default as the latest price（supporting different workingType)
-    /// </summary>
-    public decimal? ActivationPrice { get; set; }
-
-    /// <summary>
-    /// Used with TrailingStopMarket orders, min 0.1, max 4 where 1 for 1%
-    /// </summary>
-    public decimal? CallbackRate { get; set; }
-
-    /// <summary>
-    /// Stop price triggered by: Mark or Contract. Default Contract
-    /// </summary>
-    public BinanceFuturesWorkingType? WorkingType { get; set; }
-
-    /// <summary>
-    /// Used with Stop/StopMarket or TakeProfit/TakeProfitMarket orders.
-    /// </summary>
-    public bool? PriceProtect { get; set; }
 
     /// <summary>
     /// Price match

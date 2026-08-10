@@ -1,7 +1,7 @@
 namespace Binance.Api.Futures;
 
 /// <summary>
-/// Native USD-M conditional Algo order placement result
+/// Native Futures conditional Algo order placement result
 /// </summary>
 public record BinanceFuturesAlgoOrderPlacementResult
 {

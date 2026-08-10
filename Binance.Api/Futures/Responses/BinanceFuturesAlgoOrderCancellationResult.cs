@@ -1,7 +1,7 @@
 namespace Binance.Api.Futures;
 
 /// <summary>
-/// Native USD-M conditional Algo order cancellation result
+/// Native Futures conditional Algo order cancellation result
 /// </summary>
 public record BinanceFuturesAlgoOrderCancellationResult
 {

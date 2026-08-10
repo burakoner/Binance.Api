@@ -415,6 +415,9 @@ internal class Program
         var futures_717 = await api.CoinFutures.GetPositionAdlQuantileEstimationAsync();
         var futures_718 = await api.CoinFutures.SetPositionMarginAsync("---SYMBOL---", 100.0m, BinanceFuturesMarginChangeDirectionType.Add);
         var futures_719 = await api.CoinFutures.GetMarginChangeHistoryAsync("---SYMBOL---");
+        var futures_720 = await api.CoinFutures.GetOpenAlgoOrdersAsync(symbol: "---SYMBOL---");
+        var futures_721 = await api.CoinFutures.CancelAlgoOrderAsync(algoId: 1_000_001L);
+        var futures_722 = await api.CoinFutures.PlaceAlgoOrderAsync("---SYMBOL---", BinanceOrderSide.Sell, BinanceFuturesAlgoOrderType.StopMarket, triggerPrice: 50_000m);
 
         // Coin-M Futures -> User Data Stream Methods (PRIVATE)
         var futures_801 = await api.CoinFutures.StartUserStreamAsync();

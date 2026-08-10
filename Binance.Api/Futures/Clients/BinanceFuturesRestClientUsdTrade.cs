@@ -79,7 +79,6 @@ internal partial class BinanceFuturesRestClientUsd
                 throw new ArgumentException("Orders cannot contain null items", nameof(orders));
 
             ValidateNormalOrderType(order.Type);
-            ValidateNormalBatchOrderParameters(order);
         }
 
         if (RestOptions.UsdtFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
@@ -149,12 +148,6 @@ internal partial class BinanceFuturesRestClientUsd
     {
         if (type is not BinanceFuturesOrderType.Limit and not BinanceFuturesOrderType.Market)
             throw new ArgumentOutOfRangeException(nameof(type), type, "USD-M normal order endpoints support only Limit and Market orders; use PlaceAlgoOrderAsync for conditional orders");
-    }
-
-    private static void ValidateNormalBatchOrderParameters(BinanceFuturesBatchOrderRequest order)
-    {
-        if (order.StopPrice != null || order.ActivationPrice != null || order.CallbackRate != null || order.WorkingType != null || order.PriceProtect != null)
-            throw new ArgumentException("Conditional order parameters are not supported by USD-M normal order endpoints; use PlaceAlgoOrderAsync");
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
@@ -395,7 +388,7 @@ internal partial class BinanceFuturesRestClientUsd
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        BinanceFuturesUsdAlgoOrderValidation.ValidatePlacement(
+        BinanceFuturesAlgoOrderValidation.ValidatePlacement(
             symbol,
             side,
             type,
@@ -445,7 +438,7 @@ internal partial class BinanceFuturesRestClientUsd
 
     public Task<RestCallResult<BinanceFuturesAlgoOrderCancellationResult>> CancelAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default)
     {
-        BinanceFuturesUsdAlgoOrderValidation.ValidateCancellation(algoId, clientAlgoId);
+        BinanceFuturesAlgoOrderValidation.ValidateCancellation(algoId, clientAlgoId);
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("algoId", algoId?.ToString(BinanceConstants.CI));

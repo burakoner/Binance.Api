@@ -1,6 +1,6 @@
 namespace Binance.Api.Futures;
 
-internal static class BinanceFuturesUsdAlgoOrderValidation
+internal static class BinanceFuturesAlgoOrderValidation
 {
     internal static void ValidatePlacement(
         string symbol,

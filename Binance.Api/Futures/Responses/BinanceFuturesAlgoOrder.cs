@@ -163,7 +163,7 @@ public record BinanceFuturesAlgoOrderInfo
 }
 
 /// <summary>
-/// Native USD-M conditional Algo order query result
+/// Native Futures conditional Algo order query result
 /// </summary>
 public record BinanceFuturesAlgoOrder : BinanceFuturesAlgoOrderInfo
 {
@@ -181,7 +181,7 @@ public record BinanceFuturesAlgoOrder : BinanceFuturesAlgoOrderInfo
 }
 
 /// <summary>
-/// Native USD-M conditional Algo order list item
+/// Native Futures conditional Algo order list item
 /// </summary>
 public record BinanceFuturesAlgoOrderListItem : BinanceFuturesAlgoOrderInfo
 {

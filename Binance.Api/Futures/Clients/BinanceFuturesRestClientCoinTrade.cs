@@ -14,34 +14,22 @@ internal partial class BinanceFuturesRestClientCoin
         BinanceFuturesOrderType type,
         decimal? quantity,
         decimal? price = null,
-        decimal? stopPrice = null,
         string? newClientOrderId = null,
         BinancePositionSide? positionSide = null,
         BinanceTimeInForce? timeInForce = null,
         BinanceOrderResponseType? orderResponseType = null,
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         BinanceFuturesPriceMatch? priceMatch = null,
-        BinanceFuturesWorkingType? workingType = null,
         bool? reduceOnly = null,
-        bool? closePosition = null,
-        bool? priceProtect = null,
-        decimal? activationPrice = null,
-        decimal? callbackRate = null,
         int? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (closePosition == true && positionSide != null)
-        {
-            if (positionSide == BinancePositionSide.Short && side == BinanceOrderSide.Sell)
-                throw new ArgumentException("Can't close short position with order side sell");
-            if (positionSide == BinancePositionSide.Long && side == BinanceOrderSide.Buy)
-                throw new ArgumentException("Can't close long position with order side buy");
-        }
+        ValidateNormalOrderType(type);
 
         if (orderResponseType == BinanceOrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
-        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, null, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -50,7 +38,6 @@ internal partial class BinanceFuturesRestClientCoin
 
         quantity = rulesCheck.Quantity;
         price = rulesCheck.Price;
-        stopPrice = rulesCheck.StopPrice;
 
         var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
@@ -63,17 +50,11 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
         parameters.AddOptionalEnum("timeInForce", timeInForce);
         parameters.AddOptionalEnum("positionSide", positionSide);
-        parameters.AddOptional("stopPrice", stopPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("activationPrice", activationPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("callbackRate", callbackRate?.ToString(BinanceConstants.CI));
-        parameters.AddOptionalEnum("workingType", workingType);
         parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLower());
-        parameters.AddOptional("closePosition", closePosition?.ToString().ToLower());
         parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
         parameters.AddOptionalEnum("priceMatch", priceMatch);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptional("priceProtect", priceProtect?.ToString().ToUpper());
 
         var result = await RequestAsync<BinanceFuturesOrder>(GetUrl(dapi, v1, "order"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 0);
         if (result) InvokeOrderPlaced(result.Data.Id);
@@ -82,14 +63,26 @@ internal partial class BinanceFuturesRestClientCoin
 
     public async Task<RestCallResult<List<CallResult<BinanceFuturesOrder>>>> PlaceOrdersAsync(IEnumerable<BinanceFuturesBatchOrderRequest> orders, int? receiveWindow = null, CancellationToken ct = default)
     {
-        if (orders.Count() <= 0 || orders.Count() > 5)
-            throw new ArgumentException("Order list should be at least 1 and max 5 orders");
+        if (orders == null)
+            throw new ArgumentNullException(nameof(orders));
+
+        var orderList = orders.ToList();
+        if (orderList.Count is < 1 or > 5)
+            throw new ArgumentOutOfRangeException(nameof(orders), orderList.Count, "Between one and five orders must be provided");
+
+        foreach (var order in orderList)
+        {
+            if (order == null)
+                throw new ArgumentException("Orders cannot contain null items", nameof(orders));
+
+            ValidateNormalOrderType(order.Type);
+        }
 
         if (RestOptions.CoinFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
         {
-            foreach (var order in orders)
+            foreach (var order in orderList)
             {
-                var rulesCheck = await CheckTradingRulesAsync(order.Symbol, order.Type, order.Quantity, null, order.Price, order.StopPrice, ct).ConfigureAwait(false);
+                var rulesCheck = await CheckTradingRulesAsync(order.Symbol, order.Type, order.Quantity, null, order.Price, null, ct).ConfigureAwait(false);
                 if (!rulesCheck.Passed)
                 {
                     Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -98,40 +91,31 @@ internal partial class BinanceFuturesRestClientCoin
 
                 order.Quantity = rulesCheck.Quantity;
                 order.Price = rulesCheck.Price;
-                order.StopPrice = rulesCheck.StopPrice;
             }
         }
 
         var parameters = new ParameterCollection();
-
-        var parameterOrders = new ParameterCollection[orders.Count()];
-        int i = 0;
-        foreach (var order in orders)
+        var parameterOrders = new List<Dictionary<string, object>>();
+        foreach (var order in orderList)
         {
-            var orderParameters = new ParameterCollection()
-                {
-                    { "symbol", order.Symbol },
-                    { "newOrderRespType", "RESULT" }
-                };
+            var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
 
+            var orderParameters = new ParameterCollection()
+            {
+                { "symbol", order.Symbol },
+                { "newOrderRespType", "RESULT" }
+            };
             orderParameters.AddEnum("side", order.Side);
             orderParameters.AddEnum("type", order.Type);
-            var clientOrderId = BinanceHelpers.ApplyBrokerId(order.NewClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, RestOptions.AllowAppendingClientOrderId);
             orderParameters.AddOptional("quantity", order.Quantity?.ToString(BinanceConstants.CI));
             orderParameters.AddOptional("newClientOrderId", clientOrderId);
-            orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
             orderParameters.AddOptionalEnum("timeInForce", order.TimeInForce);
             orderParameters.AddOptionalEnum("positionSide", order.PositionSide);
-            orderParameters.AddOptional("stopPrice", order.StopPrice?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptional("activationPrice", order.ActivationPrice?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptional("callbackRate", order.CallbackRate?.ToString(BinanceConstants.CI));
-            orderParameters.AddOptionalEnum("workingType", order.WorkingType);
+            orderParameters.AddOptional("price", order.Price?.ToString(BinanceConstants.CI));
             orderParameters.AddOptional("reduceOnly", order.ReduceOnly?.ToString().ToLower());
-            orderParameters.AddOptional("priceProtect", order.PriceProtect?.ToString().ToUpper());
-            orderParameters.AddOptionalEnum("selfTradePreventionMode", order.SelfTradePreventionMode);
             orderParameters.AddOptionalEnum("priceMatch", order.PriceMatch);
-            parameterOrders[i] = orderParameters;
-            i++;
+            orderParameters.AddOptionalEnum("selfTradePreventionMode", order.SelfTradePreventionMode);
+            parameterOrders.Add(orderParameters);
         }
 
         parameters.Add("batchOrders", JsonConvert.SerializeObject(parameterOrders));
@@ -155,6 +139,12 @@ internal partial class BinanceFuturesRestClientCoin
         }
 
         return response.As<List<CallResult<BinanceFuturesOrder>>>(result);
+    }
+
+    private static void ValidateNormalOrderType(BinanceFuturesOrderType type)
+    {
+        if (type is not BinanceFuturesOrderType.Limit and not BinanceFuturesOrderType.Market)
+            throw new ArgumentOutOfRangeException(nameof(type), type, "COIN-M normal order endpoints support only Limit and Market orders; use PlaceAlgoOrderAsync for conditional orders");
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> ModifyOrderAsync(
@@ -372,6 +362,106 @@ internal partial class BinanceFuturesRestClientCoin
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesCountDownResult>(GetUrl(dapi, v1, "countdownCancelAll"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 10);
+    }
+
+    public Task<RestCallResult<BinanceFuturesAlgoOrderPlacementResult>> PlaceAlgoOrderAsync(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceFuturesAlgoOrderType type,
+        BinancePositionSide? positionSide = null,
+        BinanceTimeInForce? timeInForce = null,
+        decimal? quantity = null,
+        decimal? price = null,
+        decimal? triggerPrice = null,
+        BinanceFuturesWorkingType? workingType = null,
+        BinanceFuturesPriceMatch? priceMatch = null,
+        bool? closePosition = null,
+        bool? priceProtect = null,
+        bool? reduceOnly = null,
+        decimal? activatePrice = null,
+        decimal? callbackRate = null,
+        string? clientAlgoId = null,
+        BinanceOrderResponseType? orderResponseType = null,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
+        DateTime? goodTillDate = null,
+        int? receiveWindow = null,
+        CancellationToken ct = default)
+    {
+        BinanceFuturesAlgoOrderValidation.ValidatePlacement(
+            symbol,
+            side,
+            type,
+            positionSide,
+            timeInForce,
+            quantity,
+            price,
+            workingType,
+            priceMatch,
+            closePosition,
+            priceProtect,
+            reduceOnly,
+            activatePrice,
+            callbackRate,
+            clientAlgoId,
+            orderResponseType,
+            selfTradePreventionMode,
+            goodTillDate);
+
+        var parameters = new ParameterCollection
+        {
+            { "algoType", "CONDITIONAL" },
+            { "symbol", symbol }
+        };
+        parameters.AddEnum("side", side);
+        parameters.AddEnum("type", type);
+        parameters.AddOptionalEnum("positionSide", positionSide);
+        parameters.AddOptionalEnum("timeInForce", timeInForce);
+        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("triggerPrice", triggerPrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptionalEnum("workingType", workingType);
+        parameters.AddOptionalEnum("priceMatch", priceMatch);
+        parameters.AddOptional("closePosition", closePosition?.ToString().ToLowerInvariant());
+        parameters.AddOptional("priceProtect", priceProtect?.ToString().ToLowerInvariant());
+        parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLowerInvariant());
+        parameters.AddOptional("activatePrice", activatePrice?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("callbackRate", callbackRate?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("clientAlgoId", clientAlgoId);
+        parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
+        parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
+        parameters.AddOptionalMilliseconds("goodTillDate", goodTillDate);
+        parameters.AddOptional("recvWindow", _._.ReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesAlgoOrderPlacementResult>(GetUrl(dapi, v1, "algoOrder"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 0);
+    }
+
+    public Task<RestCallResult<BinanceFuturesAlgoOrderCancellationResult>> CancelAlgoOrderAsync(long? algoId = null, string? clientAlgoId = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        BinanceFuturesAlgoOrderValidation.ValidateCancellation(algoId, clientAlgoId);
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("algoId", algoId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("clientAlgoId", clientAlgoId);
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        return RequestAsync<BinanceFuturesAlgoOrderCancellationResult>(GetUrl(dapi, v1, "algoOrder"), HttpMethod.Delete, ct, true, queryParameters: parameters, requestWeight: 1);
+    }
+
+    public Task<RestCallResult<List<BinanceFuturesAlgoOrderListItem>>> GetOpenAlgoOrdersAsync(string? symbol = null, string? algoType = null, long? algoId = null, int? receiveWindow = null, CancellationToken ct = default)
+    {
+        if (symbol is not null && string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty when provided", nameof(symbol));
+        if (algoType is not null && string.IsNullOrWhiteSpace(algoType))
+            throw new ArgumentException("algoType cannot be empty when provided", nameof(algoType));
+
+        var parameters = new ParameterCollection();
+        parameters.AddOptional("algoType", algoType);
+        parameters.AddOptional("symbol", symbol);
+        parameters.AddOptional("algoId", algoId?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+
+        var weight = symbol is null ? 40 : 1;
+        return RequestAsync<List<BinanceFuturesAlgoOrderListItem>>(GetUrl(dapi, v1, "openAlgoOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: weight);
     }
 
     public Task<RestCallResult<BinanceFuturesOrder>> GetOrderAsync(string symbol, long? orderId = null, string? origClientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)

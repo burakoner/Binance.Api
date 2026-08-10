@@ -105,17 +105,18 @@ public class BinanceFuturesRestClientUsdTradeTests
     }
 
     [Fact]
-    public async Task PlaceOrdersAsync_RejectsConditionalParametersForNormalTypeBeforeTransport()
+    public void BatchOrderRequest_PublicContractDoesNotExposeConditionalParameters()
     {
-        var handler = new RecordingHttpMessageHandler("[]");
-        using var httpClient = new HttpClient(handler);
-        using var client = CreateClient(httpClient);
-        var order = CreateBatchOrder(BinanceFuturesOrderType.Limit);
-        order.StopPrice = 49_000;
+        var propertyNames = typeof(BinanceFuturesBatchOrderRequest)
+            .GetProperties()
+            .Select(property => property.Name)
+            .ToList();
 
-        await Assert.ThrowsAsync<ArgumentException>(() => client.UsdFutures.PlaceOrdersAsync([order]));
-
-        Assert.Equal(0, handler.RequestCount);
+        Assert.DoesNotContain("StopPrice", propertyNames);
+        Assert.DoesNotContain("ActivationPrice", propertyNames);
+        Assert.DoesNotContain("CallbackRate", propertyNames);
+        Assert.DoesNotContain("WorkingType", propertyNames);
+        Assert.DoesNotContain("PriceProtect", propertyNames);
     }
 
     [Fact]
