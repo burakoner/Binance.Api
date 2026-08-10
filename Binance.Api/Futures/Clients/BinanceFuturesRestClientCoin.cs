@@ -50,12 +50,33 @@ internal partial class BinanceFuturesRestClientCoin(BinanceFuturesRestClient par
         return normalizedReceiveWindow;
     }
 
-    internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, BinanceFuturesOrderType type, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, CancellationToken ct)
+    internal Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, BinanceFuturesOrderType type, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, CancellationToken ct)
+        => CheckTradingRulesAsync(
+            symbol,
+            type,
+            quantity,
+            quoteQuantity,
+            price,
+            stopPrice,
+            RestOptions.CoinFuturesOptions.TradeRulesBehavior,
+            RestOptions.CoinFuturesOptions.TradeRulesUpdateInterval,
+            ct);
+
+    internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(
+        string symbol,
+        BinanceFuturesOrderType type,
+        decimal? quantity,
+        decimal? quoteQuantity,
+        decimal? price,
+        decimal? stopPrice,
+        BinanceTradeRulesBehavior tradeRulesBehavior,
+        TimeSpan tradeRulesUpdateInterval,
+        CancellationToken ct)
     {
-        if (RestOptions.CoinFuturesOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
+        if (tradeRulesBehavior == BinanceTradeRulesBehavior.None)
             return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
 
-        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > RestOptions.CoinFuturesOptions.TradeRulesUpdateInterval.TotalMinutes)
+        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || DateTime.UtcNow - LastExchangeInfoUpdate.Value > tradeRulesUpdateInterval)
             await GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
@@ -67,7 +88,7 @@ internal partial class BinanceFuturesRestClientCoin(BinanceFuturesRestClient par
         if (!symbolInfo.OrderTypes.Contains(type))
             return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: {type} order type not allowed for {symbol}");
 
-        return BinanceHelpers.ValidateFuturesTradingRules(Logger, RestOptions.SpotOptions.TradeRulesBehavior, symbolInfo, type, quantity, quoteQuantity, price, stopPrice);
+        return BinanceHelpers.ValidateFuturesTradingRules(Logger, tradeRulesBehavior, symbolInfo, type, quantity, quoteQuantity, price, stopPrice);
     }
 
 }

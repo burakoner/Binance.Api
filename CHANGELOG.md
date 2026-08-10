@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Isolated USDⓈ-M, COIN-M, and Options trade-rule settings across REST and Futures WebSocket order validation, including the USDⓈ-M invalid client cast and Options batch gate
   * Fixed `CancelMarginOrderAsync` sending a GET request instead of the documented DELETE request
   * Fixed signed REST requests failing to generate a signature with RSA PEM credentials and omitting query parameters when a body is present
   * Fixed WebSocket API RSA and Ed25519 signatures, including UTF-8 parameter payloads

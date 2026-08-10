@@ -4,6 +4,7 @@ namespace Binance.Api.Tests;
 
 internal sealed class RecordingHttpMessageHandler(string response) : HttpMessageHandler
 {
+    public int RequestCount { get; private set; }
     public HttpMethod? Method { get; private set; }
     public Uri? RequestUri { get; private set; }
     public string? Body { get; private set; }
@@ -12,6 +13,7 @@ internal sealed class RecordingHttpMessageHandler(string response) : HttpMessage
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        RequestCount++;
         Method = request.Method;
         RequestUri = request.RequestUri;
         Body = request.Content == null ? null : await request.Content.ReadAsStringAsync(cancellationToken);

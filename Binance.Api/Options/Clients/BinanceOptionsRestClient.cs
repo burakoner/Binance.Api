@@ -56,10 +56,10 @@ internal partial class BinanceOptionsRestClient : IBinanceOptionsRestClient
 
     internal async Task<BinanceTradeRuleResult> CheckTradingRulesAsync(string symbol, BinanceOptionsOrderType? type, decimal? quantity, decimal? quoteQuantity, decimal? price, decimal? stopPrice, CancellationToken ct)
     {
-        if (RestOptions.SpotOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
+        if (RestOptions.EuropeanOptions.TradeRulesBehavior == BinanceTradeRulesBehavior.None)
             return BinanceTradeRuleResult.CreatePassed(quantity, quoteQuantity, price, stopPrice);
 
-        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || (DateTime.UtcNow - LastExchangeInfoUpdate.Value).TotalMinutes > RestOptions.SpotOptions.TradeRulesUpdateInterval.TotalMinutes)
+        if (ExchangeInfo == null || LastExchangeInfoUpdate == null || DateTime.UtcNow - LastExchangeInfoUpdate.Value > RestOptions.EuropeanOptions.TradeRulesUpdateInterval)
             await GetExchangeInfoAsync(ct).ConfigureAwait(false);
 
         if (ExchangeInfo == null)
@@ -68,6 +68,6 @@ internal partial class BinanceOptionsRestClient : IBinanceOptionsRestClient
         var symbolInfo = ExchangeInfo.Symbols.SingleOrDefault(s => string.Equals(s.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase));
         if (symbolInfo == null) return BinanceTradeRuleResult.CreateFailed($"Trade rules check failed: Symbol {symbol} not found");
 
-        return BinanceHelpers.ValidateOptionsTradingRules(Logger, RestOptions.SpotOptions.TradeRulesBehavior, symbolInfo, type, quantity, quoteQuantity, price, stopPrice);
+        return BinanceHelpers.ValidateOptionsTradingRules(Logger, RestOptions.EuropeanOptions.TradeRulesBehavior, symbolInfo, type, quantity, quoteQuantity, price, stopPrice);
     }
 }

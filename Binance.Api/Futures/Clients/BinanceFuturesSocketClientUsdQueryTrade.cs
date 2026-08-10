@@ -6,6 +6,28 @@ internal partial class BinanceFuturesSocketClientUsd
     internal const string ModifyOrderMethod = "order.modify";
     internal const int ModifyOrderIpWeight = 0;
 
+    internal Task<BinanceTradeRuleResult> CheckTradingRulesAsync(
+        string symbol,
+        BinanceFuturesOrderType type,
+        decimal? quantity,
+        decimal? quoteQuantity,
+        decimal? price,
+        decimal? stopPrice,
+        CancellationToken ct)
+    {
+        var options = SocketOptions.UsdtFuturesOptions;
+        return ((BinanceFuturesRestClientUsd)__.RestApiClient.UsdFutures).CheckTradingRulesAsync(
+            symbol,
+            type,
+            quantity,
+            quoteQuantity,
+            price,
+            stopPrice,
+            options.TradeRulesBehavior,
+            options.TradeRulesUpdateInterval,
+            ct);
+    }
+
     public async Task<CallResult<BinanceFuturesOrder>> PlaceOrderAsync(
         string symbol,
         BinanceOrderSide side,
@@ -40,7 +62,7 @@ internal partial class BinanceFuturesSocketClientUsd
         if (orderResponseType == BinanceOrderResponseType.Full)
             throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
 
-        var rulesCheck = await ((BinanceFuturesRestClientUsd)__.RestApiClient.CoinFutures).CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);

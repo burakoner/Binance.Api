@@ -1485,6 +1485,34 @@ No regression was found in the reviewed Margin implementation, Convert/Algo inve
 
 After this review, the measurable remaining minimum is thirteen small turns and approximately 11-29.5 active hours: eleven numbered slices plus Reviews 25-26. It excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program. The completion percentage falls again because review found a real cross-product financial-safety defect; hiding it to preserve the prior estimate would be false progress.
 
+## Slice 104: cross-product trade-rule safety
+
+The cross-product order-validation defects found by Backward Review 24 were corrected as one bounded financial-safety family. No exchange filter, server-side rule, endpoint, authentication contract, order parameter, or order response was changed.
+
+USDⓈ-M REST validation now takes its enablement, exchange-info refresh interval, and throw-versus-auto-comply behavior exclusively from `UsdtFuturesOptions`. COIN-M REST retains its own gate and refresh interval and now also passes its own behavior into Futures rule validation instead of leaking `SpotOptions`. Both REST clients expose the same internal explicit-settings validation path so their WebSocket counterparts can reuse the product exchange-info cache without inheriting the internal REST client's default configuration.
+
+USDⓈ-M and COIN-M WebSocket order placement now pass their respective socket product behavior and refresh interval into that explicit validation path. The USDⓈ-M path selects `RestApiClient.UsdFutures`; it no longer selects the COIN-M client and casts it to `BinanceFuturesRestClientUsd`, which could throw before transport. The COIN-M path remains on the COIN-M exchange-information source while now honoring `BinanceSocketApiClientOptions.CoinFuturesOptions` rather than unused defaults.
+
+The dedicated REST `EuropeanOptions` configuration now publishes the same opt-in trade-rule behavior and 60-minute default refresh interval as the other products. Options single-order validation and batch-order gating both use those settings; Spot and COIN-M settings can no longer enable, disable, or change Options adjustment behavior.
+
+Six deterministic regressions prove product-specific throw/auto-comply selection, product-specific refresh intervals, disabled-product isolation, Options batch gating, both Futures socket setting paths, and the corrected USDⓈ-M client selection. They use only local fake HTTP responses. All 6 exact safety tests, all 186 Futures-and-Options tests, and all 336 solution tests pass. A forced full multi-target rebuild succeeds with zero errors and the same three pre-existing warnings. No Binance account, order, cancellation, or other live endpoint was called.
+
+### Revised next order
+
+1. Slice 105: correct read-only USDⓈ-M REST kline interval, continuous-contract type, and income-type contracts; also migrate all stale links in the owned Account and Market Data interface files.
+2. Slice 106: migrate USDⓈ-M REST single and batch normal-order placement away from the five server-blocked conditional types, keep test-order evidence separate, and migrate the owned REST Trade links.
+3. Slice 107: add WebSocket native Algo place/cancel, fully align normal `order.place`, and migrate the owned WebSocket Trade links.
+4. Slice 108: add the three current v1 WebSocket account/balance/position contracts alongside v2 and migrate the owned WebSocket Account links.
+5. Backward Review 25: review Slices 104-108 before continuing.
+6. Slice 109: implement Ed25519-only USDⓈ-M WebSocket `session.logon/status/logout` with connection-bound and reconnect-safe state.
+7. Slice 110: add the routed USDⓈ-M `tradingSession` stream and complete current event coverage.
+8. Slice 111: migrate the twelve remaining untouched USDⓈ-M XML links in REST Convert, REST User Data Stream, and WebSocket Market Data.
+9. Slices 112-113: refresh the COIN-M and Options closing inventories respectively, splitting any further implementation work by product and risk.
+10. Backward Review 26: review Slices 109-113 and reconcile cross-product public API, documentation, release notes, and the next order.
+11. Slice 114: define the separate Spot FIX/SBE package, schema-generation, session/transport safety, conformance-test, and implementation execution contract. It is not protocol implementation.
+
+After this correction, the measurable remaining minimum is twelve small turns and approximately 9.5-26.5 active hours: ten numbered slices plus Reviews 25-26. It still excludes new work that the COIN-M and Options inventories may discover and excludes the still-unknown FIX/SBE implementation program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -1616,3 +1644,4 @@ After this review, the measurable remaining minimum is thirteen small turns and 
 | 102 | Complete | Convert and Algo closing inventories across all current REST endpoints | Live catalog and canonical endpoint pages, product changelogs through the 2026-01-15 signing change, connector HEAD `a0c61d1`, exact 9/9 Convert and 11/11 Algo route comparisons, endpoint-level contract matrix, canonical-link scan, 18 Convert, 18 Algo, exact encoded-signature, and 330 complete tests, forced rebuild |
 | 103 | Complete | USDⓈ-M closing inventory across REST, WebSocket API, market/private streams, and user data | Live 133-entry catalog, changelog through 2026-08-07, route-migration and WebSocket general contracts, connector HEAD `a0c61d1`, active 94/94 REST reconciliation, 18/13 WebSocket API and 20/19 stream comparisons, complete ten-event user-data dispatch, seven bounded remediation slices, 330 complete tests, forced rebuild |
 | Review 24 | Complete | Backward review of Margin, Convert/Algo, and USDⓈ-M closing work; cross-product trade-rule and XML-link ownership reconciliation | `c3edf19..b1eeef5` diff review, live connector HEAD verification, regenerated 95/94 REST, 18/13 WebSocket API, 20/19 stream and 79-link inventories, Margin int64/ignored-field scans, confirmed USDⓈ-M/COIN-M/Options trade-rule option isolation defects, 50 targeted and 330 complete tests, forced full multi-target rebuild |
+| 104 | Complete | Cross-product USDⓈ-M, COIN-M, and Options trade-rule configuration safety | Product-specific REST behavior and refresh settings, Futures socket explicit-setting paths, corrected USDⓈ-M REST-client selection, Options batch gate, 6 exact safety, 186 Futures-and-Options, and 336 complete tests, forced full multi-target rebuild |

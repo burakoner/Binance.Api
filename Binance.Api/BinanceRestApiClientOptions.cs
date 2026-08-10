@@ -143,6 +143,15 @@ public class BinanceRestApiClientCoinFuturesOptions
 /// </summary>
 public class BinanceRestApiClientEuropeanOptions
 {
+    /// <summary>
+    /// Trade Rules Behavior
+    /// </summary>
+    public BinanceTradeRulesBehavior TradeRulesBehavior { get; set; } = BinanceTradeRulesBehavior.None;
+
+    /// <summary>
+    /// Trade Rules Update Interval
+    /// </summary>
+    public TimeSpan TradeRulesUpdateInterval { get; set; } = TimeSpan.FromMinutes(60);
 }
 
 /// <summary>

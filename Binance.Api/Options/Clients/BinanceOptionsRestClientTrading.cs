@@ -60,7 +60,7 @@ internal partial class BinanceOptionsRestClient
         if (orders.Count() <= 0 || orders.Count() > 5)
             throw new ArgumentException("Order list should be at least 1 and max 5 orders");
 
-        if (RestOptions.CoinFuturesOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
+        if (RestOptions.EuropeanOptions.TradeRulesBehavior != BinanceTradeRulesBehavior.None)
         {
             foreach (var order in orders)
             {
