@@ -7,7 +7,7 @@ public interface IBinanceFuturesSocketClientCoinStreamUserData
 {
     /// <summary>
     /// Subscribes to the account update stream. Start the stream and obtain a listen key with <see cref="IBinanceFuturesSocketClientCoinQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientCoinUserDataStream.StartUserStreamAsync(CancellationToken)"/> first.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/user-data-streams" /></para>
     /// </summary>
     /// <param name="listenKey">Listen key retrieved by <see cref="IBinanceFuturesSocketClientCoinQueryUserDataStream.StartUserDataStreamAsync(CancellationToken)"/> or <see cref="IBinanceFuturesRestClientCoinUserDataStream.StartUserStreamAsync(CancellationToken)"/></param>
     /// <param name="onLeverageUpdated">The event handler for leverage changed update</param>

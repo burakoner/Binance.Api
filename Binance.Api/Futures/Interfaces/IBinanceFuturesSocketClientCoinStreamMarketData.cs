@@ -27,7 +27,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
 
     /// <summary>
     /// Subscribes to the Index price update stream for a single pair
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Index-Price-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#index-price-stream" /></para>
     /// </summary>
     /// <param name="pair">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>
@@ -38,7 +38,7 @@ public interface IBinanceFuturesSocketClientCoinStreamMarketData
 
     /// <summary>
     /// Subscribes to the Index price update stream for a list of pairs
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/Index-Price-Stream" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~#index-price-stream" /></para>
     /// </summary>
     /// <param name="pairs">The pairs, for example `BTCUSD`</param>
     /// <param name="updateInterval">Update interval in milliseconds, either 1000 or 3000. Defaults to 3000</param>

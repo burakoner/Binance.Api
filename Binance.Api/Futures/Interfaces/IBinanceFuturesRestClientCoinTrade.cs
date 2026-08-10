@@ -114,7 +114,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Cancels a pending order
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -126,7 +126,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Cancels multiple orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Multiple-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-multiple-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
     /// <param name="orderIdList">The list of order ids to cancel</param>
@@ -138,7 +138,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Cancels all open orders
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-All-Open-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-all-open-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
@@ -149,7 +149,7 @@ public interface IBinanceFuturesRestClientCoinTrade
     /// <summary>
     /// Cancel all open orders of the specified symbol at the end of the specified countdown. This rest endpoint means to ensure your open orders are canceled in case of an outage. The endpoint should be called repeatedly as heartbeats
     /// so that the existing countdown time can be canceled and replaced by a new one.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Auto-Cancel-All-Open-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#auto-cancel-all-open-orders" /></para>
     /// </summary>
     /// <param name="symbol">The symbol, for example `BTCUSD_PERP`</param>
     /// <param name="countDownTime">The time after which all open orders should cancel, or 0 to cancel an existing timer</param>
@@ -211,7 +211,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Retrieves data for a specific order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#query-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -253,7 +253,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Retrieves data for a specific open order. Either orderId or origClientOrderId should be provided.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Current-Open-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#query-current-open-order" /></para>
     /// </summary>
     /// <param name="symbol">The symbol the order is for, for example `BTCUSD_PERP`</param>
     /// <param name="orderId">The order id of the order</param>
@@ -311,7 +311,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Position-Mode" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#change-position-mode" /></para>
     /// </summary>
     /// <param name="dualPositionSide">User position mode</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
@@ -321,7 +321,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Change the margin type for an open position
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Margin-Type" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#change-margin-type" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to change the position type for, for example `BTCUSD_PERP`</param>
     /// <param name="marginType">The type of margin to use</param>
@@ -332,7 +332,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Requests to change the initial leverage of the given symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Initial-Leverage" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#change-initial-leverage" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to change the initial leverage for, for example `BTCUSD_PERP`</param>
     /// <param name="leverage">The amount of initial leverage to change to</param>
@@ -343,7 +343,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Get position ADL quantile estimations
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-ADL-Quantile-Estimation" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#position-adl-quantile-estimation" /></para>
     /// </summary>
     /// <param name="symbol">Only get for this symbol, for example `BTCUSD_PERP`</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
@@ -353,7 +353,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Change the margin on an open position
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Isolated-Position-Margin" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#modify-isolated-position-margin" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to adjust the position margin for, for example `BTCUSD_PERP`</param>
     /// <param name="quantity">The amount of margin to be used</param>
@@ -366,7 +366,7 @@ public interface IBinanceFuturesRestClientCoinTrade
 
     /// <summary>
     /// Requests the margin change history for a specific symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Position-Margin-Change-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#get-position-margin-change-history" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get margin history for, for example `BTCUSD_PERP`</param>
     /// <param name="type">Filter the history by the direction of margin change</param>

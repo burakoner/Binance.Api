@@ -7,7 +7,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 {
     /// <summary>
     /// Pings the Binance Futures API
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#test-connectivity" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>True if successful ping, false if no response</returns>
@@ -15,7 +15,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Requests the server for the local time. This function also determines the offset between server and local time and uses this for subsequent API calls
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Check-Server-time" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#check-server-time" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Server time</returns>
@@ -23,7 +23,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get's information about the exchange including rate limits and symbol list
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Exchange-Information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#exchange-information" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Exchange info</returns>
@@ -31,7 +31,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets the order book for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Order-Book" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#order-book" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the order book for, for example `BTCUSD_PERP`</param>
     /// <param name="limit">Max number of results</param>
@@ -41,7 +41,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets the recent trades for a symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Recent-Trades-List" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#recent-trades-list" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get recent trades for, for example `BTCUSD_PERP`</param>
     /// <param name="limit">Result limit</param>
@@ -62,7 +62,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have the quantity aggregated.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#compressed-aggregate-trades-list" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the trades for, for example `BTCUSD_PERP`</param>
     /// <param name="fromId">ID to get aggregate trades from INCLUSIVE.</param>
@@ -75,7 +75,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get Mark Price and Funding Rate for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-and-Mark-Price" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#index-price-and-mark-price" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
     /// <param name="pair">Filter by pair, for example `BTCUSD`</param>
@@ -85,7 +85,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get funding rate history for the provided symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Rate-History-of-Perpetual-Futures" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#get-funding-rate-history-of-perpetual-futures" /></para>
     /// </summary>
     /// <param name="symbol">The COIN-M or USDⓈ-M symbol to get the data for</param>
     /// <param name="startTime">Start time to get funding rate history</param>
@@ -97,7 +97,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get funding rate info for symbols that had FundingRateCap/ FundingRateFloor / fundingIntervalHours adjustment
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Infoo" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#get-funding-rate-info" /></para>
     /// </summary>
     /// <param name="ct">Cancellation token</param>
     /// <returns></returns>
@@ -171,7 +171,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get data regarding the last 24 hours change
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#ticker24hr-price-change-statistics" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
     /// <param name="pair">Filter by pair, for example `BTCUSD`</param>
@@ -181,7 +181,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get a list of the prices of all symbols
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Price-Ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#symbol-price-ticker" /></para>
     /// </summary>
     /// <param name="symbol">Retrieve for a symbol, for example `BTCUSD_PERP`</param>
     /// <param name="pair">Retrieve prices for a specific pair, for example `BTCUSD`</param>
@@ -191,7 +191,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets the best price/quantity on the order book for a symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#symbol-order-book-ticker" /></para>
     /// </summary>
     /// <param name="symbol">Symbol to get book price for, for example `BTCUSD_PERP`</param>
     /// <param name="pair">Filter by pair, for example `BTCUSD`</param>
@@ -201,7 +201,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Get present open interest of a specific symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#open-interest" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
     /// <param name="ct">Cancellation token</param>
@@ -224,7 +224,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets Top Trader Long/Short Ratio (Positions)
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#top-trader-long-short-ratio-positions" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
     /// <param name="period">The period timespan; 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, or 1d</param>
@@ -237,7 +237,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets Top Trader Long/Short Ratio (Accounts)
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#top-trader-long-short-ratio-accounts" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
     /// <param name="period">The period timespan; 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, or 1d</param>
@@ -250,7 +250,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Gets Global Long/Short Ratio (Accounts)
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Long-Short-Ratio" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#long-short-ratio" /></para>
     /// </summary>
     /// <param name="symbol">The symbol to get the data for, for example `BTCUSD_PERP`</param>
     /// <param name="period">The period timespan</param>
@@ -291,7 +291,7 @@ public interface IBinanceFuturesRestClientCoinMarketData
 
     /// <summary>
     /// Query index price constituents
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Constituents" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#query-index-price-constituents" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="ct">Cancellation token</param>

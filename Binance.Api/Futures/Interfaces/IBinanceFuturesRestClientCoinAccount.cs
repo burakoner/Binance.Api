@@ -7,7 +7,7 @@ public interface IBinanceFuturesRestClientCoinAccount
 {
     /// <summary>.
     /// Gets account balances
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Futures-Account-Balance" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#futures-account-balance" /></para>
     /// </summary>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
@@ -16,7 +16,7 @@ public interface IBinanceFuturesRestClientCoinAccount
 
     /// <summary>
     /// Gets account commission rates
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/User-Commission-Rate" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#user-commission-rate" /></para>
     /// </summary>
     /// <param name="symbol">Symbol, for example `BTCUSD_PERP`</param>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
@@ -56,7 +56,7 @@ public interface IBinanceFuturesRestClientCoinAccount
 
     /// <summary>
     /// Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Current-Position-Mode" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-current-position-mode" /></para>
     /// </summary>
     /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
