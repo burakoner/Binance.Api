@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned remaining signed COIN-M REST receive-window ceilings, current Account Information and Position Information response shapes, the Current All Open Orders pair filter and weights, and the three owned Account/Trade documentation links
   * Fully aligned COIN-M Income History with its exact seven-value income domain, int64 pagination and receive window, documented range boundary, string transaction identifier, dedicated response type, and current Account documentation link
   * Fully aligned five COIN-M REST kline and three futures-data contracts, including exact weight boundaries, required identifiers, interval/date/period validation, operation-specific contract types, safe `ALL` support, breaking correction of transport-specific kline response fields, complete response reconciliation, and current Market Data documentation links
   * Aligned the COIN-M REST user-data-stream lifecycle with current parameterless API-key-only weight-one requests, returned the refreshed listen key from keepalive, handled the documented empty close response, and migrated the owned documentation links and executable call sites

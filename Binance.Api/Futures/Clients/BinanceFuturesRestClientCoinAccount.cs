@@ -5,7 +5,7 @@ internal partial class BinanceFuturesRestClientCoin
     public Task<RestCallResult<List<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceFuturesCoinAccountBalance>>(GetUrl(dapi, v1, "balance"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
@@ -16,7 +16,7 @@ internal partial class BinanceFuturesRestClientCoin
         {
             { "symbol", symbol}
         };
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesAccountUserCommissionRate>(GetUrl(dapi, v1, "commissionRate"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
@@ -24,7 +24,7 @@ internal partial class BinanceFuturesRestClientCoin
     public Task<RestCallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesCoinAccountInfo>(GetUrl(dapi, v1, "account"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -50,7 +50,7 @@ internal partial class BinanceFuturesRestClientCoin
     public Task<RestCallResult<BinanceFuturesPositionMode>> GetPositionModeAsync(int? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceFuturesPositionMode>(GetUrl(dapi, v1, "positionSide/dual"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
     }

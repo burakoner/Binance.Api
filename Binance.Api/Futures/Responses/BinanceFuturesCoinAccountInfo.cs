@@ -27,13 +27,7 @@ public record BinanceFuturesCoinAccountInfo
     /// Fee tier
     /// </summary>
     [JsonProperty("feeTier")]
-    public int FeeTier { get; set; }
-
-    /// <summary>
-    /// Update tier
-    /// </summary>
-    [JsonProperty("updateTier")]
-    public int UpdateTier { get; set; }
+    public long FeeTier { get; set; }
 
     /// <summary>
     /// Account assets

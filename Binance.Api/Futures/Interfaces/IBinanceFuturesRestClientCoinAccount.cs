@@ -9,7 +9,7 @@ public interface IBinanceFuturesRestClientCoinAccount
     /// Gets account balances
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Futures-Account-Balance" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The account information</returns>
     Task<RestCallResult<List<BinanceFuturesCoinAccountBalance>>> GetBalancesAsync(int? receiveWindow = null, CancellationToken ct = default);
@@ -19,16 +19,16 @@ public interface IBinanceFuturesRestClientCoinAccount
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/User-Commission-Rate" /></para>
     /// </summary>
     /// <param name="symbol">Symbol, for example `BTCUSD_PERP`</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>User commission rate information</returns>
     Task<RestCallResult<BinanceFuturesAccountUserCommissionRate>> GetUserCommissionRateAsync(string symbol, int? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
-    /// Gets account information, including balances
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Account-Information" /></para>
+    /// Gets current COIN-M account information, including assets and positions.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#account-information" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The account information</returns>
     Task<RestCallResult<BinanceFuturesCoinAccountInfo>> GetAccountInfoAsync(int? receiveWindow = null, CancellationToken ct = default);
@@ -58,7 +58,7 @@ public interface IBinanceFuturesRestClientCoinAccount
     /// Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
     /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Current-Position-Mode" /></para>
     /// </summary>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="receiveWindow">Optional receive window in milliseconds, at most 60000.</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Whether the request was successful</returns>
     Task<RestCallResult<BinanceFuturesPositionMode>> GetPositionModeAsync(int? receiveWindow = null, CancellationToken ct = default);

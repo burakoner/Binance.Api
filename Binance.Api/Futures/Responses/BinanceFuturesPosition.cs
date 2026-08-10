@@ -131,6 +131,12 @@ public record BinanceFuturesUsdPositionInfo : BinanceFuturesPositionInfoBase
 public record BinanceFuturesCoinPositionInfo : BinanceFuturesPositionInfoBase
 {
     /// <summary>
+    /// Unrealized profit
+    /// </summary>
+    [JsonProperty("unrealizedProfit")]
+    public decimal UnrealizedProfit { get; set; }
+
+    /// <summary>
     /// Break even price
     /// </summary>
     [JsonProperty("breakEvenPrice")]
@@ -141,6 +147,12 @@ public record BinanceFuturesCoinPositionInfo : BinanceFuturesPositionInfoBase
     /// </summary>
     [JsonProperty("maxQty")]
     public decimal MaxQuantity { get; set; }
+
+    /// <summary>
+    /// Notional value
+    /// </summary>
+    [JsonProperty("notionalValue")]
+    public decimal NotionalValue { get; set; }
 }
 
 /// <summary>
@@ -241,6 +253,24 @@ public record BinanceFuturesCoinPosition : BinanceFuturesPositionDetailsBase
 
     /// <summary>
     /// Max quantity
+    /// </summary>
+    [JsonProperty("maxQty")]
+    public decimal MaxQuantity { get; set; }
+}
+
+/// <summary>
+/// COIN-M REST position risk information
+/// </summary>
+public record BinanceFuturesCoinPositionRisk : BinanceFuturesPositionDetailsBase
+{
+    /// <summary>
+    /// Unrealized profit
+    /// </summary>
+    [JsonProperty("unRealizedProfit")]
+    public decimal UnrealizedProfit { get; set; }
+
+    /// <summary>
+    /// Maximum quantity of base asset
     /// </summary>
     [JsonProperty("maxQty")]
     public decimal MaxQuantity { get; set; }
