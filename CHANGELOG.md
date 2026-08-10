@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Inventoried the complete current Options REST, public/market WebSocket stream, and user-data surfaces; confirmed exact coverage of all 44 current REST method/routes but exposed stale request weights, parameters, response models, listen-key lifecycle, WebSocket routing/topics/events, four unsupported wrapper-only routes, and ten bounded remediation slices
   * Migrated the final 35 owned COIN-M REST, WebSocket market-stream, and user-data-stream XML documentation links to their exact current canonical pages and anchors, eliminating the retired COIN-M documentation root from the repository
   * Aligned the five remaining COIN-M WebSocket API account, balance, cancel, query-order, and position contracts with current int64 request fields and ceilings, exact position filters and response models, fail-closed validation, and canonical Account documentation links
   * Migrated COIN-M WebSocket API normal order placement to the effective LIMIT/MARKET-only contract, removed conditional-only request fields, aligned numeric and int64 serialization, added fail-closed parameter validation, and moved the owned Trade documentation link to its current canonical anchor
