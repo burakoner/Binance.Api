@@ -55,19 +55,23 @@ internal partial class BinanceFuturesRestClientCoin
         return RequestAsync<BinanceFuturesPositionMode>(GetUrl(dapi, v1, "positionSide/dual"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 30);
     }
 
-    public Task<RestCallResult<List<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceFuturesCoinIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, BinanceFuturesCoinIncomeType? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, long? page = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
     {
+        if (incomeType.HasValue && !Enum.IsDefined(typeof(BinanceFuturesCoinIncomeType), incomeType.Value))
+            throw new ArgumentOutOfRangeException(nameof(incomeType), incomeType, "Unsupported COIN-M income type");
+
         limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("incomeType", incomeType);
+        parameters.AddOptionalEnum("incomeType", incomeType);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("page", page);
         parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceFuturesIncomeHistory>>(GetUrl(dapi, v1, "income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
+        return RequestAsync<List<BinanceFuturesCoinIncomeHistory>>(GetUrl(dapi, v1, "income"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 20);
     }
 
     public Task<RestCallResult<BinanceFuturesDownloadIdInfo>> GetDownloadIdForTransactionHistoryAsync(DateTime startTime, DateTime endTime, long? receiveWindow = null, CancellationToken ct = default)

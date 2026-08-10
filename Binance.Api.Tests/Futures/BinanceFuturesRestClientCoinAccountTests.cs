@@ -1,9 +1,12 @@
 using ApiSharp.Authentication;
+using ApiSharp.Converters;
 using ApiSharp.Models;
 using ApiSharp.Security;
 using ApiSharp.Throttling;
+using Binance.Api.Futures;
 using Binance.Api.Shared;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Binance.Api.Tests.Futures;
 
@@ -147,6 +150,118 @@ public class BinanceFuturesRestClientCoinAccountTests
             configuredClient.CoinFutures.GetPairBracketsAsync());
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             configuredClient.CoinFutures.GetBracketsAsync());
+        Assert.Null(configuredHandler.RequestUri);
+    }
+
+    [Theory]
+    [InlineData(BinanceFuturesCoinIncomeType.Transfer, "TRANSFER")]
+    [InlineData(BinanceFuturesCoinIncomeType.WelcomeBonus, "WELCOME_BONUS")]
+    [InlineData(BinanceFuturesCoinIncomeType.FundingFee, "FUNDING_FEE")]
+    [InlineData(BinanceFuturesCoinIncomeType.RealizedPnl, "REALIZED_PNL")]
+    [InlineData(BinanceFuturesCoinIncomeType.Commission, "COMMISSION")]
+    [InlineData(BinanceFuturesCoinIncomeType.InsuranceClear, "INSURANCE_CLEAR")]
+    [InlineData(BinanceFuturesCoinIncomeType.DeliveredSettlement, "DELIVERED_SETTELMENT")]
+    public void IncomeTypes_MapExactCurrentWireValuesBidirectionally(
+        BinanceFuturesCoinIncomeType incomeType,
+        string expected)
+    {
+        Assert.Equal(7, Enum.GetValues<BinanceFuturesCoinIncomeType>().Length);
+        Assert.Equal(expected, MapConverter.GetString(incomeType));
+
+        var response = JsonConvert.DeserializeObject<BinanceFuturesCoinIncomeHistory>(
+            $$"""{"incomeType":"{{expected}}"}""");
+        Assert.Equal(incomeType, response!.IncomeType);
+    }
+
+    [Fact]
+    public async Task IncomeHistory_UsesCurrentSignedRequestAndCoinResponse()
+    {
+        var limiter = new RecordingRateLimiter();
+        var handler = new RecordingHttpMessageHandler(
+            """
+            [
+              {
+                "symbol": "",
+                "incomeType": "DELIVERED_SETTELMENT",
+                "income": "-0.37500000",
+                "asset": "BTC",
+                "info": "DELIVERY",
+                "time": 1570608000000,
+                "tranId": "settlement-9689322392",
+                "tradeId": "trade-42"
+              }
+            ]
+            """);
+        using var client = CreateClient(handler, limiter);
+        var startTime = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        // This calendar year is 366 days. Binance does not define a fixed-day boundary,
+        // so the wrapper must not invent a 365-day rejection rule.
+        var endTime = startTime.AddYears(1);
+
+        var result = await client.CoinFutures.GetIncomeHistoryAsync(
+            "BTCUSD_PERP",
+            BinanceFuturesCoinIncomeType.DeliveredSettlement,
+            startTime,
+            endTime,
+            page: 3_000_000_000L,
+            limit: 1000,
+            receiveWindow: 60_000L);
+
+        Assert.True(result.Success);
+        Assert.Equal(HttpMethod.Get, handler.Method);
+        Assert.Equal("/dapi/v1/income", handler.RequestUri!.AbsolutePath);
+        Assert.Null(handler.Body);
+        Assert.Null(handler.ContentType);
+        Assert.True(handler.Headers.TryGetValue("X-MBX-APIKEY", out var values));
+        Assert.Equal("api-key", Assert.Single(values!));
+
+        var query = Uri.UnescapeDataString(handler.RequestUri.Query);
+        Assert.Contains("symbol=BTCUSD_PERP", query);
+        Assert.Contains("incomeType=DELIVERED_SETTELMENT", query);
+        Assert.Contains($"startTime={new DateTimeOffset(startTime).ToUnixTimeMilliseconds()}", query);
+        Assert.Contains($"endTime={new DateTimeOffset(endTime).ToUnixTimeMilliseconds()}", query);
+        Assert.Contains("page=3000000000", query);
+        Assert.Contains("limit=1000", query);
+        Assert.Contains("recvWindow=60000", query);
+        Assert.Contains("timestamp=", query);
+        Assert.Contains("signature=", query);
+        Assert.Contains(limiter.Requests, item =>
+            item.Endpoint == "/dapi/v1/income" && item.Weight == 20 && item.Signed);
+
+        var income = Assert.Single(result.Data);
+        Assert.Equal(string.Empty, income.Symbol);
+        Assert.Equal(BinanceFuturesCoinIncomeType.DeliveredSettlement, income.IncomeType);
+        Assert.Equal(-0.375m, income.Income);
+        Assert.Equal("BTC", income.Asset);
+        Assert.Equal("DELIVERY", income.Info);
+        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1570608000000).UtcDateTime, income.Timestamp);
+        Assert.Equal("settlement-9689322392", income.TransactionId);
+        Assert.Equal("trade-42", income.TradeId);
+    }
+
+    [Fact]
+    public async Task IncomeHistory_RejectsInvalidDomainsBeforeSending()
+    {
+        var handler = new RecordingHttpMessageHandler("[]");
+        using (var client = CreateClient(handler))
+        {
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+                client.CoinFutures.GetIncomeHistoryAsync(
+                    incomeType: (BinanceFuturesCoinIncomeType)255));
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                client.CoinFutures.GetIncomeHistoryAsync(limit: 1001));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+                client.CoinFutures.GetIncomeHistoryAsync(receiveWindow: 60_001L));
+        }
+        Assert.Null(handler.RequestUri);
+
+        var configuredHandler = new RecordingHttpMessageHandler("[]");
+        using var configuredClient = CreateClient(
+            configuredHandler,
+            defaultReceiveWindow: TimeSpan.FromMilliseconds(60_001));
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            configuredClient.CoinFutures.GetIncomeHistoryAsync());
         Assert.Null(configuredHandler.RequestUri);
     }
 

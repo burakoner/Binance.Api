@@ -65,17 +65,19 @@ public interface IBinanceFuturesRestClientCoinAccount
 
     /// <summary>
     /// Gets the income history for the futures account
-    /// <para><a href="https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Income-History" /></para>
+    /// <para>When both times are supplied, Binance limits the requested range to one year but does not define whether that means a fixed duration or a calendar-year calculation.</para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-income-history" /></para>
     /// </summary>
-    /// <param name="symbol">The symbol to get income history from, for example `BTCUSD_PERP`</param>
-    /// <param name="incomeType">The income type filter to apply to the request</param>
-    /// <param name="startTime">Time to start getting income history from</param>
-    /// <param name="endTime">Time to stop getting income history from</param>
-    /// <param name="limit">Max number of results</param>
-    /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+    /// <param name="symbol">Optional symbol filter</param>
+    /// <param name="incomeType">Optional COIN-M income type filter; omit to return every published type</param>
+    /// <param name="startTime">Inclusive start time</param>
+    /// <param name="endTime">Inclusive end time</param>
+    /// <param name="page">Page number</param>
+    /// <param name="limit">Maximum number of results; defaults to 100 and cannot exceed 1000</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Maximum 60000 milliseconds</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>The income history for the futures account</returns>
-    Task<RestCallResult<List<BinanceFuturesIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, string? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceFuturesCoinIncomeHistory>>> GetIncomeHistoryAsync(string? symbol = null, BinanceFuturesCoinIncomeType? incomeType = null, DateTime? startTime = null, DateTime? endTime = null, long? page = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get download id for downloading transaction history
