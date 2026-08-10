@@ -2,6 +2,9 @@
 
 internal partial class BinanceFuturesSocketClientCoin
 {
+    internal const string PlaceOrderPath = "ws-dapi/v1";
+    internal const string PlaceOrderMethod = "order.place";
+    internal const int PlaceOrderIpWeight = 0;
     internal const string ModifyOrderPath = "ws-dapi/v1";
     internal const string ModifyOrderMethod = "order.modify";
     internal const int ModifyOrderIpWeight = 1;
@@ -34,34 +37,33 @@ internal partial class BinanceFuturesSocketClientCoin
         BinanceFuturesOrderType type,
         decimal? quantity,
         decimal? price = null,
-        decimal? stopPrice = null,
         string? newClientOrderId = null,
         BinancePositionSide? positionSide = null,
         BinanceTimeInForce? timeInForce = null,
         BinanceOrderResponseType? orderResponseType = null,
         BinanceSelfTradePreventionMode? selfTradePreventionMode = null,
         BinanceFuturesPriceMatch? priceMatch = null,
-        BinanceFuturesWorkingType? workingType = null,
         bool? reduceOnly = null,
-        bool? closePosition = null,
-        bool? priceProtect = null,
-        decimal? activationPrice = null,
-        decimal? callbackRate = null,
-        int? receiveWindow = null,
+        long? receiveWindow = null,
         CancellationToken ct = default)
     {
-        if (closePosition == true && positionSide != null)
-        {
-            if (positionSide == BinancePositionSide.Short && side == BinanceOrderSide.Sell)
-                throw new ArgumentException("Can't close short position with order side sell");
-            if (positionSide == BinancePositionSide.Long && side == BinanceOrderSide.Buy)
-                throw new ArgumentException("Can't close long position with order side buy");
-        }
+        var normalizedReceiveWindow = __.ReceiveWindow(receiveWindow);
+        ValidatePlaceOrderParameters(
+            symbol,
+            side,
+            type,
+            quantity,
+            price,
+            newClientOrderId,
+            positionSide,
+            timeInForce,
+            orderResponseType,
+            selfTradePreventionMode,
+            priceMatch,
+            reduceOnly,
+            normalizedReceiveWindow);
 
-        if (orderResponseType == BinanceOrderResponseType.Full)
-            throw new ArgumentException("OrderResponseType.Full is not supported in Futures");
-
-        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, stopPrice, ct).ConfigureAwait(false);
+        var rulesCheck = await CheckTradingRulesAsync(symbol, type, quantity, null, price, null, ct).ConfigureAwait(false);
         if (!rulesCheck.Passed)
         {
             Logger.Log(LogLevel.Warning, rulesCheck.ErrorMessage!);
@@ -70,32 +72,133 @@ internal partial class BinanceFuturesSocketClientCoin
 
         quantity = rulesCheck.Quantity;
         price = rulesCheck.Price;
-        stopPrice = rulesCheck.StopPrice;
 
         var clientOrderId = BinanceHelpers.ApplyBrokerId(newClientOrderId, BinanceConstants.ClientOrderIdFutures, 36, SocketOptions.AllowAppendingClientOrderId);
+        var parameters = CreatePlaceOrderParameters(
+            symbol,
+            side,
+            type,
+            quantity,
+            price,
+            clientOrderId,
+            positionSide,
+            timeInForce,
+            orderResponseType,
+            selfTradePreventionMode,
+            priceMatch,
+            reduceOnly,
+            normalizedReceiveWindow);
+
+        return await RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>(PlaceOrderPath, PlaceOrderMethod, parameters, true, true, weight: PlaceOrderIpWeight, ct: ct).ConfigureAwait(false);
+    }
+
+    internal static ParameterCollection CreatePlaceOrderParameters(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceFuturesOrderType type,
+        decimal? quantity,
+        decimal? price,
+        string? newClientOrderId,
+        BinancePositionSide? positionSide,
+        BinanceTimeInForce? timeInForce,
+        BinanceOrderResponseType? orderResponseType,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode,
+        BinanceFuturesPriceMatch? priceMatch,
+        bool? reduceOnly,
+        long? receiveWindow)
+    {
+        ValidatePlaceOrderParameters(
+            symbol,
+            side,
+            type,
+            quantity,
+            price,
+            newClientOrderId,
+            positionSide,
+            timeInForce,
+            orderResponseType,
+            selfTradePreventionMode,
+            priceMatch,
+            reduceOnly,
+            receiveWindow);
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddEnum("side", side);
         parameters.AddEnum("type", type);
-        parameters.AddOptional("quantity", quantity?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("newClientOrderId", clientOrderId);
-        parameters.AddOptional("price", price?.ToString(BinanceConstants.CI));
+        parameters.AddOptional("quantity", quantity);
+        parameters.AddOptional("newClientOrderId", newClientOrderId);
+        parameters.AddOptional("price", price);
         parameters.AddOptionalEnum("timeInForce", timeInForce);
         parameters.AddOptionalEnum("positionSide", positionSide);
-        parameters.AddOptional("stopPrice", stopPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("activationPrice", activationPrice?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("callbackRate", callbackRate?.ToString(BinanceConstants.CI));
-        parameters.AddOptionalEnum("workingType", workingType);
-        parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLower());
-        parameters.AddOptional("closePosition", closePosition?.ToString().ToLower());
+        parameters.AddOptional("reduceOnly", reduceOnly?.ToString().ToLowerInvariant());
         parameters.AddOptionalEnum("newOrderRespType", orderResponseType);
-        parameters.AddOptional("recvWindow", __.ReceiveWindow(receiveWindow));
         parameters.AddOptionalEnum("priceMatch", priceMatch);
         parameters.AddOptionalEnum("selfTradePreventionMode", selfTradePreventionMode);
-        parameters.AddOptional("priceProtect", priceProtect?.ToString().ToUpper());
+        parameters.AddOptional("recvWindow", receiveWindow);
 
-        return await RequestAsync<BinanceFuturesCoinSocketOrderAcknowledgement>("ws-dapi/v1", $"order.place", parameters, true, true, weight: 0, ct: ct).ConfigureAwait(false);
+        return parameters;
+    }
+
+    internal static void ValidatePlaceOrderParameters(
+        string symbol,
+        BinanceOrderSide side,
+        BinanceFuturesOrderType type,
+        decimal? quantity,
+        decimal? price,
+        string? newClientOrderId,
+        BinancePositionSide? positionSide,
+        BinanceTimeInForce? timeInForce,
+        BinanceOrderResponseType? orderResponseType,
+        BinanceSelfTradePreventionMode? selfTradePreventionMode,
+        BinanceFuturesPriceMatch? priceMatch,
+        bool? reduceOnly,
+        long? receiveWindow)
+    {
+        if (string.IsNullOrWhiteSpace(symbol))
+            throw new ArgumentException("symbol cannot be empty", nameof(symbol));
+        if (side is not BinanceOrderSide.Buy and not BinanceOrderSide.Sell)
+            throw new ArgumentOutOfRangeException(nameof(side), side, "Unsupported order side");
+        if (type is not BinanceFuturesOrderType.Limit and not BinanceFuturesOrderType.Market)
+            throw new ArgumentOutOfRangeException(nameof(type), type, "COIN-M order.place supports only Limit and Market orders; use the REST Algo Order API for conditional orders");
+        if (!quantity.HasValue || quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity), quantity, "quantity must be greater than zero");
+        if (price <= 0)
+            throw new ArgumentOutOfRangeException(nameof(price), price, "price must be greater than zero when provided");
+        if (newClientOrderId is not null && !System.Text.RegularExpressions.Regex.IsMatch(newClientOrderId, @"^[\.A-Z\:/a-z0-9_-]{1,36}$", System.Text.RegularExpressions.RegexOptions.CultureInvariant))
+            throw new ArgumentException("newClientOrderId does not match the documented format", nameof(newClientOrderId));
+        if (positionSide.HasValue && positionSide is not BinancePositionSide.Both and not BinancePositionSide.Long and not BinancePositionSide.Short)
+            throw new ArgumentOutOfRangeException(nameof(positionSide), positionSide, "Unsupported position side");
+        if (timeInForce.HasValue && timeInForce is not BinanceTimeInForce.GoodTillCanceled
+            and not BinanceTimeInForce.ImmediateOrCancel
+            and not BinanceTimeInForce.FillOrKill
+            and not BinanceTimeInForce.GoodTillCrossing)
+            throw new ArgumentOutOfRangeException(nameof(timeInForce), timeInForce, "Unsupported time in force");
+        if (orderResponseType.HasValue && orderResponseType is not BinanceOrderResponseType.Acknowledge and not BinanceOrderResponseType.Result)
+            throw new ArgumentOutOfRangeException(nameof(orderResponseType), orderResponseType, "Only ACK and RESULT response types are supported");
+        if (priceMatch.HasValue && (!Enum.IsDefined(typeof(BinanceFuturesPriceMatch), priceMatch.Value) || priceMatch == BinanceFuturesPriceMatch.None))
+            throw new ArgumentOutOfRangeException(nameof(priceMatch), priceMatch, "Unsupported placement priceMatch value");
+        if (selfTradePreventionMode.HasValue && selfTradePreventionMode is not BinanceSelfTradePreventionMode.None
+            and not BinanceSelfTradePreventionMode.ExpireTaker
+            and not BinanceSelfTradePreventionMode.ExpireMaker
+            and not BinanceSelfTradePreventionMode.ExpireBoth)
+            throw new ArgumentOutOfRangeException(nameof(selfTradePreventionMode), selfTradePreventionMode, "Unsupported self-trade prevention mode");
+        if (reduceOnly.HasValue && positionSide is BinancePositionSide.Long or BinancePositionSide.Short)
+            throw new ArgumentException("reduceOnly cannot be sent in Hedge Mode", nameof(reduceOnly));
+        if (receiveWindow > 60_000)
+            throw new ArgumentOutOfRangeException(nameof(receiveWindow), receiveWindow, "receiveWindow cannot exceed 60000 milliseconds");
+
+        if (type == BinanceFuturesOrderType.Limit)
+        {
+            if (!timeInForce.HasValue)
+                throw new ArgumentException("timeInForce is required for Limit orders", nameof(timeInForce));
+            if (price.HasValue == priceMatch.HasValue)
+                throw new ArgumentException("Exactly one of price or priceMatch must be sent for Limit orders");
+        }
+        else if (price.HasValue || priceMatch.HasValue || timeInForce.HasValue)
+        {
+            throw new ArgumentException("Market orders cannot include price, priceMatch, or timeInForce");
+        }
     }
 
     public Task<CallResult<BinanceFuturesCoinSocketOrderAcknowledgement>> ModifyOrderAsync(
