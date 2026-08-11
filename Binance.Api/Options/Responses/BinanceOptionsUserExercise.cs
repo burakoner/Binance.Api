@@ -8,7 +8,7 @@ public record BinanceOptionsUserExercise
     /// <summary>
     /// Unique Id
     /// </summary>
-    public long Id { get; set; }
+    public string Id { get; set; } = "";
 
     /// <summary>
     /// Currency
@@ -25,12 +25,6 @@ public record BinanceOptionsUserExercise
     /// </summary>
     [JsonProperty("exercisePrice")]
     public decimal ExercisePrice { get; set; }
-
-    /// <summary>
-    /// Mark price
-    /// </summary>
-    [JsonProperty("markPrice")]
-    public decimal MarkPrice { get; set; }
 
     /// <summary>
     /// Quantity
@@ -56,12 +50,12 @@ public record BinanceOptionsUserExercise
     /// <summary>
     /// Price Scale
     /// </summary>
-    public int PriceScale { get; set; }
+    public long PriceScale { get; set; }
 
     /// <summary>
     /// Quantity Scale
     /// </summary>
-    public int QuantityScale { get; set; }
+    public long QuantityScale { get; set; }
 
     /// <summary>
     /// Option Side
@@ -70,9 +64,9 @@ public record BinanceOptionsUserExercise
     public BinanceOptionsSide OptionSide { get; set; }
 
     /// <summary>
-    /// Position Side
+    /// Position side
     /// </summary>
-    public BinancePositionSide Side { get; set; }
+    public BinancePositionSide PositionSide { get; set; }
 
     /// <summary>
     /// Quote Asset

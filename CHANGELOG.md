@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned all seven Options REST Trade read contracts with required and optional identifiers, symbol-dependent open-order weights, int64 limits and receive windows, endpoint-specific order results, and complete current trade, position, exercise, and commission responses
   * Aligned all Options REST Market Data response contracts with current endpoint-specific assets, contracts, filters, tuple layouts, identifiers, int64 fields, order-book update IDs, and ticker prices
   * Aligned all twelve Options REST Market Data request contracts with current weights, optional filters, int64 limits, exact open-interest date formatting, Options-valid symbol and kline validation, and canonical endpoint documentation
   * Completed Backward Review 30 across the four risk-first Options slices; reconfirmed the production contracts and corrected README/console batch examples that were guaranteed to fail pre-transport validation

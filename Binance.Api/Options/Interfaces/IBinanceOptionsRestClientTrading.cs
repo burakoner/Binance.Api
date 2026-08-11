@@ -107,7 +107,7 @@ public interface IBinanceOptionsRestClientTrading
 
     /// <summary>
     /// Check an order status.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Query-Single-Order" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#query-single-order" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="orderId">Order ID, e.g 4611875134427365377</param>
@@ -115,11 +115,11 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsOrder>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceOptionsOrderQuery>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query all finished orders within 5 days, finished status: CANCELLED FILLED REJECTED.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Query-Option-Order-History" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#query-option-order-history" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="orderId">Order ID, e.g 4611875134427365377</param>
@@ -129,35 +129,34 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsOrder>>> GetOrdersHistoryAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsOrderHistory>>> GetOrdersHistoryAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Query current all open orders, status: ACCEPTED PARTIALLY_FILLED
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Query-Current-Open-Option-Orders" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#query-current-open-option-orders" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="orderId">Order ID, e.g 4611875134427365377</param>
     /// <param name="startTime">Start Time</param>
     /// <param name="endTime">End Time</param>
-    /// <param name="limit">Number of result sets returned Default:100 Max:1000</param>
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsOrder>>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsOpenOrder>>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get current position information.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Option-Position-Information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#option-position-information" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsPosition>>> GetPositionsAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get account exercise records.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/User-Exercise-Record" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#user-exercise-record" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="startTime">Start Time</param>
@@ -166,11 +165,11 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsUserExercise>>> GetUserExerciseRecordsAsync(string? symbol = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsUserExercise>>> GetUserExerciseRecordsAsync(string? symbol = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get trades for a specific account and symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/trade/Account-Trade-List" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#account-trade-list" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="fromId">Trade id to fetch from. Default gets most recent trades, e.g 4611875134427365376</param>
@@ -180,7 +179,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Receive Window</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string? symbol = null, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// Signs the TradFi Options agreement for the authenticated account
@@ -199,5 +198,5 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(long? receiveWindow = null, CancellationToken ct = default);
 }

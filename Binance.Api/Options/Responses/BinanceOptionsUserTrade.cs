@@ -57,11 +57,6 @@ public record BinanceOptionsUserTrade
     public BinanceOptionsOrderType Type { get; set; }
 
     /// <summary>
-    /// Volatility
-    /// </summary>
-    public decimal Volatility { get; set; }
-
-    /// <summary>
     /// Liquidity
     /// </summary>
     public BinanceOptionsLiquidity Liquidity { get; set; }
@@ -75,12 +70,12 @@ public record BinanceOptionsUserTrade
     /// <summary>
     /// Price Scale
     /// </summary>
-    public int PriceScale { get; set; }
+    public long PriceScale { get; set; }
 
     /// <summary>
     /// Quantity Scale
     /// </summary>
-    public int QuantityScale { get; set; }
+    public long QuantityScale { get; set; }
 
     /// <summary>
     /// Option Side

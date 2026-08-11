@@ -254,24 +254,26 @@ internal partial class BinanceOptionsRestClient
             throw new ArgumentException($"{parameterName} must be provided", parameterName);
     }
 
-    public Task<RestCallResult<BinanceOptionsOrder>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceOptionsOrderQuery>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
     {
-        symbol.ValidateBinanceSymbol();
-        if (orderId == null && clientOrderId == null)
+        ValidateRequiredValue(symbol, nameof(symbol));
+        ValidateOptionalValue(clientOrderId, nameof(clientOrderId));
+        if (orderId == null && string.IsNullOrWhiteSpace(clientOrderId))
             throw new ArgumentException("Either orderId or clientOrderId must be sent");
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("clientOrderId", clientOrderId);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<BinanceOptionsOrder>(GetUrl(eapi, v1, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
+        return RequestAsync<BinanceOptionsOrderQuery>(GetUrl(eapi, v1, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
 
-    public Task<RestCallResult<List<BinanceOptionsOrder>>> GetOrdersHistoryAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceOptionsOrderHistory>>> GetOrdersHistoryAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        ValidateRequiredValue(symbol, nameof(symbol));
+        ValidateLimit(limit);
 
         var parameters = new ParameterCollection();
         parameters.AddParameter("symbol", symbol);
@@ -279,60 +281,62 @@ internal partial class BinanceOptionsRestClient
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceOptionsOrder>>(GetUrl(eapi, v1, "historyOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
+        return RequestAsync<List<BinanceOptionsOrderHistory>>(GetUrl(eapi, v1, "historyOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
     }
 
-    public Task<RestCallResult<List<BinanceOptionsOrder>>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceOptionsOpenOrder>>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? receiveWindow = null, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        ValidateOptionalValue(symbol, nameof(symbol));
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
-        parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
-        return RequestAsync<List<BinanceOptionsOrder>>(GetUrl(eapi, v1, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
+        return RequestAsync<List<BinanceOptionsOpenOrder>>(GetUrl(eapi, v1, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 1);
     }
 
-    public Task<RestCallResult<List<BinanceOptionsPosition>>> GetPositionsAsync(string? symbol = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceOptionsPosition>>> GetPositionsAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default)
     {
+        ValidateOptionalValue(symbol, nameof(symbol));
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsPosition>>(GetUrl(eapi, v1, "position"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<List<BinanceOptionsUserExercise>>> GetUserExerciseRecordsAsync(string? symbol=null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceOptionsUserExercise>>> GetUserExerciseRecordsAsync(string? symbol = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        ValidateOptionalValue(symbol, nameof(symbol));
+        ValidateLimit(limit);
 
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsUserExercise>>(GetUrl(eapi, v1, "exerciseRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
 
-    public Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string? symbol=null, long? fromId=null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        ValidateRequiredValue(symbol, nameof(symbol));
+        ValidateLimit(limit);
 
         var parameters = new ParameterCollection();
-        parameters.AddOptional("symbol", symbol);
+        parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("fromId", fromId);
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsUserTrade>>(GetUrl(eapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -345,12 +349,24 @@ internal partial class BinanceOptionsRestClient
         return RequestAsync<BinanceOptionsTradFiAgreementResult>(GetUrl(eapi, v1, "stock/contract"), HttpMethod.Post, ct, true, bodyParameters: parameters, requestWeight: 50);
     }
 
-    public Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
         parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceOptionsUserCommission>(GetUrl(eapi, v1, "commission"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
+    }
+
+    private static void ValidateOptionalValue(string? value, string parameterName)
+    {
+        if (value != null)
+            ValidateRequiredValue(value, parameterName);
+    }
+
+    private static void ValidateLimit(long? limit)
+    {
+        if (limit is < 1 or > 1000)
+            throw new ArgumentOutOfRangeException(nameof(limit), "limit must be between 1 and 1000");
     }
 
 }

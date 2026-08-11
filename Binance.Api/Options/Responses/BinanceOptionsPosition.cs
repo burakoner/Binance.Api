@@ -27,22 +27,10 @@ public record BinanceOptionsPosition
     public decimal Quantity { get; set; }
 
     /// <summary>
-    /// Number of positions that can be reduced
-    /// </summary>
-    [JsonProperty("reducibleQty")]
-    public decimal ReducibleQuantity { get; set; }
-
-    /// <summary>
     /// Current market value
     /// </summary>
     [JsonProperty("markValue")]
     public decimal MarkValue { get; set; }
-
-    /// <summary>
-    /// Rate of return
-    /// </summary>
-    [JsonProperty("ror")]
-    public decimal RateOfReturn { get; set; }
 
     /// <summary>
     /// Unrealized profit/loss
@@ -63,12 +51,6 @@ public record BinanceOptionsPosition
     public decimal StrikePrice { get; set; }
 
     /// <summary>
-    /// Position Cost
-    /// </summary>
-    [JsonProperty("positionCost")]
-    public decimal PositionCost { get; set; }
-
-    /// <summary>
     /// Expiry Date
     /// </summary>
     [JsonProperty("expiryDate")]
@@ -78,12 +60,12 @@ public record BinanceOptionsPosition
     /// <summary>
     /// Price Scale
     /// </summary>
-    public int PriceScale { get; set; }
+    public long PriceScale { get; set; }
 
     /// <summary>
     /// Quantity Scale
     /// </summary>
-    public int QuantityScale { get; set; }
+    public long QuantityScale { get; set; }
 
     /// <summary>
     /// Option Side
@@ -95,4 +77,20 @@ public record BinanceOptionsPosition
     /// Quote Asset
     /// </summary>
     public string QuoteAsset { get; set; } = "";
+
+    /// <summary>
+    /// Last update time
+    /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime Time { get; set; }
+
+    /// <summary>
+    /// Buy-order quantity
+    /// </summary>
+    public decimal BidQuantity { get; set; }
+
+    /// <summary>
+    /// Sell-order quantity
+    /// </summary>
+    public decimal AskQuantity { get; set; }
 }
