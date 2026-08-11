@@ -15,7 +15,7 @@ internal partial class BinanceOptionsRestClient
 
     public async Task<RestCallResult<DateTime>> GetTimeAsync(CancellationToken ct = default)
     {
-        var result = await RequestAsync<BinanceServerTime>(GetUrl(eapi, v1, "time"), HttpMethod.Get, ct, ignoreRatelimit: true).ConfigureAwait(false);
+        var result = await RequestAsync<BinanceServerTime>(GetUrl(eapi, v1, "time"), HttpMethod.Get, ct, requestWeight: 1).ConfigureAwait(false);
 
         return result.Success
             ? result.As(result.Data?.ServerTime ?? default)

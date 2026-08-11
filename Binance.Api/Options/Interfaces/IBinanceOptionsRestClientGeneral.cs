@@ -7,7 +7,7 @@ public interface IBinanceOptionsRestClientGeneral
 {
     /// <summary>
     /// Test connectivity to the Rest API.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-data/Test-Connectivity" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#test-connectivity" /></para>
     /// </summary>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
@@ -15,7 +15,7 @@ public interface IBinanceOptionsRestClientGeneral
 
     /// <summary>
     /// Test connectivity to the Rest API and get the current server time.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-data" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#check-server-time" /></para>
     /// </summary>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
@@ -23,7 +23,7 @@ public interface IBinanceOptionsRestClientGeneral
 
     /// <summary>
     /// Current exchange trading rules and symbol information
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/market-data/Exchange-Information" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#exchange-information" /></para>
     /// </summary>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>

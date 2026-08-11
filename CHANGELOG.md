@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned all twelve Options REST Market Data request contracts with current weights, optional filters, int64 limits, exact open-interest date formatting, Options-valid symbol and kline validation, and canonical endpoint documentation
   * Completed Backward Review 30 across the four risk-first Options slices; reconfirmed the production contracts and corrected README/console batch examples that were guaranteed to fail pre-transport validation
   * Aligned all six Options Market Maker kill-switch and protection contracts with current weights, optional filters, singular request fields, int64 timing and receive-window values, complete responses, and fail-closed input validation
   * Aligned the Options private user-data stream with the current direct listen-key route and all six published account, balance/position, order/trade, Greek, risk-level, and listen-key-expiration event contracts
