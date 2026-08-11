@@ -1,18 +1,18 @@
 # Spot FIX and SBE implementation execution contract
 
-Status: approved living execution contract; foundation/generation feasibility complete, pending Review 33, not protocol implementation
+Status: approved living execution contract; Review 33 complete, Slice 146 session core next, generated-output redistribution blocked
 
 Evidence date: 2026-08-11
 
 Owning inventory: Slice 118
 
-Completed implementation slices: Slices 142-145
+Completed implementation slices: Slices 142-145; completed review: Review 33
 
-Next mandatory gate: Review 33
+Next implementation slice: Slice 146. Next external gate: generated-output Rights Gate 33A before Slice 147 or any generated codec enters Git/package output.
 
 ## Brutal current state
 
-`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist; Slice 143 pins the exact FIX-owned upstream inputs without redistributing them; Slice 144 proves that FIX SBE `1:1` can be generated deterministically, internalized, and compiled across every current consumer target; Slice 145 proves the two text FIX dictionaries can share a Binance-owned internal field catalog and separate role namespaces while compiling against the unchanged published QuickFIX/n Core package. There is still no session, transport, authentication, committed generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
+`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist; Slice 143 pins the exact FIX-owned upstream inputs without redistributing them; Slice 144 proves that FIX SBE `1:1` can be generated deterministically, internalized, and compiled across every current consumer target; Slice 145 proves the two text FIX dictionaries can share a Binance-owned internal field catalog and separate role namespaces while compiling against the unchanged published QuickFIX/n Core package. Review 33 found no foundation/generator regression and proved a contained QuickFIX/n no-`ResendRequest` fail-close path, but did not invent redistribution rights over Binance-derived generated output. There is still no production session, transport, authentication, committed generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
 
 This program is much larger than adding a few missing JSON endpoints. The current official surface contains:
 
@@ -74,8 +74,8 @@ Generated wire code is required; hand-maintaining 29, 4, and 92 SBE templates is
 - SbeTool emits one reviewed warning because `MarketDataIncrementalTrade.MDEntries` deliberately uses `groupSize32Encoding` with `uint32 numInGroup`, rather than the tool's recommended `uint8`/`uint16`. That exact warning is allowlisted; a missing, changed, or additional warning fails generation. The schema also contains 56 Binance `mbx:exponent` extension attributes referencing `Exponent`, `PriceExponent`, or `QtyExponent`, so it is intentionally not valid against the unextended standard SBE XSD. The original XML is generated unchanged; decimal metadata ownership remains explicit for Slice 151 mapping.
 - The official repository publishes no `LICENSE`, `COPYING`, or `NOTICE` file. The linked [Binance Terms](https://www.binance.com/en/terms) and [Testnet Terms](https://www.binance.com/en/about-legal/terms-testnets) do not expressly grant redistribution of these raw artifacts. This is a fail-closed project decision, not legal advice: raw Binance XML/JSON files are not committed, packed, or copied into Git history. Exact commit, URI, byte length, hash, and reviewed identity are committed instead, with an explicit maintainer-only verified downloader.
 - SbeTool emits all 84 top-level codec types as `public`. The selected package boundary performs exactly one deterministic top-level `public` to `internal` accessibility change per generated file, changes no member/wire code, and proves zero exported types after compilation. Any generator output that does not match that exact 84-replacement manifest fails closed.
-- Generated C# must not be committed or released merely because generation succeeds. Slice 144 generates and compiles only in an external temporary workspace. Review 33 must obtain an explicit repository-owner/licensing decision before generated output derived from the Binance schemas can enter Git or a package. Normal restore/build/test remains offline throughout.
-- After that rights gate is approved and generated output is committed, CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
+- Generated C# must not be committed or released merely because generation succeeds. Review 33 refreshed official repository HEAD `b483413fcdf4da783cd3fcaad6fab7200a93297f` and confirmed that it still has no `LICENSE`, `COPYING`, or `NOTICE`. Binance's separately MIT-licensed SBE sample repositories demonstrate redistribution only for the files in those repositories; they do not expressly license C# output derived from the separate FIX dictionaries or FIX SBE schema. Review 33 therefore denied repository/package entry under the current evidence. Slice 144 continues to generate and compile only in an external temporary workspace, and normal restore/build/test remains offline.
+- Rights Gate 33A requires an explicit license or permission covering redistribution of the relevant generated works, or a documented legal review accepted by the repository owner. Risk acceptance alone does not create third-party rights. After that gate is satisfied and generated output is committed, CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
 - Generated namespaces include schema identity. Generated types are implementation detail, not stable high-level business API; Slice 144 must prove the selected internalization boundary before consumer mapping begins.
 - Every frame is length-checked before decode. Schema ID, schema version, template ID, block length, repeating-group counts, variable data lengths, null values, enum values, and microsecond timestamps receive deterministic boundary tests.
 - Decoder tests include independent byte fixtures and field-offset assertions. Encoder-to-decoder round trips alone are insufficient evidence because the same generator can reproduce the same defect on both sides.
@@ -84,7 +84,7 @@ QuickFIX/n DDTool 1.14.1 cannot consume the two official Binance FIX dictionarie
 
 The exact current dictionaries produce 39 C# files: two shared field files, 21 Order Entry sources, and 16 Market Data sources. Two independent Windows runs produced identical raw and adapted manifests. The adapter performs exactly 148 field-class, one tag-table, and 37 top-level message/factory accessibility changes; compilation against the untouched `QuickFIXn.Core` 1.14.1 assemblies succeeds warning-free for `net8.0`, `net9.0`, and `net10.0`. Reflection verifies all 19 Order Entry and 14 Market Data messages and both factories, 205 defined internal implementation types, and zero exported types. The maintainer verifier also fails on field name/tag/type conflicts, case-sensitive message inventory drift, unexpected DDTool source writes, manifest drift, or package/source hash drift.
 
-The pinned QuickFIX/n source and NuGet package use the QuickFIX Software License 1.0, but that does not resolve rights over Binance-derived generated output. As with SBE, no generated text FIX source, dictionary, tool archive, NuGet binary, or generated assembly is committed. Review 33 remains the explicit rights gate. The generation proof also does not prove QuickFIX/n's session behavior can satisfy Binance's unsupported-`ResendRequest` rule; that engine decision remains mandatory before public order methods.
+The pinned QuickFIX/n source and NuGet package use the QuickFIX Software License 1.0, but that does not resolve rights over Binance-derived generated output. As with SBE, no generated text FIX source, dictionary, tool archive, NuGet binary, or generated assembly is committed. Review 33 kept the rights gate closed and moved its explicit unblock criteria to Rights Gate 33A. Review 33 separately proved the contained QuickFIX/n session adapter described below; that engine decision no longer blocks Slice 146.
 
 ## FIX session safety contract
 
@@ -96,7 +96,7 @@ QuickFIX/n may own the text FIX state machine and TLS transport only after all o
 - Heartbeat is constrained to the official 5-60 second range and defaults to 30 seconds. TestRequest/Heartbeat timeout behavior is deterministic.
 - `MessageHandling=SEQUENTIAL` and `ResponseMode=EVERYTHING` are safe defaults. Unordered handling and acknowledgement-only responses require explicit opt-in and documented consequences.
 - Logon and session reset use the documented sequence contract. Graceful Logout is attempted, but application shutdown cannot pretend it succeeded.
-- Binance documents `ResendRequest` as unsupported. QuickFIX/n 1.14.1 automatically generates one when the inbound sequence is too high. Before any order API ships, a deterministic gap test must prove that the wrapper closes fail-closed without transmitting `ResendRequest`. If that cannot be achieved through a contained adapter, the team must stop and decide on a narrow QuickFIX/n fork or a different engine; it must not weaken the requirement.
+- Binance documents `ResendRequest` as unsupported. QuickFIX/n 1.14.1 automatically generates one when the inbound sequence is too high. Review 33 proved on the unchanged 1.14.1 NuGet package that `IApplication.ToAdmin` observes the generated `35=2` before persistence or responder send: the adapter resolves and disconnects the session, then throws `DoNotSend`. For an inbound logon gap from expected `34=1` to received `34=2`, the test observes the exact `7=1`/`16=0` request attempt while proving one disconnect, zero wire writes, zero persisted messages, unchanged sender sequence, and unchanged expected target sequence. Slice 146 must productionize this exact fail-closed behavior; any engine upgrade must rerun the regression before acceptance.
 - No order mutation is automatically replayed after timeout, disconnect, reconnect, or ambiguous write completion. Pending mutations become an explicit `UnknownDelivery` state and require execution-report, Drop Copy, or REST reconciliation.
 - Client order IDs and list IDs are never reused automatically. Reconnect creates a fresh session identity according to the current official rules.
 - The wrapper enforces the documented per-role message and connection-attempt budgets locally, while treating server rejections and disconnects as authoritative. Limit state is observable.
@@ -135,7 +135,8 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 | 144 | Pinned SbeTool C# feasibility pipeline | JDK 17 generation-only toolchain, ignored temporary output, deterministic generation proof, all-consuming-TFM compile matrix, internalization decision; no generated output committed before Review 33 rights decision | 4-8 h |
 | 145 | Binance FIX dictionary generation spike | Both custom FIX 4.4 dictionaries generate, compile, and validate without modifying QuickFIX/n NuGet source | 5-10 h |
 | Review 33 | Foundation review and re-estimate | Review Slices 142-145; decide schema/generated-output rights and whether QuickFIX/n remains viable before session implementation | 2-4 h |
-| 146 | Common text FIX session core | TLS/SNI, Ed25519 logon, redaction, heartbeat, logout, limits, cancellation, sequence-gap/no-resend proof | 8-16 h |
+| 146 | Common text FIX session core without generated artifacts | TLS/SNI, Ed25519 logon, redaction, heartbeat, logout, limits, cancellation, and productionized sequence-gap/no-resend fail-close behavior; package remains disabled | 8-16 h |
+| Rights Gate 33A | Generated-output redistribution authority | Written license/permission or documented legal review before any Binance-derived generated source enters Git/package output; blocks Slice 147 and all generated-code slices, but not Slice 146 | external wait |
 | 147 | Order Entry single-order lifecycle | New, cancel, cancel-replace, amend-keep-priority, exact acknowledgements/rejects, unknown-delivery handling | 8-16 h |
 | 148 | Order Entry lists and mass cancel | Order lists, list status, mass cancel, exact grouping and correlation behavior | 8-16 h |
 | 149 | Drop Copy | Read-only execution/list status, delay semantics, reconnect/reconciliation surface | 4-8 h |
@@ -161,18 +162,18 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 
 ## Forecast and mandatory recalibration
 
-The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Slices 142-145 are complete. The current remaining envelope is **24 small turns and 132-264 active hours**. At 40 focused hours per week this is roughly 3.3-6.6 weeks; at 20 hours per week it is roughly 6.6-13.2 weeks. Those are effort conversions, not a promised calendar date, and exclude waiting for credentials, user authorization, Binance/Testnet availability, licensing decisions, or an upstream engine defect.
+The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Slices 142-145 and Review 33 are complete. The current implementation/review envelope is **23 small turns and 130-260 active hours**. At 40 focused hours per week this is roughly 3.25-6.5 weeks; at 20 focused hours per week it is roughly 6.5-13 weeks. These are effort conversions, not a promised calendar date. Only Slice 146 is currently executable: Rights Gate 33A blocks the remaining generated-code chain, and its external wait has no honest calendar estimate. Credential/user authorization, Binance/Testnet availability, and any future upstream defect are also excluded.
 
 | Remaining milestone | Minimum remaining turns | Remaining active budget |
 | --- | ---: | ---: |
-| Foundation/generation decision after Review 33 | 1 | 2-4 h |
-| Complete safe text FIX after Review 34 | 7 | 40-80 h |
-| Complete text, hybrid, and full FIX SBE after Review 35 | 12 | 65-130 h |
-| Independent SBE market streams after Review 36 | 16 | 83-166 h |
-| General REST/WebSocket/user-data SBE after Review 37 | 22 | 123-246 h |
-| Release-gated current FIX/SBE program | 24 | 132-264 h |
+| Common text FIX session core before Rights Gate 33A | 1 | 8-16 h |
+| Complete safe text FIX after Review 34 | 6 plus external rights gate | 38-76 h plus external wait |
+| Complete text, hybrid, and full FIX SBE after Review 35 | 11 plus external rights gate | 63-126 h plus external wait |
+| Independent SBE market streams after Review 36 | 15 plus external rights gate | 81-162 h plus external wait |
+| General REST/WebSocket/user-data SBE after Review 37 | 21 plus external rights gate | 121-242 h plus external wait |
+| Release-gated current FIX/SBE program | 23 plus external rights gate | 130-260 h plus external wait |
 
-Review 33 is the next mandatory turn. Slices 144-145 have resolved SBE and text FIX generator determinism, target-framework compatibility, namespace ownership, and generated-type internalization with executable evidence. Review 33 must now decide whether generated artifacts may enter this repository and its packages, inspect the four-slice foundation diff, and determine whether QuickFIX/n has a contained path to Binance's no-`ResendRequest` requirement without an unsafe fork. If any gate fails, downstream slice numbers and budgets must change before development continues.
+Review 33 inspected `b4aa5ef..3ea34da` and accepted the four-slice foundation/generator work without correction. QuickFIX/n 1.14.1 remains viable because the exact no-`ResendRequest` fail-close path is now locked by a deterministic regression. The generated-output rights decision failed closed: no relevant redistribution license or permission was found, so Binance-derived generated output remains external and Rights Gate 33A now blocks Slice 147 onward. Slice 146 is next because its common session safety core can be implemented without committing generated artifacts; work must stop at Gate 33A after that slice unless qualifying rights evidence exists.
 
 ## Definition of done
 
