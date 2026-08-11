@@ -30,33 +30,27 @@ public record BinanceOptionsStreamTrade : BinanceSocketStreamEvent
     public decimal Quantity { get; set; }
 
     /// <summary>
-    /// Buy Order Id
-    /// </summary>
-    [JsonProperty("b")]
-    public long BuyOrderId { get; set; }
-
-    /// <summary>
-    /// Sell Order Id
-    /// </summary>
-    [JsonProperty("a")]
-    public long SellOrderId { get; set; }
-
-    /// <summary>
     /// The timestamp of the trade
     /// </summary>
     [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime Time { get; set; }
 
     /// <summary>
-    /// Completed trade direction（-1 Sell，1 Buy）
+    /// Completed trade direction
     /// </summary>
     [JsonProperty("S")]
-    public BinanceOptionsTradeSide Side { get; set; }
+    public BinanceOrderSide Side { get; set; }
 
     /// <summary>
     /// trade type enum, "MARKET" for Orderbook trading, "BLOCK" for Block trade
     /// </summary>
     [JsonProperty("X")]
+    [JsonConverter(typeof(MapConverter))]
     public BinanceOptionsTradeType Type { get; set; }
 
+    /// <summary>
+    /// Whether the buyer is the market maker
+    /// </summary>
+    [JsonProperty("m")]
+    public bool BuyerIsMarketMaker { get; set; }
 }

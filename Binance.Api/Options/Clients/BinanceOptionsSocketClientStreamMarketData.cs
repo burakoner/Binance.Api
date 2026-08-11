@@ -9,7 +9,7 @@ internal partial class BinanceOptionsSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        return SubscribeAsync(["option_pair"], false, handler, ct);
+        return SubscribeMarketAsync(["option_pair"], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(string asset, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default)
@@ -26,7 +26,7 @@ internal partial class BinanceOptionsSocketClient
         });
 
         var topics = tuples.Select(a => $"{a.UnderlyingAsset}@openInterest{a.ExpirationDate.ToString("MMddyy")}").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(topics, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(string asset, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default)
@@ -43,7 +43,7 @@ internal partial class BinanceOptionsSocketClient
         });
 
         var topics = assets.Select(a => $"{a}@markPrice").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(topics, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceOptionsStreamKline>> onMessage, CancellationToken ct = default)
@@ -66,21 +66,20 @@ internal partial class BinanceOptionsSocketClient
         });
 
         var topics = symbols.SelectMany(a => intervals.Select(i => a + "@kline" + "_" + MapConverter.GetString(i))).ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(topics, false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string asset, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
-        => SubscribeToTickersAsync([(asset,expiration)], onMessage, ct);
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
+        => SubscribeToTickersAsync([(symbol, expiration)], onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<(string UnderlyingAsset, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<(string Symbol, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
     {
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceOptionsStreamTicker>>>(data =>
         {
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = tuples.Select(a => $"{a.UnderlyingAsset}@ticker@{a.ExpirationDate.ToString("MMddyy")}").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribePublicAsync(TickerStreamTopics(tuples), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default)
@@ -97,7 +96,7 @@ internal partial class BinanceOptionsSocketClient
         });
 
         var topics = symbols.Select(a => a + "@index").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(topics, false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
@@ -110,8 +109,7 @@ internal partial class BinanceOptionsSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => $"{a}@ticker").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribePublicAsync(TickerStreamTopics(symbols), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamTrade>> onMessage, CancellationToken ct = default)
@@ -124,27 +122,115 @@ internal partial class BinanceOptionsSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => $"{a}@trade").ToArray();
-        return SubscribeAsync(topics, false, handler, ct);
+        return SubscribePublicAsync(TradeStreamTopics(symbols), false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(string symbol, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default)
-        => SubscribeToPartialOrderBooksAsync([symbol], levels, updateInterval, onMessage, ct);
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(
+        string symbol,
+        int updateInterval,
+        Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage,
+        CancellationToken ct = default)
+        => SubscribeToOrderBooksAsync([symbol], updateInterval, onMessage, ct);
 
-    public async Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(
+        IEnumerable<string> symbols,
+        int updateInterval,
+        Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage,
+        CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        levels.ValidateIntValues(nameof(levels), 10, 20, 50,100);
-        updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 1000);
-
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceOptionsStreamOrderBook>>>(data =>
         {
-            data.Data.Data.Symbol = data.Data.Stream?.Split('@')[0] ?? "";
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.Select(a => a.ToLower(BinanceConstants.CI) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-        return await SubscribeAsync(topics, false, handler, ct).ConfigureAwait(false);
+        return SubscribePublicAsync(DiffDepthStreamTopics(symbols, updateInterval), false, handler, ct);
     }
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(
+        string symbol,
+        Action<WebSocketDataEvent<BinanceOptionsStreamBookTicker>> onMessage,
+        CancellationToken ct = default)
+        => SubscribeToBookTickersAsync([symbol], onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(
+        IEnumerable<string> symbols,
+        Action<WebSocketDataEvent<BinanceOptionsStreamBookTicker>> onMessage,
+        CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceOptionsStreamBookTicker>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
+        });
+
+        return SubscribePublicAsync(BookTickerStreamTopics(symbols), false, handler, ct);
+    }
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(string symbol, int levels, int updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default)
+        => SubscribeToPartialOrderBooksAsync([symbol], levels, updateInterval, onMessage, ct);
+
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(IEnumerable<string> symbols, int levels, int updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default)
+    {
+        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceOptionsStreamOrderBook>>>(data =>
+        {
+            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
+        });
+
+        return SubscribePublicAsync(PartialDepthStreamTopics(symbols, levels, updateInterval), false, handler, ct);
+    }
+
+    internal static string[] DiffDepthStreamTopics(IEnumerable<string> symbols, int updateInterval)
+    {
+        ValidateUpdateInterval(updateInterval);
+        return SymbolStreamTopics(symbols, $"@depth@{updateInterval}ms");
+    }
+
+    internal static string[] BookTickerStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@bookTicker");
+
+    internal static string[] PartialDepthStreamTopics(IEnumerable<string> symbols, int levels, int updateInterval)
+    {
+        levels.ValidateIntValues(nameof(levels), 5, 10, 20);
+        ValidateUpdateInterval(updateInterval);
+        return SymbolStreamTopics(symbols, $"@depth{levels}@{updateInterval}ms");
+    }
+
+    internal static string[] TickerStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@optionTicker");
+
+    internal static string[] TickerStreamTopics(IEnumerable<(string Symbol, DateTime ExpirationDate)> tuples)
+    {
+        if (tuples == null)
+            throw new ArgumentNullException(nameof(tuples));
+        var tupleList = tuples.ToArray();
+        if (tupleList.Length == 0)
+            throw new ArgumentException("At least one symbol and expiration date must be provided.", nameof(tuples));
+        foreach (var tuple in tupleList)
+            if (string.IsNullOrWhiteSpace(tuple.Symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(tuples));
+
+        return tupleList
+            .Select(tuple => tuple.Symbol.ToLower(BinanceConstants.CI) + "@optionTicker" + tuple.ExpirationDate.ToString("yyMMdd", BinanceConstants.CI))
+            .ToArray();
+    }
+
+    internal static string[] TradeStreamTopics(IEnumerable<string> symbols)
+        => SymbolStreamTopics(symbols, "@optionTrade");
+
+    private static string[] SymbolStreamTopics(IEnumerable<string> symbols, string suffix)
+    {
+        if (symbols == null)
+            throw new ArgumentNullException(nameof(symbols));
+        var symbolList = symbols.ToArray();
+        if (symbolList.Length == 0)
+            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+        foreach (var symbol in symbolList)
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+
+        return symbolList.Select(symbol => symbol.ToLower(BinanceConstants.CI) + suffix).ToArray();
+    }
+
+    private static void ValidateUpdateInterval(int updateInterval)
+        => updateInterval.ValidateIntValues(nameof(updateInterval), 100, 500);
 
 }

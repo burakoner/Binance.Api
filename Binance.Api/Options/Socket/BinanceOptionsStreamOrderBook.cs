@@ -9,6 +9,7 @@ public record BinanceOptionsStreamOrderBook : BinanceSocketStreamEvent
     /// Transaction Time
     /// </summary>
     [JsonProperty("T")]
+    [JsonConverter(typeof(DateTimeConverter))]
     public DateTime TransactionTime { get; set; }
 
     /// <summary>
@@ -18,10 +19,22 @@ public record BinanceOptionsStreamOrderBook : BinanceSocketStreamEvent
     public string Symbol { get; set; } = "";
 
     /// <summary>
-    /// The ID of the last update
+    /// First update ID in this event
+    /// </summary>
+    [JsonProperty("U")]
+    public long FirstUpdateId { get; set; }
+
+    /// <summary>
+    /// Final update ID in this event
     /// </summary>
     [JsonProperty("u")]
-    public long UpdateId { get; set; }
+    public long LastUpdateId { get; set; }
+
+    /// <summary>
+    /// Final update ID in the previous event
+    /// </summary>
+    [JsonProperty("pu")]
+    public long PreviousLastUpdateId { get; set; }
 
     /// <summary>
     /// The list of bids

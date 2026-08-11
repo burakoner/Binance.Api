@@ -100,25 +100,25 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceOptionsStreamKline>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// 24hr ticker info by underlying asset and expiration date. E.g.ETH@ticker@220930
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/24-hour-TICKER-by-underlying-asset-and-expiration-data" /></para>
+    /// 24-hour ticker information for an underlying symbol and expiration date. E.g. btcusdt@optionTicker251230
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#hour24-ticker" /></para>
     /// </summary>
-    /// <param name="asset">Asset</param>
+    /// <param name="symbol">Underlying symbol</param>
     /// <param name="expiration">Expiration</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string asset, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// 24hr ticker info by underlying asset and expiration date. E.g.ETH@ticker@220930
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/24-hour-TICKER-by-underlying-asset-and-expiration-data" /></para>
+    /// 24-hour ticker information for underlying symbols and expiration dates.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#hour24-ticker" /></para>
     /// </summary>
-    /// <param name="tuples">Asset &amp; Expiration Date Tuple List</param>
+    /// <param name="tuples">Underlying symbol and expiration date tuples</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<(string UnderlyingAsset, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<(string Symbol, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Underlying(e.g ETHUSDT) index stream.
@@ -141,8 +141,8 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// 24hr ticker info for all symbols. Only symbols whose ticker info changed will be sent.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/24-hour-TICKER" /></para>
+    /// 24-hour ticker information for an underlying symbol without an expiration filter.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#hour24-ticker" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="onMessage">On Data Handler</param>
@@ -151,8 +151,8 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// 24hr ticker info for all symbols. Only symbols whose ticker info changed will be sent.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/24-hour-TICKER" /></para>
+    /// 24-hour ticker information for underlying symbols without expiration filters.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#hour24-ticker" /></para>
     /// </summary>
     /// <param name="symbols">Symbols</param>
     /// <param name="onMessage">On Data Handler</param>
@@ -161,8 +161,8 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// The Trade Streams push raw trade information for specific symbol or underlying asset. E.g.ETH@trade
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Trade-Streams">More details here</a></para>
+    /// Push raw trade information for a specific Options symbol or underlying symbol. E.g. btcusdt@optionTrade
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#trade-streams" /></para>
     /// </summary>
     /// <param name="symbol">Symbol or Underlying Asset</param>
     /// <param name="onMessage">On Data Handler</param>
@@ -171,8 +171,8 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamTrade>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// The Trade Streams push raw trade information for specific symbol or underlying asset. E.g.ETH@trade
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Trade-Streams">More details here</a></para>
+    /// Push raw trade information for specific Options symbols or underlying symbols.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#trade-streams" /></para>
     /// </summary>
     /// <param name="symbols">Symbols or Underlying Assets</param>
     /// <param name="onMessage">On Data Handler</param>
@@ -181,26 +181,68 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTradesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceOptionsStreamTrade>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Subscribe to partial order book updates for a specific symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Partial-Book-Depth-Streams" /></para>
+    /// Subscribe to diff order book updates for a specific symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#diff-book-depth-streams" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
-    /// <param name="levels">Valid levels are are 10, 20, 50, 100</param>
-    /// <param name="updateInterval">100ms or 1000ms, 500ms(default when update speed isn't used)</param>
+    /// <param name="updateInterval">100ms or 500ms</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(string symbol, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(string symbol, int updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
+    /// Subscribe to diff order book updates for specific symbols.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#diff-book-depth-streams" /></para>
+    /// </summary>
+    /// <param name="symbols">Symbols</param>
+    /// <param name="updateInterval">100ms or 500ms</param>
+    /// <param name="onMessage">On Data Handler</param>
+    /// <param name="ct">Cancellation Token</param>
+    /// <returns></returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOrderBooksAsync(IEnumerable<string> symbols, int updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
+    /// Subscribe to best bid and ask updates for a specific symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#individual-symbol-book-ticker-streams" /></para>
+    /// </summary>
+    /// <param name="symbol">Symbol</param>
+    /// <param name="onMessage">On Data Handler</param>
+    /// <param name="ct">Cancellation Token</param>
+    /// <returns></returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamBookTicker>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
+    /// Subscribe to best bid and ask updates for specific symbols.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#individual-symbol-book-ticker-streams" /></para>
+    /// </summary>
+    /// <param name="symbols">Symbols</param>
+    /// <param name="onMessage">On Data Handler</param>
+    /// <param name="ct">Cancellation Token</param>
+    /// <returns></returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToBookTickersAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceOptionsStreamBookTicker>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// Subscribe to partial order book updates for a specific symbol.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Partial-Book-Depth-Streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#partial-book-depth-streams" /></para>
     /// </summary>
-    /// <param name="symbols">Symbols</param>
-    /// <param name="levels">Valid levels are are 10, 20, 50, 100</param>
-    /// <param name="updateInterval">100ms or 1000ms, 500ms(default when update speed isn't used)</param>
+    /// <param name="symbol">Symbol</param>
+    /// <param name="levels">Valid levels are 5, 10, 20</param>
+    /// <param name="updateInterval">100ms or 500ms</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(string symbol, int levels, int updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default);
+
+    /// <summary>
+    /// Subscribe to partial order book updates for a specific symbol.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#partial-book-depth-streams" /></para>
+    /// </summary>
+    /// <param name="symbols">Symbols</param>
+    /// <param name="levels">Valid levels are 5, 10, 20</param>
+    /// <param name="updateInterval">100ms or 500ms</param>
+    /// <param name="onMessage">On Data Handler</param>
+    /// <param name="ct">Cancellation Token</param>
+    /// <returns></returns>
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToPartialOrderBooksAsync(IEnumerable<string> symbols, int levels, int updateInterval, Action<WebSocketDataEvent<BinanceOptionsStreamOrderBook>> onMessage, CancellationToken ct = default);
 }

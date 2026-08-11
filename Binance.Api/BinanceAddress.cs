@@ -68,9 +68,14 @@ public class BinanceAddress
     public string EuropeanOptionsRestApiAddress { get; set; } = "";
 
     /// <summary>
-    /// Binance European Options WebSocket API Stream Address
+    /// Binance European Options Public WebSocket Stream Address
     /// </summary>
-    public string EuropeanOptionsSocketApiStreamAddress { get; set; } = "";
+    public string EuropeanOptionsPublicSocketApiStreamAddress { get; set; } = "";
+
+    /// <summary>
+    /// Binance European Options Market WebSocket Stream Address
+    /// </summary>
+    public string EuropeanOptionsMarketSocketApiStreamAddress { get; set; } = "";
 
     /// <summary>
     /// Binance European Options Private WebSocket Stream Address
@@ -237,7 +242,8 @@ public class BinanceAddress
         FuturesDataRestApiAddress = "https://api.binance.com",
 
         EuropeanOptionsRestApiAddress = "https://eapi.binance.com",
-        EuropeanOptionsSocketApiStreamAddress = "wss://nbstream.binance.com/eoptions",
+        EuropeanOptionsPublicSocketApiStreamAddress = "wss://fstream.binance.com/public",
+        EuropeanOptionsMarketSocketApiStreamAddress = "wss://fstream.binance.com/market",
         EuropeanOptionsPrivateSocketApiStreamAddress = "wss://fstream.binance.com/private",
 
         PortfolioMarginRestApiAddress = "https://papi.binance.com",
@@ -288,7 +294,8 @@ public class BinanceAddress
         UsdFuturesSocketApiStreamAddress = "wss://fstream.binancefuture.com",
 
         EuropeanOptionsRestApiAddress = "",
-        EuropeanOptionsSocketApiStreamAddress = "",
+        EuropeanOptionsPublicSocketApiStreamAddress = "",
+        EuropeanOptionsMarketSocketApiStreamAddress = "",
         EuropeanOptionsPrivateSocketApiStreamAddress = "",
 
         ExchangeLinkRestApiAddress = "https://testnet.binance.vision",

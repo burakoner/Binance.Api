@@ -1242,16 +1242,18 @@ var options_106 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", Binanc
 var options_107 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", [], (data) => { });
 var options_108 = await ws.Options.SubscribeToKlinesAsync([], BinanceKlineInterval.OneDay, (data) => { });
 var options_109 = await ws.Options.SubscribeToKlinesAsync([], [], (data) => { });
-var options_110 = await ws.Options.SubscribeToTickersAsync("---ASSET---", DateTime.UtcNow, (data) => { });
-var options_111 = await ws.Options.SubscribeToTickersAsync(tuples: [], (data) => { });
+var options_110 = await ws.Options.SubscribeToTickersAsync("---UNDERLYING---", DateTime.UtcNow, (data) => { });
+var options_111 = await ws.Options.SubscribeToTickersAsync([("---UNDERLYING---", DateTime.UtcNow)], (data) => { });
 var options_112 = await ws.Options.SubscribeToIndexPricesAsync("---SYMBOL---", (data) => { });
 var options_113 = await ws.Options.SubscribeToIndexPricesAsync([], (data) => { });
 var options_114 = await ws.Options.SubscribeToTickersAsync("---SYMBOL---", (data) => { });
-var options_115 = await ws.Options.SubscribeToTickersAsync(symbols: [], (data) => { });
+var options_115 = await ws.Options.SubscribeToTickersAsync(["---UNDERLYING---"], (data) => { });
 var options_116 = await ws.Options.SubscribeToTradesAsync("---SYMBOL---", (data) => { });
-var options_117 = await ws.Options.SubscribeToTradesAsync([], (data) => { });
-var options_118 = await ws.Options.SubscribeToPartialOrderBooksAsync("---SYMBOL---", 10, null, (data) => { });
-var options_119 = await ws.Options.SubscribeToPartialOrderBooksAsync([], 10, null, (data) => { });
+var options_117 = await ws.Options.SubscribeToTradesAsync(["---SYMBOL---"], (data) => { });
+var options_118 = await ws.Options.SubscribeToPartialOrderBooksAsync("---SYMBOL---", 10, 500, (data) => { });
+var options_119 = await ws.Options.SubscribeToPartialOrderBooksAsync(["---SYMBOL---"], 10, 100, (data) => { });
+var options_120 = await ws.Options.SubscribeToOrderBooksAsync("---SYMBOL---", 100, (data) => { });
+var options_121 = await ws.Options.SubscribeToBookTickersAsync("---SYMBOL---", (data) => { });
 
 // European Options Web Socket Stream -> User Data Stream Methods (PRIVATE)
 var options_201 = await ws.Options.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",

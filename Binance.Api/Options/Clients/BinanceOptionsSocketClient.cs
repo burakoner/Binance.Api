@@ -189,7 +189,15 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
     }
     #endregion
 
-    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribePublicAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
+        => SubscribeAsync(PublicStreamAddress(), new BinanceSocketRequest
+        {
+            Method = "SUBSCRIBE",
+            Params = [.. topics],
+            Id = NextId()
+        }, "", authenticated, onData, ct);
+
+    internal Task<CallResult<WebSocketUpdateSubscription>> SubscribeMarketAsync<T>(IEnumerable<string> topics, bool authenticated, Action<WebSocketDataEvent<T>> onData, CancellationToken ct)
     {
         var request = new BinanceSocketRequest
         {
@@ -198,8 +206,14 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
             Id = NextId()
         };
 
-        return SubscribeAsync(BinanceAddress.Default.EuropeanOptionsSocketApiStreamAddress.AppendPath("stream"), request, "", authenticated, onData, ct);
+        return SubscribeAsync(MarketStreamAddress(), request, "", authenticated, onData, ct);
     }
+
+    internal static string PublicStreamAddress()
+        => BinanceAddress.Default.EuropeanOptionsPublicSocketApiStreamAddress.AppendPath("stream");
+
+    internal static string MarketStreamAddress()
+        => BinanceAddress.Default.EuropeanOptionsMarketSocketApiStreamAddress.AppendPath("stream");
 
     internal async Task<CallResult<bool>> SyncTimeAsync()
     {

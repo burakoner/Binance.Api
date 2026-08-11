@@ -6,13 +6,6 @@
 public record BinanceOptionsStreamTicker : BinanceSocketStreamEvent
 {
     /// <summary>
-    /// Transaction time of the ticker
-    /// </summary>
-    [JsonProperty("T")]
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime TransactionTime { get; set; }
-
-    /// <summary>
     /// The symbol the price is for
     /// </summary>
     [JsonProperty("s")]
@@ -43,16 +36,22 @@ public record BinanceOptionsStreamTicker : BinanceSocketStreamEvent
     public decimal LastPrice { get; set; }
 
     /// <summary>
+    /// Weighted average price
+    /// </summary>
+    [JsonProperty("w")]
+    public decimal WeightedAveragePrice { get; set; }
+
+    /// <summary>
     /// The base volume traded in the last 24 hours
     /// </summary>
-    [JsonProperty("V")]
+    [JsonProperty("v")]
     public decimal Volume { get; set; }
 
     /// <summary>
     /// The quote asset volume traded in the last 24 hours
     /// </summary>
-    [JsonProperty("A")]
-    public decimal QuoteVolume { get; set; }
+    [JsonProperty("q")]
+    public decimal QuoteAmount { get; set; }
 
     /// <summary>
     /// The price change in percentage in the last 24 hours
@@ -91,92 +90,16 @@ public record BinanceOptionsStreamTicker : BinanceSocketStreamEvent
     public long TradeCount { get; set; }
 
     /// <summary>
-    /// The best bid price in the order book
+    /// Statistics open time
     /// </summary>
-    [JsonProperty("bo")]
-    public decimal BestBidPrice { get; set; }
+    [JsonProperty("O")]
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime StatisticsOpenTime { get; set; }
 
     /// <summary>
-    /// The best ask price in the order book
+    /// Statistics close time
     /// </summary>
-    [JsonProperty("ao")]
-    public decimal BestAskPrice { get; set; }
-
-    /// <summary>
-    /// The quantity of the best ask price in the order book
-    /// </summary>
-    [JsonProperty("aq")]
-    public decimal BestAskQuantity { get; set; }
-
-    /// <summary>
-    /// The quantity of the best bid price in the order book
-    /// </summary>
-    [JsonProperty("bq")]
-    public decimal BestBidQuantity { get; set; }
-
-    /// <summary>
-    /// BuyImplied volatility   
-    /// </summary>
-    [JsonProperty("b")]
-    public decimal BuyImpliedVolatility { get; set; }
-
-    /// <summary>
-    /// SellImplied volatility
-    /// </summary>
-    [JsonProperty("a")]
-    public decimal ExercisePrice { get; set; }
-
-    /// <summary>
-    /// Delta
-    /// </summary>
-    [JsonProperty("d")]
-    public decimal Delta { get; set; }
-
-    /// <summary>
-    /// Theta 
-    /// </summary>
-    [JsonProperty("t")]
-    public decimal Theta { get; set; }
-
-    /// <summary>
-    /// Gamma
-    /// </summary>
-    [JsonProperty("g")]
-    public decimal Gamma { get; set; }
-
-    /// <summary>
-    /// Vega
-    /// </summary>
-    [JsonProperty("v")]
-    public decimal Vega { get; set; }
-
-    /// <summary>
-    /// Implied volatility 
-    /// </summary>
-    [JsonProperty("vo")]
-    public decimal ImpliedVolatility { get; set; }
-
-    /// <summary>
-    /// Mark price
-    /// </summary>
-    [JsonProperty("mp")]
-    public decimal MarkPrice { get; set; }
-
-    /// <summary>
-    /// Buy Maximum price
-    /// </summary>
-    [JsonProperty("hl")]
-    public decimal BuyMaximumPrice { get; set; }
-
-    /// <summary>
-    /// Sell Minimum price 
-    /// </summary>
-    [JsonProperty("ll")]
-    public decimal SellMinimumPrice { get; set; }
-
-    /// <summary>
-    /// Estimated strike price
-    /// </summary>
-    [JsonProperty("eep")]
-    public decimal EstimatedStrikePrice { get; set; }
+    [JsonProperty("C")]
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime StatisticsCloseTime { get; set; }
 }
