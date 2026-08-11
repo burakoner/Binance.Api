@@ -27,6 +27,12 @@ public record BinanceOptionsMarketMakerBlockOrder
     public string Status { get; set; } = "";
 
     /// <summary>
+    /// Creation time. Not returned by the new block trade order endpoint.
+    /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? CreateTime { get; set; }
+
+    /// <summary>
     /// Legs of the block order
     /// </summary>
     public List<BinanceOptionsMarketMakerBlockOrderLeg> Legs { get; set; } = [];
