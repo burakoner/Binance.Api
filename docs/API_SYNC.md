@@ -2291,6 +2291,18 @@ The complete package, schema, session, transport, testing, external-call, implem
 
 No production-code, public API, package, request, model, example, or test behavior changed. All 588 deterministic tests pass. A forced full multi-target solution rebuild succeeds with zero errors and the same three pre-existing warnings. No live Binance REST request, authenticated query, FIX/WebSocket connection, subscription, order, cancellation, or other mutation was sent. The original numbered remediation queue is now 141/141 complete, but the project is not complete: the evidence-backed FIX/SBE implementation queue begins at Slice 142.
 
+## Slice 142: truthful non-packable FIX/SBE foundation
+
+The empty FIX project no longer advertises a usable or complete multi-product wrapper. `Binance.FIX.Api` is explicitly development-stage, Spot-only, `IsPackable=false`, and `GeneratePackageOnBuild=false`; its broad Margin/Futures/Options package tags and placeholder public `Class1` were removed. QuickFIX/n Core moved from 1.14.0 to the current NuGet 1.14.1. The generic `QuickFIXn.FIX44` dependency was removed because the two official Binance custom FIX 4.4 dictionaries must own their generated field/message namespaces and factory under Slice 145.
+
+The new non-packable `Binance.SBE.Api` foundation targets .NET Standard 2.0 and 2.1 so every existing `Binance.Api` target can consume it if the actual generated-code matrix passes Slice 144. It intentionally exposes no protocol API yet. Dedicated net10.0 `Binance.FIX.Api.Tests` and `Binance.SBE.Api.Tests` projects were added to the solution; their first regressions prevent a generic `Class1` placeholder from silently returning while allowing reviewed protocol types in later slices.
+
+MSBuild property inspection proves both protocol projects have packing and package-on-build disabled. Real `dotnet pack` calls into separate empty temporary output directories produced zero files for both projects. Direct package inspection resolves only `QuickFIXn.Core` 1.14.1 for both FIX target frameworks, with no generic FIX44 dependency. Source scans find no production placeholder, old QuickFIX version, generic FIX44 package, or broad public FIX marketing claim.
+
+Both new foundation tests and all 588 legacy tests pass, for 590 deterministic tests total. A forced full multi-target solution rebuild succeeds with zero errors and one remaining pre-existing console obsolescence warning; removing the two placeholder `Class1` documentation warnings is an intended result. No schema was vendored or generated, no protocol/session/transport behavior was added, and no live Binance request, authenticated query, FIX/WebSocket connection, subscription, order, cancellation, or other mutation was sent.
+
+Slice 143 is next and owns only unchanged official schema artifacts, exact provenance, and fail-closed alias/lifecycle validation. Twenty-seven planned small turns and approximately 144-288 active hours remain before the current release gate; Review 33 remains mandatory after Slice 145.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -2468,3 +2480,4 @@ No production-code, public API, package, request, model, example, or test behavi
 | Review 32 | Complete | Backward review of Options Block Trade, Public and Market streams, and unsupported REST removal; contract-volume semantics corrected | `3c0fb81..9af305c` diff review, refreshed current Block Trade/Public/Market/Account/Market Data catalogs, generated connector HEAD `3b3f169`, exact 44/44 REST parity, corrected stream `v`/`V` unit names, 23 focused and 588 complete tests, forced full multi-target rebuild |
 | 138 | Complete | Final Options canonical XML documentation and retired-root residue audit | Rendered DOM `href` sets from all nine current Options pages, 68 active references, exact 55/55 unique-target parity after three Market Maker kill-switch anchor corrections, zero active retired-root/host residue, 588 complete tests, forced full multi-target rebuild |
 | 118 | Complete | Spot FIX and SBE implementation execution contract | Current official FIX/SBE/User Data references, schema repository commit `b483413`, exact 25/29/4/92 message-template inventories, upstream alias/lifecycle conflicts, QuickFIX/n DDTool and SbeTool C# feasibility evidence, package/session/transport safety gates, Slices 142-164 plus Reviews 33-37, 146-292 active-hour envelope, no protocol implementation |
+| 142 | Complete | Truthful non-packable FIX/SBE package and test foundation | FIX package metadata/pack safety, QuickFIX/n Core 1.14.1 with generic FIX44 removal, new netstandard SBE and dedicated protocol test projects, zero-file pack proofs, 2 focused and 590 complete tests, forced full multi-target rebuild |

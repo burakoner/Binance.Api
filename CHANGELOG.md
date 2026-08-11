@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Established the truthful non-packable FIX/SBE foundation: removed the empty public placeholder and false completeness claims, upgraded to QuickFIX/n Core 1.14.1 without the generic FIX44 package, and added netstandard SBE plus dedicated protocol test projects
   * Defined the evidence-backed Spot FIX/SBE implementation execution contract: truthful package boundaries, pinned schema and generator provenance, fail-closed TLS/session/binary safety gates, deterministic conformance policy, and 23 small implementation slices with five mandatory reviews
   * Completed the final Options documentation audit across all 68 active XML references; corrected three Market Maker kill-switch anchors and proved exact 55/55 canonical-target parity with zero active retired-root residue
   * Completed Backward Review 32 across the final four Options implementation slices; corrected Market kline and Public ticker volume names to state their published contract units, and reconfirmed Block Trade, stream routing and payloads, and exact 44-operation REST parity
