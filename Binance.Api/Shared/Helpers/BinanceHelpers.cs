@@ -421,15 +421,18 @@ public static class BinanceHelpers
         var outputPrice = price;
         var outputStopPrice = stopPrice;
 
-        if (symbolInfo.LotSizeFilter != null)
+        var filter = symbolInfo.Filters.FirstOrDefault(x =>
+            string.Equals(x.FilterType, "PRICE_FILTER", StringComparison.OrdinalIgnoreCase))
+            ?? symbolInfo.Filters.FirstOrDefault();
+        if (filter != null)
         {
-            var minQty = symbolInfo.LotSizeFilter?.MinQuantity;
-            var maxQty = symbolInfo.LotSizeFilter?.MaxQuantity;
-            var stepSize = symbolInfo.LotSizeFilter?.StepSize;
+            var minQty = filter.MinQuantity;
+            var maxQty = filter.MaxQuantity;
+            var stepSize = filter.StepSize;
 
-            if (minQty.HasValue && quantity.HasValue)
+            if (quantity.HasValue && maxQty != 0 && stepSize != 0)
             {
-                outputQuantity = BinanceHelpers.ClampQuantity(minQty.Value, maxQty!.Value, stepSize!.Value, quantity.Value);
+                outputQuantity = BinanceHelpers.ClampQuantity(minQty, maxQty, stepSize, quantity.Value);
                 if (outputQuantity != quantity.Value)
                 {
                     if (tradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
@@ -445,11 +448,11 @@ public static class BinanceHelpers
         if (price == null)
             return BinanceTradeRuleResult.CreatePassed(outputQuantity, outputQuoteQuantity, null, outputStopPrice);
 
-        if (symbolInfo.PriceFilter != null)
+        if (filter != null)
         {
-            if (symbolInfo.PriceFilter.MaxPrice != 0 && symbolInfo.PriceFilter.MinPrice != 0)
+            if (filter.MaxPrice != 0 && filter.MinPrice != 0)
             {
-                outputPrice = BinanceHelpers.ClampPrice(symbolInfo.PriceFilter.MinPrice, symbolInfo.PriceFilter.MaxPrice, price.Value);
+                outputPrice = BinanceHelpers.ClampPrice(filter.MinPrice, filter.MaxPrice, price.Value);
                 if (outputPrice != price)
                 {
                     if (tradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
@@ -460,8 +463,8 @@ public static class BinanceHelpers
 
                 if (stopPrice != null)
                 {
-                    outputStopPrice = BinanceHelpers.ClampPrice(symbolInfo.PriceFilter.MinPrice,
-                        symbolInfo.PriceFilter.MaxPrice, stopPrice.Value);
+                    outputStopPrice = BinanceHelpers.ClampPrice(filter.MinPrice,
+                        filter.MaxPrice, stopPrice.Value);
                     if (outputStopPrice != stopPrice)
                     {
                         if (tradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
@@ -476,10 +479,10 @@ public static class BinanceHelpers
                 }
             }
 
-            if (symbolInfo.PriceFilter.TickSize != 0)
+            if (filter.TickSize != 0)
             {
                 var beforePrice = outputPrice;
-                outputPrice = BinanceHelpers.FloorPrice(symbolInfo.PriceFilter.TickSize, price.Value);
+                outputPrice = BinanceHelpers.FloorPrice(filter.TickSize, price.Value);
                 if (outputPrice != beforePrice)
                 {
                     if (tradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)
@@ -491,7 +494,7 @@ public static class BinanceHelpers
                 if (stopPrice != null)
                 {
                     var beforeStopPrice = outputStopPrice;
-                    outputStopPrice = BinanceHelpers.FloorPrice(symbolInfo.PriceFilter.TickSize, stopPrice.Value);
+                    outputStopPrice = BinanceHelpers.FloorPrice(filter.TickSize, stopPrice.Value);
                     if (outputStopPrice != beforeStopPrice)
                     {
                         if (tradeRulesBehavior == BinanceTradeRulesBehavior.ThrowError)

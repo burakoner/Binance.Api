@@ -6,9 +6,14 @@
 public record BinanceOptionsPublicTrade
 {
     /// <summary>
-    /// The id of the trade
+    /// Record identifier
     /// </summary>
     [JsonProperty("id")]
+    public long Id { get; set; }
+
+    /// <summary>
+    /// Trade identifier
+    /// </summary>
     public long TradeId { get; set; }
 
     /// <summary>

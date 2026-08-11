@@ -8,6 +8,7 @@ public record BinanceOptionsExchangeInfo
     /// <summary>
     /// The timezone the server uses
     /// </summary>
+    [JsonProperty("timezone")]
     public string TimeZone { get; set; } = "";
 
     /// <summary>
@@ -20,13 +21,13 @@ public record BinanceOptionsExchangeInfo
     /// Options assets available on the exchange
     /// </summary>
     [JsonProperty("optionAssets")]
-    public List<BinanceOptionsSymbol> Assets { get; set; } = [];
+    public List<BinanceOptionsAsset> Assets { get; set; } = [];
 
     /// <summary>
     /// Options contracts available on the exchange
     /// </summary>
     [JsonProperty("optionContracts")]
-    public List<BinanceOptionsSymbol> Contracts { get; set; } = [];
+    public List<BinanceOptionsContract> Contracts { get; set; } = [];
 
     /// <summary>
     /// All symbols supported
@@ -37,6 +38,31 @@ public record BinanceOptionsExchangeInfo
     /// <summary>
     /// The rate limits used
     /// </summary>
-    public List<BinanceRateLimit> RateLimits { get; set; } = [];
+    public List<BinanceOptionsRateLimit> RateLimits { get; set; } = [];
+}
 
+/// <summary>
+/// Options request rate-limit information
+/// </summary>
+public record BinanceOptionsRateLimit
+{
+    /// <summary>
+    /// Rate-limit type
+    /// </summary>
+    public string RateLimitType { get; set; } = "";
+
+    /// <summary>
+    /// Rate-limit interval
+    /// </summary>
+    public string Interval { get; set; } = "";
+
+    /// <summary>
+    /// Number of intervals
+    /// </summary>
+    public long IntervalNum { get; set; }
+
+    /// <summary>
+    /// Request limit
+    /// </summary>
+    public long Limit { get; set; }
 }

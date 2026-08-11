@@ -23,5 +23,5 @@ public record BinanceOptionsContract
     /// <summary>
     /// Settle Asset
     /// </summary>
-    public string settleAsset { get; set; } = "";
+    public string SettleAsset { get; set; } = "";
 }

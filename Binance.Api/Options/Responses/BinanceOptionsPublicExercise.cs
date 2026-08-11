@@ -23,6 +23,7 @@ public record BinanceOptionsPublicExercise
     /// <summary>
     /// Expiry date
     /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
     public DateTime ExpiryDate { get; set; }
 
     /// <summary>

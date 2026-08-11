@@ -23,5 +23,6 @@ public record BinanceOptionsOpenInterest
     /// <summary>
     /// Timestamp
     /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
     public DateTime Timestamp { get; set; }
 }

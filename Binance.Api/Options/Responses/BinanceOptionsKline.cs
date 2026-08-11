@@ -3,79 +3,78 @@
 /// <summary>
 /// Candlestick information for symbol
 /// </summary>
+[JsonConverter(typeof(ArrayConverter))]
 public record BinanceOptionsKline
 {
     /// <summary>
+    /// Opening time
+    /// </summary>
+    [ArrayProperty(0), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime OpenTime { get; set; }
+
+    /// <summary>
     /// Opening price
     /// </summary>
-    [JsonProperty("open")]
+    [ArrayProperty(1)]
     public decimal OpenPrice { get; set; }
 
     /// <summary>
     /// Highest price
     /// </summary>
-    [JsonProperty("high")]
+    [ArrayProperty(2)]
     public decimal HighPrice { get; set; }
 
     /// <summary>
     /// Lowest price
     /// </summary>
-    [JsonProperty("low")]
+    [ArrayProperty(3)]
     public decimal LowPrice { get; set; }
 
     /// <summary>
     /// Closing price (latest price if the current candle has not closed)
     /// </summary>
-    [JsonProperty("close")]
+    [ArrayProperty(4)]
     public decimal ClosePrice { get; set; }
 
     /// <summary>
     /// Trading volume(contracts)
     /// </summary>
-    [JsonProperty("volume")]
+    [ArrayProperty(5)]
     public decimal Volume { get; set; }
+
+    /// <summary>
+    /// Closing time
+    /// </summary>
+    [ArrayProperty(6), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime CloseTime { get; set; }
 
     /// <summary>
     /// Trading amount(in quote asset)
     /// </summary>
-    [JsonProperty("amount")]
+    [ArrayProperty(7)]
     public decimal QuoteVolume { get; set; }
-
-    /// <summary>
-    /// Candle type
-    /// </summary>
-    [JsonProperty("interval")]
-    public BinanceKlineInterval Interval { get; set; }
 
     /// <summary>
     /// Number of completed trades
     /// </summary>
-    [JsonProperty("tradeCount")]
+    [ArrayProperty(8)]
     public int TradeCount { get; set; }
 
     /// <summary>
     /// Taker trading volume(contracts)
     /// </summary>
-    [JsonProperty("takerVolume")]
+    [ArrayProperty(9)]
     public decimal TakerBuyBaseVolume { get; set; }
 
     /// <summary>
     /// Taker trade amount(in quote asset)
     /// </summary>
-    [JsonProperty("takerAmount")]
+    [ArrayProperty(10)]
     public decimal TakerBuyQuoteVolume { get; set; }
 
     /// <summary>
-    /// Opening time
+    /// Ignored value published at tuple index 11
     /// </summary>
-    [JsonProperty("openTime")]
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime OpenTime { get; set; }
-
-    /// <summary>
-    /// Closing time
-    /// </summary>
-    [JsonProperty("closeTime")]
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime CloseTime { get; set; }
+    [ArrayProperty(11)]
+    public string IgnoredValue { get; set; } = "";
 }

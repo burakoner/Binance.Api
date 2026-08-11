@@ -26,7 +26,7 @@ public class BinanceTradeRuleIsolationTests
             {
               "symbol": "BTC-260925-50000-C",
               "filters": [
-                { "filterType": "LOT_SIZE", "minQty": "1", "maxQty": "10", "stepSize": "1" }
+                { "filterType": "PRICE_FILTER", "minPrice": "1", "maxPrice": "100000", "tickSize": "1", "minQty": "1", "maxQty": "10", "stepSize": "1" }
               ]
             }
           ]

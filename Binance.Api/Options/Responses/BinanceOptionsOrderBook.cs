@@ -6,39 +6,33 @@
 public record BinanceOptionsOrderBook
 {
     /// <summary>
-    /// The symbol of the order book 
-    /// </summary>
-    [JsonProperty("s")]
-    public string Symbol { get; set; } = "";
-
-    /// <summary>
     /// Transaction Time
     /// </summary>
-    [JsonProperty("T")]
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
     public DateTime TransactionTime { get; set; }
 
     /// <summary>
     /// The ID of the last update
     /// </summary>
-    [JsonProperty("u")]
-    public long UpdateId { get; set; }
+    [JsonProperty("lastUpdateId")]
+    public long LastUpdateId { get; set; }
 
     /// <summary>
     /// The list of bids
     /// </summary>
-    public List<BinanceSpotOrderBookEntry> Bids { get; set; } = [];
+    public List<BinanceOptionsOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of asks
     /// </summary>
-    public List<BinanceSpotOrderBookEntry> Asks { get; set; } = [];
+    public List<BinanceOptionsOrderBookEntry> Asks { get; set; } = [];
 }
 
 /// <summary>
 /// An entry in the order book
 /// </summary>
 [JsonConverter(typeof(ArrayConverter))]
-public record BinanceSpotOrderBookEntry
+public record BinanceOptionsOrderBookEntry
 {
     /// <summary>
     /// The price of this order book entry

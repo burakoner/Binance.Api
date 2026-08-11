@@ -115,7 +115,6 @@ public class BinanceOptionsMarketDataRequestTests
         var result = await client.Options.GetOrderBookAsync(Symbol, limit);
 
         Assert.True(result.Success);
-        Assert.Equal(Symbol, result.Data.Symbol);
         AssertUnsignedRequest(handler, HttpMethod.Get, "/eapi/v1/depth");
         AssertRateLimit(limiter, "/eapi/v1/depth", expectedWeight);
         var query = ParseQuery(handler.RequestUri!);

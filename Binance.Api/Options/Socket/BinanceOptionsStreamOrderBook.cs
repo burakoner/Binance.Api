@@ -27,11 +27,11 @@ public record BinanceOptionsStreamOrderBook : BinanceSocketStreamEvent
     /// The list of bids
     /// </summary>
     [JsonProperty("b")]
-    public List<BinanceSpotOrderBookEntry> Bids { get; set; } = [];
+    public List<BinanceOptionsOrderBookEntry> Bids { get; set; } = [];
 
     /// <summary>
     /// The list of asks
     /// </summary>
     [JsonProperty("a")]
-    public List<BinanceSpotOrderBookEntry> Asks { get; set; } = [];
+    public List<BinanceOptionsOrderBookEntry> Asks { get; set; } = [];
 }

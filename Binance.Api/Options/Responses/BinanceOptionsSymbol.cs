@@ -13,6 +13,7 @@ public record BinanceOptionsSymbol
     /// <summary>
     /// expiry time
     /// </summary>
+    [JsonConverter(typeof(DateTimeConverter))]
     public DateTime ExpiryDate { get; set; }
 
     /// <summary>
@@ -33,17 +34,7 @@ public record BinanceOptionsSymbol
     /// <summary>
     /// Contract unit, the quantity of the underlying asset represented by a single contract.
     /// </summary>
-    public decimal Unit { get; set; }
-
-    /// <summary>
-    /// maker commission rate
-    /// </summary>
-    public decimal MakerFeeRate { get; set; }
-
-    /// <summary>
-    /// taker commission rate
-    /// </summary>
-    public decimal TakerFeeRate { get; set; }
+    public long Unit { get; set; }
 
     /// <summary>
     /// Liquidation commission rate
@@ -87,32 +78,41 @@ public record BinanceOptionsSymbol
     /// <summary>
     /// price precision
     /// </summary>
-    public int PriceScale { get; set; }
+    public long PriceScale { get; set; }
 
     /// <summary>
     /// quantity precision
     /// </summary>
-    public int QuantityScale { get; set; }
+    public long QuantityScale { get; set; }
 
     /// <summary>
     /// The quote asset
     /// </summary>
     public string QuoteAsset { get; set; } = "";
-    
+
+    /// <summary>
+    /// Contract type
+    /// </summary>
+    public string ContractType { get; set; } = "";
+
+    /// <summary>
+    /// Underlying type
+    /// </summary>
+    public string UnderlyingType { get; set; } = "";
+
+    /// <summary>
+    /// Whether naked selling is allowed
+    /// </summary>
+    public bool NakedSell { get; set; }
+
+    /// <summary>
+    /// Trading status
+    /// </summary>
+    public string Status { get; set; } = "";
+
     /// <summary>
     /// Filters for order on this symbol
     /// </summary>
-    public List<BinanceSymbolFilter> Filters { get; set; } = [];
+    public List<BinanceOptionsSymbolFilter> Filters { get; set; } = [];
 
-    /// <summary>
-    /// Filter for the max accuracy of the price for this symbol
-    /// </summary>
-    [JsonIgnore]
-    public BinanceSymbolPriceFilter? PriceFilter => Filters.OfType<BinanceSymbolPriceFilter>().FirstOrDefault();
-
-    /// <summary>
-    /// Filter for max accuracy of the quantity for this symbol
-    /// </summary>
-    [JsonIgnore]
-    public BinanceSymbolLotSizeFilter? LotSizeFilter => Filters.OfType<BinanceSymbolLotSizeFilter>().FirstOrDefault();
 }

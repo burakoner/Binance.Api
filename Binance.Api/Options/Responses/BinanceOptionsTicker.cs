@@ -64,10 +64,10 @@ public record BinanceOptionsTicker
     public decimal BestBidPrice { get; set; }
 
     /// <summary>
-    /// The quantity of the best ask price in the order book
+    /// The best ask price in the order book
     /// </summary>
-    [JsonProperty("AskQty")]
-    public decimal BestAskQuantity { get; set; }
+    [JsonProperty("askPrice")]
+    public decimal BestAskPrice { get; set; }
 
     /// <summary>
     /// Time at which this 24 hours opened

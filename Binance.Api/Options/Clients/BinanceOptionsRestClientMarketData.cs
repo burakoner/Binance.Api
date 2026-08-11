@@ -48,7 +48,7 @@ internal partial class BinanceOptionsRestClient
         return RequestAsync<List<BinanceOptionsOpenInterest>>(GetUrl(eapi, v1, "openInterest"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 0);
     }
 
-    public async Task<RestCallResult<BinanceOptionsOrderBook>> GetOrderBookAsync(string symbol, long? limit = null, CancellationToken ct = default)
+    public Task<RestCallResult<BinanceOptionsOrderBook>> GetOrderBookAsync(string symbol, long? limit = null, CancellationToken ct = default)
     {
         ValidateMarketDataRequiredValue(symbol, nameof(symbol));
         if (limit is not null and not (5 or 10 or 20 or 50 or 100 or 500 or 1000))
@@ -64,11 +64,7 @@ internal partial class BinanceOptionsRestClient
             1000 => 20,
             _ => 1
         };
-        var result = await RequestAsync<BinanceOptionsOrderBook>(GetUrl(eapi, v1, "depth"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight).ConfigureAwait(false);
-        if (!result) return result;
-
-        result.Data.Symbol = symbol;
-        return result;
+        return RequestAsync<BinanceOptionsOrderBook>(GetUrl(eapi, v1, "depth"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: requestWeight);
     }
 
     public Task<RestCallResult<List<BinanceOptionsPublicTrade>>> GetRecentTradesAsync(string symbol, long? limit = null, CancellationToken ct = default)
