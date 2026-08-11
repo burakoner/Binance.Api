@@ -154,7 +154,10 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
 
     protected override async Task<bool> UnsubscribeAsync(WebSocketConnection connection, WebSocketSubscription subscription)
     {
-        var topics = ((BinanceSocketRequest)subscription.Request!).Params;
+        if (subscription.Request is not BinanceSocketRequest subscriptionRequest)
+            return true;
+
+        var topics = subscriptionRequest.Params;
         var unsub = new BinanceSocketRequest { Method = "UNSUBSCRIBE", Params = topics, Id = NextId() };
         var result = false;
 
@@ -233,6 +236,12 @@ internal partial class BinanceOptionsSocketClient : WebSocketApiClient, IBinance
         // Soft Unsubscribe
         var wsc = subscription.GetConnection();
         var wss = subscription.GetSubscription();
+        if (wss.Request == null)
+        {
+            await base.UnsubscribeAsync(subscription).ConfigureAwait(false);
+            return;
+        }
+
         await this.UnsubscribeAsync(wsc, wss).ConfigureAwait(false);
 
         // Force Unsubscribe

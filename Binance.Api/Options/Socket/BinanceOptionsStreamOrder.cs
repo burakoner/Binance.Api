@@ -1,154 +1,181 @@
-﻿namespace Binance.Api.Options;
+namespace Binance.Api.Options;
 
 /// <summary>
-/// Options Order Update
+/// Options order update
 /// </summary>
 public record BinanceOptionsStreamOrder : BinanceSocketStreamEvent
 {
     /// <summary>
-    /// The listen key the update was for
+    /// The listen key the update was received for
     /// </summary>
     [JsonIgnore]
     public string ListenKey { get; set; } = string.Empty;
 
     /// <summary>
-    /// Creation Time
+    /// Transaction time
     /// </summary>
-    [JsonProperty("T")]
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? CreateTime { get; set; }
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? TransactionTime { get; set; }
 
     /// <summary>
-    /// Update Time
+    /// Order data
     /// </summary>
-    [JsonProperty("t")]
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime? UpdateTime { get; set; }
+    [JsonProperty("o")]
+    public BinanceOptionsStreamOrderData Order { get; set; } = new();
+}
 
+/// <summary>
+/// Options order update data
+/// </summary>
+public record BinanceOptionsStreamOrderData
+{
     /// <summary>
     /// Symbol
     /// </summary>
     [JsonProperty("s")]
-    public string Symbol { get; set; } = "";
+    public string Symbol { get; set; } = string.Empty;
 
     /// <summary>
-    /// Client Order Id
+    /// Client order identifier
     /// </summary>
     [JsonProperty("c")]
-    public string ClientOrderId { get; set; } = "";
+    public string ClientOrderId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Order Id
+    /// Order side
     /// </summary>
-    [JsonProperty("oid")]
-    public long Id { get; set; }
+    [JsonProperty("S")]
+    public BinanceOrderSide? Side { get; set; }
 
     /// <summary>
-    /// Price
+    /// Order type
+    /// </summary>
+    [JsonProperty("o")]
+    public BinanceOptionsOrderType? Type { get; set; }
+
+    /// <summary>
+    /// Time in force
+    /// </summary>
+    [JsonProperty("f")]
+    public BinanceTimeInForce? TimeInForce { get; set; }
+
+    /// <summary>
+    /// Original quantity
+    /// </summary>
+    [JsonProperty("q")]
+    public decimal? Quantity { get; set; }
+
+    /// <summary>
+    /// Original price
     /// </summary>
     [JsonProperty("p")]
     public decimal? Price { get; set; }
 
     /// <summary>
-    /// Quantity
+    /// Average price
     /// </summary>
-    [JsonProperty("q")]
-    public decimal Quantity { get; set; }
+    [JsonProperty("ap")]
+    public decimal? AveragePrice { get; set; }
 
     /// <summary>
-    /// Reduce Only
+    /// Execution type
     /// </summary>
-    [JsonProperty("r")]
-    public bool ReduceOnly { get; set; }
+    [JsonProperty("x")]
+    public BinanceOptionsExecutionType? ExecutionType { get; set; }
 
     /// <summary>
-    /// Post Only
+    /// Order status
     /// </summary>
-    [JsonProperty("po")]
-    public bool PostOnly { get; set; }
+    [JsonProperty("X")]
+    public BinanceOrderStatus? Status { get; set; }
 
     /// <summary>
-    /// Order Status
+    /// Order identifier
     /// </summary>
-    [JsonProperty("S")]
-    public string Status { get; set; } = "";
+    [JsonProperty("i")]
+    public long? Id { get; set; }
 
     /// <summary>
-    /// Executed Quantity
+    /// Last filled quantity
     /// </summary>
-    [JsonProperty("e")]
-    public decimal? ExecutedQuantity { get; set; }
+    [JsonProperty("l")]
+    public decimal? LastFilledQuantity { get; set; }
 
     /// <summary>
-    /// Executed Quantity
+    /// Accumulated filled quantity
     /// </summary>
-    [JsonProperty("ec")]
-    public decimal? ExecutedEquity { get; set; }
+    [JsonProperty("z")]
+    public decimal? AccumulatedFilledQuantity { get; set; }
 
     /// <summary>
-    /// Fee
+    /// Last filled price
     /// </summary>
-    [JsonProperty("f")]
-    public decimal? Fee { get; set; }
+    [JsonProperty("L")]
+    public decimal? LastFilledPrice { get; set; }
 
     /// <summary>
-    /// Order Time In Force
+    /// Commission asset
     /// </summary>
-    [JsonProperty("tif")]
-    public BinanceTimeInForce? TimeInForce { get; set; }
+    [JsonProperty("N")]
+    public string? CommissionAsset { get; set; }
 
     /// <summary>
-    /// Order Type
+    /// Commission; a negative value represents a fee charge
     /// </summary>
-    [JsonProperty("oty")]
-    public BinanceOptionsOrderType Type { get; set; }
+    [JsonProperty("n")]
+    public decimal? Commission { get; set; }
 
     /// <summary>
-    /// Fills
+    /// Order trade time
     /// </summary>
-    [JsonProperty("oty")]
-    public List<BinanceOptionsStreamOrderFill> Fills { get; set; } = [];
-}
+    [JsonProperty("T"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime? TradeTime { get; set; }
 
-/// <summary>
-/// Options Order Update Fills
-/// </summary>
-public record BinanceOptionsStreamOrderFill
-{
     /// <summary>
-    /// Trade Id
+    /// Trade identifier
     /// </summary>
     [JsonProperty("t")]
-    public long Id { get; set; }
+    public long? TradeId { get; set; }
 
     /// <summary>
-    /// Trade Price
+    /// Bid quantity
     /// </summary>
-    [JsonProperty("p")]
-    public decimal Price { get; set; }
+    [JsonProperty("b")]
+    public decimal? BidQuantity { get; set; }
 
     /// <summary>
-    /// Trade Quantity
+    /// Ask quantity
     /// </summary>
-    [JsonProperty("q")]
-    public decimal Quantity { get; set; }
+    [JsonProperty("a")]
+    public decimal? AskQuantity { get; set; }
 
     /// <summary>
-    /// Trade Time
-    /// </summary>
-    [JsonProperty("T")]
-    [JsonConverter(typeof(DateTimeConverter))]
-    public DateTime Time { get; set; }
-
-    /// <summary>
-    /// Trade Liquidity
+    /// Whether the trade was on the maker side
     /// </summary>
     [JsonProperty("m")]
-    public BinanceOptionsLiquidity Liquidity { get; set; }
+    public bool? IsMaker { get; set; }
 
     /// <summary>
-    /// Fee
+    /// Whether the order is reduce only
     /// </summary>
-    [JsonProperty("f")]
-    public decimal Fee { get; set; }
+    [JsonProperty("R")]
+    public bool? ReduceOnly { get; set; }
+
+    /// <summary>
+    /// Original order type
+    /// </summary>
+    [JsonProperty("ot")]
+    public BinanceOptionsOrderType? OriginalType { get; set; }
+
+    /// <summary>
+    /// Realized profit for the trade
+    /// </summary>
+    [JsonProperty("rp")]
+    public decimal? RealizedProfit { get; set; }
+
+    /// <summary>
+    /// Self-trade prevention mode
+    /// </summary>
+    [JsonProperty("V")]
+    public BinanceSelfTradePreventionMode? SelfTradePreventionMode { get; set; }
 }

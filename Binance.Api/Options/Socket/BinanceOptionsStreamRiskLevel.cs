@@ -1,31 +1,31 @@
-﻿namespace Binance.Api.Options;
+namespace Binance.Api.Options;
 
 /// <summary>
-/// Options Risk Level Update
+/// Options risk-level update
 /// </summary>
 public record BinanceOptionsStreamRiskLevel : BinanceSocketStreamEvent
 {
     /// <summary>
-    /// The listen key the update was for
+    /// The listen key the update was received for
     /// </summary>
     [JsonIgnore]
     public string ListenKey { get; set; } = string.Empty;
 
     /// <summary>
-    /// Risk Level
+    /// Risk level
     /// </summary>
     [JsonProperty("s")]
-    public string RiskLevel { get; set; } = "";
+    public BinanceOptionsRiskLevel? RiskLevel { get; set; }
 
     /// <summary>
-    /// Margin Balance
+    /// Margin balance
     /// </summary>
     [JsonProperty("mb")]
-    public decimal MarginBalance { get; set; }
+    public decimal? MarginBalance { get; set; }
 
     /// <summary>
-    /// Maintenance Margin
+    /// Maintenance margin
     /// </summary>
     [JsonProperty("mm")]
-    public decimal MaintenanceMargin { get; set; }
+    public decimal? MaintenanceMargin { get; set; }
 }

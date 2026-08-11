@@ -1246,7 +1246,10 @@ var options_119 = await ws.Options.SubscribeToPartialOrderBooksAsync([], 10, nul
 var options_201 = await ws.Options.SubscribeToUserDataStreamAsync("-----LISTEN-KEY-----",
     onAccountUpdated: (data) => { },
     onOrderUpdated: (data) => { },
-    onRiskLevelUpdated: (data) => { }
+    onRiskLevelUpdated: (data) => { },
+    onBalancePositionUpdated: (data) => { },
+    onGreekUpdated: (data) => { },
+    onListenKeyExpired: (data) => { }
     );
 
 ```

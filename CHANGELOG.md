@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned the Options private user-data stream with the current direct listen-key route and all six published account, balance/position, order/trade, Greek, risk-level, and listen-key-expiration event contracts
   * Aligned all six Options order mutation contracts with the current REST schemas: required quantities, ten-order batches, optional ACK/RESULT and self-trade-prevention modes, int64 receive windows, exact query serialization and weights, complete order fields, and endpoint-specific cancel-all acknowledgements
   * Aligned the Options REST user-data-stream lifecycle with the current parameterless API-key-only weight-one POST/PUT/DELETE contracts, exposed the start response's int64 expiration, handled empty keepalive/close responses, and updated executable call sites and endpoint documentation
   * Completed Backward Review 29 across the final COIN-M and Options inventory work; moved `modifyId` out of placement/cancellation acknowledgement surfaces into exact REST/WebSocket modification result types, and split and risk-reordered the remaining Options execution contract into smaller slices
