@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Proved deterministic generation of both Binance Spot text FIX 4.4 dictionaries with QuickFIX/n DDTool 1.14.1: separate internal role namespaces, a shared 148-field internal catalog, unchanged published Core assemblies, warning-free net8/net9/net10 compilation, and zero exported generated types without committing Binance-derived source
   * Proved the pinned FIX SBE `1:1` C# generation pipeline with portable JDK 17 and SbeTool 1.39.0: two identical 84-file outputs, exact upstream warning/vendor-metadata gates, deterministic internalization, all five consumer target frameworks, and zero exported wire types without committing generated Binance artifacts
   * Added a license-safe Spot FIX schema provenance lock and maintainer-only verified downloader for the two text dictionaries, FIX SBE `1:1`, aliases, and lifecycle files; corrected checkout-converted hashes to exact commit-pinned raw bytes without redistributing Binance artifacts
   * Established the truthful non-packable FIX/SBE foundation: removed the empty public placeholder and false completeness claims, upgraded to QuickFIX/n Core 1.14.1 without the generic FIX44 package, and added netstandard SBE plus dedicated protocol test projects

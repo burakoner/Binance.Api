@@ -25,6 +25,9 @@
     <EmbeddedResource Include="..\eng\binance-spot-fix-schema-lock.json"
                       Link="Fixtures\binance-spot-fix-schema-lock.json"
                       LogicalName="Binance.FIX.Api.Tests.binance-spot-fix-schema-lock.json" />
+    <EmbeddedResource Include="..\eng\binance-spot-fix-ddtool-lock.json"
+                      Link="Fixtures\binance-spot-fix-ddtool-lock.json"
+                      LogicalName="Binance.FIX.Api.Tests.binance-spot-fix-ddtool-lock.json" />
   </ItemGroup>
 
 </Project>
