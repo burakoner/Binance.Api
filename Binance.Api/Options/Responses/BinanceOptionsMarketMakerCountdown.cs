@@ -8,10 +8,12 @@ public record BinanceOptionsMarketMakerCountdown
     /// <summary>
     /// Underlying
     /// </summary>
-    public string Underlying { get; set; } = "";
+    [JsonProperty("underlying")]
+    public string Underlying { get; set; } = string.Empty;
 
     /// <summary>
     /// Countdown Time
     /// </summary>
+    [JsonProperty("countdownTime")]
     public long CountdownTime { get; set; }
 }

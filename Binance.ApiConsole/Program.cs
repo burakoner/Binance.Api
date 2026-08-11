@@ -496,9 +496,9 @@ internal class Program
         var options_601 = await api.Options.MarketMaker.GetProtectionAsync("---UNDERLYING---");
         var options_602 = await api.Options.MarketMaker.GetCancelAllCountdownAsync("---UNDERLYING---");
         var options_603 = await api.Options.MarketMaker.SetProtectionAsync("---UNDERLYING---", 3000, 5000, 100.0m, 10);
-        var options_604 = await api.Options.MarketMaker.CancelAllCountdownHeartbeatAsync([]);
+        var options_604 = await api.Options.MarketMaker.CancelAllCountdownHeartbeatAsync(["---UNDERLYING---"]);
         var options_605 = await api.Options.MarketMaker.ResetProtectionAsync("---UNDERLYING---");
-        var options_606 = await api.Options.MarketMaker.SetCancelAllCountdownAsync("---UNDERLYING---", 30);
+        var options_606 = await api.Options.MarketMaker.SetCancelAllCountdownAsync("---UNDERLYING---", 5000);
 
         // TODO: European Options -> Market Maker -> Block Trade Methods (PRIVATE)
         var options_701 = await api.Options.MarketMaker.PlaceBlockOrderAsync(BinanceOptionsLiquidity.Taker, []);

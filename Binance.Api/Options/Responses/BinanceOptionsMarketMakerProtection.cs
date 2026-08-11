@@ -8,24 +8,26 @@ public record BinanceOptionsMarketMakerProtection
     /// <summary>
     /// Underlying Id
     /// </summary>
+    [JsonProperty("underlyingId")]
     public long UnderlyingId { get; set; }
 
     /// <summary>
     /// Underlying
     /// </summary>
-    public string Underlying { get; set; } = "";
+    [JsonProperty("underlying")]
+    public string Underlying { get; set; } = string.Empty;
 
     /// <summary>
     /// Window time in milliseconds
     /// </summary>
     [JsonProperty("windowTimeInMilliseconds")]
-    public int WindowTimeInMilliseconds { get; set; }
+    public long WindowTimeInMilliseconds { get; set; }
 
     /// <summary>
     /// Frozen time in milliseconds
     /// </summary>
     [JsonProperty("frozenTimeInMilliseconds")]
-    public int FrozenTimeInMilliseconds { get; set; }
+    public long FrozenTimeInMilliseconds { get; set; }
 
     /// <summary>
     /// Quantity limit

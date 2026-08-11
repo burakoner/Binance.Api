@@ -8,7 +8,8 @@ public record BinanceOptionsMarketMakerAutoCancelAll
     /// <summary>
     /// Underlying
     /// </summary>
-    public string Underlying { get; set; } = "";
+    [JsonProperty("underlying")]
+    public string Underlying { get; set; } = string.Empty;
 
     /// <summary>
     /// Countdown Time
