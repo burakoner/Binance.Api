@@ -97,7 +97,7 @@ public class BinanceOptionsPublicStreamTests
         Assert.Equal(99m, update.Open);
         Assert.Equal(110m, update.High);
         Assert.Equal(95m, update.Low);
-        Assert.Equal(123.5m, update.Volume);
+        Assert.Equal(123.5m, update.ContractVolume);
         Assert.Equal(12_450.75m, update.QuoteAmount);
         Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1_762_828_168_643).UtcDateTime, update.StatisticsOpenTime);
         Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1_762_914_568_643).UtcDateTime, update.StatisticsCloseTime);
@@ -107,6 +107,7 @@ public class BinanceOptionsPublicStreamTests
         Assert.Null(typeof(BinanceOptionsStreamTicker).GetProperty("Delta"));
         Assert.Null(typeof(BinanceOptionsStreamTicker).GetProperty("MarkPrice"));
         Assert.Null(typeof(BinanceOptionsStreamTicker).GetProperty("BestBidPrice"));
+        Assert.Null(typeof(BinanceOptionsStreamTicker).GetProperty("Volume"));
     }
 
     [Fact]

@@ -82,12 +82,14 @@ public class BinanceOptionsMarketStreamTests
         Assert.Equal(1_001.2m, update.ClosePrice);
         Assert.Equal(1_002.3m, update.HighPrice);
         Assert.Equal(999.4m, update.LowPrice);
-        Assert.Equal(5.5m, update.Volume);
+        Assert.Equal(5.5m, update.ContractVolume);
         Assert.Equal(5_500.6m, update.QuoteVolume);
-        Assert.Equal(2.7m, update.TakerBuyBaseVolume);
+        Assert.Equal(2.7m, update.TakerBuyContractVolume);
         Assert.Equal(2_700.8m, update.TakerBuyQuoteVolume);
         Assert.Equal(long.MaxValue, update.TradeCount);
         Assert.False(update.Final);
+        Assert.Null(typeof(BinanceOptionsStreamKline).GetProperty("Volume"));
+        Assert.Null(typeof(BinanceOptionsStreamKline).GetProperty("TakerBuyBaseVolume"));
     }
 
     [Fact]

@@ -24,7 +24,7 @@ public record BinanceOptionsStreamTrade : BinanceSocketStreamEvent
     public decimal Price { get; set; }
 
     /// <summary>
-    /// The base quantity of the trade
+    /// Trade quantity in contracts
     /// </summary>
     [JsonProperty("q")]
     public decimal Quantity { get; set; }

@@ -30,10 +30,10 @@ public record BinanceOptionsStreamKline : BinanceSocketStreamEvent
     public DateTime OpenTime { get; set; }
 
     /// <summary>
-    /// The volume traded during this candlestick
+    /// Trading volume in contracts
     /// </summary>
     [JsonProperty("v")]
-    public decimal Volume { get; set; }
+    public decimal ContractVolume { get; set; }
 
     /// <summary>
     /// The close time of this candlestick
@@ -42,7 +42,7 @@ public record BinanceOptionsStreamKline : BinanceSocketStreamEvent
     public DateTime CloseTime { get; set; }
 
     /// <summary>
-    /// The volume traded during this candlestick in the asset form
+    /// Completed trade amount in the quote asset
     /// </summary>
     [JsonProperty("q")]
     public decimal QuoteVolume { get; set; }
@@ -102,13 +102,13 @@ public record BinanceOptionsStreamKline : BinanceSocketStreamEvent
     public long TradeCount { get; set; }
 
     /// <summary>
-    /// Taker buy base asset volume
+    /// Taker completed trade volume in contracts
     /// </summary>
     [JsonProperty("V")]
-    public decimal TakerBuyBaseVolume { get; set; }
+    public decimal TakerBuyContractVolume { get; set; }
 
     /// <summary>
-    /// Taker buy quote asset volume
+    /// Taker trade amount in the quote asset
     /// </summary>
     [JsonProperty("Q")]
     public decimal TakerBuyQuoteVolume { get; set; }
