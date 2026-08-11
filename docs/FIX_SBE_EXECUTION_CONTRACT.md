@@ -6,13 +6,13 @@ Evidence date: 2026-08-11
 
 Owning inventory: Slice 118
 
-Completed implementation slices: Slices 142-143
+Completed implementation slices: Slices 142-144
 
-Next implementation slice: Slice 144
+Next implementation slice: Slice 145
 
 ## Brutal current state
 
-`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist, and Slice 143 pins the exact FIX-owned upstream inputs without redistributing them. There is still no session, transport, authentication, generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
+`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist; Slice 143 pins the exact FIX-owned upstream inputs without redistributing them; Slice 144 proves that FIX SBE `1:1` can be generated deterministically, internalized, and compiled across every current consumer target. There is still no session, transport, authentication, committed generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
 
 This program is much larger than adding a few missing JSON endpoints. The current official surface contains:
 
@@ -62,17 +62,19 @@ The smallest coherent boundary is three layers:
 
 Dependency direction is one-way: `Binance.Api -> Binance.SBE.Api` and `Binance.FIX.Api -> Binance.SBE.Api`. `Binance.SBE.Api` must not reference either consumer. No shared “protocol framework” project will be introduced unless a concrete circular dependency proves it necessary.
 
-The current empty FIX package must become non-packable and its false completeness claim must be removed in Slice 142. Packaging remains disabled until the final release gate. QuickFIX/n will be upgraded from 1.14.0 to the current 1.14.1 for implementation work. The `QuickFIXn.FIX44` package is not automatically retained: the current Binance dictionaries are custom FIX 4.4 dictionaries and must own their message factory.
+Slice 142 made both protocol projects non-packable, removed the FIX package's false completeness claim, upgraded QuickFIX/n Core to 1.14.1, and removed the generic `QuickFIXn.FIX44` package. Packaging remains disabled until the final release gate. The current Binance dictionaries are custom FIX 4.4 dictionaries and must own their message factory.
 
 ## Generated-schema contract
 
 Generated wire code is required; hand-maintaining 29, 4, and 92 SBE templates is rejected as an avoidable correctness risk.
 
 - Real Logic/Aeron SbeTool C# generation is pinned to release `1.39.0`, commit `e773b57cac6b2008ce30dd219a33de49766c6013`.
-- SbeTool is a maintainer-only generation dependency. It currently requires JDK 17, while this workstation exposes only Java 8. Generation cannot be claimed operational until Slice 144 supplies and tests the pinned JDK 17 toolchain.
-- The official C# runtime project targets .NET Standard 2.0 and 2.1, but Slice 144 must still compile the actual Binance-generated output across every consuming target framework. Review 33 owns any package-boundary revision if that concrete matrix fails; target support will not be assumed from the runtime project alone.
+- SbeTool remains a maintainer-only dependency. Slice 144 pins the current patched Eclipse Temurin JDK `17.0.20+8`, the Apache-2.0 `sbe-all` 1.39.0 executable, the exact matching seven C# runtime sources, and the official runtime's `System.Memory` 4.5.3 support assembly by URI, byte length, and SHA-256. The portable JDK lives outside the repository and does not replace the workstation's Java 8 installation.
+- The exact Binance FIX SBE `1:1` schema generates 84 C# files and 1,498,986 bytes with manifest SHA-256 `91e6310676c8bbcb0b5978ee28577069abbf4ccac6e16f685ee6cf52c88710c5`; two independent runs are byte-for-byte identical. The generated plus matching runtime sources compile warning-free for `netstandard2.0`, `netstandard2.1`, `net8.0`, `net9.0`, and `net10.0` with an offline NuGet source set.
+- SbeTool emits one reviewed warning because `MarketDataIncrementalTrade.MDEntries` deliberately uses `groupSize32Encoding` with `uint32 numInGroup`, rather than the tool's recommended `uint8`/`uint16`. That exact warning is allowlisted; a missing, changed, or additional warning fails generation. The schema also contains 56 Binance `mbx:exponent` extension attributes referencing `Exponent`, `PriceExponent`, or `QtyExponent`, so it is intentionally not valid against the unextended standard SBE XSD. The original XML is generated unchanged; decimal metadata ownership remains explicit for Slice 151 mapping.
 - The official repository publishes no `LICENSE`, `COPYING`, or `NOTICE` file. The linked [Binance Terms](https://www.binance.com/en/terms) and [Testnet Terms](https://www.binance.com/en/about-legal/terms-testnets) do not expressly grant redistribution of these raw artifacts. This is a fail-closed project decision, not legal advice: raw Binance XML/JSON files are not committed, packed, or copied into Git history. Exact commit, URI, byte length, hash, and reviewed identity are committed instead, with an explicit maintainer-only verified downloader.
-- Generated C# must not be committed or released merely because generation succeeds. Slice 144 may generate and compile in an ignored temporary workspace to prove the toolchain. Review 33 must obtain an explicit repository-owner/licensing decision before generated output derived from the Binance schemas can enter Git or a package. Normal restore/build/test remains offline throughout.
+- SbeTool emits all 84 top-level codec types as `public`. The selected package boundary performs exactly one deterministic top-level `public` to `internal` accessibility change per generated file, changes no member/wire code, and proves zero exported types after compilation. Any generator output that does not match that exact 84-replacement manifest fails closed.
+- Generated C# must not be committed or released merely because generation succeeds. Slice 144 generates and compiles only in an external temporary workspace. Review 33 must obtain an explicit repository-owner/licensing decision before generated output derived from the Binance schemas can enter Git or a package. Normal restore/build/test remains offline throughout.
 - After that rights gate is approved and generated output is committed, CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
 - Generated namespaces include schema identity. Generated types are implementation detail, not stable high-level business API; Slice 144 must prove the selected internalization boundary before consumer mapping begins.
 - Every frame is length-checked before decode. Schema ID, schema version, template ID, block length, repeating-group counts, variable data lengths, null values, enum values, and microsecond timestamps receive deterministic boundary tests.
@@ -155,18 +157,18 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 
 ## Forecast and mandatory recalibration
 
-The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Slices 142-143 are complete. The current remaining envelope is **26 small turns and 141-282 active hours**. At 40 focused hours per week this is roughly 3.5-7.1 weeks; at 20 hours per week it is roughly 7.1-14.1 weeks. Those are effort conversions, not a promised calendar date, and exclude waiting for credentials, user authorization, Binance/Testnet availability, licensing decisions, or an upstream engine defect.
+The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Slices 142-144 are complete. The current remaining envelope is **25 small turns and 137-274 active hours**. At 40 focused hours per week this is roughly 3.4-6.9 weeks; at 20 hours per week it is roughly 6.9-13.7 weeks. Those are effort conversions, not a promised calendar date, and exclude waiting for credentials, user authorization, Binance/Testnet availability, licensing decisions, or an upstream engine defect.
 
 | Remaining milestone | Minimum remaining turns | Remaining active budget |
 | --- | ---: | ---: |
-| Foundation/generation decision after Review 33 | 3 | 11-22 h |
-| Complete safe text FIX after Review 34 | 9 | 49-98 h |
-| Complete text, hybrid, and full FIX SBE after Review 35 | 14 | 74-148 h |
-| Independent SBE market streams after Review 36 | 18 | 92-184 h |
-| General REST/WebSocket/user-data SBE after Review 37 | 24 | 132-264 h |
-| Release-gated current FIX/SBE program | 26 | 141-282 h |
+| Foundation/generation decision after Review 33 | 2 | 7-14 h |
+| Complete safe text FIX after Review 34 | 8 | 45-90 h |
+| Complete text, hybrid, and full FIX SBE after Review 35 | 13 | 70-140 h |
+| Independent SBE market streams after Review 36 | 17 | 88-176 h |
+| General REST/WebSocket/user-data SBE after Review 37 | 23 | 128-256 h |
+| Release-gated current FIX/SBE program | 25 | 137-274 h |
 
-Review 33 is the first mandatory re-estimation point because it replaces current unknowns with executable evidence: whether FIX/SBE sources can be generated and compiled cleanly, whether QuickFIX/n can satisfy Binance’s no-ResendRequest rule without an unsafe fork, and whether generated artifacts may enter this repository and its packages. If any gate fails, downstream slice numbers and budgets must change before development continues.
+Review 33 is the first mandatory re-estimation point. Slice 144 has resolved JDK/SbeTool determinism, target-framework compatibility, and generated-type internalization with executable evidence. Slice 145 must resolve text FIX dictionary generation; Review 33 must then decide whether QuickFIX/n can satisfy Binance's no-ResendRequest rule without an unsafe fork and whether generated artifacts may enter this repository and its packages. If any gate fails, downstream slice numbers and budgets must change before development continues.
 
 ## Definition of done
 

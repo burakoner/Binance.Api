@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Proved the pinned FIX SBE `1:1` C# generation pipeline with portable JDK 17 and SbeTool 1.39.0: two identical 84-file outputs, exact upstream warning/vendor-metadata gates, deterministic internalization, all five consumer target frameworks, and zero exported wire types without committing generated Binance artifacts
   * Added a license-safe Spot FIX schema provenance lock and maintainer-only verified downloader for the two text dictionaries, FIX SBE `1:1`, aliases, and lifecycle files; corrected checkout-converted hashes to exact commit-pinned raw bytes without redistributing Binance artifacts
   * Established the truthful non-packable FIX/SBE foundation: removed the empty public placeholder and false completeness claims, upgraded to QuickFIX/n Core 1.14.1 without the generic FIX44 package, and added netstandard SBE plus dedicated protocol test projects
   * Defined the evidence-backed Spot FIX/SBE implementation execution contract: truthful package boundaries, pinned schema and generator provenance, fail-closed TLS/session/binary safety gates, deterministic conformance policy, and 23 small implementation slices with five mandatory reviews

@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Binance.SBE.Api\Binance.SBE.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="..\eng\binance-spot-fix-sbe-toolchain-lock.json"
+                      Link="Fixtures\binance-spot-fix-sbe-toolchain-lock.json"
+                      LogicalName="Binance.SBE.Api.Tests.binance-spot-fix-sbe-toolchain-lock.json" />
+  </ItemGroup>
+
 </Project>

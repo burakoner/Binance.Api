@@ -1,0 +1,116 @@
+{
+  "toolchain": "Binance Spot FIX SBE C# feasibility",
+  "evidenceDate": "2026-08-11",
+  "artifactsRedistributed": false,
+  "generatedArtifactsCommitted": false,
+  "java": {
+    "distribution": "Eclipse Temurin",
+    "version": "17.0.20+8",
+    "archiveUrl": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20%2B8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.20_8.zip",
+    "archiveFileName": "OpenJDK17U-jdk_x64_windows_hotspot_17.0.20_8.zip",
+    "archiveSize": 190818901,
+    "archiveSha256": "418497be5cf585bdd2203d6486a565d66d3f5e992d5630d45104cb873fab8122",
+    "extractedDirectoryName": "jdk-17.0.20+8",
+    "javaExecutablePath": "bin/java.exe",
+    "javaExecutableSize": 50296,
+    "javaExecutableSha256": "5b463cad4fcd8e4c655cc1c6f45a3b2ebb002adac94ebad2fdaa4f43e2aee211",
+    "licenseUrl": "https://github.com/adoptium/temurin17-binaries/blob/jdk-17.0.20%2B8/LICENSE"
+  },
+  "sbe": {
+    "version": "1.39.0",
+    "sourceRepository": "https://github.com/aeron-io/simple-binary-encoding",
+    "sourceTag": "1.39.0",
+    "sourceCommit": "e773b57cac6b2008ce30dd219a33de49766c6013",
+    "license": "Apache-2.0",
+    "licenseUrl": "https://github.com/aeron-io/simple-binary-encoding/blob/1.39.0/LICENSE",
+    "executable": {
+      "url": "https://repo1.maven.org/maven2/uk/co/real-logic/sbe-all/1.39.0/sbe-all-1.39.0.jar",
+      "fileName": "sbe-all-1.39.0.jar",
+      "size": 1061675,
+      "sha256": "5c44ada658c7f02223d9db30ec0b419d31fe2663d9640ec7585feb16b339ef7a"
+    },
+    "runtimeSources": [
+      {
+        "upstreamPath": "csharp/sbe-dll/ByteOrder.cs",
+        "size": 362,
+        "sha256": "4221e7e9331341fb7a03b5853a0aaa350168727eb9bc8dfa38705bb0bf9e6c23"
+      },
+      {
+        "upstreamPath": "csharp/sbe-dll/DirectBuffer.cs",
+        "size": 32046,
+        "sha256": "023850825fb69a0497301f6c2f14fb6a3ef40b0969ff3fb9da23ce95db5b3dcd"
+      },
+      {
+        "upstreamPath": "csharp/sbe-dll/EndianessConverter.cs",
+        "size": 5939,
+        "sha256": "a160bcefdae7dbd9d282cffe035391316af40c1238a805bc87b218e7c8f0096e"
+      },
+      {
+        "upstreamPath": "csharp/sbe-dll/PrimitiveType.cs",
+        "size": 8468,
+        "sha256": "5f4feacd899f6b4be3e4bd354753598794a64bd4a636cc834e62f6a39feba8e0"
+      },
+      {
+        "upstreamPath": "csharp/sbe-dll/PrimitiveValue.cs",
+        "size": 18210,
+        "sha256": "30f79101101b3da555ad253b38f8ab9d0115ba03387e1ead81c285ecb8fb1292"
+      },
+      {
+        "upstreamPath": "csharp/sbe-dll/SbePrimitiveType.cs",
+        "size": 1125,
+        "sha256": "5dfbcecadaa0f83d934696e27b4b568d0dc7a75a8038b3a8121077bc74334db2"
+      },
+      {
+        "upstreamPath": "csharp/sbe-dll/ThrowHelper.cs",
+        "size": 2259,
+        "sha256": "4f0158225f3a3da5a374db071f12a4cf579aaedf634bdff254fe9ebeee40981c"
+      }
+    ]
+  },
+  "systemMemory": {
+    "version": "4.5.3",
+    "packageUrl": "https://api.nuget.org/v3-flatcontainer/system.memory/4.5.3/system.memory.4.5.3.nupkg",
+    "packageFileName": "system.memory.4.5.3.nupkg",
+    "packageSize": 154054,
+    "packageSha256": "0af97b45b45b46ef6a2b37910568dabd492c793da3859054595d523e2a545859",
+    "assemblyPath": "lib/netstandard2.0/System.Memory.dll",
+    "assemblySize": 148760,
+    "assemblySha256": "41b5e1a4c59abdb1ce1467f58c3d9fd06d39dff4fc61d500a2410fece8037f4b",
+    "license": "MIT",
+    "licenseUrl": "https://www.nuget.org/packages/System.Memory/4.5.3/license"
+  },
+  "generation": {
+    "schemaFileName": "spot-fixsbe-1_1.xml",
+    "schemaId": 1,
+    "schemaVersion": 1,
+    "targetLanguage": "uk.co.real_logic.sbe.generation.csharp.CSharp",
+    "namespace": "Fix_sbe",
+    "generateNamespaceDirectory": true,
+    "generatePrecedenceChecks": true,
+    "standardSbeXsdCompatible": false,
+    "vendorMetadataNamespace": "https://developers.binance.com/docs/binance-spot-api-docs",
+    "vendorExponentAttributeCount": 56,
+    "vendorExponentReferences": [
+      "Exponent",
+      "PriceExponent",
+      "QtyExponent"
+    ],
+    "expectedWarnings": [
+      "WARNING: at <sbe:message name=\"MarketDataIncrementalTrade\"> <group name=\"MDEntries\"> \"numInGroup\" should be UINT8 or UINT16"
+    ],
+    "generatedFileCount": 84,
+    "generatedBytes": 1498986,
+    "generatedManifestSha256": "91e6310676c8bbcb0b5978ee28577069abbf4ccac6e16f685ee6cf52c88710c5",
+    "topLevelAccessibilityReplacements": 84,
+    "internalizedBytes": 1499154,
+    "internalizedManifestSha256": "e788b0a516aac4fb468d1ac6efe39b188ebd5588136f3b5bd9255b09eb0ec8a7"
+  },
+  "compileTargetFrameworks": [
+    "netstandard2.0",
+    "netstandard2.1",
+    "net8.0",
+    "net9.0",
+    "net10.0"
+  ],
+  "expectedExportedTypeCount": 0
+}
