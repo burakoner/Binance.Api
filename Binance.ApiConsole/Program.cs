@@ -473,9 +473,15 @@ internal class Program
 
         // European Options -> Trade Methods (PRIVATE)
         var options_401 = await api.Options.PlaceOrderAsync("---SYMBOL---", BinanceOrderSide.Buy, BinanceOptionsOrderType.Limit, 100.0m, 1.10m, BinanceTimeInForce.GoodTillCanceled);
-        var options_402 = await api.Options.PlaceOrdersAsync([]);
+        var options_402 = await api.Options.PlaceOrdersAsync([
+            new BinanceOptionsBatchOrderRequest("---SYMBOL---", BinanceOrderSide.Buy, BinanceOptionsOrderType.Limit, 100.0m)
+            {
+                Price = 1.10m,
+                TimeInForce = BinanceTimeInForce.GoodTillCanceled
+            }
+        ]);
         var options_403 = await api.Options.CancelOrderAsync("---SYMBOL---", 1_000_001);
-        var options_404 = await api.Options.CancelOrdersAsync("---SYMBOL---", []);
+        var options_404 = await api.Options.CancelOrdersAsync("---SYMBOL---", [1_000_001L]);
         var options_405 = await api.Options.CancelOrdersByUnderlyingAsync("---UNDERLYING---");
         var options_406 = await api.Options.CancelOrdersBySymbolAsync("---SYMBOL---");
         var options_407 = await api.Options.GetOrderAsync("---SYMBOL---", 1_000_001);
