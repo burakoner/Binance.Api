@@ -13,10 +13,7 @@ internal partial class BinanceOptionsRestClient
     public Task<RestCallResult<BinanceOptionsMarginAccount>> GetMarginAccountAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        var normalizedReceiveWindow = receiveWindow ?? (RestOptions.ReceiveWindow == null
-            ? null
-            : System.Convert.ToInt64(RestOptions.ReceiveWindow.Value.TotalMilliseconds));
-        parameters.AddOptional("recvWindow", normalizedReceiveWindow);
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceOptionsMarginAccount>(GetUrl(eapi, v1, "marginAccount"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
     }
@@ -34,10 +31,7 @@ internal partial class BinanceOptionsRestClient
         parameters.AddOptional("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        var normalizedReceiveWindow = receiveWindow ?? (RestOptions.ReceiveWindow == null
-            ? null
-            : System.Convert.ToInt64(RestOptions.ReceiveWindow.Value.TotalMilliseconds));
-        parameters.AddOptional("recvWindow", normalizedReceiveWindow);
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsAccountFundingFlow>>(GetUrl(eapi, v1, "bill"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }

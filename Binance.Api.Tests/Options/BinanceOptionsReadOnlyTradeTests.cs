@@ -61,7 +61,7 @@ public class BinanceOptionsReadOnlyTradeTests
         var limiter = new RecordingRateLimiter();
         var handler = new RecordingHttpMessageHandler(
             """{"commissions":[{"underlying":"BTCUSDT","makerFee":"0.0002","takerFee":"0.0004"},{"underlying":"ETHUSDT","makerFee":"0.0003","takerFee":"0.0005"}]}""");
-        using var client = CreateClient(handler, limiter, TimeSpan.FromMilliseconds(5_000));
+        using var client = CreateClient(handler, limiter, TimeSpan.FromMilliseconds(3_000_000_000L));
 
         var result = await client.Options.GetUserCommissionAsync();
 
@@ -81,19 +81,23 @@ public class BinanceOptionsReadOnlyTradeTests
                 Assert.Equal(0.0005m, commission.TakerFee);
             });
         AssertSignedGet(handler, limiter, "/eapi/v1/commission", 5);
-        Assert.Contains("recvWindow=5000", Uri.UnescapeDataString(handler.RequestUri!.Query));
+        Assert.Contains("recvWindow=3000000000", Uri.UnescapeDataString(handler.RequestUri!.Query));
     }
 
     [Fact]
-    public async Task TouchedQueries_RejectExplicitOrConfiguredReceiveWindowAboveMaximum()
+    public async Task Commission_DoesNotBorrowTheExistingBlockTradeReceiveWindowBoundary()
     {
         using (var client = CreateClient(new RecordingHttpMessageHandler("[]")))
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.MarketMaker.GetBlockTradesAsync(receiveWindow: 60_001));
 
+        var commissionHandler = new RecordingHttpMessageHandler("{}");
         using var configuredClient = CreateClient(
-            new RecordingHttpMessageHandler("{}"),
-            defaultReceiveWindow: TimeSpan.FromMilliseconds(60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => configuredClient.Options.GetUserCommissionAsync());
+            commissionHandler,
+            defaultReceiveWindow: TimeSpan.FromMilliseconds(3_000_000_000L));
+        var result = await configuredClient.Options.GetUserCommissionAsync();
+
+        Assert.True(result.Success);
+        Assert.Contains("recvWindow=3000000000", Uri.UnescapeDataString(commissionHandler.RequestUri!.Query));
     }
 
     private static void AssertSignedGet(

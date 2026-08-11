@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Completed Backward Review 31 across the four Options read-contract slices; removed invented Trade-read receive-window and lower-limit restrictions, corrected User Exercise default-limit documentation, and reconfirmed the Market Data and Account contracts
   * Aligned the Options Account Funding Flow with its current typed USDT currency, exact query key, int64 limit and receive window, published validation boundary, complete response, and canonical documentation
   * Aligned all seven Options REST Trade read contracts with required and optional identifiers, symbol-dependent open-order weights, int64 limits and receive windows, endpoint-specific order results, and complete current trade, position, exercise, and commission responses
   * Aligned all Options REST Market Data response contracts with current endpoint-specific assets, contracts, filters, tuple layouts, identifiers, int64 fields, order-book update IDs, and ticker prices

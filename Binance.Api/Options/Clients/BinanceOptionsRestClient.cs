@@ -37,12 +37,14 @@ internal partial class BinanceOptionsRestClient : IBinanceOptionsRestClient
 
     internal long? ValidateReceiveWindow(long? receiveWindow)
     {
-        var normalizedReceiveWindow = _.ReceiveWindow(receiveWindow);
+        var normalizedReceiveWindow = NormalizeReceiveWindow(receiveWindow);
         if (normalizedReceiveWindow > 60_000)
             throw new ArgumentOutOfRangeException(nameof(receiveWindow), "receiveWindow cannot exceed 60000 milliseconds");
 
         return normalizedReceiveWindow;
     }
+
+    internal long? NormalizeReceiveWindow(long? receiveWindow) => _.ReceiveWindow(receiveWindow);
 
     internal Uri GetUrl(string api, string version, string endpoint)
     {

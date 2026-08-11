@@ -265,7 +265,7 @@ internal partial class BinanceOptionsRestClient
         parameters.AddParameter("symbol", symbol);
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("clientOrderId", clientOrderId);
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceOptionsOrderQuery>(GetUrl(eapi, v1, "order"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }
@@ -281,7 +281,7 @@ internal partial class BinanceOptionsRestClient
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsOrderHistory>>(GetUrl(eapi, v1, "historyOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
     }
@@ -295,7 +295,7 @@ internal partial class BinanceOptionsRestClient
         parameters.AddOptional("orderId", orderId);
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsOpenOrder>>(GetUrl(eapi, v1, "openOrders"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: symbol == null ? 40 : 1);
     }
@@ -305,7 +305,7 @@ internal partial class BinanceOptionsRestClient
         ValidateOptionalValue(symbol, nameof(symbol));
         var parameters = new ParameterCollection();
         parameters.AddOptional("symbol", symbol);
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsPosition>>(GetUrl(eapi, v1, "position"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -320,7 +320,7 @@ internal partial class BinanceOptionsRestClient
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsUserExercise>>(GetUrl(eapi, v1, "exerciseRecord"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -336,7 +336,7 @@ internal partial class BinanceOptionsRestClient
         parameters.AddOptional("startTime", startTime?.ConvertToMilliseconds());
         parameters.AddOptional("endTime", endTime?.ConvertToMilliseconds());
         parameters.AddOptional("limit", limit);
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<List<BinanceOptionsUserTrade>>(GetUrl(eapi, v1, "userTrades"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -352,7 +352,7 @@ internal partial class BinanceOptionsRestClient
     public Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(long? receiveWindow = null, CancellationToken ct = default)
     {
         var parameters = new ParameterCollection();
-        parameters.AddOptional("recvWindow", ValidateReceiveWindow(receiveWindow));
+        parameters.AddOptional("recvWindow", NormalizeReceiveWindow(receiveWindow));
 
         return RequestAsync<BinanceOptionsUserCommission>(GetUrl(eapi, v1, "commission"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 5);
     }
@@ -365,8 +365,8 @@ internal partial class BinanceOptionsRestClient
 
     private static void ValidateLimit(long? limit)
     {
-        if (limit is < 1 or > 1000)
-            throw new ArgumentOutOfRangeException(nameof(limit), "limit must be between 1 and 1000");
+        if (limit > 1000)
+            throw new ArgumentOutOfRangeException(nameof(limit), "limit cannot exceed 1000");
     }
 
 }

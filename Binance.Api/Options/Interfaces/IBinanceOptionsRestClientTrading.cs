@@ -112,7 +112,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="orderId">Order ID, e.g 4611875134427365377</param>
     /// <param name="clientOrderId">User-defined order ID, e.g 10000</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<BinanceOptionsOrderQuery>> GetOrderAsync(string symbol, long? orderId = null, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -126,7 +126,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="startTime">Start Time</param>
     /// <param name="endTime">End Time</param>
     /// <param name="limit">Number of result sets returned Default:100 Max:1000</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsOrderHistory>>> GetOrdersHistoryAsync(string symbol, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -139,7 +139,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="orderId">Order ID, e.g 4611875134427365377</param>
     /// <param name="startTime">Start Time</param>
     /// <param name="endTime">End Time</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsOpenOrder>>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -149,7 +149,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#option-position-information" /></para>
     /// </summary>
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsPosition>>> GetPositionsAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -161,8 +161,8 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="symbol">Option trading pair, e.g BTC-200730-9000-C</param>
     /// <param name="startTime">Start Time</param>
     /// <param name="endTime">End Time</param>
-    /// <param name="limit">Number of result sets returned Default:100 Max:1000</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="limit">Number of result sets returned Default:1000 Max:1000</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsUserExercise>>> GetUserExerciseRecordsAsync(string? symbol = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -176,7 +176,7 @@ public interface IBinanceOptionsRestClientTrading
     /// <param name="startTime">Start Time</param>
     /// <param name="endTime">End Time</param>
     /// <param name="limit">Number of result sets returned Default:100 Max:1000</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsUserTrade>>> GetUserTradesAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -195,7 +195,7 @@ public interface IBinanceOptionsRestClientTrading
     /// Gets the account's Options commission rates.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#user-commission" /></para>
     /// </summary>
-    /// <param name="receiveWindow">Request validity window in milliseconds. The value cannot exceed 60000.</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<BinanceOptionsUserCommission>> GetUserCommissionAsync(long? receiveWindow = null, CancellationToken ct = default);

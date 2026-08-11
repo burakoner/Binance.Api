@@ -20,7 +20,7 @@ public class BinanceOptionsTradeReadContractTests
             """{"orderId":4611875134427365000,"symbol":"BTC-251226-90000-C","price":"100","quantity":"1","executedQty":"0.5","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":true,"createTime":1762779600000,"updateTime":1762780499999,"status":"PARTIALLY_FILLED","avgPrice":"99.5","clientOrderId":"client-1","priceScale":3000000000,"quantityScale":3000000001,"optionSide":"CALL","quoteAsset":"USDT","mmp":false,"selfTradePreventionMode":"EXPIRE_MAKER"}""");
         using var client = CreateClient(handler, limiter);
 
-        var result = await client.Options.GetOrderAsync(Symbol, orderId: 4_611_875_134_427_365_000, receiveWindow: 60_000);
+        var result = await client.Options.GetOrderAsync(Symbol, orderId: 4_611_875_134_427_365_000, receiveWindow: 3_000_000_000);
 
         Assert.True(result.Success);
         var order = result.Data;
@@ -46,7 +46,7 @@ public class BinanceOptionsTradeReadContractTests
         Assert.False(order.MMP);
         Assert.Equal(BinanceSelfTradePreventionMode.ExpireMaker, order.SelfTradePreventionMode);
         AssertSignedGet(handler, limiter, "/eapi/v1/order", 1);
-        AssertQuery(handler, "symbol=BTC-251226-90000-C", "orderId=4611875134427365000", "recvWindow=60000");
+        AssertQuery(handler, "symbol=BTC-251226-90000-C", "orderId=4611875134427365000", "recvWindow=3000000000");
         Assert.Null(typeof(BinanceOptionsOrderQuery).GetProperty("Fee"));
         Assert.Null(typeof(BinanceOptionsOrderQuery).GetProperty("Source"));
     }
@@ -61,7 +61,7 @@ public class BinanceOptionsTradeReadContractTests
         var start = DateTimeOffset.FromUnixTimeMilliseconds(1_762_779_600_000).UtcDateTime;
         var end = DateTimeOffset.FromUnixTimeMilliseconds(1_762_780_499_999).UtcDateTime;
 
-        var result = await client.Options.GetOrdersHistoryAsync(Symbol, 4_611_875_134_427_365_001, start, end, 1000, 60_000);
+        var result = await client.Options.GetOrdersHistoryAsync(Symbol, 4_611_875_134_427_365_001, start, end, 0, 3_000_000_000);
 
         Assert.True(result.Success);
         var order = Assert.Single(result.Data);
@@ -74,7 +74,7 @@ public class BinanceOptionsTradeReadContractTests
         Assert.Equal(3_000_000_001L, order.QuantityScale);
         Assert.True(order.MMP);
         AssertSignedGet(handler, limiter, "/eapi/v1/historyOrders", 3);
-        AssertQuery(handler, "symbol=BTC-251226-90000-C", "orderId=4611875134427365001", "startTime=1762779600000", "endTime=1762780499999", "limit=1000", "recvWindow=60000");
+        AssertQuery(handler, "symbol=BTC-251226-90000-C", "orderId=4611875134427365001", "startTime=1762779600000", "endTime=1762780499999", "limit=0", "recvWindow=3000000000");
         Assert.Null(typeof(BinanceOptionsOrderHistory).GetProperty("PostOnly"));
         Assert.Null(typeof(BinanceOptionsOrderHistory).GetProperty("SelfTradePreventionMode"));
         Assert.Null(typeof(BinanceOptionsOrderHistory).GetProperty("Fee"));
@@ -89,7 +89,7 @@ public class BinanceOptionsTradeReadContractTests
             """[{"orderId":4611875134427365002,"symbol":"BTC-251226-90000-C","price":"102","quantity":"3","executedQty":"1","side":"BUY","type":"LIMIT","timeInForce":"FOK","reduceOnly":false,"createTime":1762779600000,"updateTime":1762780499999,"status":"PARTIALLY_FILLED","avgPrice":"102","clientOrderId":"client-3","priceScale":3000000000,"quantityScale":3000000001,"optionSide":"CALL","quoteAsset":"USDT","mmp":false,"selfTradePreventionMode":"EXPIRE_BOTH"}]""");
         using (var filteredClient = CreateClient(filteredHandler, filteredLimiter))
         {
-            var result = await filteredClient.Options.GetOpenOrdersAsync(Symbol, 4_611_875_134_427_365_002, receiveWindow: 60_000);
+            var result = await filteredClient.Options.GetOpenOrdersAsync(Symbol, 4_611_875_134_427_365_002, receiveWindow: 3_000_000_000);
 
             Assert.True(result.Success);
             var order = Assert.Single(result.Data);
@@ -97,7 +97,7 @@ public class BinanceOptionsTradeReadContractTests
             Assert.Equal(BinanceSelfTradePreventionMode.ExpireBoth, order.SelfTradePreventionMode);
             Assert.Equal(3_000_000_000L, order.PriceScale);
             AssertSignedGet(filteredHandler, filteredLimiter, "/eapi/v1/openOrders", 1);
-            AssertQuery(filteredHandler, "symbol=BTC-251226-90000-C", "orderId=4611875134427365002", "recvWindow=60000");
+            AssertQuery(filteredHandler, "symbol=BTC-251226-90000-C", "orderId=4611875134427365002", "recvWindow=3000000000");
             Assert.DoesNotContain("limit=", Uri.UnescapeDataString(filteredHandler.RequestUri!.Query));
         }
 
@@ -123,7 +123,7 @@ public class BinanceOptionsTradeReadContractTests
             """[{"entryPrice":"1000","symbol":"BTC-251226-90000-C","side":"SHORT","quantity":"-0.1","markValue":"105.00138","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"90000","expiryDate":1766707200000,"priceScale":3000000000,"quantityScale":3000000001,"optionSide":"CALL","quoteAsset":"USDT","time":1762872654561,"bidQuantity":"0.25","askQuantity":"0.5"}]""");
         using var client = CreateClient(handler, limiter);
 
-        var result = await client.Options.GetPositionsAsync(Symbol, 60_000);
+        var result = await client.Options.GetPositionsAsync(Symbol, 3_000_000_000);
 
         Assert.True(result.Success);
         var position = Assert.Single(result.Data);
@@ -143,7 +143,7 @@ public class BinanceOptionsTradeReadContractTests
         Assert.Equal(0.25m, position.BidQuantity);
         Assert.Equal(0.5m, position.AskQuantity);
         AssertSignedGet(handler, limiter, "/eapi/v1/position", 5);
-        AssertQuery(handler, "symbol=BTC-251226-90000-C", "recvWindow=60000");
+        AssertQuery(handler, "symbol=BTC-251226-90000-C", "recvWindow=3000000000");
         Assert.Null(typeof(BinanceOptionsPosition).GetProperty("ReducibleQuantity"));
         Assert.Null(typeof(BinanceOptionsPosition).GetProperty("RateOfReturn"));
         Assert.Null(typeof(BinanceOptionsPosition).GetProperty("PositionCost"));
@@ -158,7 +158,7 @@ public class BinanceOptionsTradeReadContractTests
             $$"""[{"id":"{{recordId}}","currency":"USDT","symbol":"{{Symbol}}","exercisePrice":"90000","quantity":"1","amount":"250","fee":"0.5","createDate":1766707200000,"priceScale":3000000000,"quantityScale":3000000001,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]""");
         using var client = CreateClient(handler, limiter);
 
-        var result = await client.Options.GetUserExerciseRecordsAsync(Symbol, limit: 1000, receiveWindow: 60_000);
+        var result = await client.Options.GetUserExerciseRecordsAsync(Symbol, limit: 1000, receiveWindow: 3_000_000_000);
 
         Assert.True(result.Success);
         var exercise = Assert.Single(result.Data);
@@ -176,7 +176,7 @@ public class BinanceOptionsTradeReadContractTests
         Assert.Equal(BinancePositionSide.Long, exercise.PositionSide);
         Assert.Equal("USDT", exercise.QuoteAsset);
         AssertSignedGet(handler, limiter, "/eapi/v1/exerciseRecord", 5);
-        AssertQuery(handler, "symbol=BTC-251226-90000-C", "limit=1000", "recvWindow=60000");
+        AssertQuery(handler, "symbol=BTC-251226-90000-C", "limit=1000", "recvWindow=3000000000");
         Assert.Null(typeof(BinanceOptionsUserExercise).GetProperty("MarkPrice"));
         Assert.Null(typeof(BinanceOptionsUserExercise).GetProperty("Side"));
     }
@@ -189,7 +189,7 @@ public class BinanceOptionsTradeReadContractTests
             """[{"id":4611875134427365000,"tradeId":3000000000,"orderId":4611875134427365001,"symbol":"BTC-251226-90000-C","price":"100","quantity":"1","fee":"-1.04378629","realizedProfit":"2.5","side":"BUY","type":"LIMIT","liquidity":"TAKER","time":1762780499999,"priceScale":3000000000,"quantityScale":3000000001,"optionSide":"CALL","quoteAsset":"USDT"}]""");
         using var client = CreateClient(handler, limiter);
 
-        var result = await client.Options.GetUserTradesAsync(Symbol, 3_000_000_000, limit: 1000, receiveWindow: 60_000);
+        var result = await client.Options.GetUserTradesAsync(Symbol, 3_000_000_000, limit: 1000, receiveWindow: 3_000_000_000);
 
         Assert.True(result.Success);
         var trade = Assert.Single(result.Data);
@@ -210,12 +210,12 @@ public class BinanceOptionsTradeReadContractTests
         Assert.Equal(BinanceOptionsSide.Call, trade.OptionSide);
         Assert.Equal("USDT", trade.QuoteAsset);
         AssertSignedGet(handler, limiter, "/eapi/v1/userTrades", 5);
-        AssertQuery(handler, "symbol=BTC-251226-90000-C", "fromId=3000000000", "limit=1000", "recvWindow=60000");
+        AssertQuery(handler, "symbol=BTC-251226-90000-C", "fromId=3000000000", "limit=1000", "recvWindow=3000000000");
         Assert.Null(typeof(BinanceOptionsUserTrade).GetProperty("Volatility"));
     }
 
     [Fact]
-    public async Task ReadMethods_RejectInvalidIdentifiersLimitsAndReceiveWindowsBeforeTransport()
+    public async Task ReadMethods_RejectInvalidIdentifiersAndPublishedLimitMaximumsBeforeTransport()
     {
         using var client = CreateClient(new RecordingHttpMessageHandler("[]"));
 
@@ -228,17 +228,8 @@ public class BinanceOptionsTradeReadContractTests
         await Assert.ThrowsAsync<ArgumentException>(() => client.Options.GetUserExerciseRecordsAsync(" "));
         await Assert.ThrowsAsync<ArgumentException>(() => client.Options.GetUserTradesAsync(" "));
 
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetOrdersHistoryAsync(Symbol, limit: 0));
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetUserExerciseRecordsAsync(limit: 1001));
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetUserTradesAsync(Symbol, limit: 1001));
-
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetOrderAsync(Symbol, orderId: 1, receiveWindow: 60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetOrdersHistoryAsync(Symbol, receiveWindow: 60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetOpenOrdersAsync(receiveWindow: 60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetPositionsAsync(receiveWindow: 60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetUserExerciseRecordsAsync(receiveWindow: 60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetUserTradesAsync(Symbol, receiveWindow: 60_001));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => client.Options.GetUserCommissionAsync(60_001));
     }
 
     [Fact]
