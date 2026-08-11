@@ -24,17 +24,17 @@ public interface IBinanceOptionsRestClientAccount
 
     /// <summary>
     /// Query account funding flows.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/account/Account-Funding-Flow" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/account#account-funding-flow" /></para>
     /// </summary>
-    /// <param name="currency">Asset type, only support USDT as of now</param>
+    /// <param name="currency">Asset type; the current endpoint supports USDT</param>
     /// <param name="recordId">Return the recordId and subsequent data, the latest data is returned by default, e.g 100000</param>
     /// <param name="startTime">Start Time, e.g 1593511200000</param>
     /// <param name="endTime">End Time, e.g 1593512200000</param>
     /// <param name="limit">Number of result sets returned Default:100 Max:1000</param>
-    /// <param name="receiveWindow">Receive Window</param>
+    /// <param name="receiveWindow">The receive window for which this request is active. Binance currently publishes no maximum for this endpoint</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsAccountFundingFlow>>> GetAccountFundingFlowAsync(string currency, long? recordId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+    Task<RestCallResult<List<BinanceOptionsAccountFundingFlow>>> GetAccountFundingFlowAsync(BinanceOptionsFundingFlowCurrency currency, long? recordId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
 
     /// <summary>
     /// UNDOCUMENTED: Calls <c>GET /eapi/v1/income/asyn</c>, which is absent from the current Options catalog and official connector. Its server lifecycle is unresolved and it is not a supported current contract

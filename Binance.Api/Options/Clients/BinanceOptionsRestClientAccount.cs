@@ -21,19 +21,23 @@ internal partial class BinanceOptionsRestClient
         return RequestAsync<BinanceOptionsMarginAccount>(GetUrl(eapi, v1, "marginAccount"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 3);
     }
 
-    public Task<RestCallResult<List<BinanceOptionsAccountFundingFlow>>> GetAccountFundingFlowAsync(string currency, long? recordId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default)
+    public Task<RestCallResult<List<BinanceOptionsAccountFundingFlow>>> GetAccountFundingFlowAsync(BinanceOptionsFundingFlowCurrency currency, long? recordId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default)
     {
-        limit?.ValidateIntBetween(nameof(limit), 1, 1000);
+        if (currency != BinanceOptionsFundingFlowCurrency.Usdt)
+            throw new ArgumentOutOfRangeException(nameof(currency), currency, "currency must be USDT");
+        if (limit > 1000)
+            throw new ArgumentOutOfRangeException(nameof(limit), "limit cannot exceed 1000");
 
-        var parameters = new ParameterCollection
-        {
-            { "symbol", currency }
-        };
-        parameters.AddOptional("recordId", recordId?.ToString(BinanceConstants.CI));
-        parameters.AddOptional("limit", limit?.ToString(BinanceConstants.CI));
+        var parameters = new ParameterCollection();
+        parameters.AddEnum("currency", currency);
+        parameters.AddOptional("recordId", recordId);
+        parameters.AddOptional("limit", limit);
         parameters.AddOptionalMilliseconds("startTime", startTime);
         parameters.AddOptionalMilliseconds("endTime", endTime);
-        parameters.AddOptional("recvWindow", _.ReceiveWindow(receiveWindow));
+        var normalizedReceiveWindow = receiveWindow ?? (RestOptions.ReceiveWindow == null
+            ? null
+            : System.Convert.ToInt64(RestOptions.ReceiveWindow.Value.TotalMilliseconds));
+        parameters.AddOptional("recvWindow", normalizedReceiveWindow);
 
         return RequestAsync<List<BinanceOptionsAccountFundingFlow>>(GetUrl(eapi, v1, "bill"), HttpMethod.Get, ct, true, queryParameters: parameters, requestWeight: 1);
     }

@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned the Options Account Funding Flow with its current typed USDT currency, exact query key, int64 limit and receive window, published validation boundary, complete response, and canonical documentation
   * Aligned all seven Options REST Trade read contracts with required and optional identifiers, symbol-dependent open-order weights, int64 limits and receive windows, endpoint-specific order results, and complete current trade, position, exercise, and commission responses
   * Aligned all Options REST Market Data response contracts with current endpoint-specific assets, contracts, filters, tuple layouts, identifiers, int64 fields, order-book update IDs, and ticker prices
   * Aligned all twelve Options REST Market Data request contracts with current weights, optional filters, int64 limits, exact open-interest date formatting, Options-valid symbol and kline validation, and canonical endpoint documentation

@@ -557,7 +557,7 @@ var options_211 = await api.Options.GetMarkPriceAsync("---SYMBOL---");
 // European Options -> Account Methods (PRIVATE)
 // UNDOCUMENTED: /eapi/v1/account is absent from the current Options catalog and official connector. Use GetMarginAccountAsync for the current documented margin-account contract.
 // var options_301 = await api.Options.GetAccountAsync();
-var options_302 = await api.Options.GetAccountFundingFlowAsync("---CURRENCY---");
+var options_302 = await api.Options.GetAccountFundingFlowAsync(BinanceOptionsFundingFlowCurrency.Usdt);
 // UNDOCUMENTED: /eapi/v1/income/asyn and /eapi/v1/income/asyn/id are absent from the current Options catalog and official connector. Public wrappers remain pending explicit lifecycle evidence.
 // var options_303 = await api.Options.GetTransactionHistoryDownloadIdAsync();
 // var options_304 = await api.Options.GetTransactionHistoryDownloadLinkAsync(1_000_001);
