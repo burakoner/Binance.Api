@@ -1,18 +1,18 @@
 # Spot FIX and SBE implementation execution contract
 
-Status: approved execution contract, not protocol implementation
+Status: approved living execution contract; foundation and provenance complete, not protocol implementation
 
 Evidence date: 2026-08-11
 
 Owning inventory: Slice 118
 
-Completed implementation slices: Slice 142
+Completed implementation slices: Slices 142-143
 
-Next implementation slice: Slice 143
+Next implementation slice: Slice 144
 
 ## Brutal current state
 
-`Binance.FIX.Api` is not a usable Binance FIX wrapper today. It contains an empty `Class1`, references QuickFIX/n 1.14.0, has no session, transport, authentication, message, decoder, public client, or test implementation, and nevertheless describes itself as an up-to-date and complete package. The solution contains no SBE project or binary protocol implementation at all. A successful solution build proves neither protocol support.
+`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist, and Slice 143 pins the exact FIX-owned upstream inputs without redistributing them. There is still no session, transport, authentication, generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
 
 This program is much larger than adding a few missing JSON endpoints. The current official surface contains:
 
@@ -29,17 +29,19 @@ No protocol implementation will be called complete merely because generated clas
 
 The contract was derived from the current official [Spot FIX API](https://developers.binance.com/en/docs/products/spot/fix-api), [SBE Market Data Streams](https://developers.binance.com/en/docs/products/spot/sbe-market-data-streams), [SBE FAQ](https://developers.binance.com/en/docs/products/spot/faqs/sbe_faq), [Spot User Data Stream](https://developers.binance.com/en/docs/products/spot/user-data-stream), and the official [binance-spot-api-docs repository](https://github.com/binance/binance-spot-api-docs). Changelog entries remain supporting evidence only; current operation pages and schemas own the executable contract.
 
-The official schema repository was pinned at commit `b483413fcdf4da783cd3fcaad6fab7200a93297f` for this inventory.
+The official schema repository was pinned at commit `b483413fcdf4da783cd3fcaad6fab7200a93297f` for this inventory. Hashes below are over the exact `raw.githubusercontent.com` response bytes at that commit, not checkout files that Git may rewrite from LF to CRLF.
 
-| Artifact | Current identity | SHA-256 at the pinned commit |
-| --- | --- | --- |
-| `fix/schemas/spot-fix-oe.xml` | FIX 4.4 Order Entry dictionary, 19 messages | `b147d360bbb7bbbf9046dcfc66e24c31412bcc8e6b94fafb42ac866360e21a7a` |
-| `fix/schemas/spot-fix-md.xml` | FIX 4.4 Market Data dictionary, 14 messages | `6e7e9afaf3309a7388c7788b57e3d08fc4762120f1f851d827825bb1b855bdcf` |
-| `sbe/schemas/spot-fixsbe-1_1.xml` | FIX SBE `1:1`, 29 templates | `85c3f816b8dfa61bed1838cce4699152fca8af83e3b2063e27aabece9b257933` |
-| `sbe/schemas/stream_1_0.xml` | independent market stream `1:0`, 4 templates | `526b5151837ae5c13d2385ba64a46ebfafab3453f6ec197304ef418fe9642d09` |
-| `sbe/schemas/spot_3_5.xml` | general Spot SBE `3:5`, 92 templates | `df6895db4c194c1bbf0377f1216ce0d09f770bac31b32c66d34425561e37fcc7` |
-| `sbe/schemas/sbe_schema_lifecycle_prod.json` | current general schema `3:5` | `3dc91bc475b04419769f74cff47afaf95c058d716b08ea05ed9a759b42e3b9f0` |
-| `sbe/schemas/sbe_fix_schema_lifecycle_prod.json` | current FIX SBE schema `1:1` | `539a968a9d8b65641ab2dd8e9d0f35ca475c694051b9515fb3d565a90748d957` |
+| Artifact | Current identity | Raw bytes | SHA-256 at the pinned commit |
+| --- | --- | ---: | --- |
+| `fix/schemas/spot-fix-oe.xml` | FIX 4.4 Order Entry dictionary, 19 messages | 24,513 | `55891d2ae2c7b5a5e9dbec0003ddcfd3034ba5846e0b7fa6561defa8f44797e9` |
+| `fix/schemas/spot-fix-md.xml` | FIX 4.4 Market Data dictionary, 14 messages | 12,374 | `b18432105ae64f24acc49e1ff1e357811ccfb5a84c7475cfba7347ad9e30a2ec` |
+| `sbe/schemas/spot-fixsbe-1_1.xml` | FIX SBE `1:1`, 29 templates | 48,186 | `6b44afe558d439ddc94323fd6ff026a949184ddd79a2cf033f610194c2537e70` |
+| `sbe/schemas/stream_1_0.xml` | independent market stream `1:0`, 4 templates | 6,192 | `6ea328467e144311b1f1efff38e9fe613829997f041dd02a3b7077885d10a1f7` |
+| `sbe/schemas/spot_3_5.xml` | general Spot SBE `3:5`, 92 templates | 140,961 | `542776a038883dafe962341a041323ff5d8d3e36f1b860ab60156a88a4080bcf` |
+| `sbe/schemas/sbe_schema_lifecycle_prod.json` | current general schema `3:5` | 1,306 | `c1a67dad4092414746272709a2da8365d7dd0f0bfcd1b4ac2d65ab5f4aeeeefc` |
+| `sbe/schemas/sbe_fix_schema_lifecycle_prod.json` | current FIX SBE schema `1:1` | 355 | `8c1b60d87c86510af1dad77d0cdac6d462be4d39a6ec1dba4175f4d8af076c1a` |
+
+`eng/binance-spot-fix-schema-lock.json` is the executable lock for the seven FIX-owned inputs: both text dictionaries, FIX SBE `1:1`, production/testnet aliases, and production/testnet lifecycle files. The maintainer-only downloader verifies every size, hash, identity, count, alias, and lifecycle fact in memory before writing any file, refuses output inside the repository worktree, and refuses existing targets unless `-Force` is explicit. Normal restore, build, and test never call the network.
 
 Two upstream defects prevent blind `latest` consumption:
 
@@ -69,8 +71,9 @@ Generated wire code is required; hand-maintaining 29, 4, and 92 SBE templates is
 - Real Logic/Aeron SbeTool C# generation is pinned to release `1.39.0`, commit `e773b57cac6b2008ce30dd219a33de49766c6013`.
 - SbeTool is a maintainer-only generation dependency. It currently requires JDK 17, while this workstation exposes only Java 8. Generation cannot be claimed operational until Slice 144 supplies and tests the pinned JDK 17 toolchain.
 - The official C# runtime project targets .NET Standard 2.0 and 2.1, but Slice 144 must still compile the actual Binance-generated output across every consuming target framework. Review 33 owns any package-boundary revision if that concrete matrix fails; target support will not be assumed from the runtime project alone.
-- Official XML files are vendored unchanged with provenance. Generated C# is committed so normal restore/build/test is offline and requires neither Java nor network access.
-- CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
+- The official repository publishes no `LICENSE`, `COPYING`, or `NOTICE` file. The linked [Binance Terms](https://www.binance.com/en/terms) and [Testnet Terms](https://www.binance.com/en/about-legal/terms-testnets) do not expressly grant redistribution of these raw artifacts. This is a fail-closed project decision, not legal advice: raw Binance XML/JSON files are not committed, packed, or copied into Git history. Exact commit, URI, byte length, hash, and reviewed identity are committed instead, with an explicit maintainer-only verified downloader.
+- Generated C# must not be committed or released merely because generation succeeds. Slice 144 may generate and compile in an ignored temporary workspace to prove the toolchain. Review 33 must obtain an explicit repository-owner/licensing decision before generated output derived from the Binance schemas can enter Git or a package. Normal restore/build/test remains offline throughout.
+- After that rights gate is approved and generated output is committed, CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
 - Generated namespaces include schema identity. Generated types are implementation detail, not stable high-level business API; Slice 144 must prove the selected internalization boundary before consumer mapping begins.
 - Every frame is length-checked before decode. Schema ID, schema version, template ID, block length, repeating-group counts, variable data lengths, null values, enum values, and microsecond timestamps receive deterministic boundary tests.
 - Decoder tests include independent byte fixtures and field-offset assertions. Encoder-to-decoder round trips alone are insufficient evidence because the same generator can reproduce the same defect on both sides.
@@ -122,10 +125,10 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 | Slice | Scope | Acceptance gate | Active budget |
 | --- | --- | --- | ---: |
 | 142 | Truthful package foundation | Disable FIX packing, remove empty surface/false description, add SBE/FIX test shells, upgrade QuickFIX/n, preserve green legacy build | 2-4 h |
-| 143 | Vendored schemas and provenance | Exact upstream commit/hash/id/version manifest; strict alias/lifecycle conflict tests; no network in normal build | 3-6 h |
-| 144 | Pinned SbeTool C# pipeline | JDK 17 generation-only toolchain, deterministic committed output, all-consuming-TFM compile matrix, internalization decision, regeneration diff gate | 4-8 h |
+| 143 | License-safe schema lock and provenance | No raw redistribution; exact upstream commit/URI/size/hash/id/version lock; strict alias/lifecycle conflict tests; verified maintainer download only; no network in normal build | 3-6 h |
+| 144 | Pinned SbeTool C# feasibility pipeline | JDK 17 generation-only toolchain, ignored temporary output, deterministic generation proof, all-consuming-TFM compile matrix, internalization decision; no generated output committed before Review 33 rights decision | 4-8 h |
 | 145 | Binance FIX dictionary generation spike | Both custom FIX 4.4 dictionaries generate, compile, and validate without modifying QuickFIX/n NuGet source | 5-10 h |
-| Review 33 | Foundation review and re-estimate | Review Slices 142-145; decide whether QuickFIX/n remains viable before session implementation | 2-4 h |
+| Review 33 | Foundation review and re-estimate | Review Slices 142-145; decide schema/generated-output rights and whether QuickFIX/n remains viable before session implementation | 2-4 h |
 | 146 | Common text FIX session core | TLS/SNI, Ed25519 logon, redaction, heartbeat, logout, limits, cancellation, sequence-gap/no-resend proof | 8-16 h |
 | 147 | Order Entry single-order lifecycle | New, cancel, cancel-replace, amend-keep-priority, exact acknowledgements/rejects, unknown-delivery handling | 8-16 h |
 | 148 | Order Entry lists and mass cancel | Order lists, list status, mass cancel, exact grouping and correlation behavior | 8-16 h |
@@ -152,18 +155,18 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 
 ## Forecast and mandatory recalibration
 
-The initial implementation envelope is 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. At 40 focused hours per week this is roughly 3.7-7.3 weeks; at 20 hours per week it is roughly 7.3-14.6 weeks. Those are effort conversions, not a promised calendar date, and exclude waiting for credentials, user authorization, Binance/Testnet availability, or an upstream engine defect.
+The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Slices 142-143 are complete. The current remaining envelope is **26 small turns and 141-282 active hours**. At 40 focused hours per week this is roughly 3.5-7.1 weeks; at 20 hours per week it is roughly 7.1-14.1 weeks. Those are effort conversions, not a promised calendar date, and exclude waiting for credentials, user authorization, Binance/Testnet availability, licensing decisions, or an upstream engine defect.
 
-| Milestone | Cumulative minimum turns | Cumulative active budget |
+| Remaining milestone | Minimum remaining turns | Remaining active budget |
 | --- | ---: | ---: |
-| Foundation/generation decision after Review 33 | 5 | 16-32 h |
-| Complete safe text FIX after Review 34 | 11 | 54-108 h |
-| Complete text, hybrid, and full FIX SBE after Review 35 | 16 | 79-158 h |
-| Independent SBE market streams after Review 36 | 20 | 97-194 h |
-| General REST/WebSocket/user-data SBE after Review 37 | 26 | 137-274 h |
-| Release-gated current FIX/SBE program | 28 | 146-292 h |
+| Foundation/generation decision after Review 33 | 3 | 11-22 h |
+| Complete safe text FIX after Review 34 | 9 | 49-98 h |
+| Complete text, hybrid, and full FIX SBE after Review 35 | 14 | 74-148 h |
+| Independent SBE market streams after Review 36 | 18 | 92-184 h |
+| General REST/WebSocket/user-data SBE after Review 37 | 24 | 132-264 h |
+| Release-gated current FIX/SBE program | 26 | 141-282 h |
 
-Review 33 is the first mandatory re-estimation point because it replaces two current unknowns with executable evidence: whether the FIX dictionaries can be generated cleanly and whether QuickFIX/n can satisfy Binance’s no-ResendRequest rule without an unsafe fork. If either fails, downstream slice numbers and budgets must change before development continues.
+Review 33 is the first mandatory re-estimation point because it replaces current unknowns with executable evidence: whether FIX/SBE sources can be generated and compiled cleanly, whether QuickFIX/n can satisfy Binance’s no-ResendRequest rule without an unsafe fork, and whether generated artifacts may enter this repository and its packages. If any gate fails, downstream slice numbers and budgets must change before development continues.
 
 ## Definition of done
 

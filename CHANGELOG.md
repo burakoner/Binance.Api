@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added a license-safe Spot FIX schema provenance lock and maintainer-only verified downloader for the two text dictionaries, FIX SBE `1:1`, aliases, and lifecycle files; corrected checkout-converted hashes to exact commit-pinned raw bytes without redistributing Binance artifacts
   * Established the truthful non-packable FIX/SBE foundation: removed the empty public placeholder and false completeness claims, upgraded to QuickFIX/n Core 1.14.1 without the generic FIX44 package, and added netstandard SBE plus dedicated protocol test projects
   * Defined the evidence-backed Spot FIX/SBE implementation execution contract: truthful package boundaries, pinned schema and generator provenance, fail-closed TLS/session/binary safety gates, deterministic conformance policy, and 23 small implementation slices with five mandatory reviews
   * Completed the final Options documentation audit across all 68 active XML references; corrected three Market Maker kill-switch anchors and proved exact 55/55 canonical-target parity with zero active retired-root residue

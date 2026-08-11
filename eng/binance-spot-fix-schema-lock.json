@@ -1,0 +1,87 @@
+{
+  "schemaSet": "Binance Spot FIX",
+  "evidenceDate": "2026-08-11",
+  "sourceRepository": "https://github.com/binance/binance-spot-api-docs",
+  "sourceCommit": "b483413fcdf4da783cd3fcaad6fab7200a93297f",
+  "sourceRawBaseUrl": "https://raw.githubusercontent.com/binance/binance-spot-api-docs/b483413fcdf4da783cd3fcaad6fab7200a93297f/",
+  "sourceTerms": [
+    "https://www.binance.com/en/terms",
+    "https://www.binance.com/en/about-legal/terms-testnets"
+  ],
+  "rawArtifactsRedistributed": false,
+  "artifacts": [
+    {
+      "owner": "TextFix",
+      "upstreamPath": "fix/schemas/spot-fix-oe.xml",
+      "fileName": "spot-fix-oe.xml",
+      "size": 24513,
+      "sha256": "55891d2ae2c7b5a5e9dbec0003ddcfd3034ba5846e0b7fa6561defa8f44797e9",
+      "format": "QuickFixDataDictionary",
+      "messageCount": 19
+    },
+    {
+      "owner": "TextFix",
+      "upstreamPath": "fix/schemas/spot-fix-md.xml",
+      "fileName": "spot-fix-md.xml",
+      "size": 12374,
+      "sha256": "b18432105ae64f24acc49e1ff1e357811ccfb5a84c7475cfba7347ad9e30a2ec",
+      "format": "QuickFixDataDictionary",
+      "messageCount": 14
+    },
+    {
+      "owner": "FixSbe",
+      "upstreamPath": "sbe/schemas/spot-fixsbe-1_1.xml",
+      "fileName": "spot-fixsbe-1_1.xml",
+      "size": 48186,
+      "sha256": "6b44afe558d439ddc94323fd6ff026a949184ddd79a2cf033f610194c2537e70",
+      "format": "SbeSchema",
+      "schemaId": 1,
+      "schemaVersion": 1,
+      "messageCount": 29
+    },
+    {
+      "owner": "FixSbe",
+      "upstreamPath": "sbe/schemas/spot_fix_prod_latest.xml",
+      "fileName": "spot_fix_prod_latest.xml",
+      "size": 19,
+      "sha256": "ca27b50105e9a6caebf4906bf701031920c77b9cd1d683d0c376b681eb29f4e2",
+      "format": "Alias",
+      "environment": "PROD",
+      "expectedTarget": "spot-fixsbe-1_1.xml"
+    },
+    {
+      "owner": "FixSbe",
+      "upstreamPath": "sbe/schemas/spot_fix_testnet_latest.xml",
+      "fileName": "spot_fix_testnet_latest.xml",
+      "size": 19,
+      "sha256": "ca27b50105e9a6caebf4906bf701031920c77b9cd1d683d0c376b681eb29f4e2",
+      "format": "Alias",
+      "environment": "TESTNET",
+      "expectedTarget": "spot-fixsbe-1_1.xml"
+    },
+    {
+      "owner": "FixSbe",
+      "upstreamPath": "sbe/schemas/sbe_fix_schema_lifecycle_prod.json",
+      "fileName": "sbe_fix_schema_lifecycle_prod.json",
+      "size": 355,
+      "sha256": "8c1b60d87c86510af1dad77d0cdac6d462be4d39a6ec1dba4175f4d8af076c1a",
+      "format": "Lifecycle",
+      "environment": "PROD",
+      "strictJson": false,
+      "latestSchemaId": 1,
+      "latestSchemaVersion": 1
+    },
+    {
+      "owner": "FixSbe",
+      "upstreamPath": "sbe/schemas/sbe_fix_schema_lifecycle_testnet.json",
+      "fileName": "sbe_fix_schema_lifecycle_testnet.json",
+      "size": 358,
+      "sha256": "d0fecdfffb3bac97edc2af9436084b2d1ab40d862f74a692a6ee0a9029104c8f",
+      "format": "Lifecycle",
+      "environment": "TESTNET",
+      "strictJson": false,
+      "latestSchemaId": 1,
+      "latestSchemaVersion": 1
+    }
+  ]
+}

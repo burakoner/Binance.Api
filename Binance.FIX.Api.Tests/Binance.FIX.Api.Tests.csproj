@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Binance.FIX.Api\Binance.FIX.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="..\eng\binance-spot-fix-schema-lock.json"
+                      Link="Fixtures\binance-spot-fix-schema-lock.json"
+                      LogicalName="Binance.FIX.Api.Tests.binance-spot-fix-schema-lock.json" />
+  </ItemGroup>
+
 </Project>
