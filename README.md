@@ -1234,18 +1234,17 @@ var coinFutures_533 = await ws.CoinFutures.SubscribeToIndexKlineUpdatesAsync(["-
 
 // European Options Web Socket Stream -> Market Data Methods (PUBLIC)
 var options_101 = await ws.Options.SubscribeToNewSymbolsAsync((data) => { });
-var options_102 = await ws.Options.SubscribeToOpenInterestAsync("---ASSET---", DateTime.UtcNow, (data) => { });
-var options_103 = await ws.Options.SubscribeToOpenInterestAsync([], (data) => { });
-var options_104 = await ws.Options.SubscribeToMarkPriceAsync("---ASSET---", (data) => { });
-var options_105 = await ws.Options.SubscribeToMarkPriceAsync([], (data) => { });
+var options_102 = await ws.Options.SubscribeToOpenInterestAsync("---UNDERLYING---", DateTime.UtcNow, (data) => { });
+var options_103 = await ws.Options.SubscribeToOpenInterestAsync([("---UNDERLYING---", DateTime.UtcNow)], (data) => { });
+var options_104 = await ws.Options.SubscribeToMarkPriceAsync("---UNDERLYING---", (data) => { });
+var options_105 = await ws.Options.SubscribeToMarkPriceAsync(["---UNDERLYING---"], (data) => { });
 var options_106 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", BinanceKlineInterval.OneDay, (data) => { });
-var options_107 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", [], (data) => { });
-var options_108 = await ws.Options.SubscribeToKlinesAsync([], BinanceKlineInterval.OneDay, (data) => { });
-var options_109 = await ws.Options.SubscribeToKlinesAsync([], [], (data) => { });
+var options_107 = await ws.Options.SubscribeToKlinesAsync("---SYMBOL---", [BinanceKlineInterval.OneMinute, BinanceKlineInterval.OneDay], (data) => { });
+var options_108 = await ws.Options.SubscribeToKlinesAsync(["---SYMBOL---"], BinanceKlineInterval.OneDay, (data) => { });
+var options_109 = await ws.Options.SubscribeToKlinesAsync(["---SYMBOL---"], [BinanceKlineInterval.OneMinute, BinanceKlineInterval.OneDay], (data) => { });
 var options_110 = await ws.Options.SubscribeToTickersAsync("---UNDERLYING---", DateTime.UtcNow, (data) => { });
 var options_111 = await ws.Options.SubscribeToTickersAsync([("---UNDERLYING---", DateTime.UtcNow)], (data) => { });
-var options_112 = await ws.Options.SubscribeToIndexPricesAsync("---SYMBOL---", (data) => { });
-var options_113 = await ws.Options.SubscribeToIndexPricesAsync([], (data) => { });
+var options_112 = await ws.Options.SubscribeToIndexPricesAsync((data) => { });
 var options_114 = await ws.Options.SubscribeToTickersAsync("---SYMBOL---", (data) => { });
 var options_115 = await ws.Options.SubscribeToTickersAsync(["---UNDERLYING---"], (data) => { });
 var options_116 = await ws.Options.SubscribeToTradesAsync("---SYMBOL---", (data) => { });

@@ -9,11 +9,11 @@ internal partial class BinanceOptionsSocketClient
             onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
         });
 
-        return SubscribeMarketAsync(["option_pair"], false, handler, ct);
+        return SubscribeMarketAsync([NewSymbolStreamTopic], false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(string asset, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default)
-        => SubscribeToOpenInterestAsync([(asset, expiration)], onMessage, ct);
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(string underlying, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default)
+        => SubscribeToOpenInterestAsync([(underlying, expiration)], onMessage, ct);
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(IEnumerable<(string UnderlyingAsset, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default)
     {
@@ -25,14 +25,13 @@ internal partial class BinanceOptionsSocketClient
             }
         });
 
-        var topics = tuples.Select(a => $"{a.UnderlyingAsset}@openInterest{a.ExpirationDate.ToString("MMddyy")}").ToArray();
-        return SubscribeMarketAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(OpenInterestStreamTopics(tuples), false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(string asset, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default)
-        => SubscribeToMarkPriceAsync([asset], onMessage, ct);
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(string underlying, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default)
+        => SubscribeToMarkPriceAsync([underlying], onMessage, ct);
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(IEnumerable<string> assets, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(IEnumerable<string> underlyings, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default)
     {
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<List<BinanceOptionsStreamMarkPrice>>>>(data =>
         {
@@ -42,8 +41,7 @@ internal partial class BinanceOptionsSocketClient
             }
         });
 
-        var topics = assets.Select(a => $"{a}@markPrice").ToArray();
-        return SubscribeMarketAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(MarkPriceStreamTopics(underlyings), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(string symbol, BinanceKlineInterval interval, Action<WebSocketDataEvent<BinanceOptionsStreamKline>> onMessage, CancellationToken ct = default)
@@ -57,16 +55,13 @@ internal partial class BinanceOptionsSocketClient
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToKlinesAsync(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals, Action<WebSocketDataEvent<BinanceOptionsStreamKline>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
-
         var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceOptionsStreamKlineWrapper>>>(data =>
         {
-            onMessage(data.As(data.Data.Data.Kline, data.Data.Data.Symbol));
+            var kline = StandardKline(data.Data.Data);
+            onMessage(data.As(kline, data.Data.Data.Symbol));
         });
 
-        var topics = symbols.SelectMany(a => intervals.Select(i => a + "@kline" + "_" + MapConverter.GetString(i))).ToArray();
-        return SubscribeMarketAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync(KlineStreamTopics(symbols, intervals), false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
@@ -82,21 +77,17 @@ internal partial class BinanceOptionsSocketClient
         return SubscribePublicAsync(TickerStreamTopics(tuples), false, handler, ct);
     }
 
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default)
-        => SubscribeToIndexPricesAsync([symbol], onMessage, ct);
-
-    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default)
+    public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default)
     {
-        symbols.ValidateNotNull(nameof(symbols));
-        foreach (var symbol in symbols) symbol.ValidateBinanceSymbol();
-
-        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<BinanceOptionsStreamIndexPrice>>>(data =>
+        var handler = new Action<WebSocketDataEvent<BinanceSocketCombinedStream<List<BinanceOptionsStreamIndexPrice>>>>(data =>
         {
-            onMessage(data.As(data.Data.Data, data.Data.Data.Symbol));
+            foreach (var item in data.Data.Data)
+            {
+                onMessage(data.As(item, item.Symbol));
+            }
         });
 
-        var topics = symbols.Select(a => a + "@index").ToArray();
-        return SubscribeMarketAsync(topics, false, handler, ct);
+        return SubscribeMarketAsync([IndexPriceStreamTopic], false, handler, ct);
     }
 
     public Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default)
@@ -216,21 +207,84 @@ internal partial class BinanceOptionsSocketClient
     internal static string[] TradeStreamTopics(IEnumerable<string> symbols)
         => SymbolStreamTopics(symbols, "@optionTrade");
 
-    private static string[] SymbolStreamTopics(IEnumerable<string> symbols, string suffix)
+    internal const string IndexPriceStreamTopic = "!index@arr";
+    internal const string NewSymbolStreamTopic = "!optionSymbol";
+
+    internal static string[] OpenInterestStreamTopics(IEnumerable<(string UnderlyingAsset, DateTime ExpirationDate)> tuples)
+    {
+        if (tuples == null)
+            throw new ArgumentNullException(nameof(tuples));
+        var tupleList = tuples.ToArray();
+        if (tupleList.Length == 0)
+            throw new ArgumentException("At least one underlying and expiration date must be provided.", nameof(tuples));
+        foreach (var tuple in tupleList)
+            if (string.IsNullOrWhiteSpace(tuple.UnderlyingAsset))
+                throw new ArgumentException("Underlyings cannot be null or blank.", nameof(tuples));
+
+        return tupleList
+            .Select(tuple => tuple.UnderlyingAsset.ToLower(BinanceConstants.CI) + "@openInterest@" + tuple.ExpirationDate.ToString("yyMMdd", BinanceConstants.CI))
+            .ToArray();
+    }
+
+    internal static string[] MarkPriceStreamTopics(IEnumerable<string> underlyings)
+        => SymbolStreamTopics(underlyings, "@optionMarkPrice", nameof(underlyings));
+
+    internal static string[] KlineStreamTopics(IEnumerable<string> symbols, IEnumerable<BinanceKlineInterval> intervals)
+    {
+        var symbolList = SymbolStreamTopics(symbols, "");
+        if (intervals == null)
+            throw new ArgumentNullException(nameof(intervals));
+        var intervalList = intervals.ToArray();
+        if (intervalList.Length == 0)
+            throw new ArgumentException("At least one interval is required.", nameof(intervals));
+        foreach (var interval in intervalList)
+            ValidateMarketStreamKlineInterval(interval);
+
+        return symbolList
+            .SelectMany(symbol => intervalList.Select(interval => symbol + "@kline_" + MapConverter.GetString(interval)))
+            .ToArray();
+    }
+
+    internal static BinanceOptionsStreamKline StandardKline(BinanceOptionsStreamKlineWrapper wrapper)
+    {
+        wrapper.Kline.Event = wrapper.Event;
+        wrapper.Kline.EventTime = wrapper.EventTime;
+        return wrapper.Kline;
+    }
+
+    private static string[] SymbolStreamTopics(IEnumerable<string> symbols, string suffix, string parameterName = "symbols")
     {
         if (symbols == null)
-            throw new ArgumentNullException(nameof(symbols));
+            throw new ArgumentNullException(parameterName);
         var symbolList = symbols.ToArray();
         if (symbolList.Length == 0)
-            throw new ArgumentException("At least one symbol is required.", nameof(symbols));
+            throw new ArgumentException("At least one symbol is required.", parameterName);
         foreach (var symbol in symbolList)
             if (string.IsNullOrWhiteSpace(symbol))
-                throw new ArgumentException("Symbols cannot be null or blank.", nameof(symbols));
+                throw new ArgumentException("Symbols cannot be null or blank.", parameterName);
 
         return symbolList.Select(symbol => symbol.ToLower(BinanceConstants.CI) + suffix).ToArray();
     }
 
     private static void ValidateUpdateInterval(int updateInterval)
         => updateInterval.ValidateIntValues(nameof(updateInterval), 100, 500);
+
+    private static void ValidateMarketStreamKlineInterval(BinanceKlineInterval interval)
+    {
+        if (interval is not (BinanceKlineInterval.OneMinute
+            or BinanceKlineInterval.ThreeMinutes
+            or BinanceKlineInterval.FiveMinutes
+            or BinanceKlineInterval.FifteenMinutes
+            or BinanceKlineInterval.ThirtyMinutes
+            or BinanceKlineInterval.OneHour
+            or BinanceKlineInterval.TwoHours
+            or BinanceKlineInterval.FourHours
+            or BinanceKlineInterval.SixHours
+            or BinanceKlineInterval.TwelveHours
+            or BinanceKlineInterval.OneDay
+            or BinanceKlineInterval.ThreeDays
+            or BinanceKlineInterval.OneWeek))
+            throw new ArgumentOutOfRangeException(nameof(interval), interval, "The interval is not supported by Options Market kline streams.");
+    }
 
 }

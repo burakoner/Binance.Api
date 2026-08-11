@@ -21,7 +21,7 @@ internal record BinanceOptionsStreamKlineWrapper : BinanceSocketStreamEvent
 /// <summary>
 /// The kline data
 /// </summary>
-public record BinanceOptionsStreamKline
+public record BinanceOptionsStreamKline : BinanceSocketStreamEvent
 {
     /// <summary>
     /// The open time of this candlestick
@@ -56,7 +56,7 @@ public record BinanceOptionsStreamKline
     /// <summary>
     /// The interval of this candlestick
     /// </summary>
-    [JsonProperty("i")]
+    [JsonProperty("i"), JsonConverter(typeof(MapConverter))]
     public BinanceKlineInterval Interval { get; set; }
 
     /// <summary>
@@ -99,7 +99,7 @@ public record BinanceOptionsStreamKline
     /// The amount of trades in this candlestick
     /// </summary>
     [JsonProperty("n")]
-    public int TradeCount { get; set; }
+    public long TradeCount { get; set; }
 
     /// <summary>
     /// Taker buy base asset volume

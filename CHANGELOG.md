@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Aligned all five Options Market WebSocket stream contracts with the current all-index, kline, option-mark-price, new-symbol, and open-interest topics, strict input domains, complete event/int64/risk/book payload models, exact array handling, and canonical documentation
   * Aligned all five Options Public WebSocket stream contracts with the current Public route, canonical depth, book-ticker, 24-hour-ticker, and trade topics, strict levels and update speeds, complete int64/timestamp payload models, fail-closed topic validation, and canonical documentation
   * Aligned all seven Options Market Maker Block Trade contracts with the current single-leg request, exact query/body placement, empty cancellation acknowledgement, complete order timestamps, int64 receive-window ceiling, fail-closed validation, unambiguous query methods, and canonical documentation
   * Completed Backward Review 31 across the four Options read-contract slices; removed invented Trade-read receive-window and lower-limit restrictions, corrected User Exercise default-limit documentation, and reconfirmed the Market Data and Account contracts

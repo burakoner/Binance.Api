@@ -7,7 +7,7 @@ public interface IBinanceOptionsSocketClientStreamMarketData
 {
     /// <summary>
     /// New symbol listing stream.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/New-Symbol-Info" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#new-symbol-info" /></para>
     /// </summary>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
@@ -15,49 +15,49 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToNewSymbolsAsync(Action<WebSocketDataEvent<BinanceOptionsStreamSymbol>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Option open interest for specific underlying asset on specific expiration date. E.g.ETH@openInterest@221125
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Open-Interest" /></para>
+    /// Option open interest for a specific underlying on a specific expiration date. E.g. ethusdt@openInterest@221125
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#open-interest" /></para>
     /// </summary>
-    /// <param name="asset">Asset</param>
+    /// <param name="underlying">Underlying</param>
     /// <param name="expiration">Expiration Date</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(string asset, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(string underlying, DateTime expiration, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Option open interest for specific underlying asset on specific expiration date. E.g.ETH@openInterest@221125
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Open-Interest" /></para>
+    /// Option open interest for specific underlyings on specific expiration dates.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#open-interest" /></para>
     /// </summary>
-    /// <param name="tuples">Asset &amp; Expiration Date Tuple List</param>
+    /// <param name="tuples">Underlying and expiration date tuples</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToOpenInterestAsync(IEnumerable<(string UnderlyingAsset, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamOpenInterest>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// The mark price for all option symbols on specific underlying asset. E.g.ETH@markPrice
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Mark-Price" /></para>
+    /// Mark prices for all option symbols on a specific underlying. E.g. ethusdt@optionMarkPrice
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#option-mark-price" /></para>
     /// </summary>
-    /// <param name="asset">Asset</param>
+    /// <param name="underlying">Underlying</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(string asset, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(string underlying, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// The mark price for all option symbols on specific underlying asset. E.g.ETH@markPrice
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Mark-Price" /></para>
+    /// Mark prices for all option symbols on specific underlyings.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#option-mark-price" /></para>
     /// </summary>
-    /// <param name="assets">Assets</param>
+    /// <param name="underlyings">Underlyings</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(IEnumerable<string> assets, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToMarkPriceAsync(IEnumerable<string> underlyings, Action<WebSocketDataEvent<BinanceOptionsStreamMarkPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// The Kline/Candlestick Stream push updates to the current klines/candlestick every 1000 milliseconds (if existing).
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="interval">Interval</param>
@@ -68,7 +68,7 @@ public interface IBinanceOptionsSocketClientStreamMarketData
 
     /// <summary>
     /// The Kline/Candlestick Stream push updates to the current klines/candlestick every 1000 milliseconds (if existing).
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="symbol">Symbol</param>
     /// <param name="intervals">Intervals</param>
@@ -79,7 +79,7 @@ public interface IBinanceOptionsSocketClientStreamMarketData
 
     /// <summary>
     /// The Kline/Candlestick Stream push updates to the current klines/candlestick every 1000 milliseconds (if existing).
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="symbols">Symbols</param>
     /// <param name="interval">Interval</param>
@@ -90,7 +90,7 @@ public interface IBinanceOptionsSocketClientStreamMarketData
 
     /// <summary>
     /// The Kline/Candlestick Stream push updates to the current klines/candlestick every 1000 milliseconds (if existing).
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Kline-Candlestick-Streams" /></para>
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#kline-candlestick-streams" /></para>
     /// </summary>
     /// <param name="symbols">Symbols</param>
     /// <param name="intervals">Intervals</param>
@@ -121,24 +121,13 @@ public interface IBinanceOptionsSocketClientStreamMarketData
     Task<CallResult<WebSocketUpdateSubscription>> SubscribeToTickersAsync(IEnumerable<(string Symbol, DateTime ExpirationDate)> tuples, Action<WebSocketDataEvent<BinanceOptionsStreamTicker>> onMessage, CancellationToken ct = default);
 
     /// <summary>
-    /// Underlying(e.g ETHUSDT) index stream.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Index-Price-Streams" /></para>
+    /// All-underlying index price stream.
+    /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#index-price-streams" /></para>
     /// </summary>
-    /// <param name="symbol">Symbol</param>
     /// <param name="onMessage">On Data Handler</param>
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(string symbol, Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default);
-
-    /// <summary>
-    /// Underlying(e.g ETHUSDT) index stream.
-    /// <para><a href="https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Index-Price-Streams" /></para>
-    /// </summary>
-    /// <param name="symbols">Symbols</param>
-    /// <param name="onMessage">On Data Handler</param>
-    /// <param name="ct">Cancellation Token</param>
-    /// <returns></returns>
-    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(IEnumerable<string> symbols, Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default);
+    Task<CallResult<WebSocketUpdateSubscription>> SubscribeToIndexPricesAsync(Action<WebSocketDataEvent<BinanceOptionsStreamIndexPrice>> onMessage, CancellationToken ct = default);
 
     /// <summary>
     /// 24-hour ticker information for an underlying symbol without an expiration filter.

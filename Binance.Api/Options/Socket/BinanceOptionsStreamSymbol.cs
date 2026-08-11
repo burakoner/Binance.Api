@@ -8,7 +8,7 @@ public record BinanceOptionsStreamSymbol : BinanceSocketStreamEvent
     /// <summary>
     /// Underlying
     /// </summary>
-    [JsonProperty("u")]
+    [JsonProperty("ps")]
     public string Underlying { get; set; } = "";
 
     /// <summary>
@@ -24,21 +24,15 @@ public record BinanceOptionsStreamSymbol : BinanceSocketStreamEvent
     public string Symbol { get; set; } = "";
 
     /// <summary>
-    /// Conversion ratio, the quantity of the underlying asset represented by a single contract. 
+    /// Contract unit, the quantity of the underlying asset represented by a single contract
     /// </summary>
-    [JsonProperty("unit")]
-    public decimal Unit { get; set; }
-
-    /// <summary>
-    /// Minimum trade volume of the underlying asset 
-    /// </summary>
-    [JsonProperty("mq")]
-    public decimal MinimumTradeVolume { get; set; }
+    [JsonProperty("u")]
+    public long Unit { get; set; }
 
     /// <summary>
     /// Option type
     /// </summary>
-    [JsonProperty("d")]
+    [JsonProperty("d"), JsonConverter(typeof(MapConverter))]
     public BinanceOptionsSide Side { get; set; }
 
     /// <summary>
@@ -48,8 +42,20 @@ public record BinanceOptionsStreamSymbol : BinanceSocketStreamEvent
     public decimal StrikePrice { get; set; }
 
     /// <summary>
-    /// expiration time  
+    /// Delivery date and time
     /// </summary>
-    [JsonProperty("ed"), JsonConverter(typeof(DateTimeConverter))]
-    public DateTime TradeTime { get; set; }
+    [JsonProperty("dt"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime DeliveryTime { get; set; }
+
+    /// <summary>
+    /// Onboard date and time
+    /// </summary>
+    [JsonProperty("ot"), JsonConverter(typeof(DateTimeConverter))]
+    public DateTime OnboardTime { get; set; }
+
+    /// <summary>
+    /// Contract status
+    /// </summary>
+    [JsonProperty("cs")]
+    public string Status { get; set; } = "";
 }
