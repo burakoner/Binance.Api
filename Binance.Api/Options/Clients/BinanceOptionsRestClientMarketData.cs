@@ -115,22 +115,6 @@ internal partial class BinanceOptionsRestClient
         return RequestAsync<List<BinanceOptionsKline>>(GetUrl(eapi, v1, "klines"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 1);
     }
 
-    public async Task<RestCallResult<List<BinanceOptionsBlockTrade>>> GetHistoricalTradesAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default)
-    {
-        symbol.ValidateBinanceSymbol();
-        limit?.ValidateIntBetween(nameof(limit), 1, 500);
-
-        var parameters = new ParameterCollection { { "symbol", symbol } };
-        parameters.AddOptionalString("limit", limit);
-        parameters.AddOptionalString("fromId", fromId);
-
-        var result = await RequestAsync<List<BinanceOptionsBlockTrade>>(GetUrl(eapi, v1, "historicalTrades"), HttpMethod.Get, ct, false, queryParameters: parameters, requestWeight: 20);
-        if (!result) return result;
-
-        foreach (var trade in result.Data) trade.Symbol = symbol;
-        return result;
-    }
-
     public Task<RestCallResult<List<BinanceOptionsMarkPrice>>> GetMarkPriceAsync(string? symbol = null, CancellationToken ct = default)
     {
         ValidateMarketDataOptionalValue(symbol, nameof(symbol));

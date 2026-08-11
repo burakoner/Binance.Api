@@ -99,16 +99,6 @@ public interface IBinanceOptionsRestClientMarketData
     Task<RestCallResult<List<BinanceOptionsKline>>> GetKlinesAsync(string symbol, BinanceKlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, CancellationToken ct = default);
 
     /// <summary>
-    /// UNDOCUMENTED: Calls <c>GET /eapi/v1/historicalTrades</c>, which is absent from the current Options catalog and official connector. Its server lifecycle is unresolved and it is not a supported current contract
-    /// </summary>
-    /// <param name="symbol">Wrapper symbol parameter; the current server contract is undocumented</param>
-    /// <param name="limit">Wrapper result-limit parameter; the current server contract is undocumented</param>
-    /// <param name="fromId">Wrapper trade-identifier parameter; the current server contract is undocumented</param>
-    /// <param name="ct">Cancellation Token</param>
-    /// <returns></returns>
-    Task<RestCallResult<List<BinanceOptionsBlockTrade>>> GetHistoricalTradesAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
-
-    /// <summary>
     /// Option mark price and greek info.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#option-mark-price" /></para>
     /// </summary>

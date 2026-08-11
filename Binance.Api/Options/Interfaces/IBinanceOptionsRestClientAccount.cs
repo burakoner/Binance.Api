@@ -6,14 +6,6 @@
 public interface IBinanceOptionsRestClientAccount
 {
     /// <summary>
-    /// UNDOCUMENTED: Calls <c>GET /eapi/v1/account</c>, which is absent from the current Options catalog and official connector. Its server lifecycle is unresolved; use <see cref="GetMarginAccountAsync"/> for the current documented margin-account contract
-    /// </summary>
-    /// <param name="receiveWindow">Wrapper receive-window parameter; the current server contract is undocumented</param>
-    /// <param name="ct">Cancellation Token</param>
-    /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsAccount>> GetAccountAsync(int? receiveWindow = null, CancellationToken ct = default);
-
-    /// <summary>
     /// Get current Option Margin account information.
     /// <para><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/account#option-margin-account-information" /></para>
     /// </summary>
@@ -35,23 +27,4 @@ public interface IBinanceOptionsRestClientAccount
     /// <param name="ct">Cancellation Token</param>
     /// <returns></returns>
     Task<RestCallResult<List<BinanceOptionsAccountFundingFlow>>> GetAccountFundingFlowAsync(BinanceOptionsFundingFlowCurrency currency, long? recordId = null, DateTime? startTime = null, DateTime? endTime = null, long? limit = null, long? receiveWindow = null, CancellationToken ct = default);
-
-    /// <summary>
-    /// UNDOCUMENTED: Calls <c>GET /eapi/v1/income/asyn</c>, which is absent from the current Options catalog and official connector. Its server lifecycle is unresolved and it is not a supported current contract
-    /// </summary>
-    /// <param name="startTime">Wrapper start-time parameter; the current server contract is undocumented</param>
-    /// <param name="endTime">Wrapper end-time parameter; the current server contract is undocumented</param>
-    /// <param name="receiveWindow">Wrapper receive-window parameter; the current server contract is undocumented</param>
-    /// <param name="ct">Cancellation Token</param>
-    /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsDownloadId>> GetTransactionHistoryDownloadIdAsync(DateTime? startTime = null, DateTime? endTime = null, int? receiveWindow = null, CancellationToken ct = default);
-
-    /// <summary>
-    /// UNDOCUMENTED: Calls <c>GET /eapi/v1/income/asyn/id</c>, which is absent from the current Options catalog and official connector. Its server lifecycle is unresolved and it is not a supported current contract
-    /// </summary>
-    /// <param name="downloadId">Wrapper download identifier parameter; the current server contract is undocumented</param>
-    /// <param name="receiveWindow">Wrapper receive-window parameter; the current server contract is undocumented</param>
-    /// <param name="ct">Cancellation Token</param>
-    /// <returns></returns>
-    Task<RestCallResult<BinanceOptionsDownloadLink>> GetTransactionHistoryDownloadLinkAsync(long downloadId, int? receiveWindow = null, CancellationToken ct = default);
 }
