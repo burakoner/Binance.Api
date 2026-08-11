@@ -2261,6 +2261,18 @@ All 23 focused Block Trade, REST-surface, Public-stream, and Market-stream tests
 
 Slice 138 is next, followed by Slice 118. Two planned small turns and approximately 1.5-4 active hours remain. The numbered development ratio remains 139/141, approximately 98.6%. Actual FIX/SBE implementation remains outside this estimate and still cannot be estimated honestly before Slice 118 defines its execution contract.
 
+## Slice 138: final Options canonical-link and residue audit
+
+All 68 active Options XML documentation references were independently inventoried across the public REST and WebSocket interfaces. They resolve to 55 unique official targets on nine current rendered Binance pages: 44 REST operation anchors, five Public stream anchors, five Market stream anchors, and the product-level private User Data Streams guide. The audit compared the repository targets directly with the rendered navigation DOM `href` values rather than deriving fragments from headings or accepting a page-level HTTP response as endpoint-anchor proof.
+
+Three Market Maker kill-switch links were not exact. Their long heading-derived fragments ended in `-kill-switch-heartbeat` or `-kill-switch-config`, while the current rendered [Market Maker Endpoints](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints) navigation publishes `#auto-cancel-all-open-orders`, `#get-auto-cancel-all-open-orders`, and `#set-auto-cancel-all-open-orders`. The three owned interface links now use those exact targets. No runtime behavior, request contract, public signature, model, example, or test behavior changed.
+
+After correction, the local and current rendered canonical sets are exactly 55/55 with zero local-only and zero canonical-only targets. Active production, test, README, and console surfaces contain zero retired Options documentation roots and zero retired `nbstream` Options hosts. The two remaining textual matches in this execution contract are intentionally retained historical inventory statements describing the pre-remediation state; treating them as active-link residue would falsify the audit.
+
+All 588 deterministic tests pass. A forced full multi-target solution rebuild succeeds with zero errors and the same three pre-existing warnings. No live Binance REST request, authenticated query, WebSocket connection, subscription, order, cancellation, or other mutation was sent.
+
+The Options remediation and documentation queue is complete. Slice 118 is the only remaining numbered slice and is next; it defines the separate Spot FIX/SBE implementation execution contract rather than implementing either protocol. One planned turn and approximately 1-3 active hours remain in the currently measurable queue. The numbered development ratio is now 140/141, approximately 99.3%. Actual FIX/SBE implementation remains outside this estimate and cannot be estimated honestly until Slice 118 defines that program.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -2436,3 +2448,4 @@ Slice 138 is next, followed by Slice 118. Two planned small turns and approximat
 | 135 | Complete | Current Options Market WebSocket topics, public surface, models, validation, and documentation contracts | Current rendered five-operation Market stream catalog, generated connector remote HEAD `3b3f169`, exact all-index/kline/mark/new-symbol/open-interest topics and payloads, zero retired Options links, 6 focused and 586 complete tests, forced full multi-target rebuild |
 | 137 | Complete | Removal of four unsupported wrapper-only Options REST operations and dedicated public response types | Current rendered Account and Market Data catalogs, historical changelog locators, generated connector remote HEAD `3b3f169`, exact 44/44 method-path parity with zero differences, 2 focused and 588 complete tests, forced full multi-target rebuild |
 | Review 32 | Complete | Backward review of Options Block Trade, Public and Market streams, and unsupported REST removal; contract-volume semantics corrected | `3c0fb81..9af305c` diff review, refreshed current Block Trade/Public/Market/Account/Market Data catalogs, generated connector HEAD `3b3f169`, exact 44/44 REST parity, corrected stream `v`/`V` unit names, 23 focused and 588 complete tests, forced full multi-target rebuild |
+| 138 | Complete | Final Options canonical XML documentation and retired-root residue audit | Rendered DOM `href` sets from all nine current Options pages, 68 active references, exact 55/55 unique-target parity after three Market Maker kill-switch anchor corrections, zero active retired-root/host residue, 588 complete tests, forced full multi-target rebuild |

@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Completed the final Options documentation audit across all 68 active XML references; corrected three Market Maker kill-switch anchors and proved exact 55/55 canonical-target parity with zero active retired-root residue
   * Completed Backward Review 32 across the final four Options implementation slices; corrected Market kline and Public ticker volume names to state their published contract units, and reconfirmed Block Trade, stream routing and payloads, and exact 44-operation REST parity
   * Removed the four unsupported wrapper-only Options REST operations and their dedicated public response types, leaving exact method/path parity with all 44 operations in the current official catalog and connector
   * Aligned all five Options Market WebSocket stream contracts with the current all-index, kline, option-mark-price, new-symbol, and open-interest topics, strict input domains, complete event/int64/risk/book payload models, exact array handling, and canonical documentation
