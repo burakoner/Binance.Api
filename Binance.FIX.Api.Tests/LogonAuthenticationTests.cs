@@ -153,6 +153,7 @@ public class LogonAuthenticationTests
     [InlineData("A", "OTHER", "SPOT", "1", "20260812-10:11:12")]
     [InlineData("A", "SESSION", "OTHER", "1", "20260812-10:11:12")]
     [InlineData("A", "SESSION", "SPOT", "-1", "20260812-10:11:12")]
+    [InlineData("A", "SESSION", "SPOT", "0", "20260812-10:11:12")]
     [InlineData("A", "SESSION", "SPOT", "1", "2026-08-12T10:11:12Z")]
     public void RefusesHeaderValuesOutsideSignedSessionContract(
         string messageType,
@@ -172,6 +173,25 @@ public class LogonAuthenticationTests
         Assert.Throws<InvalidOperationException>(() =>
             BinanceFixLogonAuthenticator.Apply(logon, options, credentials));
         AssertAuthenticationFieldsCleared(logon);
+    }
+
+    [Fact]
+    public void AcceptsQuickFixUnsigned64BitSequenceNumber()
+    {
+        var options = new BinanceFixSessionOptions(
+            BinanceFixEnvironment.SpotTestnet,
+            BinanceFixSessionRole.OrderEntry,
+            "SESSION");
+        using var credentials = CreateOfficialCredentials("api-key");
+        var logon = CreateLogon(
+            "SESSION",
+            "SPOT",
+            ulong.MaxValue.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            "20260812-10:11:12");
+
+        BinanceFixLogonAuthenticator.Apply(logon, options, credentials);
+
+        Assert.NotEmpty(logon.GetString(Tags.RawData));
     }
 
     [Fact]

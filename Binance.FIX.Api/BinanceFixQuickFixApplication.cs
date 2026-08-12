@@ -13,6 +13,7 @@ internal sealed class BinanceFixQuickFixApplication : IApplication
     private readonly BinanceFixSessionBudgets budgets;
     private TaskCompletionSource logoutResponse = CreateLogoutResponse();
     private TaskCompletionSource sessionEnded = CreateLifecycleSignal();
+    private bool validatedInboundLogoutObserved;
 
     internal BinanceFixQuickFixApplication(
         BinanceFixSessionOptions options,
@@ -60,6 +61,14 @@ internal sealed class BinanceFixQuickFixApplication : IApplication
 
         if (!budgets.TryAcquireOutboundMessage().Acquired)
         {
+            if (string.Equals(messageType, MsgType.LOGOUT, StringComparison.Ordinal))
+            {
+                lock (lifecycleGate)
+                {
+                    validatedInboundLogoutObserved = false;
+                }
+            }
+
             Disconnect(sessionId, "Local Binance FIX outbound-message budget exhausted");
             throw new DoNotSend();
         }
@@ -82,7 +91,7 @@ internal sealed class BinanceFixQuickFixApplication : IApplication
             {
                 lock (lifecycleGate)
                 {
-                    logoutResponse.TrySetResult();
+                    validatedInboundLogoutObserved = true;
                 }
             }
 
@@ -117,6 +126,12 @@ internal sealed class BinanceFixQuickFixApplication : IApplication
     {
         lock (lifecycleGate)
         {
+            if (validatedInboundLogoutObserved)
+            {
+                logoutResponse.TrySetResult();
+            }
+
+            validatedInboundLogoutObserved = false;
             sessionEnded.TrySetResult();
         }
     }
@@ -125,6 +140,8 @@ internal sealed class BinanceFixQuickFixApplication : IApplication
     {
         lock (lifecycleGate)
         {
+            validatedInboundLogoutObserved = false;
+
             if (logoutResponse.Task.IsCompleted)
             {
                 logoutResponse = CreateLogoutResponse();

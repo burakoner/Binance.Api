@@ -208,6 +208,53 @@ public class SessionCoreIntegrationTests
     }
 
     [Fact]
+    public void InboundLogoutIsNotGracefulUntilQuickFixEndsTheSession()
+    {
+        var options = CreateOptions(BinanceFixSessionRole.OrderEntry);
+        using var credentials = CreateCredentials();
+        var application = new BinanceFixQuickFixApplication(
+            options,
+            credentials,
+            new BinanceFixSessionBudgets(options.Limits));
+        var sessionId = BinanceFixQuickFixSessionSettings.CreateSessionId(options);
+
+        application.OnLogon(sessionId);
+        application.FromAdmin(CreateInboundMessage(MsgType.LOGOUT, sessionId), sessionId);
+
+        Assert.False(application.CurrentLogoutResponse.IsCompleted);
+        Assert.False(application.CurrentSessionEnded.IsCompleted);
+
+        application.OnLogout(sessionId);
+
+        Assert.True(application.CurrentLogoutResponse.IsCompleted);
+        Assert.True(application.CurrentSessionEnded.IsCompleted);
+    }
+
+    [Fact]
+    public void RejectedLogoutResponseCannotBeReportedAsGraceful()
+    {
+        var options = CreateOptions(BinanceFixSessionRole.DropCopy);
+        using var credentials = CreateCredentials();
+        var budgets = new BinanceFixSessionBudgets(options.Limits);
+        var application = new BinanceFixQuickFixApplication(options, credentials, budgets);
+        var sessionId = BinanceFixQuickFixSessionSettings.CreateSessionId(options);
+
+        application.OnLogon(sessionId);
+        application.FromAdmin(CreateInboundMessage(MsgType.LOGOUT, sessionId), sessionId);
+        for (var message = 0; message < options.Limits.OutboundMessages.MaximumCount; message++)
+        {
+            application.ToApp(CreateOutboundMessage(MsgType.ORDER_SINGLE, sessionId), sessionId);
+        }
+
+        Assert.Throws<DoNotSend>(() =>
+            application.ToAdmin(CreateOutboundMessage(MsgType.LOGOUT, sessionId), sessionId));
+        application.OnLogout(sessionId);
+
+        Assert.False(application.CurrentLogoutResponse.IsCompleted);
+        Assert.True(application.CurrentSessionEnded.IsCompleted);
+    }
+
+    [Fact]
     public async Task GracefulStopSendsLogoutWaitsForResponseThenForcesBoundedEngineStop()
     {
         using var fixture = CreateRegisteredSession(BinanceFixSessionRole.OrderEntry);
