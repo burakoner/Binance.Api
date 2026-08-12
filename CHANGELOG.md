@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added a bounded Spot FIX Ed25519 Logon boundary with the official SOH/ASCII/Base64 signature vector, Ed25519-only PKCS#8 import, role-correct required fields, disposed-key rejection, and exact tag 96/553 wire redaction
   * Added the first bounded FIX session-core slice with explicit production/Testnet selection, exact immutable role endpoints, strict SenderCompID and heartbeat validation, sequential message handling, Order Entry/Drop Copy response defaults, and Market Data response-mode isolation
   * Completed Backward Review 33 across the FIX/SBE foundation and generation spikes: kept Binance-derived generated artifacts out of Git pending explicit redistribution authority, proved QuickFIX/n 1.14.1 can fail closed on sequence gaps without sending or persisting unsupported ResendRequest messages, and narrowed the next executable work to the non-generated common session core
   * Proved deterministic generation of both Binance Spot text FIX 4.4 dictionaries with QuickFIX/n DDTool 1.14.1: separate internal role namespaces, a shared 148-field internal catalog, unchanged published Core assemblies, warning-free net8/net9/net10 compilation, and zero exported generated types without committing Binance-derived source

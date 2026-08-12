@@ -37,6 +37,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NSec.Cryptography" Version="25.4.0" />
     <PackageReference Include="QuickFIXn.Core" Version="1.14.1" />
   </ItemGroup>
 
