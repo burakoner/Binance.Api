@@ -9,6 +9,16 @@ internal static class BinanceFixQuickFixTlsSettings
     {
         ArgumentNullException.ThrowIfNull(options);
 
+        var settings = new SettingsDictionary();
+        Apply(options, settings);
+        return settings;
+    }
+
+    internal static void Apply(BinanceFixSessionOptions options, SettingsDictionary settings)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(settings);
+
         var endpoint = options.Endpoint;
         if (!string.Equals(endpoint.Scheme, "tcp+tls", StringComparison.Ordinal) || endpoint.Port != 9000)
         {
@@ -16,7 +26,6 @@ internal static class BinanceFixQuickFixTlsSettings
         }
 
         var host = endpoint.DnsSafeHost;
-        var settings = new SettingsDictionary();
         settings.SetString(SessionSettings.SOCKET_CONNECT_HOST, host);
         settings.SetLong(SessionSettings.SOCKET_CONNECT_PORT, endpoint.Port);
         settings.SetBool(SessionSettings.SOCKET_IGNORE_PROXY, true);
@@ -24,6 +33,5 @@ internal static class BinanceFixQuickFixTlsSettings
         settings.SetString(SessionSettings.SSL_SERVERNAME, host);
         settings.SetBool(SessionSettings.SSL_VALIDATE_CERTIFICATES, true);
         settings.SetBool(SessionSettings.SSL_CHECK_CERTIFICATE_REVOCATION, true);
-        return settings;
     }
 }

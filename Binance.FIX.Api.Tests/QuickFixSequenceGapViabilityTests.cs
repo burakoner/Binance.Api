@@ -3,12 +3,19 @@ using QuickFix;
 using QuickFix.Fields;
 using QuickFix.Store;
 using QuickFix.Transport;
+using System.Text;
 using Xunit;
 
 namespace Binance.FIX.Api.Tests;
 
 public class QuickFixSequenceGapViabilityTests
 {
+    private const string OfficialPrivateKey = """
+        -----BEGIN PRIVATE KEY-----
+        MC4CAQAwBQYDK2VwBCIEIIJEYWtGBrhACmb9Dvy+qa8WEf0lQOl1s4CLIAB9m89u
+        -----END PRIVATE KEY-----
+        """;
+
     [Fact]
     public void BinanceAdapterDisconnectsBeforeResendRequestCanBePersistedOrSent()
     {
@@ -20,7 +27,16 @@ public class QuickFixSequenceGapViabilityTests
         bootstrapDictionary.SetString(SessionSettings.CONNECTION_TYPE, "initiator");
         bootstrapSettings.Set(bootstrapSession, bootstrapDictionary);
 
-        var application = new FailClosedApplication();
+        var senderCompId = $"OE{Guid.NewGuid():N}"[..8];
+        var options = new BinanceFixSessionOptions(
+            BinanceFixEnvironment.SpotTestnet,
+            BinanceFixSessionRole.OrderEntry,
+            senderCompId);
+        using var credentials = new BinanceFixEd25519Credentials(
+            "test-api-key",
+            Encoding.ASCII.GetBytes(OfficialPrivateKey));
+        var budgets = new BinanceFixSessionBudgets(options.Limits);
+        var application = new BinanceFixQuickFixApplication(options, credentials, budgets);
         using var initiator = new SocketInitiator(
             application,
             new MemoryStoreFactory(),
@@ -28,7 +44,6 @@ public class QuickFixSequenceGapViabilityTests
             NullLoggerFactory.Instance,
             new DefaultMessageFactory());
 
-        var senderCompId = $"OE{Guid.NewGuid():N}"[..8];
         var sessionId = new SessionID("FIX.4.4", senderCompId, "SPOT");
         var sessionDictionary = new SettingsDictionary();
         sessionDictionary.SetString(SessionSettings.CONNECTION_TYPE, "initiator");
@@ -57,9 +72,6 @@ public class QuickFixSequenceGapViabilityTests
 
             session.Next(logonWithGap.ConstructString());
 
-            Assert.Equal(1, application.BlockedResendRequestCount);
-            Assert.Equal(1UL, application.BlockedBeginSeqNo);
-            Assert.Equal(0UL, application.BlockedEndSeqNo);
             Assert.Equal(1, responder.DisconnectCount);
             Assert.Empty(responder.SentMessages);
             Assert.Equal(1UL, session.NextSenderMsgSeqNum);
@@ -72,57 +84,6 @@ public class QuickFixSequenceGapViabilityTests
         finally
         {
             Assert.True(initiator.RemoveSession(sessionId, terminateActiveSession: true));
-        }
-    }
-
-    private sealed class FailClosedApplication : IApplication
-    {
-        public int BlockedResendRequestCount { get; private set; }
-
-        public ulong BlockedBeginSeqNo { get; private set; }
-
-        public ulong BlockedEndSeqNo { get; private set; }
-
-        public void ToAdmin(Message message, SessionID sessionId)
-        {
-            if (message.Header.GetString(Tags.MsgType) != MsgType.RESEND_REQUEST)
-            {
-                return;
-            }
-
-            BlockedResendRequestCount++;
-            BlockedBeginSeqNo = message.GetULong(Tags.BeginSeqNo);
-            BlockedEndSeqNo = message.GetULong(Tags.EndSeqNo);
-
-            var session = Session.LookupSession(sessionId)
-                ?? throw new InvalidOperationException($"FIX session '{sessionId}' was not registered.");
-
-            session.Disconnect("Binance does not support ResendRequest");
-            throw new DoNotSend();
-        }
-
-        public void FromAdmin(Message message, SessionID sessionId)
-        {
-        }
-
-        public void ToApp(Message message, SessionID sessionId)
-        {
-        }
-
-        public void FromApp(Message message, SessionID sessionId)
-        {
-        }
-
-        public void OnCreate(SessionID sessionId)
-        {
-        }
-
-        public void OnLogout(SessionID sessionId)
-        {
-        }
-
-        public void OnLogon(SessionID sessionId)
-        {
         }
     }
 

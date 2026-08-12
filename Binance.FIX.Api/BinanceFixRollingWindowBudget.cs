@@ -18,6 +18,8 @@ internal sealed class BinanceFixRollingWindowBudget
         this.timeProvider = timeProvider ?? TimeProvider.System;
     }
 
+    internal BinanceFixWindowLimit Limit => limit;
+
     internal BinanceFixBudgetDecision TryAcquire()
     {
         lock (gate)
