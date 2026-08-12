@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Corrected the Review 33B Logon sequence-domain regression back to Binance's exact unsigned 32-bit `SEQNUM` contract including rollover value zero, and revised the forward text-FIX plan to manually authored internal wire mappings that keep generated Binance artifacts out of Git and packages
   * Reconciled future NuGet package metadata with the repository's Apache License 2.0 under the repository owner's explicit decision; this prospective project-license correction does not grant redistribution rights over Binance-owned FIX schemas or generated derivatives
   * Prepared the copy-ready Binance Spot FIX generated-output permission request and fail-closed evidence checklist for Rights Gate 33A, and recorded the independent Apache-2.0 repository versus MIT package-metadata mismatch that must be owner-resolved before a future package release
   * Completed Backward Review 33B across the Spot FIX common session core: delayed graceful-logout completion until QuickFIX actually ends a validated Logout exchange, removed an invented 32-bit Logon sequence-number ceiling, locked the public boundary against raw QuickFIX types, normalized only the FIX projects to the repository CRLF policy, and reconfirmed current official transport, dependency, key-lifecycle, and budget contracts

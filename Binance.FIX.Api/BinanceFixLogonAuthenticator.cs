@@ -49,14 +49,9 @@ internal static class BinanceFixLogonAuthenticator
         }
 
         var messageSequenceNumber = GetRequiredHeaderValue(logon, Tags.MsgSeqNum);
-        if (!ulong.TryParse(
-                messageSequenceNumber,
-                NumberStyles.None,
-                CultureInfo.InvariantCulture,
-                out var sequenceNumber)
-            || sequenceNumber == 0)
+        if (!uint.TryParse(messageSequenceNumber, NumberStyles.None, CultureInfo.InvariantCulture, out _))
         {
-            throw new InvalidOperationException("Logon MsgSeqNum must be a positive unsigned integer.");
+            throw new InvalidOperationException("Logon MsgSeqNum must be an unsigned 32-bit integer.");
         }
 
         var sendingTime = GetRequiredHeaderValue(logon, Tags.SendingTime);

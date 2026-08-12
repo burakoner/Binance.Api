@@ -153,7 +153,7 @@ public class LogonAuthenticationTests
     [InlineData("A", "OTHER", "SPOT", "1", "20260812-10:11:12")]
     [InlineData("A", "SESSION", "OTHER", "1", "20260812-10:11:12")]
     [InlineData("A", "SESSION", "SPOT", "-1", "20260812-10:11:12")]
-    [InlineData("A", "SESSION", "SPOT", "0", "20260812-10:11:12")]
+    [InlineData("A", "SESSION", "SPOT", "4294967296", "20260812-10:11:12")]
     [InlineData("A", "SESSION", "SPOT", "1", "2026-08-12T10:11:12Z")]
     public void RefusesHeaderValuesOutsideSignedSessionContract(
         string messageType,
@@ -175,8 +175,10 @@ public class LogonAuthenticationTests
         AssertAuthenticationFieldsCleared(logon);
     }
 
-    [Fact]
-    public void AcceptsQuickFixUnsigned64BitSequenceNumber()
+    [Theory]
+    [InlineData("0")]
+    [InlineData("4294967295")]
+    public void AcceptsBinanceUnsigned32BitSequenceBoundary(string messageSequenceNumber)
     {
         var options = new BinanceFixSessionOptions(
             BinanceFixEnvironment.SpotTestnet,
@@ -186,7 +188,7 @@ public class LogonAuthenticationTests
         var logon = CreateLogon(
             "SESSION",
             "SPOT",
-            ulong.MaxValue.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            messageSequenceNumber,
             "20260812-10:11:12");
 
         BinanceFixLogonAuthenticator.Apply(logon, options, credentials);
