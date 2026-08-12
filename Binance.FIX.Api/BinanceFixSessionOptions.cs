@@ -71,6 +71,7 @@ public sealed class BinanceFixSessionOptions
 
         Environment = environment;
         Role = role;
+        Limits = BinanceFixSessionLimits.ForRole(role);
         SenderCompId = senderCompId;
         HeartbeatIntervalSeconds = heartbeatIntervalSeconds;
         MessageHandling = messageHandling;
@@ -88,6 +89,11 @@ public sealed class BinanceFixSessionOptions
     /// Gets the isolated session role.
     /// </summary>
     public BinanceFixSessionRole Role { get; }
+
+    /// <summary>
+    /// Gets the current published limits for the isolated session role.
+    /// </summary>
+    public BinanceFixSessionLimits Limits { get; }
 
     /// <summary>
     /// Gets the immutable official TLS endpoint for the environment and role.

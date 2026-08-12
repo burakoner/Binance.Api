@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added exact immutable Spot FIX role-limit metadata and a monotonic thread-safe rolling-window budget primitive with deterministic boundary, observation, and concurrent-acquisition coverage, ready for lifecycle integration without pretending to replace Binance's account-wide authority
   * Added mandatory Spot FIX QuickFIX/n TLS projection with exact direct production/Testnet role hosts for both TCP and SNI, certificate and revocation validation locked on, and real in-process matching-host, hostname-mismatch, and untrusted-chain handshake coverage
   * Added a bounded Spot FIX Ed25519 Logon boundary with the official SOH/ASCII/Base64 signature vector, Ed25519-only PKCS#8 import, role-correct required fields, disposed-key rejection, and exact tag 96/553 wire redaction
   * Added the first bounded FIX session-core slice with explicit production/Testnet selection, exact immutable role endpoints, strict SenderCompID and heartbeat validation, sequential message handling, Order Entry/Drop Copy response defaults, and Market Data response-mode isolation
