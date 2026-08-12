@@ -18,7 +18,7 @@
 		<Description>Development-stage Binance Spot FIX protocol client. This project is not yet a usable or supported API wrapper.</Description>
 		<PackageTags>Binance;FIX;Spot;Trading;Cryptocurrency;Exchange;</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageReleaseNotes>Please refer to changelog at Github https://github.com/burakoner/Binance.Api/blob/master/CHANGELOG.md</PackageReleaseNotes>
 		<PackageIcon>Binance.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/burakoner/Binance.Api</PackageProjectUrl>

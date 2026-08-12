@@ -50,6 +50,6 @@ A response opens the gate only after the repository owner accepts documented evi
 
 Generic permission to use the API, the licenses of QuickFIX/n or SbeTool, and licenses attached to separate Binance sample repositories do not by themselves satisfy this checklist.
 
-## Independent project-license decision
+## Resolved project-license decision
 
-The repository root `LICENSE` contains Apache License 2.0, while `Binance.Api.csproj`, the current generated `Binance.Api` NuGet metadata, and `Binance.FIX.Api.csproj` declare `MIT`. Both declarations have historical provenance, so this packet does not guess which one the owner intended. The repository owner must reconcile that mismatch before any future package release and before accepting Binance terms that depend on the wrapper's outbound license.
+On 2026-08-12, the repository owner explicitly selected Apache License 2.0 for future project and NuGet package outputs. `Binance.Api.csproj` and the non-packable `Binance.FIX.Api.csproj` now use the SPDX expression `Apache-2.0`, matching the root `LICENSE`. This prospective source/package-metadata decision does not rewrite already produced packages or expand the rights granted by Binance over its schemas and generated derivatives.
