@@ -1,18 +1,18 @@
 # Spot FIX and SBE implementation execution contract
 
-Status: approved living execution contract; Review 33 complete, Slice 146 session core next, generated-output redistribution blocked
+Status: approved living execution contract; Slice 146a complete, Slice 146b next, generated-output redistribution blocked
 
-Evidence date: 2026-08-11
+Evidence date: 2026-08-12
 
 Owning inventory: Slice 118
 
-Completed implementation slices: Slices 142-145; completed review: Review 33
+Completed implementation slices: Slices 142-145 and Slice 146a; completed review: Review 33
 
-Next implementation slice: Slice 146. Next external gate: generated-output Rights Gate 33A before Slice 147 or any generated codec enters Git/package output.
+Next implementation slice: Slice 146b. Next external gate: generated-output Rights Gate 33A before Slice 147 or any generated codec enters Git/package output.
 
 ## Brutal current state
 
-`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist; Slice 143 pins the exact FIX-owned upstream inputs without redistributing them; Slice 144 proves that FIX SBE `1:1` can be generated deterministically, internalized, and compiled across every current consumer target; Slice 145 proves the two text FIX dictionaries can share a Binance-owned internal field catalog and separate role namespaces while compiling against the unchanged published QuickFIX/n Core package. Review 33 found no foundation/generator regression and proved a contained QuickFIX/n no-`ResendRequest` fail-close path, but did not invent redistribution rights over Binance-derived generated output. There is still no production session, transport, authentication, committed generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
+`Binance.FIX.Api` is still not a usable Binance FIX wrapper. Slice 142 removed its empty public placeholder and false completeness claims, made it non-packable, and upgraded its sole runtime dependency to QuickFIX/n Core 1.14.1. A non-packable `Binance.SBE.Api` foundation and dedicated protocol test projects now exist; Slice 143 pins the exact FIX-owned upstream inputs without redistributing them; Slice 144 proves that FIX SBE `1:1` can be generated deterministically, internalized, and compiled across every current consumer target; Slice 145 proves the two text FIX dictionaries can share a Binance-owned internal field catalog and separate role namespaces while compiling against the unchanged published QuickFIX/n Core package. Review 33 found no foundation/generator regression and proved a contained QuickFIX/n no-`ResendRequest` fail-close path, but did not invent redistribution rights over Binance-derived generated output. Slice 146a adds only immutable, validated production/Testnet role endpoints, session identity, heartbeat, and safe logon-mode defaults. There is still no production session, transport, authentication, committed generated message, decoder, or public client implementation. A successful solution build still proves neither protocol support.
 
 This program is much larger than adding a few missing JSON endpoints. The current official surface contains:
 
@@ -94,7 +94,7 @@ QuickFIX/n may own the text FIX state machine and TLS transport only after all o
 - Only Ed25519 credentials are accepted. Logon signs the exact SOH-joined `35`, `49`, `56`, `34`, and `52` values after QuickFIX/n has populated the header. API key and raw signature fields are redacted; raw wire logging is off by default.
 - Order Entry, Drop Copy, and Market Data use distinct client types, endpoints, permissions, connection counters, rate limits, and message catalogs. A generic public `Send(Message)` escape hatch is out of scope.
 - Heartbeat is constrained to the official 5-60 second range and defaults to 30 seconds. TestRequest/Heartbeat timeout behavior is deterministic.
-- `MessageHandling=SEQUENTIAL` and `ResponseMode=EVERYTHING` are safe defaults. Unordered handling and acknowledgement-only responses require explicit opt-in and documented consequences.
+- `MessageHandling=SEQUENTIAL` is the shared safe default. Order Entry and Drop Copy default to `ResponseMode=EVERYTHING`; Market Data's current dictionary does not define that field. Unordered handling and acknowledgement-only responses require explicit opt-in and documented consequences on roles that support them.
 - Logon and session reset use the documented sequence contract. Graceful Logout is attempted, but application shutdown cannot pretend it succeeded.
 - Binance documents `ResendRequest` as unsupported. QuickFIX/n 1.14.1 automatically generates one when the inbound sequence is too high. Review 33 proved on the unchanged 1.14.1 NuGet package that `IApplication.ToAdmin` observes the generated `35=2` before persistence or responder send: the adapter resolves and disconnects the session, then throws `DoNotSend`. For an inbound logon gap from expected `34=1` to received `34=2`, the test observes the exact `7=1`/`16=0` request attempt while proving one disconnect, zero wire writes, zero persisted messages, unchanged sender sequence, and unchanged expected target sequence. Slice 146 must productionize this exact fail-closed behavior; any engine upgrade must rerun the regression before acceptance.
 - No order mutation is automatically replayed after timeout, disconnect, reconnect, or ambiguous write completion. Pending mutations become an explicit `UnknownDelivery` state and require execution-report, Drop Copy, or REST reconciliation.
@@ -135,7 +135,10 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 | 144 | Pinned SbeTool C# feasibility pipeline | JDK 17 generation-only toolchain, ignored temporary output, deterministic generation proof, all-consuming-TFM compile matrix, internalization decision; no generated output committed before Review 33 rights decision | 4-8 h |
 | 145 | Binance FIX dictionary generation spike | Both custom FIX 4.4 dictionaries generate, compile, and validate without modifying QuickFIX/n NuGet source | 5-10 h |
 | Review 33 | Foundation review and re-estimate | Review Slices 142-145; decide schema/generated-output rights and whether QuickFIX/n remains viable before session implementation | 2-4 h |
-| 146 | Common text FIX session core without generated artifacts | TLS/SNI, Ed25519 logon, redaction, heartbeat, logout, limits, cancellation, and productionized sequence-gap/no-resend fail-close behavior; package remains disabled | 8-16 h |
+| 146a | Immutable text FIX session contract | Explicit production/Testnet selection, exact role endpoint, immutable SenderCompID, heartbeat validation, sequential default, and role-correct response-mode isolation | 2-3 h |
+| 146b | Ed25519 logon and credential boundary | Exact SOH payload/signature vector, Ed25519-only key acceptance, required logon fields, signature/API-key redaction | 2-4 h |
+| 146c | Mandatory TLS transport projection | QuickFIX/n SSL enablement, exact endpoint hostname for TCP and SNI, hostname/certificate/revocation validation with no public disable switch, in-process TLS rejection tests | 2-4 h |
+| 146d | Session lifecycle and budgets | Heartbeat/test/logout, role message/connection limits, cancellation/disposal, ambiguous delivery boundary, and productionized sequence-gap/no-resend fail-close behavior | 2-5 h |
 | Rights Gate 33A | Generated-output redistribution authority | Written license/permission or documented legal review before any Binance-derived generated source enters Git/package output; blocks Slice 147 and all generated-code slices, but not Slice 146 | external wait |
 | 147 | Order Entry single-order lifecycle | New, cancel, cancel-replace, amend-keep-priority, exact acknowledgements/rejects, unknown-delivery handling | 8-16 h |
 | 148 | Order Entry lists and mass cancel | Order lists, list status, mass cancel, exact grouping and correlation behavior | 8-16 h |
@@ -162,18 +165,18 @@ The queue is a living execution contract. Review gates may split, reorder, or st
 
 ## Forecast and mandatory recalibration
 
-The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Slices 142-145 and Review 33 are complete. The current implementation/review envelope is **23 small turns and 130-260 active hours**. At 40 focused hours per week this is roughly 3.25-6.5 weeks; at 20 focused hours per week it is roughly 6.5-13 weeks. These are effort conversions, not a promised calendar date. Only Slice 146 is currently executable: Rights Gate 33A blocks the remaining generated-code chain, and its external wait has no honest calendar estimate. Credential/user authorization, Binance/Testnet availability, and any future upstream defect are also excluded.
+The initial implementation envelope was 23 development slices plus five mandatory reviews: **28 small turns and 146-292 active hours**. Review 33 split the 8-16 hour Slice 146 into four smaller turns without increasing its active-hour envelope. Slices 142-145, Slice 146a, and Review 33 are complete. The current implementation/review envelope is **25 small turns and 128-257 active hours**. At 40 focused hours per week this is roughly 3.2-6.4 weeks; at 20 focused hours per week it is roughly 6.4-12.9 weeks. These are effort conversions, not a promised calendar date. Only Slices 146b-146d are currently executable: Rights Gate 33A blocks the remaining generated-code chain, and its external wait has no honest calendar estimate. Credential/user authorization, Binance/Testnet availability, and any future upstream defect are also excluded.
 
 | Remaining milestone | Minimum remaining turns | Remaining active budget |
 | --- | ---: | ---: |
-| Common text FIX session core before Rights Gate 33A | 1 | 8-16 h |
-| Complete safe text FIX after Review 34 | 6 plus external rights gate | 38-76 h plus external wait |
-| Complete text, hybrid, and full FIX SBE after Review 35 | 11 plus external rights gate | 63-126 h plus external wait |
-| Independent SBE market streams after Review 36 | 15 plus external rights gate | 81-162 h plus external wait |
-| General REST/WebSocket/user-data SBE after Review 37 | 21 plus external rights gate | 121-242 h plus external wait |
-| Release-gated current FIX/SBE program | 23 plus external rights gate | 130-260 h plus external wait |
+| Complete common text FIX session core before Rights Gate 33A | 3 | 6-13 h |
+| Complete safe text FIX after Review 34 | 8 plus external rights gate | 36-73 h plus external wait |
+| Complete text, hybrid, and full FIX SBE after Review 35 | 13 plus external rights gate | 61-123 h plus external wait |
+| Independent SBE market streams after Review 36 | 17 plus external rights gate | 79-159 h plus external wait |
+| General REST/WebSocket/user-data SBE after Review 37 | 23 plus external rights gate | 119-239 h plus external wait |
+| Release-gated current FIX/SBE program | 25 plus external rights gate | 128-257 h plus external wait |
 
-Review 33 inspected `b4aa5ef..3ea34da` and accepted the four-slice foundation/generator work without correction. QuickFIX/n 1.14.1 remains viable because the exact no-`ResendRequest` fail-close path is now locked by a deterministic regression. The generated-output rights decision failed closed: no relevant redistribution license or permission was found, so Binance-derived generated output remains external and Rights Gate 33A now blocks Slice 147 onward. Slice 146 is next because its common session safety core can be implemented without committing generated artifacts; work must stop at Gate 33A after that slice unless qualifying rights evidence exists.
+Review 33 inspected `b4aa5ef..3ea34da` and accepted the four-slice foundation/generator work without correction. QuickFIX/n 1.14.1 remains viable because the exact no-`ResendRequest` fail-close path is now locked by a deterministic regression. The generated-output rights decision failed closed: no relevant redistribution license or permission was found, so Binance-derived generated output remains external and Rights Gate 33A now blocks Slice 147 onward. Slice 146a revalidated the current official production and Spot Testnet documents at the unchanged schema-repository HEAD `b483413fcdf4da783cd3fcaad6fab7200a93297f` and locked all six text FIX role endpoints plus the shared identity/heartbeat/logon-mode domain. Slice 146b is next; work must stop at Gate 33A after Slice 146d unless qualifying rights evidence exists.
 
 ## Definition of done
 
