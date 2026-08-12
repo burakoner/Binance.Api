@@ -1,6 +1,6 @@
 # Spot FIX and SBE implementation execution contract
 
-Status: approved living execution contract; Review 33B complete, generated-output redistribution blocks Slice 147 onward
+Status: approved living execution contract; Rights Gate 33A request prepared, external authority still blocks Slice 147 onward
 
 Evidence date: 2026-08-12
 
@@ -8,7 +8,7 @@ Owning inventory: Slice 118
 
 Completed implementation slices: Slices 142-145 and Slices 146a-146d2; completed reviews: Review 33 and Review 33B
 
-Next action: obtain qualifying generated-output authority for Rights Gate 33A. Slice 147 and every generated-code slice remain blocked until written license/permission or a repository-owner-accepted documented legal review exists.
+Next action: the repository owner must send the copy-ready [`BINANCE_FIX_GENERATED_OUTPUT_RIGHTS_REQUEST.md`](BINANCE_FIX_GENERATED_OUTPUT_RIGHTS_REQUEST.md) through an attributable Binance channel and preserve the written response. Slice 147 and every generated-code slice remain blocked until that evidence passes Rights Gate 33A.
 
 ## Brutal current state
 
@@ -77,7 +77,8 @@ Generated wire code is required; hand-maintaining 29, 4, and 92 SBE templates is
 - The official repository publishes no `LICENSE`, `COPYING`, or `NOTICE` file. The linked [Binance Terms](https://www.binance.com/en/terms) and [Testnet Terms](https://www.binance.com/en/about-legal/terms-testnets) do not expressly grant redistribution of these raw artifacts. This is a fail-closed project decision, not legal advice: raw Binance XML/JSON files are not committed, packed, or copied into Git history. Exact commit, URI, byte length, hash, and reviewed identity are committed instead, with an explicit maintainer-only verified downloader.
 - SbeTool emits all 84 top-level codec types as `public`. The selected package boundary performs exactly one deterministic top-level `public` to `internal` accessibility change per generated file, changes no member/wire code, and proves zero exported types after compilation. Any generator output that does not match that exact 84-replacement manifest fails closed.
 - Generated C# must not be committed or released merely because generation succeeds. Review 33 refreshed official repository HEAD `b483413fcdf4da783cd3fcaad6fab7200a93297f` and confirmed that it still has no `LICENSE`, `COPYING`, or `NOTICE`. Binance's separately MIT-licensed SBE sample repositories demonstrate redistribution only for the files in those repositories; they do not expressly license C# output derived from the separate FIX dictionaries or FIX SBE schema. Review 33 therefore denied repository/package entry under the current evidence. Slice 144 continues to generate and compile only in an external temporary workspace, and normal restore/build/test remains offline.
-- Rights Gate 33A requires an explicit license or permission covering redistribution of the relevant generated works, or a documented legal review accepted by the repository owner. Risk acceptance alone does not create third-party rights. After that gate is satisfied and generated output is committed, CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
+- Rights Gate 33A requires an explicit license or permission covering redistribution of the relevant generated works, or a documented legal review accepted by the repository owner. Risk acceptance alone does not create third-party rights. The copy-ready request and exact acceptance checklist live in [`BINANCE_FIX_GENERATED_OUTPUT_RIGHTS_REQUEST.md`](BINANCE_FIX_GENERATED_OUTPUT_RIGHTS_REQUEST.md); preparing or sending it does not open the gate. After the gate is satisfied and generated output is committed, CI regenerates into a temporary directory and fails on a diff. It does not rewrite the worktree.
+- The repository root has declared Apache License 2.0 since its initial commit, while the main NuGet project has declared `MIT` since its first release and current package metadata still does so. The non-packable FIX project also declares `MIT`. This contract does not guess owner intent: the mismatch is a separate release gate and must be reconciled before any future package release or acceptance of Binance terms whose compatibility depends on the outbound license.
 - Generated namespaces include schema identity. Generated types are implementation detail, not stable high-level business API; Slice 144 must prove the selected internalization boundary before consumer mapping begins.
 - Every frame is length-checked before decode. Schema ID, schema version, template ID, block length, repeating-group counts, variable data lengths, null values, enum values, and microsecond timestamps receive deterministic boundary tests.
 - Decoder tests include independent byte fixtures and field-offset assertions. Encoder-to-decoder round trips alone are insufficient evidence because the same generator can reproduce the same defect on both sides.
@@ -192,4 +193,4 @@ The FIX/SBE program is complete only when:
 4. sequence gaps, ambiguous delivery, reconnects, timeouts, malformed frames, unknown versions, and credential/logging paths fail safely;
 5. the full legacy suite plus all new deterministic protocol tests pass on every target framework and a forced solution build has zero errors;
 6. opt-in Spot Testnet conformance evidence exists for each transport, with no production call or credential;
-7. pack contents and public API are reviewed, documentation is executable and safe, and package metadata makes no claim broader than the tested implementation.
+7. pack contents and public API are reviewed, documentation is executable and safe, repository/package license metadata is owner-reconciled, and package metadata makes no claim broader than the tested implementation.

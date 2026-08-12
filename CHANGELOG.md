@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Prepared the copy-ready Binance Spot FIX generated-output permission request and fail-closed evidence checklist for Rights Gate 33A, and recorded the independent Apache-2.0 repository versus MIT package-metadata mismatch that must be owner-resolved before a future package release
   * Completed Backward Review 33B across the Spot FIX common session core: delayed graceful-logout completion until QuickFIX actually ends a validated Logout exchange, removed an invented 32-bit Logon sequence-number ceiling, locked the public boundary against raw QuickFIX types, normalized only the FIX projects to the repository CRLF policy, and reconfirmed current official transport, dependency, key-lifecycle, and budget contracts
   * Completed the bounded Spot FIX common session core with fail-closed QuickFIX/n settings, real outbound and shared account-role connection-attempt budget gates, signed Logon integration, deterministic heartbeat/TestRequest/Logout behavior, cancellation-safe bounded shutdown, explicit `UnknownDelivery`, no mutation persistence/replay, and productionized bidirectional no-`ResendRequest` handling
   * Added exact immutable Spot FIX role-limit metadata and a monotonic thread-safe rolling-window budget primitive with deterministic boundary, observation, and concurrent-acquisition coverage, ready for lifecycle integration without pretending to replace Binance's account-wide authority

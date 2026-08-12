@@ -2411,6 +2411,16 @@ Reflection now also proves that no exported FIX API member exposes a `QuickFix` 
 
 The forward program is now honestly blocked. Review 33B is complete, leaving 22 implementation/review turns and 122-244 active hours, but Slice 147 and every later generated-code slice require Rights Gate 33A: written redistribution authority or a repository-owner-accepted documented legal review. No such evidence exists, so no generated Binance dictionary/message source may enter Git or package output and the external wait has no honest calendar estimate.
 
+## Rights Gate 33A coordination packet
+
+The official schema repository was checked again at unchanged HEAD `b483413fcdf4da783cd3fcaad6fab7200a93297f`. Its complete, non-truncated Git tree still contains no `LICENSE`, `LICENCE`, `COPYING`, or `NOTICE`; `PROD-TERMS-OF-USE.md` only points to the Binance Product Terms. No new local permission or accepted legal-review evidence exists. Rights Gate 33A therefore remains closed.
+
+[`BINANCE_FIX_GENERATED_OUTPUT_RIGHTS_REQUEST.md`](BINANCE_FIX_GENERATED_OUTPUT_RIGHTS_REQUEST.md) now contains a copy-ready English request identifying all seven locked FIX-owned XML/JSON inputs and asking separately about generated C# modification, public Git source distribution, NuGet binary distribution, raw-input redistribution, future schema versions, and required notices. Its acceptance checklist rejects generic API-use approval and unrelated generator/sample-repository licenses. Preparing it does not grant permission and does not authorize Slice 147.
+
+This preparation also exposed an independent release blocker that cannot be resolved by inference. The repository root `LICENSE` has declared Apache License 2.0 since its initial commit, while the main package has declared `MIT` since its first release; current `Binance.Api` NuGet metadata and the non-packable FIX project still declare `MIT`. The intended outbound license is an owner decision. No license file or package metadata was changed in this turn; the mismatch must be reconciled before a future package release and before accepting any Binance permission whose compatibility depends on that choice.
+
+Only documentation and the external tracker changed. No generated artifact, schema, package, protocol code, dependency, API call, Binance connection, credential, subscription, order, cancellation, or other mutation was created or sent.
+
 ## Review log
 
 | Slice | Status | Scope | Evidence |
@@ -2599,3 +2609,4 @@ The forward program is now honestly blocked. Review 33B is complete, leaving 22 
 | 146d1 | Complete | Immutable exact role-limit metadata and monotonic thread-safe local rolling-window budget primitive | Current production/Testnet FIX documents at official HEAD `b483413`, exact OE/DC/MD message-attempt-concurrent-stream values, immutable public metadata, exact boundary expiry, non-consuming observation, concurrent no-oversubscription, 7 focused/68 FIX and 660 complete tests, forced full multi-target rebuild |
 | 146d2 | Complete | Bounded common session lifecycle, operational budgets, no-resend handling, and ambiguous-delivery boundary | Current production/Testnet FIX documents at official HEAD `b483413`, QuickFIX/n 1.14.1, real heartbeat/TestRequest/Logout/sequence-gap paths, 16 new integration/regression tests, 84 FIX and 676 complete tests, forced full multi-target rebuild |
 | Review 33B | Complete | Backward review of all five common-session turns and gate-before-generated-code scope | `2724fd1^..3b9ae3e` diff review, current official FIX/QuickFIX/n/NuGet refresh, graceful-logout and positive uint64 sequence corrections, public QuickFIX-type escape gate, project-scoped CRLF normalization, 89 FIX and 681 complete tests, forced full multi-target rebuild |
+| Rights Gate 33A preparation | Complete; gate closed | Exact generated-output permission request and evidence-acceptance checklist; local package-license mismatch recorded without guessing owner intent | Unchanged official schema HEAD `b483413`, complete upstream-tree license scan, seven exact locked inputs, root Apache-2.0 versus package-metadata MIT history audit, no implementation or artifact redistribution |
