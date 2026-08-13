@@ -213,4 +213,52 @@ public sealed class BinanceFixExecutionReport
                 ? BinanceFixNewOrderReconciliationStatus.ExchangeRejected
                 : BinanceFixNewOrderReconciliationStatus.ExchangeProcessed;
     }
+
+    /// <summary>
+    /// Reconciles this report against one ambiguous OrderCancelRequest transport attempt.
+    /// A correlated canceled report proves only that one cancellation was observed; an order-list
+    /// cancellation can produce additional ExecutionReport and ListStatus messages.
+    /// </summary>
+    /// <param name="request">The original caller-owned request.</param>
+    /// <param name="deliveryStatus">The immediate transport result.</param>
+    /// <returns>The conservative cancellation resolution.</returns>
+    public BinanceFixCancelReconciliationStatus ReconcileCancel(
+        BinanceFixOrderCancelRequest request,
+        BinanceFixDeliveryStatus deliveryStatus)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (deliveryStatus is not BinanceFixDeliveryStatus.UnknownDelivery
+            || !request.MatchesCoreResponse(ClientOrderId, Symbol)
+            || !MatchesCancelTarget(request)
+            || ExecutionType is not BinanceFixExecutionType.Canceled
+            || OrderStatus is not BinanceFixOrderStatus.Canceled)
+        {
+            return BinanceFixCancelReconciliationStatus.Unresolved;
+        }
+
+        return BinanceFixCancelReconciliationStatus.ExchangeCancellationObserved;
+    }
+
+    private bool MatchesCancelTarget(BinanceFixOrderCancelRequest request)
+    {
+        if (request.OrderId is not null && OrderId is not null && request.OrderId != OrderId)
+        {
+            return false;
+        }
+
+        if (request.OriginalClientOrderId is not null
+            && OriginalClientOrderId is not null
+            && !string.Equals(
+                request.OriginalClientOrderId,
+                OriginalClientOrderId,
+                StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        return request.ListId is null
+            || ListId is null
+            || string.Equals(request.ListId, ListId, StringComparison.Ordinal);
+    }
 }

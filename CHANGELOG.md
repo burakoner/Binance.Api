@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added manually authored Spot FIX `OrderCancelRequest` order/order-list factories, complete `OrderCancelReject` parsing, and exact ambiguous-delivery reconciliation that distinguishes an observed canceled execution from a fully completed order-list lifecycle, without exposing a cancel-send path
   * Added a complete manually authored Spot FIX `ExecutionReport` model and fail-closed parser across the current official documentation/dictionary union, including dictionaryless repeating-fee recovery and exact `ClOrdID` reconciliation for ambiguous `NewOrderSingle` delivery without exposing an order-send path
   * Added the manually authored Spot FIX `NewOrderSingle` public request and internal generic QuickFIX wire mapper across the complete current 24-field surface, with eight Binance order types, exact derived trigger/peg constants, signed-64-bit and invariant fixed-point encoding, fail-closed combination validation, and no public send path before execution-report reconciliation exists
   * Corrected the Review 33B Logon sequence-domain regression back to Binance's exact unsigned 32-bit `SEQNUM` contract including rollover value zero, and revised the forward text-FIX plan to manually authored internal wire mappings that keep generated Binance artifacts out of Git and packages
