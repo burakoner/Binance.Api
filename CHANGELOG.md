@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added the manually authored five-field Spot FIX `OrderAmendKeepPriorityRequest` mapping, complete seven-field `OrderAmendReject` parsing, and exact rejected/replaced ambiguous-delivery reconciliation that preserves order-list incompleteness until the separate `ListStatus` lifecycle is implemented
   * Added the manually authored 29-field Spot FIX `OrderCancelRequestAndNewOrderSingle` mapping with exact cancel-failure/rate-limit modes, phase-aware IDs, reuse of the validated new-order domain, and phase-specific ambiguous-delivery reconciliation that never claims the two-phase mutation is complete from one response
   * Added manually authored Spot FIX `OrderCancelRequest` order/order-list factories, complete `OrderCancelReject` parsing, and exact ambiguous-delivery reconciliation that distinguishes an observed canceled execution from a fully completed order-list lifecycle, without exposing a cancel-send path
   * Added a complete manually authored Spot FIX `ExecutionReport` model and fail-closed parser across the current official documentation/dictionary union, including dictionaryless repeating-fee recovery and exact `ClOrdID` reconciliation for ambiguous `NewOrderSingle` delivery without exposing an order-send path

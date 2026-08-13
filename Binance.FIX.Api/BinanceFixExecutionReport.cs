@@ -241,6 +241,32 @@ public sealed class BinanceFixExecutionReport
     }
 
     /// <summary>
+    /// Reconciles this report against one ambiguous OrderAmendKeepPriorityRequest attempt.
+    /// A correlated replacement proves only that one order amendment was observed; an order-list
+    /// amendment can produce a subsequent ListStatus message.
+    /// </summary>
+    /// <param name="request">The original caller-owned request.</param>
+    /// <param name="deliveryStatus">The immediate transport result.</param>
+    /// <returns>The conservative amendment resolution.</returns>
+    public BinanceFixOrderAmendReconciliationStatus ReconcileAmend(
+        BinanceFixOrderAmendRequest request,
+        BinanceFixDeliveryStatus deliveryStatus)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (deliveryStatus is not BinanceFixDeliveryStatus.UnknownDelivery
+            || OrderQuantity is null
+            || !request.MatchesCoreResponse(ClientOrderId, Symbol, OrderQuantity.Value)
+            || !request.MatchesReportedTarget(OrderId, OriginalClientOrderId)
+            || ExecutionType is not BinanceFixExecutionType.Replaced)
+        {
+            return BinanceFixOrderAmendReconciliationStatus.Unresolved;
+        }
+
+        return BinanceFixOrderAmendReconciliationStatus.ExchangeReplacementObserved;
+    }
+
+    /// <summary>
     /// Reconciles this report as one phase-specific observation for an ambiguous cancel-and-new attempt.
     /// No single report proves that both phases are complete.
     /// </summary>
