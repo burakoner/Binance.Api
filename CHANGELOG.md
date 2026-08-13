@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added the complete six-field Spot FIX generic `Reject` model/parser with all 14 currently documented session-reject reasons and fail-closed field validation; split `ListStatus` into a follow-up because dictionaryless QuickFIX/n cannot safely preserve its nested order/trigger repeating groups
   * Completed Backward Review 33C across the five manually authored Spot FIX single-order lifecycle turns, reconfirming exact current field inventories, financial combinations, conservative reconciliation, public QuickFIX isolation, and zero generated/package artifacts; split the next list/mass-cancel work into three smaller turns without increasing its effort budget
   * Added the manually authored five-field Spot FIX `OrderAmendKeepPriorityRequest` mapping, complete seven-field `OrderAmendReject` parsing, and exact rejected/replaced ambiguous-delivery reconciliation that preserves order-list incompleteness until the separate `ListStatus` lifecycle is implemented
   * Added the manually authored 29-field Spot FIX `OrderCancelRequestAndNewOrderSingle` mapping with exact cancel-failure/rate-limit modes, phase-aware IDs, reuse of the validated new-order domain, and phase-specific ambiguous-delivery reconciliation that never claims the two-phase mutation is complete from one response
