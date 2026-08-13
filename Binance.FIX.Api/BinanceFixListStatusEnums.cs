@@ -39,6 +39,24 @@ public enum BinanceFixListOrderStatus
     Rejected = 7
 }
 
+/// <summary>
+/// Resolution of an ambiguous NewOrderList transport attempt.
+/// </summary>
+public enum BinanceFixNewOrderListReconciliationStatus
+{
+    /// <summary>No exact correlated ListStatus resolved the ambiguous attempt.</summary>
+    Unresolved = 0,
+
+    /// <summary>Binance reported EXECUTING for the exact correlated order list.</summary>
+    ExchangeExecuting = 1,
+
+    /// <summary>Binance reported ALL_DONE for the exact correlated order list.</summary>
+    ExchangeAllDone = 2,
+
+    /// <summary>Binance reported REJECT for the exact correlated order-list request.</summary>
+    ExchangeRejected = 3
+}
+
 /// <summary>Published reason for rejecting a Binance Spot FIX order list.</summary>
 public enum BinanceFixListRejectReason
 {

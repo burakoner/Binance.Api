@@ -50,6 +50,77 @@ public sealed class BinanceFixListStatus
 
     /// <summary>Gets the dictionary-preserved order entries.</summary>
     public IReadOnlyList<BinanceFixListStatusOrder> Orders { get; internal init; } = [];
+
+    /// <summary>
+    /// Reconciles this status against one ambiguous NewOrderList transport attempt.
+    /// The account-wide ListStatus feed resolves only an ordinally equal ClListID with no
+    /// contradictory contingency or nested order identity.
+    /// </summary>
+    /// <param name="request">The original caller-owned request.</param>
+    /// <param name="deliveryStatus">The immediate transport result.</param>
+    /// <returns>The exact published aggregate list-order state, or unresolved.</returns>
+    public BinanceFixNewOrderListReconciliationStatus ReconcileNewOrderList(
+        BinanceFixNewOrderListRequest request,
+        BinanceFixDeliveryStatus deliveryStatus)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (deliveryStatus is not BinanceFixDeliveryStatus.UnknownDelivery
+            || !MatchesNewOrderList(request))
+        {
+            return BinanceFixNewOrderListReconciliationStatus.Unresolved;
+        }
+
+        return OrderStatus switch
+        {
+            BinanceFixListOrderStatus.Executing
+                => BinanceFixNewOrderListReconciliationStatus.ExchangeExecuting,
+            BinanceFixListOrderStatus.AllDone
+                => BinanceFixNewOrderListReconciliationStatus.ExchangeAllDone,
+            BinanceFixListOrderStatus.Rejected
+                => BinanceFixNewOrderListReconciliationStatus.ExchangeRejected,
+            _ => BinanceFixNewOrderListReconciliationStatus.Unresolved
+        };
+    }
+
+    private bool MatchesNewOrderList(BinanceFixNewOrderListRequest request)
+    {
+        if (!string.Equals(ClientListId, request.ClientListId, StringComparison.Ordinal)
+            || (ContingencyType is not null && ContingencyType != request.ContingencyType)
+            || Orders.Count > request.Orders.Count)
+        {
+            return false;
+        }
+
+        var matchedRequestOrders = new bool[request.Orders.Count];
+        foreach (var statusOrder in Orders)
+        {
+            var matchIndex = -1;
+            for (var index = 0; index < request.Orders.Count; index++)
+            {
+                var requestOrder = request.Orders[index];
+                if (!matchedRequestOrders[index]
+                    && string.Equals(
+                        statusOrder.ClientOrderId,
+                        requestOrder.ClientOrderId,
+                        StringComparison.Ordinal)
+                    && string.Equals(statusOrder.Symbol, requestOrder.Symbol, StringComparison.Ordinal))
+                {
+                    matchIndex = index;
+                    break;
+                }
+            }
+
+            if (matchIndex < 0)
+            {
+                return false;
+            }
+
+            matchedRequestOrders[matchIndex] = true;
+        }
+
+        return true;
+    }
 }
 
 /// <summary>One order entry nested in a Binance Spot FIX ListStatus.</summary>

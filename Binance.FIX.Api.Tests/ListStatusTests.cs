@@ -140,6 +140,85 @@ public class ListStatusTests
     }
 
     [Theory]
+    [InlineData("3", BinanceFixNewOrderListReconciliationStatus.ExchangeExecuting)]
+    [InlineData("6", BinanceFixNewOrderListReconciliationStatus.ExchangeAllDone)]
+    [InlineData("7", BinanceFixNewOrderListReconciliationStatus.ExchangeRejected)]
+    public void ReconcilesEveryExactPublishedAggregateState(
+        string orderStatus,
+        BinanceFixNewOrderListReconciliationStatus expected)
+    {
+        var request = CreateNewOrderListRequest();
+        var message = CreateRequiredStatus();
+        Set(message, BinanceFixListStatusParser.ClientListIdTag, request.ClientListId);
+        Set(message, BinanceFixListStatusParser.ContingencyTypeTag, "2");
+        Set(message, BinanceFixListStatusParser.ListOrderStatusTag, orderStatus);
+        AddOrder(message, "pending", 2);
+        AddOrder(message, "working", 1);
+
+        var status = BinanceFixListStatusParser.Parse(message);
+
+        Assert.Equal(
+            expected,
+            status.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.UnknownDelivery));
+    }
+
+    [Fact]
+    public void ReconcilesRejectedStatusWithOnlyExactClientListId()
+    {
+        var request = CreateNewOrderListRequest();
+        var message = CreateRequiredStatus();
+        Set(message, BinanceFixListStatusParser.ClientListIdTag, request.ClientListId);
+        Set(message, BinanceFixListStatusParser.ListOrderStatusTag, "7");
+
+        var status = BinanceFixListStatusParser.Parse(message);
+
+        Assert.Equal(
+            BinanceFixNewOrderListReconciliationStatus.ExchangeRejected,
+            status.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.UnknownDelivery));
+        Assert.Equal(
+            BinanceFixNewOrderListReconciliationStatus.Unresolved,
+            status.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.NotSent));
+    }
+
+    [Fact]
+    public void RejectsMissingOrContradictoryListIdentityDuringReconciliation()
+    {
+        var request = CreateNewOrderListRequest();
+
+        var missingClientListId = BinanceFixListStatusParser.Parse(CreateRequiredStatus());
+
+        var differentCaseMessage = CreateRequiredStatus();
+        Set(differentCaseMessage, BinanceFixListStatusParser.ClientListIdTag, "LIST_1");
+        var differentCase = BinanceFixListStatusParser.Parse(differentCaseMessage);
+
+        var wrongContingencyMessage = CreateRequiredStatus();
+        Set(wrongContingencyMessage, BinanceFixListStatusParser.ClientListIdTag, request.ClientListId);
+        Set(wrongContingencyMessage, BinanceFixListStatusParser.ContingencyTypeTag, "1");
+        var wrongContingency = BinanceFixListStatusParser.Parse(wrongContingencyMessage);
+
+        var wrongOrderMessage = CreateRequiredStatus();
+        Set(wrongOrderMessage, BinanceFixListStatusParser.ClientListIdTag, request.ClientListId);
+        AddOrder(wrongOrderMessage, "working", 1, symbol: "ETHUSDT");
+        var wrongOrder = BinanceFixListStatusParser.Parse(wrongOrderMessage);
+
+        Assert.Equal(
+            BinanceFixNewOrderListReconciliationStatus.Unresolved,
+            missingClientListId.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.UnknownDelivery));
+        Assert.Equal(
+            BinanceFixNewOrderListReconciliationStatus.Unresolved,
+            differentCase.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.UnknownDelivery));
+        Assert.Equal(
+            BinanceFixNewOrderListReconciliationStatus.Unresolved,
+            wrongContingency.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.UnknownDelivery));
+        Assert.Equal(
+            BinanceFixNewOrderListReconciliationStatus.Unresolved,
+            wrongOrder.ReconcileNewOrderList(request, BinanceFixDeliveryStatus.UnknownDelivery));
+        Assert.Throws<ArgumentNullException>(() => wrongOrder.ReconcileNewOrderList(
+            null!,
+            BinanceFixDeliveryStatus.UnknownDelivery));
+    }
+
+    [Theory]
     [InlineData("1", BinanceFixListTriggerType.Activated, BinanceFixListTriggerAction.Release)]
     [InlineData("2", BinanceFixListTriggerType.PartiallyFilled, BinanceFixListTriggerAction.Cancel)]
     [InlineData("3", BinanceFixListTriggerType.Filled, BinanceFixListTriggerAction.Release)]
@@ -299,6 +378,27 @@ public class ListStatusTests
         return message;
     }
 
+    private static BinanceFixNewOrderListRequest CreateNewOrderListRequest()
+        => new(
+            "list_1",
+            BinanceFixOrderListType.OneTriggersTheOther,
+            [
+                new BinanceFixNewOrderRequest(
+                    "working",
+                    "BTCUSDT",
+                    BinanceFixOrderSide.Buy,
+                    BinanceFixOrderType.Limit,
+                    orderQuantity: 1,
+                    price: 10,
+                    timeInForce: BinanceFixTimeInForce.GoodTillCanceled),
+                new BinanceFixNewOrderRequest(
+                    "pending",
+                    "BTCUSDT",
+                    BinanceFixOrderSide.Sell,
+                    BinanceFixOrderType.Market,
+                    orderQuantity: 1)
+            ]);
+
     private static Group AddOrder(
         Message message,
         string clientOrderId,
@@ -307,13 +407,14 @@ public class ListStatusTests
         string triggerAction = "1",
         string? orderRejectReason = null,
         string? errorCode = null,
-        string? errorText = null)
+        string? errorText = null,
+        string symbol = "BTCUSDT")
     {
         var order = new Group(
             BinanceFixListStatusParser.NumberOfOrdersTag,
             Tags.Symbol,
             OrderFieldOrder);
-        Set(order, Tags.Symbol, "BTCUSDT");
+        Set(order, Tags.Symbol, symbol);
         Set(order, Tags.ClOrdID, clientOrderId);
         if (orderId is not null)
         {
