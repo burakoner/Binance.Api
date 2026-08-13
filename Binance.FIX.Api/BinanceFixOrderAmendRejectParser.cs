@@ -31,7 +31,7 @@ internal static class BinanceFixOrderAmendRejectParser
             ClientOrderId = GetRequiredClientId(message, Tags.ClOrdID, "ClOrdID"),
             OriginalClientOrderId = GetOptionalClientId(message, Tags.OrigClOrdID),
             OrderId = GetOptionalInt64(message, Tags.OrderID),
-            Symbol = GetRequiredPrintable(message, Tags.Symbol, "Symbol"),
+            Symbol = GetRequiredUtf8(message, Tags.Symbol, "Symbol"),
             NewQuantity = GetRequiredPositiveDecimal(message, Tags.OrderQty, "OrderQty"),
             ErrorCode = GetRequiredInt64(message, ErrorCodeTag, "ErrorCode"),
             ErrorText = GetRequiredPrintable(message, Tags.Text, "Text")
@@ -103,6 +103,17 @@ internal static class BinanceFixOrderAmendRejectParser
         if (value.Any(character => character is < ' ' or > '~'))
         {
             throw Invalid(tag, value, "STRING must contain printable ASCII only.");
+        }
+
+        return value;
+    }
+
+    private static string GetRequiredUtf8(Message message, int tag, string fieldName)
+    {
+        var value = GetRequiredValue(message, tag, fieldName);
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
+        {
+            throw Invalid(tag, value, "STRING must be non-empty valid Unicode without control characters.");
         }
 
         return value;

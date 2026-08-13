@@ -11,7 +11,7 @@ public sealed class BinanceFixNewOrderRequest
     /// Creates a request from the complete current Binance Spot FIX NewOrderSingle field surface.
     /// </summary>
     /// <param name="clientOrderId">Caller-owned client order ID matching <c>^[a-zA-Z0-9-_]{1,36}$</c>. It is never generated or reused by this wrapper.</param>
-    /// <param name="symbol">Printable-ASCII Spot symbol.</param>
+    /// <param name="symbol">Non-empty Spot symbol representable as valid UTF-8 without control characters.</param>
     /// <param name="side">Order side.</param>
     /// <param name="orderType">Binance order type.</param>
     /// <param name="orderQuantity">Base-asset quantity.</param>
@@ -49,7 +49,7 @@ public sealed class BinanceFixNewOrderRequest
         bool? smartOrderRouting = null)
     {
         ValidateClientOrderId(clientOrderId);
-        ValidatePrintableAscii(symbol, nameof(symbol));
+        ValidateUtf8Symbol(symbol, nameof(symbol));
         ValidateEnum(side, nameof(side));
         ValidateEnum(orderType, nameof(orderType));
         ValidateNullableEnum(timeInForce, nameof(timeInForce));
@@ -289,19 +289,13 @@ public sealed class BinanceFixNewOrderRequest
         }
     }
 
-    private static void ValidatePrintableAscii(string value, string parameterName)
+    private static void ValidateUtf8Symbol(string value, string parameterName)
     {
-        if (string.IsNullOrEmpty(value))
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
         {
-            throw new ArgumentException("Value must not be empty.", parameterName);
-        }
-
-        foreach (var character in value)
-        {
-            if (character is < ' ' or > '~')
-            {
-                throw new ArgumentException("Value must contain only printable ASCII characters.", parameterName);
-            }
+            throw new ArgumentException(
+                "Symbol must be non-empty valid Unicode without control characters.",
+                parameterName);
         }
     }
 

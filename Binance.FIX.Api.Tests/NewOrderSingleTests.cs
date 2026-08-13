@@ -224,12 +224,38 @@ public class NewOrderSingleTests
     [Theory]
     [InlineData("")]
     [InlineData("BTC\nUSDT")]
-    [InlineData("BTÇUSDT")]
-    public void RejectsNonPrintableAsciiSymbol(string symbol)
+    public void RejectsInvalidUnicodeSymbol(string symbol)
     {
         Assert.Throws<ArgumentException>(() => new BinanceFixNewOrderRequest(
             "client_1",
             symbol,
+            BinanceFixOrderSide.Buy,
+            BinanceFixOrderType.Market,
+            orderQuantity: 1));
+    }
+
+    [Theory]
+    [InlineData("BTÇUSDT")]
+    [InlineData("这是测试币456")]
+    public void AcceptsCurrentUtf8SymbolBoundary(string symbol)
+    {
+        var request = new BinanceFixNewOrderRequest(
+            "client_1",
+            symbol,
+            BinanceFixOrderSide.Buy,
+            BinanceFixOrderType.Market,
+            orderQuantity: 1);
+
+        Assert.Equal(symbol, request.Symbol);
+        Assert.Equal(symbol, BinanceFixNewOrderMapper.CreateMessage(request).GetString(Tags.Symbol));
+    }
+
+    [Fact]
+    public void RejectsUnpairedUnicodeSurrogateInSymbol()
+    {
+        Assert.Throws<ArgumentException>(() => new BinanceFixNewOrderRequest(
+            "client_1",
+            "BTC\ud800USDT",
             BinanceFixOrderSide.Buy,
             BinanceFixOrderType.Market,
             orderQuantity: 1));

@@ -35,7 +35,7 @@ internal static class BinanceFixOrderCancelRejectParser
             OrderId = GetOptionalInt64(message, Tags.OrderID),
             OriginalClientListId = GetOptionalClientId(message, OriginalClientListIdTag),
             ListId = GetOptionalPrintable(message, Tags.ListID, allowEmpty: false),
-            Symbol = GetRequiredPrintable(message, Tags.Symbol, "Symbol", allowEmpty: false),
+            Symbol = GetRequiredUtf8(message, Tags.Symbol, "Symbol"),
             CancelRestriction = ParseOptionalCancelRestriction(message),
             ResponseTo = ParseResponseTo(GetRequiredValue(message, CancelRejectResponseToTag, "CxlRejResponseTo")),
             ErrorCode = GetRequiredInt64(message, ErrorCodeTag, "ErrorCode"),
@@ -108,6 +108,17 @@ internal static class BinanceFixOrderCancelRejectParser
     {
         var value = GetOptionalValue(message, tag);
         return value is null ? null : ValidatePrintable(value, tag, allowEmpty);
+    }
+
+    private static string GetRequiredUtf8(Message message, int tag, string fieldName)
+    {
+        var value = GetRequiredValue(message, tag, fieldName);
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
+        {
+            throw Invalid(tag, value, "STRING must be non-empty valid Unicode without control characters.");
+        }
+
+        return value;
     }
 
     private static string ValidatePrintable(string value, int tag, bool allowEmpty)

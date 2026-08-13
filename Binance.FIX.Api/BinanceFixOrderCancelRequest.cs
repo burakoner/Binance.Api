@@ -31,7 +31,7 @@ public sealed class BinanceFixOrderCancelRequest
     /// Creates a cancellation targeting one order. If that order belongs to a list, Binance cancels the whole list.
     /// </summary>
     /// <param name="clientOrderId">Caller-owned ID for this cancel request.</param>
-    /// <param name="symbol">Printable-ASCII Spot symbol.</param>
+    /// <param name="symbol">Non-empty Spot symbol representable as valid UTF-8 without control characters.</param>
     /// <param name="orderId">Optional exchange-assigned signed 64-bit order ID.</param>
     /// <param name="originalClientOrderId">Optional client order ID of the order to cancel.</param>
     /// <param name="cancelRestriction">Optional order-state restriction.</param>
@@ -67,7 +67,7 @@ public sealed class BinanceFixOrderCancelRequest
     /// Creates a cancellation targeting one order list.
     /// </summary>
     /// <param name="clientOrderId">Caller-owned ID for this cancel request.</param>
-    /// <param name="symbol">Printable-ASCII Spot symbol.</param>
+    /// <param name="symbol">Non-empty Spot symbol representable as valid UTF-8 without control characters.</param>
     /// <param name="listId">Optional opaque exchange-assigned order-list ID.</param>
     /// <param name="originalClientListId">Optional client list ID of the order list to cancel.</param>
     /// <param name="cancelRestriction">Optional order-state restriction.</param>
@@ -134,7 +134,7 @@ public sealed class BinanceFixOrderCancelRequest
         BinanceFixCancelRestriction? cancelRestriction)
     {
         ValidateClientId(clientOrderId, nameof(clientOrderId));
-        ValidatePrintableAscii(symbol, nameof(symbol));
+        ValidateUtf8Symbol(symbol, nameof(symbol));
         if (cancelRestriction is not null && !Enum.IsDefined(cancelRestriction.Value))
         {
             throw new ArgumentOutOfRangeException(
@@ -198,6 +198,16 @@ public sealed class BinanceFixOrderCancelRequest
             {
                 throw new ArgumentException("Value must contain only printable ASCII characters.", parameterName);
             }
+        }
+    }
+
+    private static void ValidateUtf8Symbol(string value, string parameterName)
+    {
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
+        {
+            throw new ArgumentException(
+                "Symbol must be non-empty valid Unicode without control characters.",
+                parameterName);
         }
     }
 }

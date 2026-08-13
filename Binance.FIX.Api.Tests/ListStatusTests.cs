@@ -167,6 +167,22 @@ public class ListStatusTests
         Assert.Throws<FormatException>(() => BinanceFixListStatusParser.Parse(message));
     }
 
+    [Fact]
+    public void ParsesCurrentUtf8Symbols()
+    {
+        const string symbol = "这是测试币456";
+        var message = CreateRequiredStatus();
+        Set(message, Tags.Symbol, symbol);
+        var order = AddOrder(message, "order_1", 1);
+        Set(order, Tags.Symbol, symbol);
+        message.ReplaceGroup(1, BinanceFixListStatusParser.NumberOfOrdersTag, order);
+
+        var status = BinanceFixListStatusParser.Parse(message);
+
+        Assert.Equal(symbol, status.Symbol);
+        Assert.Equal(symbol, Assert.Single(status.Orders).Symbol);
+    }
+
     [Theory]
     [InlineData(BinanceFixListStatusParser.ListStatusTypeTag, "99")]
     [InlineData(BinanceFixListStatusParser.ListOrderStatusTag, "99")]

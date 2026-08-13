@@ -44,6 +44,7 @@ public class SessionCoreIntegrationTests
         Assert.True(session.GetBool(SessionSettings.RESET_ON_DISCONNECT));
         Assert.False(session.GetBool(SessionSettings.SEND_REDUNDANT_RESENDREQUESTS));
         Assert.False(session.GetBool(SessionSettings.SEND_LOGOUT_BEFORE_TIMEOUT_DISCONNECT));
+        Assert.Equal("utf-8", session.GetString(SessionSettings.ENCODING));
         Assert.Equal(expectedReconnectIntervalSeconds, settings.Get().GetLong(SessionSettings.RECONNECT_INTERVAL));
         Assert.True(session.GetBool(SessionSettings.SSL_ENABLE));
         Assert.True(session.GetBool(SessionSettings.SSL_VALIDATE_CERTIFICATES));

@@ -28,38 +28,7 @@ internal static class BinanceFixNewOrderMapper
 
         var message = new Message();
         message.Header.SetField(new MsgType(MsgType.ORDER_SINGLE));
-        message.SetField(new ClOrdID(request.ClientOrderId));
-        message.SetField(new OrdType(GetOrdType(request.OrderType)));
-        message.SetField(new Side(GetSide(request.Side)));
-        message.SetField(new Symbol(request.Symbol));
-
-        SetDecimal(message, Tags.OrderQty, request.OrderQuantity);
-        SetDecimal(message, Tags.CashOrderQty, request.CashOrderQuantity);
-        SetDecimal(message, Tags.Price, request.Price);
-        SetDecimal(message, Tags.MaxFloor, request.IcebergQuantity);
-
-        if (request.OrderType is BinanceFixOrderType.LimitMaker)
-        {
-            message.SetField(new ExecInst("6"));
-        }
-
-        if (request.TimeInForce is not null)
-        {
-            message.SetField(new TimeInForce((char)('0' + (int)request.TimeInForce.Value)));
-        }
-
-        SetInt64(message, TargetStrategyTag, request.TargetStrategy);
-        SetInt64(message, StrategyIdTag, request.StrategyId);
-
-        if (request.SelfTradePreventionMode is not null)
-        {
-            message.SetField(new CharField(
-                SelfTradePreventionModeTag,
-                (char)('0' + (int)request.SelfTradePreventionMode.Value)));
-        }
-
-        ApplyTriggerFields(message, request);
-        ApplyPegFields(message, request);
+        ApplySharedFields(message, request);
 
         if (request.SmartOrderRouting is not null)
         {
@@ -69,7 +38,46 @@ internal static class BinanceFixNewOrderMapper
         return message;
     }
 
-    private static void ApplyTriggerFields(Message message, BinanceFixNewOrderRequest request)
+    internal static void ApplySharedFields(FieldMap fields, BinanceFixNewOrderRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(fields);
+        ArgumentNullException.ThrowIfNull(request);
+
+        fields.SetField(new ClOrdID(request.ClientOrderId));
+        fields.SetField(new OrdType(GetOrdType(request.OrderType)));
+        fields.SetField(new Side(GetSide(request.Side)));
+        fields.SetField(new Symbol(request.Symbol));
+
+        SetDecimal(fields, Tags.OrderQty, request.OrderQuantity);
+        SetDecimal(fields, Tags.CashOrderQty, request.CashOrderQuantity);
+        SetDecimal(fields, Tags.Price, request.Price);
+        SetDecimal(fields, Tags.MaxFloor, request.IcebergQuantity);
+
+        if (request.OrderType is BinanceFixOrderType.LimitMaker)
+        {
+            fields.SetField(new ExecInst("6"));
+        }
+
+        if (request.TimeInForce is not null)
+        {
+            fields.SetField(new TimeInForce((char)('0' + (int)request.TimeInForce.Value)));
+        }
+
+        SetInt64(fields, TargetStrategyTag, request.TargetStrategy);
+        SetInt64(fields, StrategyIdTag, request.StrategyId);
+
+        if (request.SelfTradePreventionMode is not null)
+        {
+            fields.SetField(new CharField(
+                SelfTradePreventionModeTag,
+                (char)('0' + (int)request.SelfTradePreventionMode.Value)));
+        }
+
+        ApplyTriggerFields(fields, request);
+        ApplyPegFields(fields, request);
+    }
+
+    private static void ApplyTriggerFields(FieldMap fields, BinanceFixNewOrderRequest request)
     {
         if (request.OrderType is not (BinanceFixOrderType.StopLoss
             or BinanceFixOrderType.StopLossLimit
@@ -79,27 +87,27 @@ internal static class BinanceFixNewOrderMapper
             return;
         }
 
-        message.SetField(new CharField(TriggerTypeTag, '4'));
-        message.SetField(new CharField(TriggerActionTag, '1'));
-        message.SetField(new CharField(TriggerPriceTypeTag, '2'));
-        message.SetField(new CharField(TriggerPriceDirectionTag, GetTriggerDirection(request)));
-        SetDecimal(message, TriggerPriceTag, request.TriggerPrice);
-        SetInt64(message, TriggerTrailingDeltaBipsTag, request.TriggerTrailingDeltaBips);
+        fields.SetField(new CharField(TriggerTypeTag, '4'));
+        fields.SetField(new CharField(TriggerActionTag, '1'));
+        fields.SetField(new CharField(TriggerPriceTypeTag, '2'));
+        fields.SetField(new CharField(TriggerPriceDirectionTag, GetTriggerDirection(request)));
+        SetDecimal(fields, TriggerPriceTag, request.TriggerPrice);
+        SetInt64(fields, TriggerTrailingDeltaBipsTag, request.TriggerTrailingDeltaBips);
     }
 
-    private static void ApplyPegFields(Message message, BinanceFixNewOrderRequest request)
+    private static void ApplyPegFields(FieldMap fields, BinanceFixNewOrderRequest request)
     {
         if (request.OrderType is not BinanceFixOrderType.Pegged)
         {
             return;
         }
 
-        message.SetField(new CharField(PegPriceTypeTag, (char)('0' + (int)request.PegPriceType!.Value)));
-        message.SetField(new IntField(PegMoveTypeTag, 1));
+        fields.SetField(new CharField(PegPriceTypeTag, (char)('0' + (int)request.PegPriceType!.Value)));
+        fields.SetField(new IntField(PegMoveTypeTag, 1));
         if (request.PegOffsetValue is not null)
         {
-            message.SetField(new CharField(PegOffsetTypeTag, '3'));
-            message.SetField(new DecimalField(PegOffsetValueTag, request.PegOffsetValue.Value));
+            fields.SetField(new CharField(PegOffsetTypeTag, '3'));
+            fields.SetField(new DecimalField(PegOffsetValueTag, request.PegOffsetValue.Value));
         }
     }
 
@@ -134,19 +142,19 @@ internal static class BinanceFixNewOrderMapper
         return triggerUp ? 'U' : 'D';
     }
 
-    private static void SetDecimal(Message message, int tag, decimal? value)
+    private static void SetDecimal(FieldMap fields, int tag, decimal? value)
     {
         if (value is not null)
         {
-            message.SetField(new DecimalField(tag, value.Value));
+            fields.SetField(new DecimalField(tag, value.Value));
         }
     }
 
-    private static void SetInt64(Message message, int tag, long? value)
+    private static void SetInt64(FieldMap fields, int tag, long? value)
     {
         if (value is not null)
         {
-            message.SetField(new StringField(tag, value.Value.ToString(CultureInfo.InvariantCulture)));
+            fields.SetField(new StringField(tag, value.Value.ToString(CultureInfo.InvariantCulture)));
         }
     }
 }

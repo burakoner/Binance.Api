@@ -69,7 +69,7 @@ internal static class BinanceFixListStatusParser
 
         return new BinanceFixListStatus
         {
-            Symbol = GetOptionalPrintable(message, Tags.Symbol, allowEmpty: false),
+            Symbol = GetOptionalUtf8(message, Tags.Symbol),
             ListId = GetOptionalPrintable(message, Tags.ListID, allowEmpty: false),
             ClientListId = GetOptionalClientOrderId(message, ClientListIdTag),
             OriginalClientListId = GetOptionalClientOrderId(message, OriginalClientListIdTag),
@@ -132,7 +132,7 @@ internal static class BinanceFixListStatusParser
             orders.Add(new BinanceFixListStatusOrder
             {
                 ClientOrderId = GetRequiredClientOrderId(group, Tags.ClOrdID, "ClOrdID"),
-                Symbol = GetRequiredPrintable(group, Tags.Symbol, "Symbol"),
+                Symbol = GetRequiredUtf8(group, Tags.Symbol, "Symbol"),
                 OrderId = GetOptionalInt64(group, Tags.OrderID),
                 TriggeringInstructions = ParseTriggeringInstructions(group),
                 OrderRejectReason = ParseOptionalOrderRejectReason(group),
@@ -351,6 +351,25 @@ internal static class BinanceFixListStatusParser
     {
         var value = GetOptionalValue(fields, tag);
         return value is null ? null : ValidatePrintable(value, tag, allowEmpty);
+    }
+
+    private static string GetRequiredUtf8(FieldMap fields, int tag, string fieldName)
+        => ValidateUtf8(GetRequiredValue(fields, tag, fieldName), tag);
+
+    private static string? GetOptionalUtf8(FieldMap fields, int tag)
+    {
+        var value = GetOptionalValue(fields, tag);
+        return value is null ? null : ValidateUtf8(value, tag);
+    }
+
+    private static string ValidateUtf8(string value, int tag)
+    {
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
+        {
+            throw Invalid(tag, value, "STRING must be non-empty valid Unicode without control characters.");
+        }
+
+        return value;
     }
 
     private static string ValidatePrintable(string value, int tag, bool allowEmpty)

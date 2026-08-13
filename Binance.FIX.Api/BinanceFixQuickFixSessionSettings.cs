@@ -37,6 +37,7 @@ internal static class BinanceFixQuickFixSessionSettings
         session.SetBool(SessionSettings.RESET_ON_DISCONNECT, true);
         session.SetBool(SessionSettings.SEND_REDUNDANT_RESENDREQUESTS, false);
         session.SetBool(SessionSettings.SEND_LOGOUT_BEFORE_TIMEOUT_DISCONNECT, false);
+        session.SetString(SessionSettings.ENCODING, "utf-8");
         BinanceFixQuickFixTlsSettings.Apply(options, session);
 
         var settings = new SessionSettings();

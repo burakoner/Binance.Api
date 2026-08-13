@@ -11,7 +11,7 @@ public sealed class BinanceFixOrderAmendRequest
     /// Creates an amendment that reduces the original order quantity while preserving priority.
     /// </summary>
     /// <param name="clientOrderId">Caller-owned ID for the amended order.</param>
-    /// <param name="symbol">Printable-ASCII Spot symbol.</param>
+    /// <param name="symbol">Non-empty Spot symbol representable as valid UTF-8 without control characters.</param>
     /// <param name="newQuantity">Positive new total order quantity. Binance requires it to be smaller than the current quantity.</param>
     /// <param name="orderId">Optional exchange-assigned signed 64-bit order ID.</param>
     /// <param name="originalClientOrderId">Optional current client order ID.</param>
@@ -23,7 +23,7 @@ public sealed class BinanceFixOrderAmendRequest
         string? originalClientOrderId = null)
     {
         ValidateClientId(clientOrderId, nameof(clientOrderId));
-        ValidatePrintableAscii(symbol, nameof(symbol));
+        ValidateUtf8Symbol(symbol, nameof(symbol));
         ValidateOptionalClientId(originalClientOrderId, nameof(originalClientOrderId));
 
         if (newQuantity <= 0)
@@ -131,21 +131,13 @@ public sealed class BinanceFixOrderAmendRequest
             "Client ID must contain 1-36 ASCII letters, digits, hyphens, or underscores.",
             parameterName);
 
-    private static void ValidatePrintableAscii(string value, string parameterName)
+    private static void ValidateUtf8Symbol(string value, string parameterName)
     {
-        if (string.IsNullOrEmpty(value))
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
         {
-            throw new ArgumentException("Value must not be empty.", parameterName);
-        }
-
-        foreach (var character in value)
-        {
-            if (character is < ' ' or > '~')
-            {
-                throw new ArgumentException(
-                    "Value must contain only printable ASCII characters.",
-                    parameterName);
-            }
+            throw new ArgumentException(
+                "Symbol must be non-empty valid Unicode without control characters.",
+                parameterName);
         }
     }
 }

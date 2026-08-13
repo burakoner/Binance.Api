@@ -80,7 +80,7 @@ internal static class BinanceFixExecutionReportParser
             OrderQuantity = GetOptionalDecimal(message, Tags.OrderQty, requireNonNegative: true),
             OrderType = ParseOrderType(GetRequiredValue(message, Tags.OrdType, "OrdType")),
             Side = ParseSide(GetRequiredValue(message, Tags.Side, "Side")),
-            Symbol = GetRequiredPrintable(message, Tags.Symbol, "Symbol"),
+            Symbol = GetRequiredUtf8(message, Tags.Symbol, "Symbol"),
             ExecutionInstruction = ParseOptionalExecutionInstruction(message),
             Price = GetOptionalDecimal(message, Tags.Price, requireNonNegative: true),
             HasPriceMovementTrigger = HasOptionalFixedValue(message, TriggerTypeTag, "4"),
@@ -122,7 +122,7 @@ internal static class BinanceFixExecutionReportParser
             PreventedExecutionPrice = GetOptionalDecimal(message, PreventedExecutionPriceTag, requireNonNegative: true),
             PreventedExecutionQuantity = GetOptionalDecimal(message, PreventedExecutionQuantityTag, requireNonNegative: true),
             TradeGroupId = GetOptionalInt64(message, TradeGroupIdTag),
-            CounterSymbol = GetOptionalPrintable(message, CounterSymbolTag, allowEmpty: false),
+            CounterSymbol = GetOptionalUtf8(message, CounterSymbolTag),
             CounterOrderId = GetOptionalInt64(message, CounterOrderIdTag),
             PreventedQuantity = GetOptionalDecimal(message, PreventedQuantityTag, requireNonNegative: true),
             LastPreventedQuantity = GetOptionalDecimal(message, LastPreventedQuantityTag, requireNonNegative: true),
@@ -248,7 +248,7 @@ internal static class BinanceFixExecutionReportParser
     private static BinanceFixMiscFee ParseFee(string amount, string currency, string type)
         => new(
             ParseDecimal(amount, MiscellaneousFeeAmountTag, requireNonNegative: true),
-            ValidatePrintable(currency, MiscellaneousFeeCurrencyTag, allowEmpty: false),
+            ValidateUtf8(currency, MiscellaneousFeeCurrencyTag),
             type switch
             {
                 "4" => BinanceFixMiscFeeType.ExchangeFees,
@@ -529,6 +529,25 @@ internal static class BinanceFixExecutionReportParser
     {
         var value = GetOptionalValue(message, tag);
         return value is null ? null : ValidatePrintable(value, tag, allowEmpty);
+    }
+
+    private static string GetRequiredUtf8(Message message, int tag, string fieldName)
+        => ValidateUtf8(GetRequiredValue(message, tag, fieldName), tag);
+
+    private static string? GetOptionalUtf8(Message message, int tag)
+    {
+        var value = GetOptionalValue(message, tag);
+        return value is null ? null : ValidateUtf8(value, tag);
+    }
+
+    private static string ValidateUtf8(string value, int tag)
+    {
+        if (!BinanceFixUtf8FieldValidator.IsValidNonEmptyValue(value))
+        {
+            throw Invalid(tag, value, "STRING must be non-empty valid Unicode without control characters.");
+        }
+
+        return value;
     }
 
     private static string ValidatePrintable(string value, int tag, bool allowEmpty)

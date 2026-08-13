@@ -73,11 +73,22 @@ public class OrderAmendTests
     [Theory]
     [InlineData("")]
     [InlineData("BTC\nUSDT")]
-    [InlineData("BTÃ‡USDT")]
     public void RejectsInvalidSymbols(string symbol)
     {
         Assert.Throws<ArgumentException>(() =>
             new BinanceFixOrderAmendRequest("amended_1", symbol, 1m, orderId: 1));
+    }
+
+    [Fact]
+    public void AcceptsCurrentUtf8SymbolOnRequestAndReject()
+    {
+        const string symbol = "这是测试币456";
+        var request = new BinanceFixOrderAmendRequest("amended_1", symbol, 1m, orderId: 1);
+        var message = CreateRequiredReject();
+        Set(message, Tags.Symbol, symbol);
+
+        Assert.Equal(symbol, request.Symbol);
+        Assert.Equal(symbol, BinanceFixOrderAmendRejectParser.Parse(message).Symbol);
     }
 
     [Theory]
@@ -148,7 +159,6 @@ public class OrderAmendTests
     [InlineData(Tags.ClOrdID, "invalid id")]
     [InlineData(Tags.OrigClOrdID, "invalid!")]
     [InlineData(Tags.OrderID, "9223372036854775808")]
-    [InlineData(Tags.Symbol, "BTÃ‡USDT")]
     [InlineData(Tags.OrderQty, "0")]
     [InlineData(Tags.OrderQty, "-1")]
     [InlineData(Tags.OrderQty, "1e2")]

@@ -97,13 +97,24 @@ public class OrderCancelTests
     [Theory]
     [InlineData("")]
     [InlineData("BTC\nUSDT")]
-    [InlineData("BTÇUSDT")]
     public void RejectsInvalidPrintableRequestStrings(string value)
     {
         Assert.Throws<ArgumentException>(() =>
             BinanceFixOrderCancelRequest.ForOrder("cancel_1", value, orderId: 1));
         Assert.Throws<ArgumentException>(() =>
             BinanceFixOrderCancelRequest.ForOrderList("cancel_1", "BTCUSDT", listId: value));
+    }
+
+    [Fact]
+    public void AcceptsCurrentUtf8SymbolOnRequestAndReject()
+    {
+        const string symbol = "这是测试币456";
+        var request = BinanceFixOrderCancelRequest.ForOrder("cancel_1", symbol, orderId: 1);
+        var message = CreateRequiredReject();
+        Set(message, Tags.Symbol, symbol);
+
+        Assert.Equal(symbol, request.Symbol);
+        Assert.Equal(symbol, BinanceFixOrderCancelRejectParser.Parse(message).Symbol);
     }
 
     [Fact]
@@ -184,7 +195,6 @@ public class OrderCancelTests
     [InlineData(Tags.OrigClOrdID, "invalid!")]
     [InlineData(BinanceFixOrderCancelRejectParser.OriginalClientListIdTag, "invalid!")]
     [InlineData(Tags.ListID, "")]
-    [InlineData(Tags.Symbol, "BTÇUSDT")]
     [InlineData(Tags.Text, "")]
     public void RejectsInvalidCancelRejectFieldDomain(int tag, string value)
     {

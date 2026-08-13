@@ -217,6 +217,22 @@ public class ExecutionReportTests
         Assert.Throws<FormatException>(() => BinanceFixExecutionReportParser.Parse(message));
     }
 
+    [Fact]
+    public void ParsesCurrentUtf8SymbolFields()
+    {
+        const string symbol = "这是测试币456";
+        var message = CreateRequiredReport();
+        Set(message, Tags.Symbol, symbol);
+        Set(message, BinanceFixExecutionReportParser.CounterSymbolTag, symbol);
+        AddFee(message, "0.01", symbol);
+
+        var report = BinanceFixExecutionReportParser.Parse(message);
+
+        Assert.Equal(symbol, report.Symbol);
+        Assert.Equal(symbol, report.CounterSymbol);
+        Assert.Equal(symbol, Assert.Single(report.MiscellaneousFees).Currency);
+    }
+
     [Theory]
     [InlineData("0", BinanceFixExecutionType.New)]
     [InlineData("4", BinanceFixExecutionType.Canceled)]
