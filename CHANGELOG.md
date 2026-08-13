@@ -1,6 +1,7 @@
 ## Change Log & Release Notes
 
 * Unreleased
+  * Added a complete manually authored Spot FIX `ExecutionReport` model and fail-closed parser across the current official documentation/dictionary union, including dictionaryless repeating-fee recovery and exact `ClOrdID` reconciliation for ambiguous `NewOrderSingle` delivery without exposing an order-send path
   * Added the manually authored Spot FIX `NewOrderSingle` public request and internal generic QuickFIX wire mapper across the complete current 24-field surface, with eight Binance order types, exact derived trigger/peg constants, signed-64-bit and invariant fixed-point encoding, fail-closed combination validation, and no public send path before execution-report reconciliation exists
   * Corrected the Review 33B Logon sequence-domain regression back to Binance's exact unsigned 32-bit `SEQNUM` contract including rollover value zero, and revised the forward text-FIX plan to manually authored internal wire mappings that keep generated Binance artifacts out of Git and packages
   * Reconciled future NuGet package metadata with the repository's Apache License 2.0 under the repository owner's explicit decision; this prospective project-license correction does not grant redistribution rights over Binance-owned FIX schemas or generated derivatives
