@@ -240,6 +240,51 @@ public sealed class BinanceFixExecutionReport
         return BinanceFixCancelReconciliationStatus.ExchangeCancellationObserved;
     }
 
+    /// <summary>
+    /// Reconciles this report as one phase-specific observation for an ambiguous cancel-and-new attempt.
+    /// No single report proves that both phases are complete.
+    /// </summary>
+    /// <param name="request">The original caller-owned request.</param>
+    /// <param name="deliveryStatus">The immediate transport result.</param>
+    /// <returns>The conservative phase-specific resolution.</returns>
+    public BinanceFixCancelReplaceReconciliationStatus ReconcileCancelReplace(
+        BinanceFixCancelReplaceRequest request,
+        BinanceFixDeliveryStatus deliveryStatus)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (deliveryStatus is not BinanceFixDeliveryStatus.UnknownDelivery
+            || !string.Equals(Symbol, request.NewOrder.Symbol, StringComparison.Ordinal))
+        {
+            return BinanceFixCancelReplaceReconciliationStatus.Unresolved;
+        }
+
+        if (request.CancelClientOrderId is not null
+            && string.Equals(ClientOrderId, request.CancelClientOrderId, StringComparison.Ordinal)
+            && ExecutionType is BinanceFixExecutionType.Canceled
+            && OrderStatus is BinanceFixOrderStatus.Canceled
+            && MatchesCancelReplaceTarget(request))
+        {
+            return BinanceFixCancelReplaceReconciliationStatus.CancellationObserved;
+        }
+
+        if (string.Equals(ClientOrderId, request.NewOrder.ClientOrderId, StringComparison.Ordinal))
+        {
+            if (ExecutionType is BinanceFixExecutionType.Rejected
+                || OrderStatus is BinanceFixOrderStatus.Rejected)
+            {
+                return BinanceFixCancelReplaceReconciliationStatus.NewOrderRejected;
+            }
+
+            return ExecutionType is BinanceFixExecutionType.New
+                && OrderStatus is BinanceFixOrderStatus.New
+                    ? BinanceFixCancelReplaceReconciliationStatus.NewOrderAccepted
+                    : BinanceFixCancelReplaceReconciliationStatus.Unresolved;
+        }
+
+        return BinanceFixCancelReplaceReconciliationStatus.Unresolved;
+    }
+
     private bool MatchesCancelTarget(BinanceFixOrderCancelRequest request)
     {
         if (request.OrderId is not null && OrderId is not null && request.OrderId != OrderId)
@@ -260,5 +305,20 @@ public sealed class BinanceFixExecutionReport
         return request.ListId is null
             || ListId is null
             || string.Equals(request.ListId, ListId, StringComparison.Ordinal);
+    }
+
+    private bool MatchesCancelReplaceTarget(BinanceFixCancelReplaceRequest request)
+    {
+        if (request.OrderId is not null && OrderId is not null && request.OrderId != OrderId)
+        {
+            return false;
+        }
+
+        return request.OriginalClientOrderId is null
+            || OriginalClientOrderId is null
+            || string.Equals(
+                request.OriginalClientOrderId,
+                OriginalClientOrderId,
+                StringComparison.Ordinal);
     }
 }

@@ -64,6 +64,39 @@ public sealed class BinanceFixOrderCancelReject
         return BinanceFixCancelReconciliationStatus.ExchangeRejected;
     }
 
+    /// <summary>
+    /// Reconciles this rejection as the cancellation-phase outcome of one ambiguous cancel-and-new attempt.
+    /// An explicit CancelClOrdID is required because tag 11 belongs to the new order in the combined request.
+    /// </summary>
+    /// <param name="request">The original caller-owned request.</param>
+    /// <param name="deliveryStatus">The immediate transport result.</param>
+    /// <returns>The conservative phase-specific resolution.</returns>
+    public BinanceFixCancelReplaceReconciliationStatus ReconcileCancelReplace(
+        BinanceFixCancelReplaceRequest request,
+        BinanceFixDeliveryStatus deliveryStatus)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (deliveryStatus is not BinanceFixDeliveryStatus.UnknownDelivery
+            || request.CancelClientOrderId is null
+            || !string.Equals(ClientOrderId, request.CancelClientOrderId, StringComparison.Ordinal)
+            || !string.Equals(Symbol, request.NewOrder.Symbol, StringComparison.Ordinal)
+            || ListId is not null
+            || OriginalClientListId is not null
+            || (OrderId is not null && OrderId != request.OrderId)
+            || (OriginalClientOrderId is not null
+                && !string.Equals(
+                    OriginalClientOrderId,
+                    request.OriginalClientOrderId,
+                    StringComparison.Ordinal))
+            || (CancelRestriction is not null && CancelRestriction != request.CancelRestriction))
+        {
+            return BinanceFixCancelReplaceReconciliationStatus.Unresolved;
+        }
+
+        return BinanceFixCancelReplaceReconciliationStatus.CancellationRejected;
+    }
+
     private bool MatchesEchoedTarget(BinanceFixOrderCancelRequest request)
     {
         if (request.Target is BinanceFixOrderCancelTarget.Order)
