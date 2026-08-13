@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace Binance.FIX.Api;
 
@@ -26,6 +27,7 @@ public sealed class BinanceFixSessionOptions
     /// <param name="heartbeatIntervalSeconds">The negotiated heartbeat interval, from 5 through 60 seconds.</param>
     /// <param name="messageHandling">The message processing-order mode.</param>
     /// <param name="responseMode">The Order Entry/Drop Copy execution-report response mode. Market Data does not support this field.</param>
+    /// <param name="dataDictionaryPath">The caller-owned official Binance QuickFIX dictionary path. Order Entry and Drop Copy use spot-fix-oe.xml; Market Data uses spot-fix-md.xml. The file is verified before a session is constructed.</param>
     /// <exception cref="ArgumentException"><paramref name="senderCompId"/> does not match Binance's published domain.</exception>
     /// <exception cref="ArgumentOutOfRangeException">An enum or heartbeat value is outside the published domain.</exception>
     public BinanceFixSessionOptions(
@@ -34,7 +36,8 @@ public sealed class BinanceFixSessionOptions
         string senderCompId,
         int heartbeatIntervalSeconds = DefaultHeartbeatIntervalSeconds,
         BinanceFixMessageHandling messageHandling = BinanceFixMessageHandling.Sequential,
-        BinanceFixResponseMode? responseMode = null)
+        BinanceFixResponseMode? responseMode = null,
+        string? dataDictionaryPath = null)
     {
         Endpoint = ResolveEndpoint(environment, role);
 
@@ -69,6 +72,11 @@ public sealed class BinanceFixSessionOptions
             throw new ArgumentException("Market Data Logon does not support ResponseMode.", nameof(responseMode));
         }
 
+        if (dataDictionaryPath is not null && string.IsNullOrWhiteSpace(dataDictionaryPath))
+        {
+            throw new ArgumentException("Data dictionary path must not be empty or whitespace.", nameof(dataDictionaryPath));
+        }
+
         Environment = environment;
         Role = role;
         Limits = BinanceFixSessionLimits.ForRole(role);
@@ -78,6 +86,9 @@ public sealed class BinanceFixSessionOptions
         ResponseMode = role is BinanceFixSessionRole.MarketData
             ? null
             : responseMode ?? BinanceFixResponseMode.Everything;
+        DataDictionaryPath = dataDictionaryPath is null
+            ? null
+            : Path.GetFullPath(dataDictionaryPath);
     }
 
     /// <summary>
@@ -119,6 +130,12 @@ public sealed class BinanceFixSessionOptions
     /// Gets the execution-report response mode used as FIX tag 25036, or <see langword="null"/> for Market Data.
     /// </summary>
     public BinanceFixResponseMode? ResponseMode { get; }
+
+    /// <summary>
+    /// Gets the absolute path to the caller-owned official Binance QuickFIX dictionary.
+    /// A production session cannot be constructed until this file passes the current size and SHA-256 lock.
+    /// </summary>
+    public string? DataDictionaryPath { get; }
 
     private static Uri ResolveEndpoint(BinanceFixEnvironment environment, BinanceFixSessionRole role)
     {

@@ -18,6 +18,7 @@ internal sealed class BinanceFixSessionCore : IAsyncDisposable
     private readonly BinanceFixEd25519Credentials credentials;
     private readonly BinanceFixQuickFixApplication application;
     private readonly IInitiator initiator;
+    private readonly BinanceFixVerifiedDataDictionary? dataDictionary;
     private readonly SessionID sessionId;
     private readonly TimeSpan gracefulLogoutWait;
     private BinanceFixSessionCoreState state;
@@ -43,16 +44,28 @@ internal sealed class BinanceFixSessionCore : IAsyncDisposable
         this.credentials = credentials;
         Budgets = budgets;
 
-        sessionId = BinanceFixQuickFixSessionSettings.CreateSessionId(options);
-        var settings = BinanceFixQuickFixSessionSettings.Create(options, sessionId);
-        application = new BinanceFixQuickFixApplication(options, credentials, Budgets);
-        initiator = new BinanceFixSocketInitiator(
-            application,
-            new MemoryStoreFactory(),
-            settings,
-            NullLoggerFactory.Instance,
-            new DefaultMessageFactory(),
-            Budgets);
+        dataDictionary = BinanceFixDataDictionaryVerifier.VerifyRequired(
+            options.Role,
+            options.DataDictionaryPath);
+        try
+        {
+            sessionId = BinanceFixQuickFixSessionSettings.CreateSessionId(options);
+            var settings = BinanceFixQuickFixSessionSettings.Create(options, sessionId, dataDictionary);
+            application = new BinanceFixQuickFixApplication(options, credentials, Budgets);
+            initiator = new BinanceFixSocketInitiator(
+                application,
+                new MemoryStoreFactory(),
+                settings,
+                NullLoggerFactory.Instance,
+                new DefaultMessageFactory(),
+                Budgets);
+        }
+        catch
+        {
+            dataDictionary.Dispose();
+            throw;
+        }
+
         gracefulLogoutWait = TimeSpan.FromSeconds(
             Math.Min(options.HeartbeatIntervalSeconds, MaximumGracefulLogoutWait.TotalSeconds));
     }
@@ -176,13 +189,20 @@ internal sealed class BinanceFixSessionCore : IAsyncDisposable
                     }
                     finally
                     {
-                        if (!credentialsDisposed)
+                        try
                         {
-                            credentials.Dispose();
-                            credentialsDisposed = true;
+                            dataDictionary?.Dispose();
                         }
+                        finally
+                        {
+                            if (!credentialsDisposed)
+                            {
+                                credentials.Dispose();
+                                credentialsDisposed = true;
+                            }
 
-                        state = BinanceFixSessionCoreState.Disposed;
+                            state = BinanceFixSessionCoreState.Disposed;
+                        }
                     }
                 }
             }

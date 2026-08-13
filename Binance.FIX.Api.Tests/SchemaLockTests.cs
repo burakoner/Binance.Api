@@ -63,6 +63,17 @@ public class SchemaLockTests
     }
 
     [Fact]
+    public void RuntimeDictionaryVerifierUsesTheCommittedTextFixLocks()
+    {
+        Assert.Equal(
+            ExpectedArtifacts["fix/schemas/spot-fix-oe.xml"],
+            (BinanceFixDataDictionaryVerifier.OrderEntryLength, BinanceFixDataDictionaryVerifier.OrderEntrySha256));
+        Assert.Equal(
+            ExpectedArtifacts["fix/schemas/spot-fix-md.xml"],
+            (BinanceFixDataDictionaryVerifier.MarketDataLength, BinanceFixDataDictionaryVerifier.MarketDataSha256));
+    }
+
+    [Fact]
     public void LockContainsOnlyFixOwnedInputsAndReviewedCurrentIdentities()
     {
         using var document = LoadLock();

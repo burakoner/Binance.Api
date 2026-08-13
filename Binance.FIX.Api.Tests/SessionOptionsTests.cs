@@ -37,6 +37,7 @@ public class SessionOptionsTests
         Assert.Equal(30, options.HeartbeatIntervalSeconds);
         Assert.Equal(BinanceFixMessageHandling.Sequential, options.MessageHandling);
         Assert.Equal(BinanceFixResponseMode.Everything, options.ResponseMode);
+        Assert.Null(options.DataDictionaryPath);
     }
 
     [Fact]
@@ -176,5 +177,22 @@ public class SessionOptionsTests
             BinanceFixSessionRole.OrderEntry,
             "OE",
             responseMode: (BinanceFixResponseMode)99));
+    }
+
+    [Fact]
+    public void StoresAConfiguredDictionaryAsAnAbsolutePathAndRejectsWhitespace()
+    {
+        var options = new BinanceFixSessionOptions(
+            BinanceFixEnvironment.SpotTestnet,
+            BinanceFixSessionRole.OrderEntry,
+            "OE",
+            dataDictionaryPath: ".\\spot-fix-oe.xml");
+
+        Assert.Equal(Path.GetFullPath(".\\spot-fix-oe.xml"), options.DataDictionaryPath);
+        Assert.Throws<ArgumentException>(() => new BinanceFixSessionOptions(
+            BinanceFixEnvironment.SpotTestnet,
+            BinanceFixSessionRole.OrderEntry,
+            "OE",
+            dataDictionaryPath: " "));
     }
 }

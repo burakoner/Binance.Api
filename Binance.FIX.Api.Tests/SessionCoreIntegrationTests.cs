@@ -123,6 +123,17 @@ public class SessionCoreIntegrationTests
     }
 
     [Fact]
+    public void SessionCoreRejectsConstructionWithoutAVerifiedRoleDictionary()
+    {
+        var options = CreateOptions(BinanceFixSessionRole.OrderEntry);
+        using var credentials = CreateCredentials();
+        var budgets = new BinanceFixSessionBudgets(options.Limits);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            new BinanceFixSessionCore(options, credentials, budgets));
+    }
+
+    [Fact]
     public void ProductionApplicationSignsLogonAndCountsEveryOutboundMessageOnce()
     {
         var options = CreateOptions(BinanceFixSessionRole.OrderEntry);

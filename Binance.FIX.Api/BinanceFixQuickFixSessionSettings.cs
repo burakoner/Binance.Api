@@ -13,7 +13,8 @@ internal static class BinanceFixQuickFixSessionSettings
 
     internal static SessionSettings Create(
         BinanceFixSessionOptions options,
-        SessionID sessionId)
+        SessionID sessionId,
+        BinanceFixVerifiedDataDictionary? dataDictionary = null)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(sessionId);
@@ -23,7 +24,11 @@ internal static class BinanceFixQuickFixSessionSettings
 
         var session = new SettingsDictionary("SESSION");
         session.SetString(SessionSettings.CONNECTION_TYPE, "initiator");
-        session.SetBool(SessionSettings.USE_DATA_DICTIONARY, false);
+        session.SetBool(SessionSettings.USE_DATA_DICTIONARY, dataDictionary is not null);
+        if (dataDictionary is not null)
+        {
+            session.SetString(SessionSettings.DATA_DICTIONARY, dataDictionary.Path);
+        }
         session.SetBool(SessionSettings.NON_STOP_SESSION, true);
         session.SetLong(SessionSettings.HEARTBTINT, options.HeartbeatIntervalSeconds);
         session.SetBool(SessionSettings.PERSIST_MESSAGES, false);
